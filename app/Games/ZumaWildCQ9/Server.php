@@ -139,11 +139,11 @@ namespace VanguardLTE\Games\ZumaWildCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet,$packet_id);
                             $result_val['EmulatorType'] = $emulatorType;
-                            if($packet_id == 33){
-                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                }
-                            }
+                            // if($packet_id == 33){
+                            //     if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                            //         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            //     }
+                            // }
                             
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
@@ -319,18 +319,31 @@ namespace VanguardLTE\Games\ZumaWildCQ9
             $freespinNum = 0;
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
-            }
-            if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
-                $freespinNum = 15;
+            }else{
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                        $freespinNum = 15;
+                    }
             }
 
             $newRespin = false;
-            if($stack['IsRespin'] == true){
-                $newRespin = true;
-                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
-            }else{
-                $newRespin = false;
-                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+            if($slotEvent != 'freespin'){
+                if($stack['IsRespin'] == true){
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == false){
+                        $newRespin = true;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
+                    }else{
+                        $newRespin = false;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                    }
+                }else{
+                    $newRespin = false;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                    /*if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
+                    }*/
+                }
             }
 
             $stack['Type'] = $result_val['Type'];
@@ -358,14 +371,14 @@ namespace VanguardLTE\Games\ZumaWildCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $newRespin == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     if($packId == 1000){
                         $isState = true;
                     }
                     
                 }
-            }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){
+            }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0 && $stack['IsRespin'] == false){
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 $slotEvent = 'freespin';

@@ -23,6 +23,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
             $originalbet = 1;
+            $roundId = 0;
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
@@ -128,7 +129,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                                 $roundstr = '660' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
-
+                            
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline* $this->demon, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
 
@@ -152,7 +153,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                                 $result_val['AccumlateWinAmt'] = ($result_val['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                                 $result_val['AccumlateJPAmt'] = 0;
                                 $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
-                                $result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                                //$result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                                 $result_val['MaxRound'] = $stack['MaxRound'];
                                 $result_val['AwardRound'] = $stack['AwardRound'];
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
@@ -171,9 +172,9 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $result_val['TotalWinAmt'] = ($stack['TotalWinAmt'] / $originalbet * $betline);
-                            $result_val['TotalWinAmt'] = ($result_val['TotalWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                            //$result_val['TotalWinAmt'] = ($result_val['TotalWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                             $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
-                            $result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                            //$result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
                         }
@@ -234,6 +235,14 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
+            $roundId = 0;
+            if($slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') == 38){
+                $roundId = 0;
+            }else if($slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') == 58){
+                $roundId = 1;
+            }else if($slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') == 88){
+                $roundId = 2;
+            }
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
@@ -248,7 +257,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'),$roundId);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -264,25 +273,25 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             }
             if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
                 $stack['BaseWin'] = (($stack['BaseWin'] / $originalbet * $betline) / $this->demon);
-                $stack['BaseWin'] = ($stack['BaseWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                //$stack['BaseWin'] = ($stack['BaseWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
                 $stack['TotalWin'] = (($stack['TotalWin'] / $originalbet * $betline) / $this->demon);
-                $stack['TotalWin'] = ($stack['TotalWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                //$stack['TotalWin'] = floor(($stack['TotalWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'));
                 $totalWin = ($stack['TotalWin'] / $this->demon);
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
                 $stack['AccumlateWinAmt'] = (($stack['AccumlateWinAmt'] / $originalbet * $betline) / $this->demon);
-                $stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                //$stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
                 $stack['AccumlateJPAmt'] = (($stack['AccumlateJPAmt'] / $originalbet * $betline ) / $this->demon);
-                $stack['AccumlateJPAmt'] = ($stack['AccumlateJPAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                //$stack['AccumlateJPAmt'] = ($stack['AccumlateJPAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = (($stack['ScatterPayFromBaseGame'] / $originalbet * $betline ) / $this->demon);
-                $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                //$stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
 
 
@@ -295,7 +304,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
                     $value['LinePrize'] = (($value['LinePrize'] / $originalbet * $betline) / $this->demon);
-                    $value['LinePrize'] = ($value['LinePrize'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                    //$value['LinePrize'] = ($value['LinePrize'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                 }
                 $stack['udsOutputWinLine'][$index] = $value;
             }
