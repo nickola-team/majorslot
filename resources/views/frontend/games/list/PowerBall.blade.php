@@ -447,16 +447,12 @@
                             $('#betlock').css('display', 'block');
                         }
                     }else{
-                        wait(true);
+                        wait(false);
                         clearInterval(timer);
-                        Swal.fire({
-                        icon: 'info',
-                        title: '알림',
-                        html: '게임사와의 연결이 끊어 졋습니다.잠시후 다시 시도해보세요.',
-                        confirmButtonText: '확인',
-                        }).then(result =>{
-                            window.top.close();
-                        });
+                        $('.bet_label').css('background','');
+                        $('.bet_label').addClass('lock');
+                        $('.btn_betting_confirm').addClass('lock');
+                    
                     }
                 },
                 error: function (error) {
