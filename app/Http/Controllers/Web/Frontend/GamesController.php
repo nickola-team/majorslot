@@ -358,6 +358,32 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
         }
+        public function pball_go(\Illuminate\Http\Request $request)
+        {
+            $game = $request->game;
+            $object =  'VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall\\'.$game;
+            if(!class_exists($object))
+            {
+                abort(404);
+            }
+            $shop_id=0;
+            $token = '';
+            if(\Illuminate\Support\Facades\Auth::check()){
+                $shop_id = \Illuminate\Support\Facades\Auth::user()->shop_id;
+                $token = \Illuminate\Support\Facades\Auth::user()->api_token;
+            }
+            $game = \VanguardLTE\Game::where([
+                'name' => $game, 
+                'shop_id' => $shop_id,
+                'view' => 1
+            ])->first();
+            $gameInfo = new $object($game->original_id);
+            $pbGameResults = \VanguardLTE\PowerBallModel\PBGameResult::where('game_id',$game->original_id)->get();
+            
+            $gameName = $game->title;
+            $betMax = $game->rezerv;
+            return view('frontend.games.list.PowerBall', compact('pbGameResults', 'gameInfo', 'token','gameName','betMax'));
+        }
         public function startGameWithiFrame(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
             $game = $request->game;
