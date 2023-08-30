@@ -341,6 +341,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.game.startgame',
         'uses' => 'GamesController@startGameWithiFrame',
     ]);
+    Route::get('gamestart/pball_go', [
+        'as' => 'frontend.game.startpball',
+        'uses' => 'GamesController@pball_go',
+    ]);
 
     Route::post('api/getgamelink', [
         'as' => 'frontend.api.getgamelink',

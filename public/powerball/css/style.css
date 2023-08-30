@@ -98,8 +98,8 @@ a[href^=tel] {
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+    /* border-collapse: collapse;
+    border-spacing: 0; */
     table-layout: fixed;
     width: 100%;
     zoom: 1
@@ -17349,4 +17349,27 @@ button {
     line-height: 0;
     text-align: center;
     padding: 20px 5px;
+}
+
+.contract_wrap .lock.bet_label{
+    background: unset;
+    background-size:contain;
+    background-color: rgb(42, 42, 42);
+    background-position:center;
+    background-image:linear-gradient(to bottom, rgb(166 166 167 / 52%), rgb(10 10 10 / 73%)),url("/powerball/img/lock.png");
+    background-repeat:no-repeat;
+    pointer-events: none;
+}
+
+.contract_wrap .contract_game_cart .cart_bet .cart_form .btn_betting_confirm.lock{
+    background: unset;
+    background-size:contain;
+    background-color: rgb(42, 42, 42);
+    background-image:linear-gradient(to bottom, rgb(166 166 167 / 52%), rgb(10 10 10 / 73%)),url("/powerball/img/lock.png");
+    background-repeat:no-repeat;
+    pointer-events: none;
+}
+
+.contract_wrap .lock span {
+    opacity: 0;
 }
