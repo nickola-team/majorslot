@@ -609,10 +609,12 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                 $arr_g = $slotSettings->GetGameData($slotSettings->slotId . 'G');
                 $arr_trails = explode(';', $slotSettings->GetGameData($slotSettings->slotId . 'Trail'));
                 $fsmax = 0;
-                if(count($arr_trails) == 2){
-                    $arr_subtrail = explode('~', $arr_trails[1]);
-                    if($arr_subtrail[0] == 'fs'){
-                        $fsmax = $arr_subtrail[1];
+                if(count($arr_trails) >= 2){
+                    for($k = 0; $k < count($arr_trails); $k++){
+                        $arr_subtrail = explode('~', $arr_trails[$k]);
+                        if($arr_subtrail[0] == 'fs'){
+                            $fsmax = $arr_subtrail[1];
+                        }
                     }
                 }
                 $currentIndex = 0;
@@ -675,7 +677,7 @@ namespace VanguardLTE\Games\RocketBlastMegawaysPM
                     $str_trail = 'fs~' . $fsmax;
                 }else{
                     $spinType = 'b';
-                    $str_trail = 'try~4;fs~' . $fsmax;
+                    $str_trail = 'try~5;fs~' . $fsmax;
                 }
                 $slotSettings->SetGameData($slotSettings->slotId . 'Level', $level);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Trail', $str_trail);
