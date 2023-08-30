@@ -6,10 +6,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
     class Pow8885minPB extends BasePB
     {
         public $ROUND_URL = 'http://cms.pow888.com/logic_api/room_info/powerball_result';
-        public  $GAME_TIME = 370;
-        public  $GAME_PERIOD = 300;
-        public  $LAST_LIMIT_TIME = 70;
-        public  $VIDEO_URL = 'https://viewer.millicast.com/?streamId=nNhedt/PowerballTable1';
+        public $GAME_TIME = 370;
+        public $GAME_PERIOD = 300;
+        public $LAST_LIMIT_TIME = 70;
+        public $VIDEO_URL = 'https://viewer.millicast.com/?streamId=nNhedt/PowerballTable1';
+        public $HISTORY_TYPE = 'multi'; // single/multi
 
         public function __construct($gameid){
             $this->game = $gameid;

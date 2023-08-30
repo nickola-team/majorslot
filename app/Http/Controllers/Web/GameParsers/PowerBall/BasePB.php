@@ -8,10 +8,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
         const provider = 'powerball';
         public $game = 0;
         public $ROUND_URL = 'https://ntry.com/data/json/games/eos_powerball/3min/recent_result.json';
-        public  $GAME_TIME = 170;
-        public  $GAME_PERIOD = 180;
-        public  $LAST_LIMIT_TIME = 10;
-        public  $VIDEO_URL = 'https://ntry.com/scores/eos_powerball/3min/main.php';
+        public $GAME_TIME = 170;
+        public $GAME_PERIOD = 180;
+        public $LAST_LIMIT_TIME = 10;
+        public $VIDEO_URL = 'https://ntry.com/scores/eos_powerball/3min/main.php';
+        public $HISTORY_TYPE = 'single'; // single/multi
 
         public function generateGameRounds($date)
         {
