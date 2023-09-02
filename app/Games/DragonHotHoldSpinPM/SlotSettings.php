@@ -734,6 +734,8 @@ namespace VanguardLTE\Games\DragonHotHoldSpinPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

@@ -670,6 +670,8 @@ namespace VanguardLTE\Games\_777gemsbng
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

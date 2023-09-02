@@ -727,6 +727,8 @@ namespace VanguardLTE\Games\DiscoLadyPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

@@ -749,6 +749,8 @@ namespace VanguardLTE\Games\FloatingDragonDragonBoatFestivalHoldAndSpinPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
