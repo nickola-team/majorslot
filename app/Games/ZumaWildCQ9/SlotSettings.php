@@ -753,6 +753,8 @@ namespace VanguardLTE\Games\ZumaWildCQ9
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
