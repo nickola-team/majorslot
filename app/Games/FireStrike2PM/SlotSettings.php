@@ -732,6 +732,8 @@ namespace VanguardLTE\Games\FireStrike2PM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

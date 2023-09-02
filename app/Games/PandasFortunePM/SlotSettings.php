@@ -732,6 +732,8 @@ namespace VanguardLTE\Games\PandasFortunePM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

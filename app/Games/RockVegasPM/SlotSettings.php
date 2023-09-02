@@ -735,6 +735,8 @@ namespace VanguardLTE\Games\RockVegasPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

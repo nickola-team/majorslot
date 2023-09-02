@@ -718,6 +718,8 @@ namespace VanguardLTE\Games\Super7sPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;

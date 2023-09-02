@@ -739,6 +739,8 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
