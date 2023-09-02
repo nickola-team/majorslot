@@ -1225,6 +1225,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function exportCSV(\Illuminate\Http\Request $request)
         {
+            set_time_limit(0);
             $fileName = '유저목록.csv';
             $headers = array(
                 "Content-type"        => "text/csv;charset=UTF-8",
