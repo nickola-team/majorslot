@@ -293,7 +293,7 @@ namespace VanguardLTE\Games\goddessofegyptbng
                         $objRes['context']['current'] = 'spins';
                     }
                 }else{
-                    if($slotEvent['slotEvent'] == 'bet' && $betline * $LINES > $BALANCE){
+                    if($slotEvent['slotEvent'] == 'bet' && $action['name'] != 'respin' && $betline * $LINES > $BALANCE){
                         // throw error
                         $objRes = [
                             'command' => $slotEvent['command'],
