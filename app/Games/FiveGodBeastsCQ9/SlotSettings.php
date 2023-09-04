@@ -766,6 +766,8 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
@@ -782,8 +784,9 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
 
-                $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
+                $left_specialsymbol_count = 3 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
+                $index = 0;
                 if($gameRound == 1){
                     $index = mt_rand(0, 220000);
                 }else if($gameRound == 2){

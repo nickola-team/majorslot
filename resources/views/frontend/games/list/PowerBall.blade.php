@@ -22,6 +22,8 @@
 
         <link href="/powerball/css/style.css" rel="stylesheet" />
 
+        <link href="/powerball/css/tab.css" rel="stylesheet" />
+
         <link href="/powerball/css/jquery-ui.css" rel="stylesheet" />
 
         <link href="/powerball/plugins/swiper/swiper.min.css" rel="stylesheet" />
@@ -191,14 +193,70 @@
                                                     <a href="javascript:betting(0);" class="btn_betting_confirm">배팅하기</a>
                                                 </div>
                                             </div>
-                                            <div id="betlock" class="bet_disable"><span
-                                                    style="top: 80px; position: relative;">배팅이 마감 되었습니다.</span></div>
+                                            <div id="betlock" class="bet_disable"><span style="top: 80px; position: relative;">배팅이 마감 되었습니다.</span></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="contract_section">
-                                    <h2 class="contract_title">최근 배팅내역</h2>
-                                    <div class="tbl_scroll">
+                                    <input type="hidden" id="history_type" value="bet-history"/>
+                                    @if ($gameInfo->HISTORY_TYPE == 'multi')
+                                        <div class="tab">
+                                            <button class="tablinks active" id="betHistoryBtn" onclick="historyTypeChange('bet-history')">최근 배팅내역</button>
+                                            <button class="tablinks" id="roundHistoryBtn" onclick="historyTypeChange('result-history')">결과내역</button>
+                                        </div>
+                                        {{-- <select style="width: 100%;text-align: center;" id="history_type_option" onchange="historyTypeChange()">
+                                            <option value="bet-history"><h2 class="contract_title">최근 배팅내역</h2></option>
+                                            <option value="result-history"><h2 class="contract_title">결과내역</h2></option>
+                                        </select> --}}
+                                        <div class="tbl_scroll" id="result_history" style="display: none;">
+                                            <div class="tbl_board tbl_game_result">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th rowspan="2">회차</th>
+                                                            <th colspan="4" class="line_left">파워볼</th>
+                                                            <th colspan="6" class="line_left">숫자</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="line_left">결과</th>
+                                                            <th>구간</th>
+                                                            <th>홀짝</th>
+                                                            <th>언오버</th>
+                                                            <th class="line_left">결과</th>
+                                                            <th>합</th>
+                                                            <th>구간</th>
+                                                            <th>대중소</th>
+                                                            <th>홀짝</th>
+                                                            <th>언오버</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="result_list">
+                                                        <tr>
+                                                            <td class="noresult" colspan="11"><i
+                                                                    class="fal fa-stream"></i><br>배팅내역이 존재하지 않습니다</td>
+                                                        </tr>
+                                                        {{-- 
+                                                        <tr>
+                                                            <td align="center">2023-08-21 127회차</td>
+                                                            <td align="center">1</td>
+                                                            <td align="center">A</td>
+                                                            <td align="center">홀</td>
+                                                            <td align="center">언더</td>
+                                                            <td align="center">23,21,12,13,11</td>
+                                                            <td align="center">109</td>
+                                                            <td align="center">F</td>
+                                                            <td align="center">소</td>
+                                                            <td align="center">짝</td>
+                                                            <td align="center">언더</td>
+                                                        </tr> --}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <h2 class="contract_title">최근 배팅내역</h2>
+                                    @endif
+                                    <div class="tbl_scroll" id="bet_history">
                                         <div class="tbl_board tbl_game_result">
                                             <input id="hd_cancel_bet" type="hidden" value="0">
                                             <table>
@@ -246,7 +304,17 @@
         var apiURL = '';
         var token = '{{$token}}';
         var bettingLock = false;
+        var isLogined = true;
         Date.prototype.yyyymmdd = function() {
+            var mm = this.getMonth() + 1; // getMonth() is zero-based
+            var dd = this.getDate();
+
+            return [this.getFullYear(),
+                    (mm>9 ? '' : '0') + mm,
+                    (dd>9 ? '' : '0') + dd
+                    ].join('-');
+        };
+        Date.prototype.yyyymmddhhMMss = function() {
             var mm = this.getMonth() + 1; // getMonth() is zero-based
             var dd = this.getDate();
             var hh = this.getHours();
@@ -271,6 +339,25 @@
             );
             betHistoryList();
         });
+
+        function historyTypeChange(val)
+        {
+            $('#history_type').val(val);
+            betHistoryList(true);
+            if ($('#history_type').val() == 'bet-history')
+            {
+                $('#bet_history').show();
+                $('#result_history').hide();
+                $('#betHistoryBtn').addClass('active');
+                $('#roundHistoryBtn').removeClass('active');
+            }else{
+                $('#bet_history').hide();
+                $('#result_history').show();
+                $('#roundHistoryBtn').addClass('active');
+                $('#betHistoryBtn').removeClass('active');
+            }
+        }
+
         function moveSlip() {
             let height = $('.powerball_wrap').height();
             height -= 400;
@@ -307,13 +394,22 @@
                 crossOrigin: true,
                 success: function (jsonData) {
                     if (jsonData.error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '알림',
-                            html: '유저 정보를 확인 하세요.',
-                            confirmButtonText: '확인'
-                        });
+                        if (isLogined)
+                        {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '알림',
+                                html: '유저 정보를 확인 하세요.',
+                                confirmButtonText: '확인'
+                            });
+                            isLogined = false;
+                            wait(false);
+                            $('.bet_label').css('background','');
+                            $('.bet_label').addClass('lock');
+                            $('.btn_betting_confirm').addClass('lock');
+                        }
                     } else {
+                        isLogined = true;
                         $('.name').html(jsonData.username);
                         $('#cur_money').html(insertComma(parseInt(jsonData.balance).toFixed(0)));
 
@@ -447,16 +543,12 @@
                             $('#betlock').css('display', 'block');
                         }
                     }else{
-                        wait(true);
+                        wait(false);
                         clearInterval(timer);
-                        Swal.fire({
-                        icon: 'info',
-                        title: '알림',
-                        html: '게임사와의 연결이 끊어 졋습니다.잠시후 다시 시도해보세요.',
-                        confirmButtonText: '확인',
-                        }).then(result =>{
-                            window.top.close();
-                        });
+                        $('.bet_label').css('background','');
+                        $('.bet_label').addClass('lock');
+                        $('.btn_betting_confirm').addClass('lock');
+                    
                     }
                 },
                 error: function (error) {
@@ -604,57 +696,156 @@
             }
         }
 
-        function betHistoryList()
+        function betHistoryList(isWait = false)
         {
             var formData = new FormData();
-            formData.append('token', token);
-            formData.append('game_id', 0);
+            if ($('#history_type').val() == 'bet-history')
+            {
+                formData.append('token', token);
+                formData.append('game_id', 0);
+            }else{
+                formData.append('game_id', '{{$gameInfo->game}}');
+            }
+            if (isWait)
+            {
+                wait(true);
+            }
             $.ajax({
                 type: 'POST',
-                url: apiURL + '/api/pbgame/history',
+                url: apiURL + ($('#history_type').val() == 'bet-history'?'/api/pbgame/history':'/api/pbgame/recent_rounds'),
                 data: formData,
                 processData: false,
                 contentType: false,
                 crossOrigin: true,
                 success: function (jsonData) {
                     let strHtml = '';
-                    if (!jsonData.error && jsonData.bets.length > 0)
+                    if ($('#history_type').val() == 'bet-history')
                     {
-                        for(let i = 0; i < jsonData.bets.length; i++)
+                        if (!jsonData.error && jsonData.bets.length > 0)
                         {
-                            let bet = jsonData.bets[i];
-                            let betTime = new Date(bet.created_at);
-                            strHtml += '<tr>';
-                            strHtml += '<td align="center">' + betTime.yyyymmdd() + '</td>';
-                            strHtml += '<td align="center">' + bet.gameName + '</td>';
-                            strHtml += '<td align="center">' + parseInt(bet.ground_no.substring(bet.ground_no.length - 3,bet.ground_no.length)) + '회차</td>';
-                            strHtml += '<td align="center">';
-                            strHtml += '<span class="left" style="padding-left:10px;">' + $('#' + bet.result).attr('bet_title') + '</span>';
-                            strHtml += '</td>';
-                            strHtml += '<td align="center">' + insertComma(bet.amount.toString()) + '원</td>';
-                            strHtml += '<td align="center">' + bet.rate + '</td>';
-                            strHtml += '<td align="center"><b>' + insertComma(bet.win.toString()) + '원</b></td>';
-                            strHtml += '<td align="center" class="content4">';
-                            if (bet.status == 0) {
-                                strHtml += '<b><font color="yellow">결과대기</font></b>';
-                                if (i == 0) isNext = true;
-                            } else if (bet.status == 1) {
-                                strHtml += '<b><font color="green">결과완료</font></b>';
-                            } else if (bet.status == 2) {
-                                strHtml += '<b><font color="red">정산완료</font></b>';
-                            } else if (bet.status == 3) {
-                                strHtml += '<b><font color="gray">무효</font></b>';
-                            } else if (bet.status == 4) {
-                                strHtml += '<b><font color="gray">정산대기</font></b>';
+                            for(let i = 0; i < jsonData.bets.length; i++)
+                            {
+                                let bet = jsonData.bets[i];
+                                let betTime = new Date(bet.created_at);
+                                strHtml += '<tr>';
+                                strHtml += '<td align="center">' + betTime.yyyymmddhhMMss() + '</td>';
+                                strHtml += '<td align="center">' + bet.gameName + '</td>';
+                                strHtml += '<td align="center">' + parseInt(bet.ground_no.substring(bet.ground_no.length - 3,bet.ground_no.length)) + '회차</td>';
+                                strHtml += '<td align="center">';
+                                strHtml += '<span class="left" style="padding-left:10px;">' + $('#' + bet.result).attr('bet_title') + '</span>';
+                                strHtml += '</td>';
+                                strHtml += '<td align="center">' + insertComma(bet.amount.toString()) + '원</td>';
+                                strHtml += '<td align="center">' + bet.rate + '</td>';
+                                strHtml += '<td align="center"><b>' + insertComma(bet.win.toString()) + '원</b></td>';
+                                strHtml += '<td align="center" class="content4">';
+                                if (bet.status == 0) {
+                                    strHtml += '<b><font color="yellow">결과대기</font></b>';
+                                    if (i == 0) isNext = true;
+                                } else if (bet.status == 1) {
+                                    strHtml += '<b><font color="green">결과완료</font></b>';
+                                } else if (bet.status == 2) {
+                                    strHtml += '<b><font color="red">정산완료</font></b>';
+                                } else if (bet.status == 3) {
+                                    strHtml += '<b><font color="gray">무효</font></b>';
+                                } else if (bet.status == 4) {
+                                    strHtml += '<b><font color="gray">정산대기</font></b>';
+                                }
+                                strHtml += '</td>';
+                                strHtml += '<td width="10%" align="center" class="content4"></td>';
+                                strHtml += '</tr>';
                             }
-                            strHtml += '</td>';
-                            strHtml += '<td width="10%" align="center" class="content4"></td>';
-                            strHtml += '</tr>';
+                        }else{
+                            strHtml += '<tr><td class="noresult" colspan="8"><i class="fal fa-stream"></i><br>배팅내역이 존재하지 않습니다</td></tr>';
                         }
+                        $('#bet_list').html(strHtml);
                     }else{
-                        strHtml += '<tr><td class="noresult" colspan="8"><i class="fal fa-stream"></i><br>배팅내역이 존재하지 않습니다</td></tr>';
+                        if (!jsonData.error && jsonData.rounds.length > 0)
+                        {
+                            for(let i = 0; i < jsonData.rounds.length; i++)
+                            {
+                                let round = jsonData.rounds[i];
+                                if (round.balls == null)
+                                {
+                                    continue;
+                                }
+                                let balls = round.balls.split('|');
+                                strHtml += '<tr>';
+                                strHtml += '<td align="center">' + new Date(round.s_time).yyyymmdd() + '<br/>' + parseInt(round.dround_no) + '회차</td>';
+                                strHtml += '<td align="center">' + balls[5] + '</td>';
+                                let periodPo = 'A';
+                                for(let i = 0; i < balls.length; i++)
+                                {
+                                    balls[i] = parseInt(balls[i]);
+                                }
+                                balls.forEach(ball => {
+                                    ball = parseInt(ball);
+                                });
+                                if (balls[5] >= 0 && balls[5] <=2)
+                                {
+                                    periodPo = 'A';
+                                } else if (balls[5] >= 3 && balls[5] <=4)
+                                {
+                                    periodPo = 'B';
+                                } else if (balls[5] >= 5 && balls[5] <=6)
+                                {
+                                    periodPo = 'C';
+                                } else if (balls[5] >= 7 && balls[5] <=8)
+                                {
+                                    periodPo = 'D';
+                                }
+                                strHtml += '<td align="center">' + periodPo +'</td>';
+                                strHtml += '<td align="center">' + (balls[5]%2 == 1?'홀':'짝') +'</td>';
+                                strHtml += '<td align="center">' + (balls[5] >  4.5?'오버':'언더') +'</td>';
+                                strHtml += '<td align="center">' + balls.slice(0,5).toString() +'</td>';
+                                let normalSum = balls[0] + balls[1] + balls[2] + balls[3] + balls[4];
+                                strHtml += '<td align="center">' + normalSum +'</td>';
+                                let periodNo = 'A';
+                                if (normalSum >= 15 && normalSum <= 35)
+                                {
+                                    periodNo = 'A';
+                                } else if (normalSum >= 36 && normalSum <= 49)
+                                {
+                                    periodNo = 'B';
+                                } else if (normalSum >= 50 && normalSum <= 57)
+                                {
+                                    periodNo = 'C';
+                                } else if (normalSum >= 58 && normalSum <= 65)
+                                {
+                                    periodNo = 'D';
+                                } else if (normalSum >= 66 && normalSum <= 78)
+                                {
+                                    periodNo = 'E';
+                                } else if (normalSum >= 79 && normalSum <= 130)
+                                {
+                                    periodNo = 'F';
+                                }
+                                strHtml += '<td align="center">' + periodNo +'</td>';
+                                let termNo = '소';
+                                if (normalSum >= 15 && normalSum <= 64)
+                                {
+                                    periodNo = '소';
+                                } else if (normalSum >= 65 && normalSum <= 80)
+                                {
+                                    periodNo = '중';
+                                } else if (normalSum >= 81 && normalSum <= 130)
+                                {
+                                    periodNo = '대';
+                                }
+                                strHtml += '<td align="center">' + termNo +'</td>';
+                                strHtml += '<td align="center">' + (normalSum%2 == 1?'홀':'짝') +'</td>';
+                                strHtml += '<td align="center">' + (normalSum <  73?'언더':'오버') +'</td>';
+                                strHtml += '</tr>';
+                            }
+                        }else{
+                            strHtml += '<tr><td class="noresult" colspan="11"><i class="fal fa-stream"></i><br>배팅내역이 존재하지 않습니다</td></tr>';
+                        }
+                        $('#result_list').html(strHtml);
                     }
-                    $('#bet_list').html(strHtml);
+
+                    if (isWait)
+                    {
+                        wait(false);
+                    }
                 },
                 error: function (error) {
                     console.log(error);
@@ -680,7 +871,7 @@
 
         function betting() {
             //check balance and max betting
-            if (!bettingLock)
+            if (!bettingLock && isLogined)
             {
                 bettingLock = true;
                 var cur_money = parseInt($('#cur_money').html().replace(/,/gi, ''));

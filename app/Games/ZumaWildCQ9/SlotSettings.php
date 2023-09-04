@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\ZumaWildCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZumaWildStack::where('id', 174337)->first();//16755,,5745
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameZumaWildStack::where('id', 50386)->first();//16755,,5745
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -753,6 +753,8 @@ namespace VanguardLTE\Games\ZumaWildCQ9
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
@@ -773,7 +775,7 @@ namespace VanguardLTE\Games\ZumaWildCQ9
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 21);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

@@ -163,7 +163,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'deal_percent',
                 'table_deal_percent',
                 'ggr_percent',
-                'table_ggr_percent'
+                'table_ggr_percent',
+                'pball_single_percent',
+                'pball_comb_percent'
             ];
             foreach ($check_deals as $dealtype)
             {
@@ -568,6 +570,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $check_deals = [
                 'deal_percent',
                 'table_deal_percent',
+                'pball_single_percent',
+                'pball_comb_percent',
                 'pball_single_percent',
                 'pball_comb_percent'
             ];
@@ -1221,6 +1225,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function exportCSV(\Illuminate\Http\Request $request)
         {
+            set_time_limit(0);
             $fileName = '유저목록.csv';
             $headers = array(
                 "Content-type"        => "text/csv;charset=UTF-8",

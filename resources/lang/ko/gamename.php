@@ -1144,6 +1144,10 @@ return [
         "ForgeofOlympus" => "포지 오브 올림푸스",
         "PiggyBankers" => "피기뱅커스",
         "PubKings" => "펍 킹스",
+        "MahjongWins" => "마종 윈즈",
+        "BigBassHoldAndSpinnerMegaways" => "빅배스 홀드 & 스피너 메가웨이즈",
+        "CyclopsSmash" => "사이클롭스 스매시",
+        "SaiyanMania" => "사이어인 매니아",
 
         
         //Booongo
@@ -1228,6 +1232,8 @@ return [
         "tigergems" => "타이거 잼스",
         "forestspirit" => "포레스트 스피리트",
         "ladyfortune" => "레이디 포츈",
+        "ladyfortune" => "레이디 포츈",
+        "greenchilli2" => "그린 칠리 2",
 
         // CQ9
         "Double Fly" => "더블 플라이",
