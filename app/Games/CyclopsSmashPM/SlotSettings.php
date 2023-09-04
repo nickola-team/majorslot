@@ -764,7 +764,7 @@ namespace VanguardLTE\Games\CyclopsSmashPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCyclopsSmashStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; // mt_rand(0, 48000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
