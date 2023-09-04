@@ -1145,6 +1145,9 @@ return [
         "PiggyBankers" => "피기뱅커스",
         "PubKings" => "펍 킹스",
         "MahjongWins" => "마종 윈즈",
+        "BigBassHoldAndSpinnerMegaways" => "빅배스 홀드 & 스피너 메가웨이즈",
+        "CyclopsSmash" => "사이클롭스 스매시",
+        "SaiyanMania" => "사이어인 매니아",
 
         
         //Booongo
