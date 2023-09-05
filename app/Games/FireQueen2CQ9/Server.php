@@ -128,7 +128,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
                             
-                            $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline * $this->demon, $lines, $originalbet);
+                            $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;                            
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
@@ -153,7 +153,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                                 $result_val['MaxSpin'] = $stack['MaxSpin'];
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
                                 $result_val['Multiple'] = 0;
-                                $result_val['GameExtraData'] = "";
+                                $result_val['GameExtraData'] = $stack['GameExtraData'];
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $result_val['IsAllowFreeHand'] = false;
@@ -203,7 +203,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                             if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1){
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             }
-                            $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline * $this->demon, $lines, $originalbet);
+                            $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                         }
                     }
                 }
@@ -258,11 +258,11 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                 
                 if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
                 
-                    $stack['BaseWin'] = floor(($stack['BaseWin'] / $originalbet * $betline) / $this->demon + 0.05);
+                    $stack['BaseWin'] = floor(($stack['BaseWin'] / $originalbet * $betline) + 0.05);
                 }
                 if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
                     
-                    $stack['TotalWin'] = floor(($stack['TotalWin'] / $originalbet * $betline) / $this->demon + 0.05);
+                    $stack['TotalWin'] = floor(($stack['TotalWin'] / $originalbet * $betline) + 0.05);
                     $totalWin = floor($stack['TotalWin'] / $this->demon + 0.05);
                 }
             
@@ -270,13 +270,13 @@ namespace VanguardLTE\Games\FireQueen2CQ9
             
             
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
-                $stack['AccumlateWinAmt'] = floor(($stack['AccumlateWinAmt'] / $originalbet * ($betline)) / $this->demon + 0.05) ;
+                $stack['AccumlateWinAmt'] = floor(($stack['AccumlateWinAmt'] / $originalbet * ($betline)) + 0.05) ;
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
-                $stack['AccumlateJPAmt'] = floor(($stack['AccumlateJPAmt'] / $originalbet * ($betline)) / $this->demon + 0.05);
+                $stack['AccumlateJPAmt'] = floor(($stack['AccumlateJPAmt'] / $originalbet * ($betline)) + 0.05);
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
-                $stack['ScatterPayFromBaseGame'] = floor(($stack['ScatterPayFromBaseGame'] / $originalbet * ($betline)) / $this->demon + 0.05);
+                $stack['ScatterPayFromBaseGame'] = floor(($stack['ScatterPayFromBaseGame'] / $originalbet * ($betline)) + 0.05);
             }
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
@@ -286,7 +286,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
             }
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = floor(($value['LinePrize'] / $originalbet * $betline) / $this->demon + 0.05);
+                    $value['LinePrize'] = floor(($value['LinePrize'] / $originalbet * $betline) + 0.05);
                 }
                 $stack['udsOutputWinLine'][$index] = $value;
             }
@@ -305,7 +305,12 @@ namespace VanguardLTE\Games\FireQueen2CQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
@@ -332,7 +337,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline / $this->demon) * $lines * 2, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline) * $lines * 2, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
@@ -408,7 +413,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                 $log['detail']                  = [];
                 $bet_action = [];
                 $bet_action['action']           = 'bet';
-                $bet_action['amount']           = floor(($betline / $this->demon) * 2 * $lines  + 0.05);
+                $bet_action['amount']           = floor(($betline) * 2 * $lines  + 0.05);
                 $bet_action['eventtime']        = $currentTime;
                 array_push($log['actionlist'], $bet_action);
                 $win_action = [];
@@ -428,9 +433,9 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = floor(($betline/ $this->demon) * 2 * $lines + 0.05);
+                $wager['play_bet']              = floor(($betline) * 2 * $lines + 0.05);
                 $wager['play_denom']            = 1000;
-                $wager['bet_multiple']          = floor($betline / $this->demon + 0.05);
+                $wager['bet_multiple']          = floor($betline + 0.05);
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
                 $wager['base_game_win']         = $result_val['TotalWin'] / $this->demon;
