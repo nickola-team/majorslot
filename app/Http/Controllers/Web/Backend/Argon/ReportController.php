@@ -735,7 +735,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function report_user(\Illuminate\Http\Request $request)
         {
-            if (!auth()->user()->isInoutPartner())
+            if (auth()->user()->role_id < 3)
             {
                 return redirect()->back()->withErrors(['비정상적인 접근입니다.']);
             }
