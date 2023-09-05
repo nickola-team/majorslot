@@ -340,14 +340,12 @@
                                     일별정산
                                 </a>
                             </li>
-                            @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.user')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     유저별벳윈
                                 </a>
                             </li>
-                            @endif
                             <!-- <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.report.monthly')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
