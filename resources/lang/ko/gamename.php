@@ -1310,5 +1310,15 @@ return [
         "GoldenEggs" => "골든 에그",
         "EightEightEight" => "888",
         "SakuraLegend" => "사쿠라 레전드",
-        "ZhongKui" => "종규"
+        "ZhongKui" => "종규",
+        "SixGachaCQ9" => "식스 가차",
+        "MrRichCQ9" => "미스터 리치",
+        "ChickyParmParmCQ9" => "Chicky Parm Parm",
+        "NeZhaAdventCQ9" => "NeZha Advent",
+        "KingofAtlantisCQ9" => "King of Atlantis",
+        "GuGuGuCQ9" => "Gu Gu Gu",
+        "TreasureHouseCQ9" => "트래져 하우스",
+        "WildTarzanCQ9" => "와일드 타잔",
+        "GodOfChessCQ9" => "갓 오브 체스",
+        "NinjaRaccoonCQ9" => "Ninja Raccoon"
 ];
