@@ -1640,6 +1640,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return view('frontend.Default.games.cq9.history');
         }
 
+        public function cq9Feedback(\Illuminate\Http\Request $request)
+        {
+            return view('frontend.Default.games.cq9.feedback');
+        }
+
+        public function cq9FeedbackInit(\Illuminate\Http\Request $request)
+        {
+            $data = '{"error_code":1,"error_msg":"SUCCESS","log_id":"","result":{"white":false,"rate":[{"id":1,"name":"HowtoPlay"},{"id":2,"name":"Visualperformance"},{"id":3,"name":"Experienceandfeeling"}],"tag":[{"id":1,"name":"Gameplay"},{"id":2,"name":"Visual"},{"id":3,"name":"Experience"},{"id":4,"name":"Bug"},{"id":5,"name":"Others"},{"id":6,"name":""}]}}';
+            return  response($data, 200)->header('Content-Type', 'application/json');
+        }
+
+        public function cq9FeedbackCreate(\Illuminate\Http\Request $request)
+        {
+            $data = '{"error_code":1,"error_msg":"SUCCESS","log_id":"","result":[]}';
+            return  response($data, 200)->header('Content-Type', 'application/json');
+        }
+
         public function cq9PlayerOrder(\Illuminate\Http\Request $request)
         {
             return view('frontend.Default.games.cq9.playerorder');

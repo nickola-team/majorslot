@@ -730,10 +730,10 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $gameRound=1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 68122)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 438989)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -768,7 +768,19 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+                $index = 0;
+                 if($gameRound == 0){
+                    $index = mt_rand(0, 198000);
+                }else if($gameRound == 1){
+                    $index = mt_rand(0, 198000);
+                }else if($gameRound == 2){
+                    $index = mt_rand(0, 198000);
+                }else if($gameRound == 3){
+                    $index = mt_rand(0, 198000);
+                }else if($gameRound == 4){
+                    $index = mt_rand(0, 198000);
+                }
+                $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

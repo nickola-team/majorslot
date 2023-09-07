@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\AllWildCQ9
                             $result_val['PromotionData'] = null; //$slotSettings->getPromotionData();
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom * $this->demon;
@@ -320,8 +320,13 @@ namespace VanguardLTE\Games\AllWildCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin / $this->demon);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin / $this->demon);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin / $this->demon);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin / $this->demon);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
             if($freespinNum > 0){
                 $isTriggerFG = true;
