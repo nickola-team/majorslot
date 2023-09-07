@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GoodFortuneMCQ9
+namespace VanguardLTE\Games\ChickyParmParmCQ9
 {
     class SlotSettings
     {
@@ -571,7 +571,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -632,7 +631,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                     'win', 
                     $_obf_currentbank
                 ];
-
                 if( $_obf_currentbank < 0) 
                 {
                     $return = [
@@ -658,7 +656,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -716,7 +713,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 return route('frontend.game.startgame',$fakeparams);
             }
         }
-
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'RealBet') == null) 
@@ -729,12 +725,20 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-
         public function GetReelStrips($winType, $bet, $gameRound=1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 438989)->first();
-                //   return json_decode($stack->spin_stack, true);
+                // if($gameRound == 1){
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameChickyParmParmStack::where('id', 1)->first(); //6039 :  Free,9472 : symbol spin
+                    // return json_decode($stack->spin_stack, true);                    
+                // }else if($gameRound == 2){
+                //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameChickyParmParmStack::where('id', 2560)->first();
+                //     return json_decode($stack->spin_stack, true);
+                // }else if($gameRound == 3){
+                //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameChickyParmParmStack::where('id', 4608)->first();
+                //     return json_decode($stack->spin_stack, true);
+                //  }
+                  
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -753,8 +757,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
-                }else{
-                    $winType = 'none';
                 }
             }
             $isLowBank = false;
@@ -764,21 +766,19 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameChickyParmParmStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameChickyParmParmStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;
-                 if($gameRound == 0){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 1){
-                    $index = mt_rand(0, 198000);
+                $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
+                $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
+                $index = 1;
+                if($gameRound == 1){
+                    $index = mt_rand(0, 68000);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 198000);
+                    $index = mt_rand(0, 138000);
                 }else if($gameRound == 3){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 4){
-                    $index = mt_rand(0, 198000);
+                    $index = mt_rand(0, 248000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
@@ -787,7 +787,7 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -821,7 +821,12 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     if($isLowBank == true){
-                        $existIds = [0];
+                        if($winType == 'bonus'){
+                            $winType = 'win';
+                            $winAvaliableMoney = $this->GetBank('');
+                        }else{
+                            $existIds = [0];
+                        }
                     }
                     $isLowBank = true;
                 }else{

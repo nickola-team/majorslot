@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GoodFortuneMCQ9
+namespace VanguardLTE\Games\NinjaRaccoonCQ9
 {
     class SlotSettings
     {
@@ -446,11 +446,11 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
+                }*/
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -730,10 +730,10 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $gameRound=1)
+        public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 438989)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameNinjaRaccoonStack::where('id', 25172)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -764,30 +764,18 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameNinjaRaccoonStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameNinjaRaccoonStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;
-                 if($gameRound == 0){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 1){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 2){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 3){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 4){
-                    $index = mt_rand(0, 198000);
-                }
-                $stacks = $stacks->where('pur_level', $gameRound);
+                $index = mt_rand(0, 108000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
