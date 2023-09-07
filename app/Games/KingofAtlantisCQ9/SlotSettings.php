@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GoodFortuneMCQ9
+namespace VanguardLTE\Games\KingofAtlantisCQ9
 {
     class SlotSettings
     {
@@ -571,7 +571,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -632,7 +631,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                     'win', 
                     $_obf_currentbank
                 ];
-
                 if( $_obf_currentbank < 0) 
                 {
                     $return = [
@@ -658,7 +656,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $_obf_linecount = 10;
-            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -716,7 +713,6 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 return route('frontend.game.startgame',$fakeparams);
             }
         }
-
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'RealBet') == null) 
@@ -729,12 +725,11 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-
-        public function GetReelStrips($winType, $bet, $gameRound=1)
+        public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('id', 438989)->first();
-                //   return json_decode($stack->spin_stack, true);
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameKingofAtlantisStack::where('id', 41678)->first();
+                //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -764,30 +759,21 @@ namespace VanguardLTE\Games\GoodFortuneMCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameKingofAtlantisStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGoodFortuneMStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameKingofAtlantisStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;
-                 if($gameRound == 0){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 1){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 2){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 3){
-                    $index = mt_rand(0, 198000);
-                }else if($gameRound == 4){
-                    $index = mt_rand(0, 198000);
+                if($pur >= 0){
+                    $stacks = $stacks->where('pur_level', $pur);
                 }
-                $stacks = $stacks->where('pur_level', $gameRound);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

@@ -747,6 +747,16 @@ namespace VanguardLTE\Games\MrRichCQ9
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
@@ -758,7 +768,7 @@ namespace VanguardLTE\Games\MrRichCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMrRichStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

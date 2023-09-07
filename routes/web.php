@@ -1426,6 +1426,9 @@ Route::get('api/player_betting/detail_link', 'GameProviders\CQ9Controller@detail
 Route::get('api/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
 Route::get('playerodh5/gbapi/ginplayerhistory/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
 Route::get('gbapi/ginplayerhistory/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
+Route::get('feedback/', 'GameProviders\CQ9Controller@cq9Feedback');
+Route::get('/api/frontend/feedback/init', 'GameProviders\CQ9Controller@cq9FeedbackInit');
+Route::post('/api/frontend/feedback/create', 'GameProviders\CQ9Controller@cq9FeedbackCreate');
 
 
 /**
