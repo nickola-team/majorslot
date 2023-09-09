@@ -70,6 +70,12 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                 $stack = null;
                 $strWinLine = '';
                 $winMoney = 0;
+                if($lastEvent == 'NULL'){
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
+                }
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -206,13 +212,13 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                 }
                 
                 $Balance = $slotSettings->GetBalance();    
-                $response = 'def_s=3,9,10,8,6,3,9,10,8,6,3,9,10,8,6,3,9,10,8,6,3,20,20,20,6&balance='. $Balance .'&cfgs=3087&nas=20&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=3&def_sb=10,7,9,11,8&def_sa=11,4,9,7,5&reel_set=0&bonusInit=[{bgid:0,bgt:45,bg_i:"13,16,17,15,18",bg_i_mask:"r,wd,ms,fs,m"}]&balance_bonus=0.00&na='. $spinType .'&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&gmb=0,0,0&rt=d&gameInfo={}&stime='. floor(microtime(true) * 1000) .'&sa=11,4,9,7,5&sb=10,7,9,11,8&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1&sh=5&wilds=2~0,0,0,0,0~1,1,1,1,1;19~0,0,0,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;200,50,25,0,0;100,40,20,0,0;50,25,15,0,0;40,20,10,0,0;20,10,8,0,0;15,8,6,0,0;10,8,6,0,0;10,6,4,0,0;10,6,4,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0&l=20&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=9,10,11,3,3,3,3,9,10,8,6,10,6,9,4,10,4,11,9,7,5,8,9,10,6,3,10~5,9,8,5,7,9,5,8,9,6,7,11,8,11,7,8,5,6,2,10,6,9,5,9,8,5,7,11,7,7,6,8,9,5,11,6,9,7,11,3,4,5,6,11,6,9,5,9,8,5,7,9,5,8,9,6,7,11,8,3,11,8,7,9,11,7,7,6,8,9,5,11,6,9,8,11,7,8,5,6,10,6,9,5,9,8,5,7,11,5,8,9,6,7,11,8,7,11,8,11,9,11,7,7,6,8,9,5,11,6,9,7,11,3,4,5,6,11,6,9~7,11,8,6,11,10,5,7,3,11,4,7,10,7,11,5,10,4,7,2,10,8,7,11,5,4,11,11,3,8,10,4,8,5,10,7,9,10,7,11,8,10,4,7,10,8~11,10,7,6,10,11,6,9,3,3,3,3,5,6,11,2,10,7,10,6,9,2,9,7,10,9,7,4,9,7,6,7,4,11,6,10,9,8,7,3,4,5,6,11,10~6,10,11,3,3,3,3,9,10,7,11,10,3,9,8,5,10,9,7,8,9,6,10,5,8,4,7,11,4,8,10,5,7,6,9,7,5,11,6,7,4,8,11,7,5,9,11,10&s='.$lastReelStr.'&reel_set2=10,11,3,3,3,3,10,6,11,4,10,11,6,4,10,4,11,5,11,10,6,11,10~5,9,8,5,7,11,5,8,11,9,11,7,7,6,9,5,11,6,9,11,5,6,6,9~7,8,10,7,8,4,7,4,8,3,10,9,7,10,7,8,10,4,7,10,8~11,10,7,6,10,11,5,4,9,7,6,7,4,11,6,10,2,8,7,3,4,5,6,11,2,10,7,10,6,9,10,9,7,4,6~6,10,9,3,3,3,3,6,10,9,9,8,5,10,9,7,8,9,6,10,5,8,4,7,10,4,8,10,5,7,6,9,7,5,10,6,7,4,8,11,7,5,9,11,10&t=243&reel_set1=9,10,11,3,3,3,3,9,10,7,6,10,10,6,11,8,6,9,4,10,4,11,9,7,6,9,11,10,6,11,5~5,9,8,5,7,11,5,8,9,6,7,11,11,6,9,11,11,2,7,4,5,6,10,8,7,11,8,11,9,11,5,7,6,10,9,5,11,6,9,7,11,3,9,5,6,8,6,9,8,7,9,6,11~7,11,8,6,11,10,5,7,8,11,4,7,10,7,8,10,9,7,11,8,10,2,8,11,4,7,11,3,4,5,6,10,11,7,11,10,4,8,5,10,7,8,10,7,11,8,10,11,7,4,8,5,10~11,10,7,6,10,11,5,8,7,11,9,10,7,3,4,5,6,11,9,10,7,5,9,7,2,11,9,10,9,7,4,9,8,6,7,4,11,6,10,11,8,7,3,4,5,6,11,9,10,7,10,8,9~6,10,9,3,3,3,3,9,10,7,8,10,7,8,10,10,9,8,5,10,9,7,8,9,6,10,5,8,4,7,10,4,8,10,5,7,6,9,7,5,10,6,7,4,8,9,7,5,9,11,10&purInit=[{type:"wbg",bet:2000,game_ids:[0]}]&total_bet_min=10.00';
+                $response = 'def_s=3,9,10,8,6,3,9,10,8,6,3,9,10,8,6,3,9,10,8,6,3,20,20,20,6&balance='. $Balance .'&cfgs=3087&nas=20&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=3&def_sb=10,7,9,11,8&def_sa=11,4,9,7,5&reel_set=0&bonusInit=[{bgid:0,bgt:45,bg_i:"13,16,17,15,18",bg_i_mask:"r,wd,ms,fs,m"}]&balance_bonus=0.00&na='. $spinType .'&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&gmb=0,0,0&rt=d&gameInfo={}&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime='. floor(microtime(true) * 1000) .'&sa=11,4,9,7,5&sb=10,7,9,11,8&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1&sh=5&wilds=2~0,0,0,0,0~1,1,1,1,1;19~0,0,0,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;200,50,25,0,0;100,40,20,0,0;50,25,15,0,0;40,20,10,0,0;20,10,8,0,0;15,8,6,0,0;10,8,6,0,0;10,6,4,0,0;10,6,4,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0&l=20&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=9,10,11,3,3,3,3,9,10,8,6,10,6,9,4,10,4,11,9,7,5,8,9,10,6,3,10~5,9,8,5,7,9,5,8,9,6,7,11,8,11,7,8,5,6,2,10,6,9,5,9,8,5,7,11,7,7,6,8,9,5,11,6,9,7,11,3,4,5,6,11,6,9,5,9,8,5,7,9,5,8,9,6,7,11,8,3,11,8,7,9,11,7,7,6,8,9,5,11,6,9,8,11,7,8,5,6,10,6,9,5,9,8,5,7,11,5,8,9,6,7,11,8,7,11,8,11,9,11,7,7,6,8,9,5,11,6,9,7,11,3,4,5,6,11,6,9~7,11,8,6,11,10,5,7,3,11,4,7,10,7,11,5,10,4,7,2,10,8,7,11,5,4,11,11,3,8,10,4,8,5,10,7,9,10,7,11,8,10,4,7,10,8~11,10,7,6,10,11,6,9,3,3,3,3,5,6,11,2,10,7,10,6,9,2,9,7,10,9,7,4,9,7,6,7,4,11,6,10,9,8,7,3,4,5,6,11,10~6,10,11,3,3,3,3,9,10,7,11,10,3,9,8,5,10,9,7,8,9,6,10,5,8,4,7,11,4,8,10,5,7,6,9,7,5,11,6,7,4,8,11,7,5,9,11,10&s='.$lastReelStr.'&reel_set2=10,11,3,3,3,3,10,6,11,4,10,11,6,4,10,4,11,5,11,10,6,11,10~5,9,8,5,7,11,5,8,11,9,11,7,7,6,9,5,11,6,9,11,5,6,6,9~7,8,10,7,8,4,7,4,8,3,10,9,7,10,7,8,10,4,7,10,8~11,10,7,6,10,11,5,4,9,7,6,7,4,11,6,10,2,8,7,3,4,5,6,11,2,10,7,10,6,9,10,9,7,4,6~6,10,9,3,3,3,3,6,10,9,9,8,5,10,9,7,8,9,6,10,5,8,4,7,10,4,8,10,5,7,6,9,7,5,10,6,7,4,8,11,7,5,9,11,10&t=243&reel_set1=9,10,11,3,3,3,3,9,10,7,6,10,10,6,11,8,6,9,4,10,4,11,9,7,6,9,11,10,6,11,5~5,9,8,5,7,11,5,8,9,6,7,11,11,6,9,11,11,2,7,4,5,6,10,8,7,11,8,11,9,11,5,7,6,10,9,5,11,6,9,7,11,3,9,5,6,8,6,9,8,7,9,6,11~7,11,8,6,11,10,5,7,8,11,4,7,10,7,8,10,9,7,11,8,10,2,8,11,4,7,11,3,4,5,6,10,11,7,11,10,4,8,5,10,7,8,10,7,11,8,10,11,7,4,8,5,10~11,10,7,6,10,11,5,8,7,11,9,10,7,3,4,5,6,11,9,10,7,5,9,7,2,11,9,10,9,7,4,9,8,6,7,4,11,6,10,11,8,7,3,4,5,6,11,9,10,7,10,8,9~6,10,9,3,3,3,3,9,10,7,8,10,7,8,10,10,9,8,5,10,9,7,8,9,6,10,5,8,4,7,10,4,8,10,5,7,6,9,7,5,10,6,7,4,8,9,7,5,9,11,10&purInit=[{type:"wbg",bet:2000,game_ids:[0]}]&total_bet_min=10.00';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
-                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
                 
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
@@ -274,7 +280,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                         if(!isset($balance_cash)){
                             $balance_cash = $slotSettings->GetBalance();
                         }
-                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                         exit( $response );
                     }
                     if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1  < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')) && $slotEvent['slotEvent'] == 'freespin' ) 
@@ -332,7 +338,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '446' . substr($roundstr, 4, 10);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
@@ -580,7 +586,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                 if(count($wlc_vs) > 0){
                     $strOtherResponse = $strOtherResponse . '&wlc_v=' . implode(';', $wlc_vs);
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&reel_set='. $currentReelSet .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=5&st=rect&c='.$betline .'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.($totalWin / $fsmul).'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&reel_set='. $currentReelSet .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=5&st=rect&c='.$betline .'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.($totalWin / $fsmul).'&s=' . $strLastReel;
 
                 if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
                 {
@@ -751,7 +757,7 @@ namespace VanguardLTE\Games\DragoJewelsofFortunePM
                     $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
                 }
                
-                $response = 'bgid='. $bgid . $strOtherResponse .'&balance='. $Balance .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType  . '&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response = 'bgid='. $bgid . $strOtherResponse .'&balance='. $Balance .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType  . '&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
