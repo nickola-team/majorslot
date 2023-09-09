@@ -55,6 +55,12 @@ namespace VanguardLTE\Games\Dragons888PM
             if( $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent'] == 'doInit' ) 
             {
                 $lastEvent = $slotSettings->GetHistory();
+                if($lastEvent == 'NULL'){
+                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = str_replace('.', '', $roundstr);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
+                }
                 if( $lastEvent != 'NULL' ) 
                 {
                     if( isset($lastEvent->serverResponse->bonusWin) ) 
