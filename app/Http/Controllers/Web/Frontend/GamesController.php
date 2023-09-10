@@ -100,7 +100,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 ];
             }
             //add pbgames
-            $pbgameLst = \VanguardLTE\Category::where(['href'=> 'minigame', 'shop_id'=>\Illuminate\Support\Facades\Auth::check() ? auth()->user()->shop_id : 0, 'site_id'=>0])->first();
+            $pbgameLst = \VanguardLTE\Category::where(['href'=> 'minigame', 'shop_id'=>\Illuminate\Support\Facades\Auth::check() ? auth()->user()->shop_id : 0])->first();
             if ($pbgameLst)
             {
                 $gamecats = $pbgameLst->games()->orderby('game_id', 'asc')->get();
