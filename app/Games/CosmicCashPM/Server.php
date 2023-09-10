@@ -65,17 +65,12 @@ namespace VanguardLTE\Games\CosmicCashPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [17,17,17,17,17,17,17,17,17,17,2,13,8,5,11,16,9,11,7,9,2,14,13,6,5,16,10,11,2,8]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
                 $stack = null;
-                if($lastEvent == 'NULL'){
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
-                    $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
-                }
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);

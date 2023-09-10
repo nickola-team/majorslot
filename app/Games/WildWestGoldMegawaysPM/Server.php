@@ -64,14 +64,9 @@ namespace VanguardLTE\Games\WildWestGoldMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
-                if($lastEvent == 'NULL'){
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
-                    $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
-                }
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);

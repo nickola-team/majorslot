@@ -67,17 +67,12 @@ namespace VanguardLTE\Games\WisdomofAthenaPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [4,10,3,6,3,8,5,7,5,5,5,7,3,11,9,8,3,10,5,7,4,7,5,7,3,9,9,3,3,9,6,10,11,8,4,7]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
                 $stack = null;
-                if($lastEvent == 'NULL'){
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
-                    $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
-                }
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);

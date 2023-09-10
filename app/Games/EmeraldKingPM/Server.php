@@ -65,17 +65,12 @@ namespace VanguardLTE\Games\EmeraldKingPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [3,4,5,6,7,3,4,5,6,7,3,4,5,6,7]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
                 $stack = null;
-                if($lastEvent == 'NULL'){
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
-                    $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
-                }
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
