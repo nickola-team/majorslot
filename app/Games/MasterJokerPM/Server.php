@@ -44,12 +44,7 @@ namespace VanguardLTE\Games\MasterJokerPM
                 $lastEvent = $slotSettings->GetHistory();
                 $_obf_StrResponse = '';
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,9,9,5]);
-                if($lastEvent == 'NULL'){
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
-                    $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
-                }
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
