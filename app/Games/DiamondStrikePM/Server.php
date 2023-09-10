@@ -64,12 +64,13 @@ namespace VanguardLTE\Games\DiamondStrikePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []); //FreeStacks
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Wins', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Status', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'WinsMask', []);
                 $stack = null;
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -188,13 +189,13 @@ namespace VanguardLTE\Games\DiamondStrikePM
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
 
                 $Balance = $slotSettings->GetBalance();
-                $response = 'def_s=6,7,4,2,8,4,3,5,6,7,8,5,7,3,4&bgid=0&balance='. $Balance .'&cfgs=2186&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=2&def_sb=7,4,7,5,7&def_sa=3,6,6,8,8&bonusInit=[{bgid:0,bgt:18,bg_i:"1000,100,30,10",bg_i_mask:"pw,pw,pw,pw"}]&balance_bonus=0.00&na='.$spinType.'&scatters=1~0,0,0,0,0~0,0,8,0,0~1,1,1,1,1&gmb=0,0,0&bg_i=1000,100,30,10&rt=d&stime=' . floor(microtime(true) * 1000) . '&bgt=18&sa=3,6,6,8,8&sb=7,4,7,5,7&sc='. implode(',', $slotSettings->Bet) .'&defc=100.00&sh=3&wilds=2~300,60,20,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&n_reel_set='.$currentReelSet.$strOtherResponse.'&bg_i_mask=pw,pw,pw,pw&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;200,20,10,0,0;100,20,10,0,0;40,10,5,0,0;40,10,5,0,0;40,10,5,0,0;40,10,5,0,0&l=15&reel_set0=6,5,7,8,6,2,2,2,7,3,1,4,7,8,4,7,2,2,7,6,3,6,7,6,4,6~6,8,4,8,5,5,3,8,2,2,8,3,8,8,5,4,5,8,4,6,8,3,5,4,5,2,2,2,7~7,3,6,5,2,2,2,8,5,6,5,2,2,5,4,5,5,7,1~6,4,3,6,8,4,7,6,5,6,2,2,2,7,5,8,6,7,6,4,6,8,4,2~4,5,6,5,6,4,5,1,7,5,2,2,2,7,5,7,1,5,8,7,4,5,6,7,5,7,3,7,5,7,3,5,4,7,4,5,7&s='.$lastReelStr.'&reel_set1=4,8,3,7,6,4,6,1,4,6,2,2,2,7,4,1,5,7,8,5,7,4,6,8,2,2,5,3~3,4,6,4,3,8,5,2,2,3,6,4,4,5,2,2,2,6,7,8,4,8,5~7,2,2,6,4,3,1,6,2,2,2,3,4,5,4,5,8,7,4,5,6,8~8,6,3,6,4,2,2,2,4,8,4,5,7,6,2,2,5,5,8,6,4,7~1,8,1,6,2,2,2,5,4,8,7,4,5,4,7,4,1,5,6,8,7,8,2,2,3,6';
+                $response = 'def_s=6,7,4,2,8,4,3,5,6,7,8,5,7,3,4&bgid=0&balance='. $Balance .'&cfgs=2186&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=2&def_sb=7,4,7,5,7&def_sa=3,6,6,8,8&bonusInit=[{bgid:0,bgt:18,bg_i:"1000,100,30,10",bg_i_mask:"pw,pw,pw,pw"}]&balance_bonus=0.00&na='.$spinType.'&scatters=1~0,0,0,0,0~0,0,8,0,0~1,1,1,1,1&gmb=0,0,0&bg_i=1000,100,30,10&rt=d&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&bgt=18&sa=3,6,6,8,8&sb=7,4,7,5,7&sc='. implode(',', $slotSettings->Bet) .'&defc=100.00&sh=3&wilds=2~300,60,20,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&n_reel_set='.$currentReelSet.$strOtherResponse.'&bg_i_mask=pw,pw,pw,pw&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;200,20,10,0,0;100,20,10,0,0;40,10,5,0,0;40,10,5,0,0;40,10,5,0,0;40,10,5,0,0&l=15&reel_set0=6,5,7,8,6,2,2,2,7,3,1,4,7,8,4,7,2,2,7,6,3,6,7,6,4,6~6,8,4,8,5,5,3,8,2,2,8,3,8,8,5,4,5,8,4,6,8,3,5,4,5,2,2,2,7~7,3,6,5,2,2,2,8,5,6,5,2,2,5,4,5,5,7,1~6,4,3,6,8,4,7,6,5,6,2,2,2,7,5,8,6,7,6,4,6,8,4,2~4,5,6,5,6,4,5,1,7,5,2,2,2,7,5,7,1,5,8,7,4,5,6,7,5,7,3,7,5,7,3,5,4,7,4,5,7&s='.$lastReelStr.'&reel_set1=4,8,3,7,6,4,6,1,4,6,2,2,2,7,4,1,5,7,8,5,7,4,6,8,2,2,5,3~3,4,6,4,3,8,5,2,2,3,6,4,4,5,2,2,2,6,7,8,4,8,5~7,2,2,6,4,3,1,6,2,2,2,3,4,5,4,5,8,7,4,5,6,8~8,6,3,6,4,2,2,2,4,8,4,5,7,6,2,2,5,5,8,6,4,7~1,8,1,6,2,2,2,5,4,8,7,4,5,4,7,4,1,5,6,8,7,8,2,2,3,6';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
-                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
                 
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
@@ -252,7 +253,7 @@ namespace VanguardLTE\Games\DiamondStrikePM
                         if(!isset($balance_cash)){
                             $balance_cash = $slotSettings->GetBalance();
                         }
-                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                         exit( $response );
                     }
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotEvent['slotEvent'] == 'freespin' ) 
@@ -305,7 +306,7 @@ namespace VanguardLTE\Games\DiamondStrikePM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '446' . substr($roundstr, 4, 10);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
@@ -504,7 +505,7 @@ namespace VanguardLTE\Games\DiamondStrikePM
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
                 
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&n_reel_set='.$currentReelSet.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=15&s='.$strLastReel.'&w='.$totalWin;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&c='.$betline.'&sver=5&n_reel_set='.$currentReelSet.'&counter='. ((int)$slotEvent['counter'] + 1) .'&l=15&s='.$strLastReel.'&w='.$totalWin;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $bw == 0) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -656,7 +657,7 @@ namespace VanguardLTE\Games\DiamondStrikePM
                 }
                 
                 
-                $response = 'balance='. $Balance  . $strOtherResponse .'&coef='. $coef .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response = 'balance='. $Balance  . $strOtherResponse .'&coef='. $coef .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');

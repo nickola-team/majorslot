@@ -65,13 +65,14 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
                 $stack = null;
                 $strWinLine = '';
                 $winMoney = 0;
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -184,13 +185,13 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                 }
                 
                 $Balance = $slotSettings->GetBalance();    
-                $response = 'def_s=3,4,11,9,10,9,6,5,6,7,9,10,8,10,8,6,7,8,3,7&balance='. $Balance .'&cfgs=4085&ver=2&mo_s=14&index=1&balance_cash='. $Balance .'&mo_v=100,200,250,500,1000,2000,5000,10944,3344,1064&def_sb=5,3,4,6,7&reel_set_size=2&def_sa=11,11,10,8,9&reel_set='. $currentReelSet .'&mo_jp=10944;3344;1064&balance_bonus=0.00&na='. $spinType .'&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&gmb=0,0,0&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"8665511",jwt_jp:"jp1,jp2,jp3,jp4",max_rnd_win:"9000",ma_jp:"337744,10944,3344,1064"}}&wl_i=tbm~9000&mo_jp_mask=jp2;jp3;jp4&stime='. floor(microtime(true) * 1000) .'&sa=11,11,10,8,9&sb=5,3,4,6,7&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1&sh=4&wilds=2~0,0,0,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,40,20,0,0;25,15,10,0,0;15,10,5,0,0;10,5,3,0,0;10,5,3,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;0,0,0,0,0;0,0,0,0,0&l=38&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=8,8,8,6,10,10,10,10,9,3,13,5,4,7,7,7,8,12,12,12,12,11,9,9,9,7,11,11,11,5,5,5,6,6,6,13,13,13,12,7,9,5,10,11,7,11,10,7,6,10,9,10,7,10,11,6~9,7,12,12,12,1,3,2,5,10,10,10,13,10,6,9,9,9,8,11,12,4,7,7,7,13,13,13,2,2,2,3,3,3,5,13,2,3,12,5,3,5,3,10,7,10,3,2,3~10,1,7,12,5,5,5,2,2,2,2,6,5,9,8,13,13,13,11,8,8,8,3,13,11,11,11,4,4,4,4,7,7,7,4,3,11,2,4,2,6,2,11,9,5,11,7,4,8,1,8,11,7,12,8,11,7,5,13,4,13,6~13,13,13,2,12,12,12,7,4,9,9,9,10,11,4,4,4,8,6,12,2,2,2,1,5,9,13,10,10,10,3,10,7,12,2,4,9,2,10,2,10,9,10,9,1,10,2,4,2,4,10,2,10,9,3,9,10,2,4,10,9,10,9,4,12,2,10,12,2,10,9,5,2,1,2,9,12,10,1,4,2,10,3,10,2,12,10,8,10,3~3,13,13,13,7,11,10,10,10,5,11,11,11,4,13,8,6,9,10,12,4,6,12,13,10,13,9,7,13,4&s='.$lastReelStr.'&t=243&reel_set1=7,10,10,10,11,9,5,4,10,6,11,11,11,12,13,3,3,3,3,13,13,13,8,7,7,7,5,5,5,3,10~12,2,2,2,3,4,13,5,5,5,5,11,6,4,4,4,10,13,13,13,7,8,8,8,14,9,2,8,12,12,12,4,7,5,4,10,6,4,9,14,4,2,9,11,13,4,8,9,7,9,7,11,9,4,9,2,4,8,2,9,4,7,4,7,9,6,7,4,11~4,11,7,7,7,14,2,12,9,9,9,3,2,2,2,8,6,5,10,9,7,3,3,3,13,11,11,11,13,13,13,12,12,12,2,7,3,7,10,14,2,6,3,7,9,11,9,11,2,3,11,6,2,13~8,5,7,2,2,2,11,10,10,10,9,12,11,11,11,4,13,13,13,10,3,13,6,14,2,13,10,11,2,11,5,11,5,13,2,13,10,5,2,10,4,9,10,9,13,2,7,6,3,5,7,5,11,5,3,4,5,10,2~12,6,6,6,10,7,13,6,9,9,9,8,5,3,9,7,7,7,4,12,12,12,11,8,8,8,11,11,11,13,13,13,10,10,10,13,8,13,11,13,9,13,11&purInit=[{type:"d",bet:3800}]&total_bet_min=5.00';
+                $response = 'def_s=3,4,11,9,10,9,6,5,6,7,9,10,8,10,8,6,7,8,3,7&balance='. $Balance .'&cfgs=4085&ver=2&mo_s=14&index=1&balance_cash='. $Balance .'&mo_v=100,200,250,500,1000,2000,5000,10944,3344,1064&def_sb=5,3,4,6,7&reel_set_size=2&def_sa=11,11,10,8,9&reel_set='. $currentReelSet .'&mo_jp=10944;3344;1064&balance_bonus=0.00&na='. $spinType .'&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&gmb=0,0,0&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"8665511",jwt_jp:"jp1,jp2,jp3,jp4",max_rnd_win:"9000",ma_jp:"337744,10944,3344,1064"}}&wl_i=tbm~9000&mo_jp_mask=jp2;jp3;jp4&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime='. floor(microtime(true) * 1000) .'&sa=11,11,10,8,9&sb=5,3,4,6,7&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=50.00&purInit_e=1&sh=4&wilds=2~0,0,0,0,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,40,20,0,0;25,15,10,0,0;15,10,5,0,0;10,5,3,0,0;10,5,3,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;5,3,2,0,0;0,0,0,0,0;0,0,0,0,0&l=38&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=8,8,8,6,10,10,10,10,9,3,13,5,4,7,7,7,8,12,12,12,12,11,9,9,9,7,11,11,11,5,5,5,6,6,6,13,13,13,12,7,9,5,10,11,7,11,10,7,6,10,9,10,7,10,11,6~9,7,12,12,12,1,3,2,5,10,10,10,13,10,6,9,9,9,8,11,12,4,7,7,7,13,13,13,2,2,2,3,3,3,5,13,2,3,12,5,3,5,3,10,7,10,3,2,3~10,1,7,12,5,5,5,2,2,2,2,6,5,9,8,13,13,13,11,8,8,8,3,13,11,11,11,4,4,4,4,7,7,7,4,3,11,2,4,2,6,2,11,9,5,11,7,4,8,1,8,11,7,12,8,11,7,5,13,4,13,6~13,13,13,2,12,12,12,7,4,9,9,9,10,11,4,4,4,8,6,12,2,2,2,1,5,9,13,10,10,10,3,10,7,12,2,4,9,2,10,2,10,9,10,9,1,10,2,4,2,4,10,2,10,9,3,9,10,2,4,10,9,10,9,4,12,2,10,12,2,10,9,5,2,1,2,9,12,10,1,4,2,10,3,10,2,12,10,8,10,3~3,13,13,13,7,11,10,10,10,5,11,11,11,4,13,8,6,9,10,12,4,6,12,13,10,13,9,7,13,4&s='.$lastReelStr.'&t=243&reel_set1=7,10,10,10,11,9,5,4,10,6,11,11,11,12,13,3,3,3,3,13,13,13,8,7,7,7,5,5,5,3,10~12,2,2,2,3,4,13,5,5,5,5,11,6,4,4,4,10,13,13,13,7,8,8,8,14,9,2,8,12,12,12,4,7,5,4,10,6,4,9,14,4,2,9,11,13,4,8,9,7,9,7,11,9,4,9,2,4,8,2,9,4,7,4,7,9,6,7,4,11~4,11,7,7,7,14,2,12,9,9,9,3,2,2,2,8,6,5,10,9,7,3,3,3,13,11,11,11,13,13,13,12,12,12,2,7,3,7,10,14,2,6,3,7,9,11,9,11,2,3,11,6,2,13~8,5,7,2,2,2,11,10,10,10,9,12,11,11,11,4,13,13,13,10,3,13,6,14,2,13,10,11,2,11,5,11,5,13,2,13,10,5,2,10,4,9,10,9,13,2,7,6,3,5,7,5,11,5,3,4,5,10,2~12,6,6,6,10,7,13,6,9,9,9,8,5,3,9,7,7,7,4,12,12,12,11,8,8,8,11,11,11,13,13,13,10,10,10,13,8,13,11,13,9,13,11&purInit=[{type:"d",bet:3800}]&total_bet_min=5.00';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
-                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
                 
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
@@ -252,7 +253,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                         if(!isset($balance_cash)){
                             $balance_cash = $slotSettings->GetBalance();
                         }
-                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                         exit( $response );
                     }
                     if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1  < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')) && $slotEvent['slotEvent'] == 'freespin' ) 
@@ -309,7 +310,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '446' . substr($roundstr, 4, 10);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
@@ -521,7 +522,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                 if(count($wlc_vs) > 0){
                     $strOtherResponse = $strOtherResponse . '&wlc_v=' . implode(';', $wlc_vs);
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&reel_set='. $currentReelSet .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=38&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&reel_set='. $currentReelSet .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=4&c='.$betline .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=38&w='.$totalWin.'&s=' . $strLastReel;
                 if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -606,7 +607,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                 }
                 
                
-                $response =  'bmw=0.00&bgid=0&level='. $slotSettings->GetGameData($slotSettings->slotId . 'Level') . $strOtherResponse .'&balance='. $Balance .'&coef='. $coef .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&stime=' . floor(microtime(true) * 1000) .'&bgt=50&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response =  'bmw=0.00&bgid=0&level='. $slotSettings->GetGameData($slotSettings->slotId . 'Level') . $strOtherResponse .'&balance='. $Balance .'&coef='. $coef .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&bgt=50&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 //------------ ReplayLog ---------------
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');

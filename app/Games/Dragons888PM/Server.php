@@ -55,6 +55,7 @@ namespace VanguardLTE\Games\Dragons888PM
             if( $_obf_0D221D1040101E0C18152D38350A220B2431190A3E1822['slotEvent'] == 'doInit' ) 
             {
                 $lastEvent = $slotSettings->GetHistory();
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     if( isset($lastEvent->serverResponse->bonusWin) ) 
