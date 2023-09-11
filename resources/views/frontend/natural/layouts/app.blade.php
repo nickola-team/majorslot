@@ -53,7 +53,7 @@
 
 		@include('frontend.kdior.layouts.partials.footer')
 		@if( ($detect->isMobile() || $detect->isTablet() ) && Auth::check()) 
-			@include('frontend.kdior.layouts.partials.m.aside', ['logo' => 'natural'])
+			@include('frontend.kdior.layouts.partials.m.aside')
 		@endif
 		
 	</div><!-- wrap -->
