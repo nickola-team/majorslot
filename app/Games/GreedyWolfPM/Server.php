@@ -498,7 +498,7 @@ namespace VanguardLTE\Games\GreedyWolfPM
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime=' . floor(microtime(true) * 1000).'&sa='. $strReelSa  .'&sb='. $strReelSb .'&st=rect&c='.$betline.'&sh=4&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='. $strReelSa  .'&sb='. $strReelSb .'&st=rect&c='.$betline.'&sh=4&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)  && $rs_p < 0) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);

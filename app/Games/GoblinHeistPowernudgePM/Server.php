@@ -484,7 +484,7 @@ namespace VanguardLTE\Games\GoblinHeistPowernudgePM
                     }
                     $strOtherResponse = $strOtherResponse . '&sa=9,3,5,5,7&sb=5,6,4,3,7&tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 }
-                $response = 'balance='. $Balance . $strOtherResponse . $strWinLine. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000).'&bl='.$bl.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'balance='. $Balance . $strOtherResponse . $strWinLine. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&bl='.$bl.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)  && $mo_count == 0) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
