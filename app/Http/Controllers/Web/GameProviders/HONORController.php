@@ -531,6 +531,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($from == '')
             {
+                return [0, 0];
                 $roundfrom = date('Y-m-d H:i:s',strtotime('-2 hours'));
                 $lastround = \VanguardLTE\StatGame::whereIn('category_id', $category_ids)->orderby('date_time', 'desc')->first();
                 if ($lastround)
