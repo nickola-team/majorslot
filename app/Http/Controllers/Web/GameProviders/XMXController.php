@@ -661,7 +661,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 do
                 {
-                    $curend_timeStamp = $start_timeStamp + 3600; // 1hours
+                    $curend_timeStamp = $start_timeStamp + 3599; // 1hours
                     if ($curend_timeStamp > $end_timeStamp)
                     {
                         $curend_timeStamp = $end_timeStamp;
