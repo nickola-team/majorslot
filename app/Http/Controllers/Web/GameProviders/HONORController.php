@@ -664,6 +664,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         break;
                     }
                     $curPage = $curPage + 1;
+                    sleep(1);
                 } while ($data!=null);
                 sleep(60);
                 $start_timeStamp = $curend_timeStamp;
