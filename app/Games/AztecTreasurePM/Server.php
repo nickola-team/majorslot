@@ -555,8 +555,13 @@ namespace VanguardLTE\Games\AztecTreasurePM
                 }
                 
                 $freeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'FreeStacks');
-                $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                while(true){
+                    $stack = $freeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') >= count($freeStacks) || $stack['wins'] != ''){
+                        break;
+                    }
+                }                
                 $lastReel = $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'); 
                 $str_msr = $stack['msr'];
                 $bgt = $stack['bgt'];
