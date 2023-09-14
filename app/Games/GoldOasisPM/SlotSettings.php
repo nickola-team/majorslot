@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\FrozenTropicsPM
+namespace VanguardLTE\Games\GoldOasisPM
 {
     class SlotSettings
     {
@@ -102,11 +102,11 @@ namespace VanguardLTE\Games\FrozenTropicsPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 8,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -695,25 +695,6 @@ namespace VanguardLTE\Games\FrozenTropicsPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function BonusWinChance($currentIndex, $bet)
-        {
-            $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = floor($winAvaliableMoney / $bet);
-            $fsChance = [63, 69, 73, 50, 50, 50]; // [10, 14, 18, 22, 26]
-            $percent = mt_rand(0, 100);
-            if($currentIndex == 1 && $limitOdd < 25){
-                return false;
-            }else if($currentIndex == 2 && $limitOdd < 50){
-                return false;
-            }else if($currentIndex == 3 && $limitOdd < 100){
-                return false;
-            }else if($fsChance[$currentIndex] > $percent){
-                return true;
-            }else{
-                return false;
-            }
-        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -728,12 +709,10 @@ namespace VanguardLTE\Games\FrozenTropicsPM
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $pur)
         {
-            // if($winType='bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameForzenTropicsStack::where([
-                //     'id' => 18
-                // ])->first();
+            // if($fsmax > 0){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameGoldOasisStack::where('id', 17672)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -764,18 +743,23 @@ namespace VanguardLTE\Games\FrozenTropicsPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameForzenTropicsStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    if($pur >= 0){
+                        $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldOasisStack::where('spin_type', 1)->where('pur_level', $pur)->whereNotIn('id', $existIds);
+                    }else{
+                        $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldOasisStack::where('spin_type', 1)->where('pur_level', '<', 1)->whereNotIn('id', $existIds);
+                    }
+                    
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameForzenTropicsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoldOasisStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 48000);
+                $index = mt_rand(0, 45000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 55000);
+                    // $index = mt_rand(0, 28000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

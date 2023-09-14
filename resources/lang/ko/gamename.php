@@ -1148,6 +1148,8 @@ return [
         "BigBassHoldAndSpinnerMegaways" => "빅배스 홀드 & 스피너 메가웨이즈",
         "CyclopsSmash" => "사이클롭스 스매시",
         "SaiyanMania" => "사이어인 매니아",
+        "FrozenTropics" => "프로즌 트로픽스",
+        "GoldOasis" => "골드 오아시스",
 
         
         //Booongo
