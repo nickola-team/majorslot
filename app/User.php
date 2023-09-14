@@ -126,6 +126,7 @@ namespace VanguardLTE
                 'JUNCOIN',
                 'WORLDPAY',
                 'OSSCOIN',
+                '경남가상계좌',
                 'MESSAGE'
             ],
             'reset_days' => [

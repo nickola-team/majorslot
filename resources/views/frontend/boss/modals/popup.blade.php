@@ -20,7 +20,7 @@ $width = '330px'; $height = '400px';
     </tr>
     <tr>
         <td valign="top" style="padding-left: 5px !important; padding-right : 5px !important;">
-        <div style="height: calc({{$height}} - 77px); overflow:auto; background-color:RGBA(0,0,0,0.9);"><?php echo $notice->content; ?>
+        <div style="height: calc({{$height}} - 77px); overflow:auto; background-color:RGBA(0,0,0,0.9);color:white;"><?php echo $notice->content; ?>
         </div>
       </td>
     </tr>

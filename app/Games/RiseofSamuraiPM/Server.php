@@ -63,11 +63,12 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [3,4,5,6,3,3,4,5,6,3,3,4,5,6,3]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
-                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
                 $stack = null;
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $lastEvent->serverResponse->bonusWin);
@@ -127,13 +128,13 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                 }
                 
                 $Balance = $slotSettings->GetBalance();  
-                $response = 'def_s=3,4,5,6,3,3,4,5,6,3,3,4,5,6,3&balance='. $Balance .'&cfgs=3423&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=6&def_sb=5,5,5,5,5&def_sa=5,5,5,5,5&balance_bonus=0.00&na='. $spinType .'&scatters=&gmb=0,0,0&rt=d&stime='. floor(microtime(true) * 1000) .'&sa=5,5,5,5,5&sb=5,5,5,5,5&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&sh=3&wilds=2~400,100,30,10,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&n_reel_set='. $currentReelSet .'&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,40,10,3,0;50,25,8,2,0;30,20,7,2,0;25,15,5,1,0;15,10,3,0,0;15,10,3,0,0;13,8,2,0,0;13,8,2,0,0&l=25&reel_set0=3,3,3,8,8,8,8,8,4,4,4,7,7,7,1,5,5,5,5,5,9,9,9,2,2,2,2,1,6,6,6,10,10,10,10~3,3,3,3,8,8,8,1,4,4,4,4,7,7,7,7,5,5,5,5,5,9,9,9,2,2,2,2,1,6,6,6,6,6,10,10,10~3,3,3,3,8,8,8,1,4,4,4,4,4,4,4,4,4,7,7,7,7,7,5,5,5,5,9,9,9,2,2,2,1,6,6,6,10,10,10,10~3,3,3,3,3,8,8,8,1,4,4,4,4,4,4,7,7,7,5,5,5,5,5,9,9,2,2,2,2,6,6,6,6,6,10,10,10~3,3,3,3,8,8,8,8,4,4,4,4,4,4,7,7,7,5,5,5,5,5,5,9,9,9,9,9,2,2,2,2,1,6,6,6,6,6,10,10,10,10,10&s='.$lastReelStr.'&reel_set2=3,3,3,3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,4,7,5,9~3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,7,5,9~3,3,3,3,3,3,3,6,1,6,8,4,7,5,9,2,10,8,4,7,5,9~3,3,3,3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,4,7,5,9~3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,4,7,5,9&reel_set1=2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9,6&reel_set4=5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,8,4,7,9&reel_set3=4,4,4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,4,4,4,4,4,6,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9&reel_set5=6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9,3';
+                $response = 'def_s=3,4,5,6,3,3,4,5,6,3,3,4,5,6,3&balance='. $Balance .'&cfgs=3423&ver=2&index=1&balance_cash='. $Balance .'&reel_set_size=6&def_sb=5,5,5,5,5&def_sa=5,5,5,5,5&balance_bonus=0.00&na='. $spinType .'&scatters=&gmb=0,0,0&rt=d&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime='. floor(microtime(true) * 1000) .'&sa=5,5,5,5,5&sb=5,5,5,5,5&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&sh=3&wilds=2~400,100,30,10,0~1,1,1,1,1&bonuses=0&fsbonus=&c='. $bet .'&sver=5&n_reel_set='. $currentReelSet .'&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,40,10,3,0;50,25,8,2,0;30,20,7,2,0;25,15,5,1,0;15,10,3,0,0;15,10,3,0,0;13,8,2,0,0;13,8,2,0,0&l=25&reel_set0=3,3,3,8,8,8,8,8,4,4,4,7,7,7,1,5,5,5,5,5,9,9,9,2,2,2,2,1,6,6,6,10,10,10,10~3,3,3,3,8,8,8,1,4,4,4,4,7,7,7,7,5,5,5,5,5,9,9,9,2,2,2,2,1,6,6,6,6,6,10,10,10~3,3,3,3,8,8,8,1,4,4,4,4,4,4,4,4,4,7,7,7,7,7,5,5,5,5,9,9,9,2,2,2,1,6,6,6,10,10,10,10~3,3,3,3,3,8,8,8,1,4,4,4,4,4,4,7,7,7,5,5,5,5,5,9,9,2,2,2,2,6,6,6,6,6,10,10,10~3,3,3,3,8,8,8,8,4,4,4,4,4,4,7,7,7,5,5,5,5,5,5,9,9,9,9,9,2,2,2,2,1,6,6,6,6,6,10,10,10,10,10&s='.$lastReelStr.'&reel_set2=3,3,3,3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,4,7,5,9~3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,7,5,9~3,3,3,3,3,3,3,6,1,6,8,4,7,5,9,2,10,8,4,7,5,9~3,3,3,3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,4,7,5,9~3,3,3,3,6,10,1,6,8,4,7,5,9,2,10,8,4,7,5,9&reel_set1=2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9~2,2,2,2,2,2,2,2,2,2,6,10,1,3,8,4,7,5,9,6,10,3,8,4,7,5,9,6&reel_set4=5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,3,8,4,7,9~5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,10,1,3,8,4,7,2,9,6,10,8,4,7,9&reel_set3=4,4,4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,4,4,4,4,4,6,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9~4,4,4,4,4,4,4,6,10,1,3,8,2,7,5,9,6,10,3,8,7,5,9&reel_set5=6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9~6,6,6,6,6,6,6,6,6,10,1,3,8,4,7,5,9,2,10,3,8,4,7,5,9,3';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
                 $Balance = $slotSettings->GetBalance();
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
-                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&na=s&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
                 
                 //------------ ReplayLog ---------------                
                 $lastEvent = $slotSettings->GetHistory();
@@ -217,7 +218,7 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                         if(!isset($balance_cash)){
                             $balance_cash = $slotSettings->GetBalance();
                         }
-                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                         exit( $response );
                     }
                     if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1  < $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame')) && $slotEvent['slotEvent'] == 'freespin' ) 
@@ -266,7 +267,7 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '446' . substr($roundstr, 4, 10);
+                    $roundstr = '561' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
@@ -461,7 +462,7 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                     $strOtherResponse = $strOtherResponse . '&w=' . $totalWin;
                 }
                 
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')  . '&n_reel_set='. $currentReelSet . $strOtherResponse . $strWinLine .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin')  . '&n_reel_set='. $currentReelSet . $strOtherResponse . $strWinLine .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
@@ -511,7 +512,7 @@ namespace VanguardLTE\Games\RiseofSamuraiPM
                 $fsmul = $stack[0]['fsmul'];
                 $slotSettings->SetGameData($slotSettings->slotId . 'FsOPT', 0);
 
-                $response = 'fsmul='. $fsmul .'&balance='.$Balance.'&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&n_reel_set='. $currentReelSet .'&balance_bonus=0.00&na=s&fswin=0.00&stime=' . floor(microtime(true) * 1000) .'&fs=1&fsres=0.00&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                $response = 'fsmul='. $fsmul .'&balance='.$Balance.'&fsmax=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . '&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&n_reel_set='. $currentReelSet .'&balance_bonus=0.00&na=s&fswin=0.00&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&fs=1&fsres=0.00&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 
                 //------------ ReplayLog ---------------

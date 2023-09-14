@@ -44,6 +44,7 @@ namespace VanguardLTE\Games\MasterJokerPM
                 $lastEvent = $slotSettings->GetHistory();
                 $_obf_StrResponse = '';
                 $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,7,9,9,5]);
+                
                 if( $lastEvent != 'NULL' ) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
@@ -56,13 +57,13 @@ namespace VanguardLTE\Games\MasterJokerPM
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
                 $Balance = $slotSettings->GetBalance();
 
-                $response = 'tw=0.00&def_s=5,6,3,6,8&balance='. $Balance .'&action=doSpin&cfgs=2694&reel1=3,7,4,7,3,6,7,6,7,6,7,6,8,8,8,6,7,6,7,5,9,8&ver=2&reel0=3,4,5,6,4,5,6,7,8,4,5,6,4,5,9&index=1&balance_cash='. $Balance .'&def_sb=5,7,8,5,4&def_sa=4,8,7,6,5&reel3=9,9,9,8,7,8,7,8,7,8,7,8,8,7,8,7,8,3,8,4,8,5,8,6,8,7&reel2=8,7,5,8,2,4,8,7,3,8,7,2,6,7,8,6,8,6,8,4,5,6,8,6,9,8,6,8&reel4=8,8,3,8,8,4,8,8,5,8,8,5,8,8,6,8,5,8,8,5,7,9&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0,0~0,0,0,0,0~0,0,0,0,0,0&gmb=0,0,0&rt=d&stime=' . floor(microtime(true) * 1000) . '&sa=5,8,8,8,6&sb=7,8,7,4,9&sc='. implode(',', $slotSettings->Bet) .'&defc=2000.00&sh=1&wilds=2~0,0,0,0,0,0~1,1,1,1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&l=1&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,50,15,0,0;50,25,10,0,0;25,15,8,0,0;15,10,5,0,0;12,8,4,0,0;10,5,2,0,0;8,3,1,0,0&s='.$lastReelStr. '&t=symbol_count&w=0.00';
+                $response = 'tw=0.00&def_s=5,6,3,6,8&balance='. $Balance .'&action=doSpin&cfgs=2694&reel1=3,7,4,7,3,6,7,6,7,6,7,6,8,8,8,6,7,6,7,5,9,8&ver=2&reel0=3,4,5,6,4,5,6,7,8,4,5,6,4,5,9&index=1&balance_cash='. $Balance .'&def_sb=5,7,8,5,4&def_sa=4,8,7,6,5&reel3=9,9,9,8,7,8,7,8,7,8,7,8,8,7,8,7,8,3,8,4,8,5,8,6,8,7&reel2=8,7,5,8,2,4,8,7,3,8,7,2,6,7,8,6,8,6,8,4,5,6,8,6,9,8,6,8&reel4=8,8,3,8,8,4,8,8,5,8,8,5,8,8,6,8,5,8,8,5,7,9&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0,0~0,0,0,0,0~0,0,0,0,0,0&gmb=0,0,0&rt=d&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&sa=5,8,8,8,6&sb=7,8,7,4,9&sc='. implode(',', $slotSettings->Bet) .'&defc=2000.00&sh=1&wilds=2~0,0,0,0,0,0~1,1,1,1,1,1&bonuses=0&fsbonus=&c='.$bet.'&sver=5&counter=2&l=1&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;100,50,15,0,0;50,25,10,0,0;25,15,8,0,0;15,10,5,0,0;12,8,4,0,0;10,5,2,0,0;8,3,1,0,0&s='.$lastReelStr. '&t=symbol_count&w=0.00';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect') 
             {
                 $Balance = $slotSettings->GetBalance();
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);    
-                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) . '&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
+                $response = 'balance=' . $Balance . '&index=' . $slotEvent['index'] . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&sver=5&counter=' . ((int)$slotEvent['counter'] + 1);
             }
             else if( $slotEvent['slotEvent'] == 'doSpin' ) 
             {
@@ -90,7 +91,7 @@ namespace VanguardLTE\Games\MasterJokerPM
                         if(!isset($balance_cash)){
                             $balance_cash = $slotSettings->GetBalance();
                         }
-                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
+                        $response = 'nomoney=1&balance='. $balance_cash .'&error_type=i&index='.$slotEvent['index'].'&balance_cash='. $balance_cash .'&balance_bonus=0.00&na=s&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&ext_code=SystemError&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
                     exit( $response );
                 }
                 
@@ -107,7 +108,7 @@ namespace VanguardLTE\Games\MasterJokerPM
 
                 $roundstr = sprintf('%.4f', microtime(TRUE));
                 $roundstr = str_replace('.', '', $roundstr);
-                $roundstr = '446' . substr($roundstr, 4, 10);
+                $roundstr = '561' . substr($roundstr, 4, 10);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                 
                 $Balance = $slotSettings->GetBalance();
@@ -187,7 +188,7 @@ namespace VanguardLTE\Games\MasterJokerPM
                     $str_wheelResponse = '&lm_v=0~' . $multiplier . '&lm_m=l~m';
                 }
                 
-                $response = 'tw='. $totalWin . $str_wheelResponse .'&balance='.$Balance .'&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&balance_bonus=0.00&na='.$spinType.$strWinLine.'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=1&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=1&s='.$strLastReel.'&w='.$totalWin;
+                $response = 'tw='. $totalWin . $str_wheelResponse .'&balance='.$Balance .'&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&balance_bonus=0.00&na='.$spinType.$strWinLine.'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=1&c='.$betline.'&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=1&s='.$strLastReel.'&w='.$totalWin;
                 
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"LastReel":'.json_encode($lastReel).',"bet":'.$betline.'}}';
                 $allBet = $betline * $lines;

@@ -1,0 +1,126 @@
+:root {
+    --slot-item-height: 55px;
+    --slot-item-width: 55px;
+    --additionalSlot-item-height: 18px;
+    --additionalSlot-item-width: 18px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    gap: 5px;
+    grid-template-areas: " Fight MiniSlot" " slot FsLevel"
+}
+
+.Spin .Fight {
+    grid-area: Fight;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end
+}
+
+.Spin .Fight__Item {
+    width: 90px;
+    height: 60px
+}
+
+.Spin .Fight__Item .Fight__ItemSymbol {
+    margin-top: 10px
+}
+
+.Spin .FsLevel {
+    grid-area: FsLevel;
+    transform: scale(.84);
+    margin-top: -16px
+}
+
+.Spin .FsLevel__Item {
+    width: 54px;
+    height: 20px;
+    line-height: normal
+}
+
+.Spin .FsLevel__ItemText {
+    width: 50px;
+    white-space: nowrap
+}
+
+.Spin .LinesSlot {
+    grid-area: slot;
+    display: flex
+}
+
+.Spin .LinesSlot .SlotWrap__Field {
+    margin-top: 0
+}
+
+.Spin .MiniSlot__Wrapper {
+    grid-area: MiniSlot;
+    min-width: 54px;
+    position: relative
+}
+
+.Spin .MiniSlot__Wrapper .MiniSlot {
+    width: 105px;
+    height: 70px;
+    position: absolute;
+    right: 0;
+    bottom: 0
+}
+
+.Spin .MiniSlot__Wrapper .MiniSlot .Image__Source {
+    width: 100%;
+    height: 100%
+}
+
+.Spin .MiniSlot__Wrapper .MiniSlot .AvailableSymbols {
+    gap: 0 3px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: calc(var(--additionalSlot-item-width)*5)
+}
+
+.Spin .MiniSlot__Wrapper .MiniSlot .AvailableSymbols__Item {
+    width: var(--additionalSlot-item-width);
+    height: var(--additionalSlot-item-height)
+}
+
+.WinLines-Group .Animation__CrossFadeItem {
+    animation: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:nth-child(n) {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:first-child {
+    display: none
+}
