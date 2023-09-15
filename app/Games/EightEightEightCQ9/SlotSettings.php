@@ -755,9 +755,9 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                if($pur >= 0){
-                    $stacks = $stacks->where('pur_level', $pur);
-                }
+                // if($pur >= 0){
+                //     $stacks = $stacks->where('pur_level', $pur);
+                // }
                 $index =  mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
