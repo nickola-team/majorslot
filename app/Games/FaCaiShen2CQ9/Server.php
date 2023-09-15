@@ -30,7 +30,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 14}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
-                    
+                    $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', 38);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -76,7 +76,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['DenomMultiple'] = $initDenom * $this->demon;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
@@ -144,16 +144,12 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                                 $result_val['PlayerBet'] = $betline;
-                                // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                                // $originalbet = round($originalbet,2);
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                $result_val['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline);
-                                $result_val['AccumlateWinAmt'] = ($result_val['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                                $result_val['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline);                                
                                 $result_val['AccumlateJPAmt'] = 0;
-                                $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
-                                //$result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                                $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);                                
                                 $result_val['MaxRound'] = $stack['MaxRound'];
                                 $result_val['AwardRound'] = $stack['AwardRound'];
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
@@ -166,15 +162,11 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                             }
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                            // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                            // $originalbet = round($originalbet,2);
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $result_val['TotalWinAmt'] = ($stack['TotalWinAmt'] / $originalbet * $betline);
-                            //$result_val['TotalWinAmt'] = ($result_val['TotalWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                            $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
-                            //$result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                            $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);                            
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
                         }
@@ -248,8 +240,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             $_winAvaliableMoney = $_spinSettings[1];
              //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
-            // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-            // $originalbet = round($originalbet,2);
+            
             if($slotEvent == 'freespin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
@@ -273,25 +264,20 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             }
             if(isset($stack['BaseWin']) && $stack['BaseWin'] > 0){
                 $stack['BaseWin'] = (($stack['BaseWin'] / $originalbet * $betline) / $this->demon);
-                //$stack['BaseWin'] = ($stack['BaseWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
                 $stack['TotalWin'] = (($stack['TotalWin'] / $originalbet * $betline) / $this->demon);
-                //$stack['TotalWin'] = floor(($stack['TotalWin'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'));
                 $totalWin = ($stack['TotalWin'] / $this->demon);
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
                 $stack['AccumlateWinAmt'] = (($stack['AccumlateWinAmt'] / $originalbet * $betline) / $this->demon);
-                //$stack['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
                 $stack['AccumlateJPAmt'] = (($stack['AccumlateJPAmt'] / $originalbet * $betline ) / $this->demon);
-                //$stack['AccumlateJPAmt'] = ($stack['AccumlateJPAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
             if(isset($stack['ScatterPayFromBaseGame']) && $stack['ScatterPayFromBaseGame'] > 0){
                 $stack['ScatterPayFromBaseGame'] = (($stack['ScatterPayFromBaseGame'] / $originalbet * $betline ) / $this->demon);
-                //$stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
             }
 
 
@@ -304,7 +290,6 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
                     $value['LinePrize'] = (($value['LinePrize'] / $originalbet * $betline) / $this->demon);
-                    //$value['LinePrize'] = ($value['LinePrize'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                 }
                 $stack['udsOutputWinLine'][$index] = $value;
             }
@@ -323,8 +308,13 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             //$result_val['Multiple'] = "1";
@@ -344,7 +334,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
                 //$result_val['Multiple'] = "3";
                 $result_val['Multiple'] = $stack['Multiple'];
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

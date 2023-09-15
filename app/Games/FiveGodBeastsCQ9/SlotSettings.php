@@ -785,6 +785,9 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 }
 
                 $left_specialsymbol_count = 3 - $this->GetGameData($this->slotId . 'SymbolCount');
+                if($left_specialsymbol_count<0){
+                    $left_specialsymbol_count = 0;
+                }
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 0;
                 if($gameRound == 1){

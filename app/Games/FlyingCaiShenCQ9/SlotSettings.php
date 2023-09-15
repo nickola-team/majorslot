@@ -786,7 +786,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
 
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                //$index =  mt_rand(0, 48000);
+                $index =  0;
                 if($gameRound == 1){
                     $index = mt_rand(4592335, 4646500);
                 }else if($gameRound == 2){

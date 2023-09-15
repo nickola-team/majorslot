@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\NeZhaAdventCQ9
+namespace VanguardLTE\Games\Fire777CQ9
 {
     class Server
     {
@@ -21,11 +21,11 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 1;
+            $originalbet = 3;
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
                 if($paramData['req'] == 1){ // init
-                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 13}],"msg": null}');
+                    $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 14}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                     
@@ -59,8 +59,8 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                             $result_val['DenomDefine'] = $denomDefine;
                             $result_val['BetButton'] = $betButtons;
                             $result_val['DefaultDenomIdx'] = 3;
-                            $result_val['MaxBet'] = 1200;
-                            $result_val['MaxLine'] = 1;
+                            $result_val['MaxBet'] = 4000;
+                            $result_val['MaxLine'] = 20;
                             $result_val['WinLimitLock'] = 300000000;
                             $result_val['DollarSignId'] = 4;
                             $result_val['EmulatorType'] = $emulatorType;
@@ -79,9 +79,9 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                             $result_val['DenomMultiple'] = $initDenom;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
                             $result_val['Tag'] = [
-                                "g" => "163",
+                                "g" => "66",
                                 "s" => "5.27.1.0",
-                                "l" => "2.5.1.1",
+                                "l" => "2.3.8.0",
                                 "si" => "59"
                             ];
                         }else if($packet_id == 12){
@@ -89,12 +89,12 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                             $result_val['FGStripStartID'] = 50;
                             $result_val['BGStripCount'] = 1;
                             // $result_val['BGContext'] = [[implode(',', $slotSettings->reelStrip1) , implode(',', $slotSettings->reelStrip2), implode(',', $slotSettings->reelStrip3), implode(',', $slotSettings->reelStrip4), implode(',', $slotSettings->reelStrip5)]];
-                            $result_val['BGContext'] = [["MIrquKSrKL8eXOa7BYK9kmmOPsyh7eJdXWIf9vTswnxVv4keOaKJtujKD8nTIFB+nTGRYRVOwTRZ+gr+l3v5MIxMcDKYby9qoTZN6I73j2nSE6Dz/OQ2dGOgx2vOA2clJVIFokc/ysNiKhEgqwlOssM7cXo//aZ6bLc3eC3yNy0Q7xAHkDiIiWn468ER5daa1qsTgauzD1JgsgUk","QmZbVeSHxXMcGQkuAM9XM/Ghe5Ha1WP/V44ce5JMzmnbpmk39/UJScFBloxpClEXTFpbnDVaxkAmwPsZyws8tgC+7eaxMf7kHnfuJTqdtE0+if24UhreYy9jmEckEqvk/aFvnkYfNnUEuGygl1+66Ls38n/UMH07zMfb5svqDYBBBtsoMIEuc941ymcWPaqkM+lK5ZR0i4mdGzEN","4QQqMrBRSUCZREshT6gdCM3TXyGKMldmru9iPJGPC1HTw2QC6BxzvsrY4PAbDrXPf7t/FFKQej3co90RFQY93k0T0k1qyNHkaPtFQiTT/qQtvwQW9f55m/YP5Em0G6fTqYLceoBOWxxOLYJev03b7NaGu4l0o1243NGI2WP3Qj13GXMrY72r3XGJk6FTyoPfMrWeFiWWfT8uOg2s","lNsYnL2cy7YnxTUCpRmfAS9XT+h+uJu5ibGtocrVjWVW0pKb616vGNB2DESYtYl6z2TLD0rJW6+ivWIMWnDkJLzOs5s2i5lS4xsGep1Efyiu2mVw8hZLRAAeTeisQmHSN07IZDxU7iEAt4HopPUOexZz1dcsEGPiQGVscc3mdfW5C1QOHTNdgKLLiI7AwsdO9Bh6d++ZRaK0t76B","otN8S5MYCr8ecdB1Fq/Y+Uw9TnlACjzplNK/tVGRCBdHOBTlS2b9Vx12cqE06nNKOX36eQgnJK9zwAquB3KVfYJEZKST+DEbGiYvQ/X1gQTI+E80GfszFknML6KPWdqwjzH198qjogvgUf/IZZVQcRZ1xzN7mUYp5GRaDM/aMHshtBtMhAQPUyM2r4NZJH4Hg3rq4qRxUnttClL2JZshA5HMyZc6dzmvd7GDeA=="]];
+                            $result_val['BGContext'] = [["0net51WF2w6z7O3JrtA37zGeXjz2fKtULQ5FY81xPeDZHwLPFE0O6S8hCjmO1MTSMCOndn0yGzIpiC+26Ta6axOOuoqKBx8WJ5ztTJ8ZScHV0wpLw+gCDUI6wMWrLxXbKVwt4qlrXcJnGRAbwIqtik6XCmS/LMimyJIISV+PjSbwIOFP6lbQGAu4b+8=","y7ukrZJ1yXUQhL8fPiRbVR3YJjS/KM7mWK9tpcNqptsTZQVUkksD6gJIabStBticSxu9RAespZC+F/g7JI3QaysAZX4YphtMX8IR4OWNp88eUyIjGDB1yu3/rqM4AnVr2Q+la3JqNMEcWuGMBaYzXZ5QZMg0yTlHOA/o+g==","M0oWfdokg22kkSwl5NjnfYAqmgwJmeNEyH/ejnphEYEiawTAIajWC75Wf+i8U1mQoNDbGm0xOORZn+J/LYiq0CScx42zPSdXaMAtPAtJsje64rElDIKDJIkfhgWSLGmK7fwadh2Z8KHmF9aLeg69ch3IYlVdA88HwOLAaf/EfZ60lhX1cyD6DCWAR9g=","vae7c8x0wDhZcEoTCnE/YkCPG30HdPbojSWp3eYgxcEONnKUso8ux7S7W6jm4HqB39Jb/Wii37HmzRS73DIkTIHQcgDpT2gszibFuVqbiO7jK2LxXUDzOvnaVWAeZ5ybDgjmPdNkmJdNdytb+BUgcUEsCVkFHf1Nib2/yQpw7zNZulC7KAIC6Oc/82w=","a4TFzr1IeJSQFRycxX0rdwfjCa/9sDVto7lRQqy0hJb9vTRl91YtYhDeUxk8FccxNWTLaUQ8xgF2fX7uAxWLHA/XJwDpk2dzMN3ddAIAyj2f2MhTsNCycsQE2tgZr9+YvPWV4xrUv8FYqYJ/7Ez2zmk+R6k5fVBZaX3d8RdI2XVQ5oIj9x5UWhc+sgs="]];
                             $result_val['FGStripCount'] = 1;
                             // $result_val['FGContext'] = [[implode(',', $slotSettings->reelStripBonus1), implode(',', $slotSettings->reelStripBonus2), implode(',', $slotSettings->reelStripBonus3),implode(',', $slotSettings->reelStripBonus4),implode(',', $slotSettings->reelStripBonus5)]];
-                            $result_val['FGContext'] = [["2XB358sUBvGwPCuCuqWRCayGbydX8t9JjWVa8SGNiE4oTGluaN6SElV4amlCxwoWF04Az7r2Zrb0aDphRHcl2N+ubkrTH5zAwXEeq/oL/3sGZPCYdblE3WcnYd3h7d8DDYv5xw/UvlbWNiWRWaNdXUo+nC+gaWCnhlabaJbOjBgFjOD9gx0+dvtY+9cAtQIBG42AbeV14WBYAu7Pr4SLFJ1eujOc+kYLbI5W0pna2sTuWDHp06imU9yEoPkWei6wlsj17ck0OA3FvfbZEZPxNCzgwmALtgPZ+gF40bw9RV6M26IbUJAhvTn45/Wl6vLAvdHqw6A7c5k/b78q","Sd6cmpoQO7cDImWAPBYkP9treUZnmsWgxeMNWgBm5SUqFp5DjyAHsbCYh/bJQqXQ3cSct5/d6VxGT7JMA58Sz8w9flhgAv0hc6Ly8NHZ6tiMpHHHlPqxXQX7oVELDwE27D7My8voklXjmnYQ6eG4ZaX6FtNtMGAMAla0rurMyhRxKPBFG9gdr/y6oTlWZr1Ay8g4E+kd+WEkIBD8HUCd1aM8lHgW/6eA4P5RO5z0ZddGNn8cxr6xMW1eP5FRG1mEHBhjF50dsjop4XWxd+3ArMLAB6zXTdvtl70a7dCRLnzfPoM76kGnLmIoXUM=","WfJ6TMbhvXMEv9DLpMdb1rp/MLvJWh5WG+ZUhl5isooEn3bXTZFMUaBVN6JciQ3MbKlRazXMwSOg2QDZqbddedyRwFN0Z3gDF3j+wViUGhXWJOupQGL8oZoG9D8RK9rkLPcimV/HN07nc902rBRaJJEKEPAJprKrrphxyV78dFydR6S5VH8YGyEBdRDd+SYC0EPELm4ZXUoQTBjrL5kNjwO98wJGoUoI2ns44dHqbj199CkWE5ZsTTT/1GcTe26Vjwxb+7847FG+k+TCfrGZjk3zlEuP3y4cTRVJxA==","iW8wOEGMZGCVkYK9MGqD9dItYGLCND8EuuY3yLeIUC8uzB+TLZzUCQs3PkmrK6gsKeWY5TdcNWzUQExr3HbIewyWR4/iIXF6sgisi8oXs1ugHFECCM/ILPyUi7L6CTwTRy+X36NRRDF3obXNTd/eWaXdrEYKtjblVMV/yYTvB2lOBwFJRm2wDRh8NYNCkI6zmtwOJPBT3RxFILO6HH0Xf3Aa96ndtMnWkT9wDauftgjPdPGCYgDKOw9iah8hhSUOyA5cZP28yeg/vArKq5RWAVL6bIiebq5BP7Cx7AN7WlvsUwCXnVxYceHhJmo=","NTBZkxn3VTbSU2mmhJZF/rbJArT5y47bZ7FlLFoOpZbS0So7pMs2q95l2MahsBFnTONys5yvvpxzFu4fBxBRyw34Qks/UuOAwZpCGl6ZM8qTNFrxamxq8VGsfP/TEu7yKVKNfhLTekjoYaS1yFioLWA7A3Thhcq/Ow609nUUCUVrVdEwXO8yVnx2MOCBx++/P94kihSuW4rDtx4vvSKXR2ssD4vMxMaUr+JYfia2mROc/zrm4n1M4sZeykCF4St9Q/PUpMMOgYShp/6zcFLz2BU3g0yIchqsiWaEjLjF++kO3RcFmfwH+dBuC574gdC42IsyWigMs7PF2wKV"]];
+                            $result_val['FGContext'] = [["fB34xLAh5sat0F0FtKPE6bGbgiesLkFY2cK11VKj8bvFhw3cyDdjXhXgXJiER6lAFbMjUUSqNs/hCpY9OIdyNpbPsjcL/kkKI4QB+0Kue2Wx/S/ZhRSFZwR/3xaV+qF7HjKdDTNC/pDTuYuTkvcLhtzrVcMrq3HzhBkmgr4/5bqvp050Xi74Svv0+3PZD5l70r3JWrFm2COjqM/kh1Fm//rDgniphTmRXWPBuX3luYCLoZlufx0nGL0awuHxtn3r2WE+u0w7FFGV9Fy4YtPZajKy1zP8ZOo3g9QlV6f0d+j596aclOKTn+7a4Xkl3GPpdD/jveUqXnZT+iqwfdOnhjMkKTOClajxwj1vOtI7BfGfF8f80lLE+XCJNY4=","TcqqXEt7yM8Pl6xabAp3XR8vzwVbhNMCguP70vMbOfwJeQ65aLoba1JoxeGLOfO5wCuTi6txI3wdM+Y6wdorlOMZUJ8OyPODcHKTVR5PAULdpbnmmqEQgvvxfE8b/NLwdUSPeUdlfJYLtwOHe3jRVrT0nm8ic/6d1rBeNUtqpANNoDBJF3CTQpf+BYSUdgPj2a24tZtCVnHR+8NYEg5zESbXHPk7exs5YGZ2Fgr2Opr52qKn7kSKUF5z4L0MVeU07l3SDfpF1fX/daXET1q2inDrheLpmKoz9dMg20+SPJ2b963SPCdbF5aQBzdYavMJWUQHiJYLjZiZW6Z07BhULqWl1ruFNbibAOdXFhDZWUYDkSRT+YwwVA7RkdZII4klSGH4gm4VRrO0Dswy","KvPXFDoBmh9Eegb55z+08TCScltnp73iNCaDiYneQxEyGhDrnCWqtg6RxlqBsAPYqk2ph9BsKsODHzKTJJvweexYkNYn4fgJpdu9gEb5WGC4nN2+RIQ9JIVW1/bRczq5GWM5EdxNLvJMtHXIheJRjO+kJfak54gwH2cUhIQ7v7gkow7Kjv9xO2M4Xd7Vh3nZA3i5qhDcpmkURjhRGEM2DS/TuCnomFVEqzL1nnhPc03qjzgUsoVkad4uEciVFswOWdMLtlUcSZW1xnV0zwu3OPGgWIOta5kwQ0nw30e0EezpX0++vLUuYznyL0xubsLQ9ST1Y0mi8OudPrVnCnspv2dNbWlAThldHpAuUQ==","9JqWhVr1xqW987hfAw83g2L7o0w/Q2LsUBo7w0IWIjj28Igyo4mLtRmXcaI=","mK8jmsSJbu9ecszikHazS2fkwkkOgtXSfN8hpqg+gDq44x5SnhFtQJNzPe8="]];
                         }else if($packet_id == 31 || $packet_id == 42){
-                            $lines = 50;
+                            $lines = 20;
                             if($packet_id == 31){
                                  $betline = $gameData->PlayBet;// * $gameData->MiniBet;
                             }else if($packet_id == 42){
@@ -122,7 +122,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '664' . substr($roundstr, 3, 9);
+                                $roundstr = '656' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -151,7 +151,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
                                 $result_val['MaxSpin'] = $stack['MaxSpin'];
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
-                                $result_val['Multiple'] = $stack['Multiple'];
+                                $result_val['Multiple'] = 0;
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -188,7 +188,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
                         $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 50;
+                        $lines = 20;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -225,7 +225,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'bonus';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -302,8 +302,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
-            //$result_val['Multiple'] = "1";
-            //$result_val['Multiple'] = $stack['Multiple'];
+            $result_val['Multiple'] = "1";
             if($freespinNum > 0)
             {
                 $isTriggerFG = true;
@@ -316,9 +315,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                //$result_val['Multiple'] = "3";
-                //$result_val['Multiple'] = $stack['Multiple'];
+                $result_val['Multiple'] = "'". $currentSpinTimes . "'";
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
@@ -418,7 +415,7 @@ namespace VanguardLTE\Games\NeZhaAdventCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 163;
+                $wager['game_id']               = 66;
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;

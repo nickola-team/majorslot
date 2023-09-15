@@ -297,8 +297,13 @@ namespace VanguardLTE\Games\FlowerFortunesCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             $result_val['Multiple'] = $stack['Multiple'];
@@ -315,7 +320,7 @@ namespace VanguardLTE\Games\FlowerFortunesCQ9
             if($slotEvent == 'freespin'){                
                 $isState = false;
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                $result_val['Multiple'] = $stack['Multiple'];
+                //$result_val['Multiple'] = $stack['Multiple'];
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;

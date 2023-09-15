@@ -352,8 +352,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
                 }else{
                     $newRespin = false;
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
-                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
-                        //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
                     }
                 }
@@ -389,7 +388,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound'] && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     if($packId == 1000){
                         $isState = true;

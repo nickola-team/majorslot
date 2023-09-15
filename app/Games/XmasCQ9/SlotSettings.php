@@ -773,6 +773,9 @@ namespace VanguardLTE\Games\XmasCQ9
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameXmasStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
+                if($left_specialsymbol_count < 0){
+                    $left_specialsymbol_count = 0;
+                }
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = mt_rand(0, 48000);
                 $stacks = $stacks->where('pur_level', $gameRound);

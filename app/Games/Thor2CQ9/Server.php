@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\Thor2CQ9
                             $result_val['PromotionData'] = null; //$slotSettings->getPromotionData();
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom * $this->demon;
