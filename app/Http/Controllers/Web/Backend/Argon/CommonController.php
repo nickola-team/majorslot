@@ -57,6 +57,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
+            if ($user->id == auth()->user()->id)
+            {
+                \DB::commit();
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
             
             $b = $user->withdrawAll('updateBalance');
             if (!$b)
