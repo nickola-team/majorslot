@@ -62,7 +62,15 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
-            
+            if ($user->playing_game != null)
+            {
+                $ct = \VanguardLTE\Category::where('href', $user->playing_game)->first();
+                if ($ct != null && $ct->provider != null)
+                {
+                    \DB::commit();
+                    return redirect()->back()->withErrors(['먼저 게임종료버튼을 눌러주세요.']);
+                }
+            }
             $b = $user->withdrawAll('updateBalance');
             if (!$b)
             {
