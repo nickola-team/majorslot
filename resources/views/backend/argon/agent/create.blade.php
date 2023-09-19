@@ -104,7 +104,7 @@
                                 </div>
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4 col-6">생성</button>
+                                    <button type="button" onclick="submitCheck(this.form)" class="btn btn-success mt-4 col-6">생성</button>
                                 </div>
                             </div>
                         </form>
@@ -147,5 +147,16 @@ $('#btncheckId').click(function () {
             }
         });
 });
+var doubleSubmitFlag = false;
+function submitCheck(form){
+    userid = $('#username').val();
+    if(doubleSubmitFlag == true){
+        alert(userid + '파트너 생성중입니다.');
+        return false;
+    }else{
+        doubleSubmitFlag = true;
+        form.submit();
+    }
+}
 </script>
 @endpush
