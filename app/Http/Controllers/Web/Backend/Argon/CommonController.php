@@ -103,7 +103,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // {
                 //     return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
                 // }
-
+                if($data['type'] == ''){
+                    \DB::commit();
+                    return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                }
                 $shop = $user->shop;
                 if( $request->all && $request->all == '1' ) 
                 {
