@@ -71,6 +71,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     return redirect()->back()->withErrors(['먼저 게임종료버튼을 눌러주세요.']);
                 }
             }
+            //대기중의 게임입장큐 삭제
+            \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
             $b = $user->withdrawAll('updateBalance');
             if (!$b)
             {
