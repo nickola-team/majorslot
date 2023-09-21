@@ -1089,7 +1089,7 @@ namespace VanguardLTE
                 {
                     $betMoney = $bet->amount;
                     $winMoney = $bet->win;
-                    if ($bet->rt_rate < 2)
+                    if ($bet->rate < 2)
                     {
                         $type = 'pbsingle';
                     }
