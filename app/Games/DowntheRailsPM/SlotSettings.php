@@ -746,6 +746,9 @@ namespace VanguardLTE\Games\DowntheRailsPM
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    if($spintype == 0){
+                        $spintype = 2;
+                    }
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{

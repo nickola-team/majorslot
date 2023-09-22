@@ -754,6 +754,11 @@ namespace VanguardLTE\Games\VampiresvsWolvesPM
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    if($ind > -1){
+                        $spintype = 1;
+                    }else{
+                        $spintype = 2;
+                    }
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
