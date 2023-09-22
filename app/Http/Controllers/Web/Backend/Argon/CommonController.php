@@ -72,7 +72,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
             //대기중의 게임입장큐 삭제
-            \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
+            $launchReque = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->first();
+            if(isset($launchReque)){
+                \DB::commit();
+                return redirect()->back()->withErrors([$user->username . '님이 게임입장중이므로 잠시 기다려주세요.']);
+            }
             $b = $user->withdrawAll('updateBalance');
             if (!$b)
             {
