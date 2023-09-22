@@ -1,4 +1,4 @@
-@extends('frontend.newworld.layouts.app', ['logo' => 'unique'])
+@extends('frontend.unique.layouts.app', ['logo' => 'unique'])
 @section('page-title', $title)
 
 @section('content')
