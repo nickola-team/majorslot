@@ -57,7 +57,26 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 \DB::commit();
                 return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
             }
-            
+            if ($user->id == auth()->user()->id)
+            {
+                \DB::commit();
+                return redirect()->back()->withErrors(['유저를 찾을수 없습니다.']);
+            }
+            if ($user->playing_game != null)
+            {
+                $ct = \VanguardLTE\Category::where('href', $user->playing_game)->first();
+                if ($ct != null && $ct->provider != null)
+                {
+                    \DB::commit();
+                    return redirect()->back()->withErrors(['먼저 게임종료버튼을 눌러주세요.']);
+                }
+            }
+            //대기중의 게임입장큐 삭제
+            $launchReque = \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->first();
+            if(isset($launchReque)){
+                \DB::commit();
+                return redirect()->back()->withErrors([$user->username . '님이 게임입장중이므로 잠시 기다려주세요.']);
+            }
             $b = $user->withdrawAll('updateBalance');
             if (!$b)
             {
@@ -90,7 +109,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 // {
                 //     return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
                 // }
-
+                if($data['type'] == ''){
+                    \DB::commit();
+                    return redirect()->back()->withErrors(['허용되지 않은 조작입니다.']);
+                }
                 $shop = $user->shop;
                 if( $request->all && $request->all == '1' ) 
                 {

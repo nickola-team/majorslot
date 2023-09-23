@@ -1,0 +1,35 @@
+.sc-inner {
+    max-width: 1440px;
+    margin: 0px auto;
+}
+
+.slot-btn {
+    width: auto;
+    height: auto;
+    float: left;
+    position: relative;
+    z-index: 0;
+    transition: 0.3s;
+    perspective: 900px;
+    border-radius: 0px;
+    overflow: hidden;
+    margin: 0 5px 10px 5px;
+}
+
+.slot-btn .inner {
+    width: 100%;
+    /* height: 100%; */
+    float: left;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.slot-btn.before-hover .inner {
+    transform: rotateY(30deg) scale(0.9);
+    opacity: 0.5;
+}
+
+.slot-btn.after-hover .inner {
+    transform: rotateY(-30deg) scale(0.9);
+    opacity: 0.5;
+}

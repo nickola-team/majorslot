@@ -725,6 +725,7 @@ namespace VanguardLTE\Games\PekingLuckPM
             // }
             $spintype = 0;
             if($winType == 'bonus'){
+                $spintype = 1;
                 $winAvaliableMoney = $this->GetBank('bonus');
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
@@ -739,6 +740,7 @@ namespace VanguardLTE\Games\PekingLuckPM
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    $spintype = 1;
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
