@@ -732,6 +732,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function player_list(\Illuminate\Http\Request $request)
         {
+            set_time_limit(0);
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
             $parent = $user;
