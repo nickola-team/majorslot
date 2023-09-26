@@ -178,6 +178,8 @@ namespace VanguardLTE\Games\MrMiserCQ9
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
                             }
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -188,7 +190,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
                             $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
+                            //$slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                         }
                         array_push($result_vals, count($result_vals) + 1);
@@ -365,8 +367,13 @@ namespace VanguardLTE\Games\MrMiserCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             // $result_val['Multiple'] = 0;
