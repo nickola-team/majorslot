@@ -37,7 +37,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 }else if($paramData['req'] == 2){
@@ -195,6 +195,8 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                             }
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -205,7 +207,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                             $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
+                            //$slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -280,7 +282,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'win';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -380,8 +382,13 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             // $result_val['Multiple'] = 0;
@@ -404,6 +411,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
                 $isState = false;
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
                     $isState = true;
                 }
             }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){
