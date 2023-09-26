@@ -868,7 +868,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 return redirect()->back()->withErrors(['플레이어를 찾을수 없습니다.']);
             }
             //대기중의 게임입장큐 삭제
-            \VanguardLTE\GameLaunch::where('finished', 0)->where('user_id', $user->id)->delete();
+            \VanguardLTE\GameLaunch::where('user_id', $user->id)->delete(); // where('finished', 0)->
             $b = $user->withdrawAll('playerterminate');
             if (!$b)
             {
