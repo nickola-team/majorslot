@@ -1150,8 +1150,9 @@ return [
         "SaiyanMania" => "사이어인 매니아",
         "FrozenTropics" => "프로즌 트로픽스",
         "GoldOasis" => "골드 오아시스",
+        "_8GoldenDragonChallenge" => "8 골든 드래곤 첼린지",
+        "BookofTutMegaways" => "북 오브 투트 메가웨이즈",
 
-        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
