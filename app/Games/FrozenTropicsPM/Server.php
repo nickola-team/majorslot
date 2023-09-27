@@ -135,7 +135,17 @@ namespace VanguardLTE\Games\FrozenTropicsPM
                     $str_s_mark = $stack['s_mark'];
                     $fsmore = $stack['fsmore'];
                     $strWinLine = $stack['win_line'];
+                    $moneyWin = $apv * $bet;
                     $strOtherResponse = $strOtherResponse . '&tw=' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                    if($rs_p >= 0){
+                        $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_c='. $rs_c .'&rs_m=' . $rs_m;
+                    }
+                    if($rs_t > 0){
+                        $strOtherResponse = $strOtherResponse.'&rs_t='.$rs_t;
+                    }
+                    if($str_rs != ''){
+                        $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
+                    }
                     if($str_trail != ''){
                         $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
                     }
@@ -166,7 +176,7 @@ namespace VanguardLTE\Games\FrozenTropicsPM
                         $strOtherResponse = $strOtherResponse . '&slm_mv=' . $str_slm_mv . '&slm_mp=' . $str_slm_mp;
                     }
                     if($apv > 0){
-                        $strOtherResponse = $strOtherResponse . '&apaw=' . $apaw . '&apt=ma&apv=' . $apv;
+                        $strOtherResponse = $strOtherResponse . '&apaw=' . $moneyWin . '&apt=ma&apv=' . $apv;
                     }
                     if($arr_g != null){
                         $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($arr_g));                    
