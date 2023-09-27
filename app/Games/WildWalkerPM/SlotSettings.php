@@ -735,6 +735,7 @@ namespace VanguardLTE\Games\WildWalkerPM
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    $spintype = 1;
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{

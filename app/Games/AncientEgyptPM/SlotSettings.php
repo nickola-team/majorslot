@@ -724,6 +724,9 @@ namespace VanguardLTE\Games\AncientEgyptPM
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    if($spintype == 0){
+                        $spintype = 2;
+                    }
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
@@ -761,7 +764,7 @@ namespace VanguardLTE\Games\AncientEgyptPM
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
-                            if ($this->happyhouruser)
+                            if ($this->happyhouruser && $spintype == 1)
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
                             }
