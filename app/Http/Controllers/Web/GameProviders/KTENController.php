@@ -31,11 +31,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-evoplay' => ['thirdname' =>'Evoplay','type' => 'slot'],
 
             //==== CASINO ====
-            'kten-og' => ['thirdname' =>'Og','type' => 'casino'],
-            'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'casino'],
-            'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'casino'],
-            'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'casino'],
-            'kten-asia' => ['thirdname' =>'Ag','type' => 'casino'],
+            'kten-og' => ['thirdname' =>'Og','type' => 'live'],
+            'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'live'],
+            'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'live'],
+            'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'live'],
+            'kten-asia' => ['thirdname' =>'Ag','type' => 'live'],
         ];
 
         public static function getGameObj($uuid)
@@ -125,7 +125,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $url = config('app.kten_api') . '/api/getGameList';
             }
-            elseif ($type=='casino')
+            elseif ($type=='live')
             {
                 $url = config('app.kten_api') . '/api/getLobbyList';
             }
@@ -199,7 +199,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
                         'title' => $korname,
                         'icon' => $game['thumbnail'],
-                        'type' => (($type=='casino')?'table':'slot'),
+                        'type' => (($type=='live')?'table':'slot'),
                         'view' => $view
                     ]);
                 }
@@ -215,7 +215,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
                 'icon' => '',
-                'type' => (($type=='casino')?'table':'slot'),
+                'type' => (($type=='live')?'table':'slot'),
                 'view' => 0
             ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -455,7 +455,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='casino')
+            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='live')
             {
                 $gamelist = KTENController::getgamelist($gamecode);
                 if (count($gamelist) > 0)
