@@ -768,10 +768,10 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGame8GoldenDragonChallengeStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 48000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 55000);
+                    $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
