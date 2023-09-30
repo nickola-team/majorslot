@@ -257,7 +257,7 @@ namespace VanguardLTE\Games\ClubTropicanaPM
                         $response = '{"responseEvent":"error","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":"invalid bet state"}';
                         exit( $response );
                     }
-                    if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline)) 
+                    if( $slotEvent['slotEvent'] == 'doSpin' && $slotSettings->GetBalance() < ($lines * $betline)  && $slotSettings->GetGameData($slotSettings->slotId . 'TumbleState') == 0) 
                     {
                         $balance_cash = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                         if(!isset($balance_cash)){
@@ -440,7 +440,7 @@ namespace VanguardLTE\Games\ClubTropicanaPM
                     $strWinLine = implode('&', $arr_lines);
                 } 
                 $str_g = '';
-                if($moneycount > 5 && $str_mo != ''){
+                if($moneycount >= 5 && $str_mo != ''){
                     $normal_mo_wpos = [];
                     $normal_mo_tv = 0;
                     $arr_mo = explode(',', $str_mo);

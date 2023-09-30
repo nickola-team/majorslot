@@ -440,7 +440,7 @@ namespace VanguardLTE\Games\BiggerBassBlizzardPM
                     $strWinLine = implode('&', $arr_lines);
                 } 
                 $str_g = '';
-                if($moneycount > 5 && $str_mo != ''){
+                if($moneycount >= 5 && $str_mo != ''){
                     $normal_mo_wpos = [];
                     $normal_mo_tv = 0;
                     $arr_mo = explode(',', $str_mo);
