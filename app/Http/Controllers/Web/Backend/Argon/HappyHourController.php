@@ -70,6 +70,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $data['progressive'] = mt_rand(2,5);
             }
+            if($data['total_bank'] > 20000000){
+                return redirect()->back()->withErrors('총 담첨금을 2천만으로 제한시켜주세요.');
+            }
             $data['admin_id'] = auth()->user()->id;
             if (!auth()->user()->hasRole('admin'))
             {
