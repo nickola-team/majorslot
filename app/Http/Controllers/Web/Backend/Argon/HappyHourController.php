@@ -135,6 +135,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 $data['progressive'] = mt_rand(2,5);
             }
+            if($data['total_bank'] > 20000000){
+                return redirect()->back()->withErrors('총 담첨금을 2천만으로 제한시켜주세요.');
+            }
             $data['admin_id'] = auth()->user()->id;
             $happyhour->update($data);
             return redirect()->to(argon_route('argon.happyhour.list'))->withSuccess(['유저콜이 업데이트되었습니다']);
