@@ -3,7 +3,11 @@
 ?>
 <td><span class="{{$adjustment->user->role_id>3?'partner':'shop'}}">{{ $adjustment->user->username }}</span>&nbsp;<span class="badge {{$badge_class[$adjustment->user->role_id]}}">{{$adjustment->user->role->description}}</span></td>
 @if ($adjustment->date=='')
-<td></td>
+    @if(isset($sumInfo) && $sumInfo!='')
+    <td>{{$sumInfo}}</td>
+    @else
+    <td></td>
+    @endif
 @else
 <td>{{ date('Y-m-d',strtotime($adjustment->date)) }}</td>
 @endif
@@ -16,7 +20,11 @@
         $adjustment->moneyin = $inout['moneyin'];
         $adjustment->moneyout = $inout['moneyout'];
     }
-    $betwin = $adjustment->betwin();
+    if(isset($sumInfo) && $sumInfo!=''){
+        $betwin = \VanguardLTE\DailySummary::rangebetwin($adjustment->user->id, $sumInfo);
+    }else{
+        $betwin = $adjustment->betwin();
+    }
 ?>
 <td><ul>
     <li>
@@ -43,9 +51,11 @@
 <td>{{ number_format($adjustment->dealout,0) }}</td>
 @if (auth()->user()->isInoutPartner())
 <td>
+    {{--
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
+--}}
 @foreach ($betwin as $type => $bt)
     <div class="d-flex">
     <div class="d-flex" style="justify-content : center;align-items : center;">
@@ -73,13 +83,17 @@
     <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
     @endif
 @endforeach
+{{--
 @endif
+--}}
 </td>
 @endif
 <td>
+{{--
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
+--}}
 @foreach ($betwin as $type => $bt)
     <div class="d-flex">
     <div class="d-flex" style="justify-content : center;align-items : center;">
@@ -107,30 +121,39 @@
     <hr style="margin-top:0.5rem !important; margin-bottom:0.5rem !important;">
     @endif
 @endforeach    
+{{--
 @endif
+--}}
 </td>
 <td>
+{{--
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
+--}}
     <ul>
     <li>총죽장 : {{ number_format($betwin['total']['total_ggr'],0)}}</li>
     <li>하부죽장 : {{ number_format($betwin['total']['total_ggr_mileage'],0)}}</li>
     <li>본인죽장 : {{ number_format($betwin['total']['total_ggr']-$betwin['total']['total_ggr_mileage'],0)}}</li>
     </ul>
+    {{--
 @endif
+--}}
 </td>
 <td>
+{{--
 @if (isset($sumInfo) && $sumInfo!='')
     <span class='text-red'>준비중</span>
 @else
-
+--}}
     <ul>
     <li>총롤링 : {{ number_format($betwin['total']['total_deal'],0)}}</li>
     <li>하부롤링 : {{ number_format($betwin['total']['total_mileage'],0)}}</li>
     <li>본인롤링 : {{ number_format($betwin['total']['total_deal']-$betwin['total']['total_mileage'],0)}}</li>
     </ul>
+    {{--
 @endif
+--}}
 </td>
 <td>
     <ul>
