@@ -11,7 +11,7 @@
         <div class="sidenav-header d-flex align-items-center">
             <a class="navbar-brand" href="#">
                 <!-- <img src="{{ asset('back/argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="..."> -->
-            </a>
+            </a> 
             <div class="ml-auto">
                 <!-- Sidenav toggler -->
                 <div class="sidenav-toggler d-none d-xl-block" data-action="sidenav-unpin" data-target="#sidenav-main">

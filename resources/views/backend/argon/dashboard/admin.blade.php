@@ -6,7 +6,7 @@
 @section('content-header')
 <div class="row">
     <div class="col-xl-3 col-md-6">
-        <div class="card bg-gradient-primary border-0 card-bg-1">
+        <div class="card bg-gradient-primary border-0 card-bg-1"> 
             <div class="card-body">
                 <div class="row">
                     <div class="col">
