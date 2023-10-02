@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $gameRound=1)
+        public function GetReelStrips($winType, $bet, $gameRound=0)
         {
             // if($winType == 'bonus'){
                 //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFaCaiShen2Stack::where('id', 14760)->first();
@@ -768,12 +768,13 @@ namespace VanguardLTE\Games\FaCaiShen2CQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFaCaiShen2Stack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
+                $index = 0;
                 if($gameRound == 0){
-                    $index = mt_rand(0, 120000);
+                    $index = mt_rand(0, 118000);
                 }else if($gameRound == 1){
-                    $index = mt_rand(0, 120000);
+                    $index = mt_rand(0, 118000);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 120000);
+                    $index = mt_rand(0, 118000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){

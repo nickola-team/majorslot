@@ -725,7 +725,7 @@ namespace VanguardLTE\Games\KingofAtlantisCQ9
            } 
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
                 //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameKingofAtlantisStack::where('id', 41678)->first();

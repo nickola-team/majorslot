@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\HappyRichYearCQ9
         public function GetReelStrips($winType, $bet)
         {
             // // // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHappyRichYearStack::where('id', 111874)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHappyRichYearStack::where('id', 16901)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

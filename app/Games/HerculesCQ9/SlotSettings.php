@@ -730,10 +730,10 @@ namespace VanguardLTE\Games\HerculesCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHerculesStack::where('id', 108209)->first();   //74814,105418,108209
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHerculesStack::where('id', 68352)->first();   //74814,105418,108209
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -746,6 +746,16 @@ namespace VanguardLTE\Games\HerculesCQ9
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
+            }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
             }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([

@@ -81,7 +81,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             //$result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom;
@@ -130,6 +130,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 } 
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){
@@ -220,7 +221,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',$gameData->PlayerSelectIndex);
-                            $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, 1, $originalbet,$packet_id);
+                            $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, 30, $originalbet,$packet_id);
                            
                         }else if($packet_id == 46){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -266,8 +267,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                     $lines = 30;
                         
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
-                        $pur_level = 0;
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('freespin', ($betline /  $this->demon) * $lines, 0);
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('freespin', ($betline) * $lines, 0);
                         if($tumbAndFreeStacks == null){
                             $response = 'unlogged';
                             exit( $response );
@@ -289,7 +289,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
                         //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                         $stack = $tumbAndFreeStacks[0];
                         $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
@@ -333,7 +333,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+             //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -425,8 +425,13 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             $result_val['Multiple'] = 0;
@@ -443,7 +448,7 @@ namespace VanguardLTE\Games\SkrSkrCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

@@ -333,7 +333,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             event(new \VanguardLTE\Events\User\LoggedOut());
             if (\Auth::check()){
                 $user = auth()->user();
-                $b = $user->withdrawAll('getlogout');                
+                // $b = $user->withdrawAll('getlogout');                
                 $user->update([
                     'api_token' => null
                 ]);

@@ -760,6 +760,16 @@ namespace VanguardLTE\Games\DragonBallCQ9
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
@@ -776,6 +786,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
 
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
+                $index = 1;
                 if($gameRound == 1){
                     $index = mt_rand(0, 220000);
                 }else if($gameRound == 2){

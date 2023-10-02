@@ -226,7 +226,7 @@ namespace VanguardLTE\Games\LuckyTigersCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'bonus';
+             //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -270,14 +270,19 @@ namespace VanguardLTE\Games\LuckyTigersCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];   
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                $awardSpinTimes = $stack['AwardSpinTimes'];   
+                if(isset($stack['CurrentSpinTimes'])) {
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];   
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
+                
+            }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -294,8 +299,13 @@ namespace VanguardLTE\Games\LuckyTigersCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             $result_val['Multiple'] = $stack['Multiple'];
@@ -313,7 +323,7 @@ namespace VanguardLTE\Games\LuckyTigersCQ9
                 $isState = false;
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
                 $result_val['Multiple'] = $stack['Multiple'];
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

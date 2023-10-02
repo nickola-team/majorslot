@@ -76,7 +76,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['DenomMultiple'] = $initDenom * $this->demon;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
@@ -231,7 +231,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            //$winType = 'bonus';
+            //$winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -285,14 +285,18 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];   
+                $awardSpinTimes = $stack['AwardSpinTimes']; 
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes']; 
+                }   
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = floor(($value['LinePrize'] / $originalbet * $betline) + 0.05);
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = floor(($value['LinePrize'] / $originalbet * $betline) + 0.05);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -332,7 +336,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             if($slotEvent == 'freespin'){                
                 $isState = false;
                 //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound']){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

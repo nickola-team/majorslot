@@ -332,9 +332,6 @@ namespace VanguardLTE\Games\GodOfChessCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                $result_val['Multiple'] = $stack['Multiple'];
-                //if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
                 if(( isset($stack['IsRespin']) && $stack['IsRespin'] == false)&&($awardSpinTimes == $currentSpinTimes)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;

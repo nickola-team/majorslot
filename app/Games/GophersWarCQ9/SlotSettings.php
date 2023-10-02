@@ -752,6 +752,16 @@ namespace VanguardLTE\Games\GophersWarCQ9
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
