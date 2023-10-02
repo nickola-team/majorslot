@@ -729,8 +729,8 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 1904)->first(); //6039 :  Free,9472 : symbol spin
-                    return json_decode($stack->spin_stack, true);                    
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 13408)->first(); //6039 :  Free,9472 : symbol spin
+                    // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 2560)->first();
                 //     return json_decode($stack->spin_stack, true);
@@ -751,6 +751,16 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
@@ -764,7 +774,14 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
                 }
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                $index = 0;// mt_rand(0, 48000);
+                $index = 1;// mt_rand(0, 48000);
+                if($gameRound == 1){
+                    $index = mt_rand(0, 70000);
+                }else if($gameRound == 2){
+                    $index = mt_rand(0, 140000);
+                }else if($gameRound == 3){
+                    $index = mt_rand(0, 210000);
+                }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

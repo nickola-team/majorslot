@@ -82,7 +82,7 @@ namespace VanguardLTE\Games\GophersWarCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom;
@@ -292,7 +292,7 @@ namespace VanguardLTE\Games\GophersWarCQ9
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
-                            $result_val['ID'] = 142;
+                            $result_val['ID'] = 145;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
@@ -411,8 +411,13 @@ namespace VanguardLTE\Games\GophersWarCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             $result_val['Multiple'] = 0;

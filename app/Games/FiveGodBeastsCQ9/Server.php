@@ -86,7 +86,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom;
@@ -445,6 +445,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 $stack['ExtendFeatureByGame'] = [["Name"=>"AccumulateUpCount","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["Name"=>"LevelUpCount","Value"=>3],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
             }else{
                 $stack['ExtendFeatureByGame'] = [["Name"=>"AccumulateUpCount","Value"=>0],["Name"=>"LevelUpCount","Value"=>3],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)]];
+                $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
                 $stack['ExtraData'][0] = 0;
             }
             $stack['NextSTable'] = 0;
@@ -520,7 +521,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddSpins'] == 0 && $stack['RetriggerAddRound'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

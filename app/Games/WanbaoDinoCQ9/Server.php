@@ -74,7 +74,7 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['DenomMultiple'] = $initDenom;
                             $result_val['RecommendList'] = $slotSettings->getRecommendList();
@@ -186,8 +186,6 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 25;
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
@@ -271,13 +269,18 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];   
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];   
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
+                
+            }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -294,8 +297,13 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             $result_val['Multiple'] = $stack['Multiple'];
@@ -311,9 +319,7 @@ namespace VanguardLTE\Games\WanbaoDinoCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                $result_val['Multiple'] = $stack['Multiple'];
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
