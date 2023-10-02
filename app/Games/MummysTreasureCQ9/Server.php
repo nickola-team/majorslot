@@ -360,11 +360,13 @@ namespace VanguardLTE\Games\MummysTreasureCQ9
                 $stack['TotalWin'] = $stack['TotalWin'] / $originalbet * $betline;
                 $totalWin = $stack['TotalWin'];
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
             $stack['ExtraData'] = [$slotSettings->GetGameData($slotSettings->slotId . 'BombValue'), $totalPknoCount, $pkno_value, 0];
             if($isDouble == true){

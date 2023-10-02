@@ -117,9 +117,6 @@ namespace VanguardLTE\Games\HerculesCQ9
                                     $slotEvent['slotEvent'] = 'bet';
                                 }
                                 $pur_level = -1;
-                                if($gameData->ReelPay > 0){
-                                    $pur_level = 0;
-                                }
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
@@ -137,11 +134,7 @@ namespace VanguardLTE\Games\HerculesCQ9
                                 
                                 $slotSettings->SetBet(); 
                                 $isBuyFreespin = false;
-                                $allBet = ($betline /  $this->demon) * $lines;
-                                if($pur_level == 0){
-                                    $allBet = $allBet * 60;
-                                    $isBuyFreespin = true;
-                                }       
+                                $allBet = ($betline /  $this->demon) * $lines;    
                                 if(isset($slotEvent['slotEvent'])){
                                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                                 }
@@ -281,7 +274,7 @@ namespace VanguardLTE\Games\HerculesCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+             //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -332,14 +325,19 @@ namespace VanguardLTE\Games\HerculesCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                $awardSpinTimes = $stack['AwardSpinTimes']; 
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                }   
+                
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];

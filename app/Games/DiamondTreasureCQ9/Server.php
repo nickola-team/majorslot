@@ -285,9 +285,10 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
                         //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                         $stack = $tumbAndFreeStacks[0];
-                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        //$freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $freespinNum = 12;
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
@@ -444,7 +445,7 @@ namespace VanguardLTE\Games\DiamondTreasureCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

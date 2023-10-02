@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\EightEightEightCaiShenCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
                 //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameEightEightEightCaiShenStack::where('id', 27648)->first();

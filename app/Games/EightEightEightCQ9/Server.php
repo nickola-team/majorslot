@@ -109,9 +109,7 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                             }else{
                                 $slotEvent['slotEvent'] = 'bet';
                                 $pur_level = -1;
-                                if($gameData->ReelPay > 0){
-                                    $pur_level = 0;
-                                }
+                                
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
@@ -122,16 +120,12 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 1);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;
                                 $isBuyFreespin = false;
-                                if($pur_level == 0){
-                                    $allBet = $allBet * 80;
-                                    $isBuyFreespin = true;
-                                }
+                                
                                 $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                                 $_sum = $allBet / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'], $isBuyFreespin);
@@ -183,7 +177,6 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
                         }else if($packet_id == 44){
                             $slotEvent['slotEvent'] = 'bonus';
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -210,10 +203,6 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'];// / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
-                            // $slotSettings->SetBalance($stack['TotalWinAmt']);
-                            // $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $stack['TotalWinAmt']);
-                            // $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $stack['TotalWinAmt']);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -236,8 +225,8 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                     $lines = 10;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
-                        $pur_level = 0;
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', ($betline /  $this->demon) * $lines, $pur_level);
+                        $pur_level = -1;
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', ($betline /  $this->demon) * $lines);
                         if($tumbAndFreeStacks == null){
                             $response = 'unlogged';
                             exit( $response );
@@ -256,10 +245,9 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                     }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
                         //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines);
                         $stack = $tumbAndFreeStacks[0];
-                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $freespinNum = 10;
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
@@ -319,10 +307,7 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
             }else{
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
-                    $winType = 'bonus';
-                }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline /  $this->demon) * $lines);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -394,11 +379,13 @@ namespace VanguardLTE\Games\EightEightEightCQ9
             }
             
             if($packetID ==31 || $packetID == 33){
-                foreach($stack['udsOutputWinLine'] as $index => $value){
-                    if($value['LinePrize'] > 0){
-                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                    foreach($stack['udsOutputWinLine'] as $index => $value){
+                        if($value['LinePrize'] > 0){
+                            $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                        }
+                        $stack['udsOutputWinLine'][$index] = $value;
                     }
-                    $stack['udsOutputWinLine'][$index] = $value;
                 }
             }
             
@@ -472,9 +459,6 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                 $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
                 if($isState == true){
                     $allBet = ($betline /  $this->demon) * $lines;
-                    if($slotEvent == 'bonus' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                        $allBet = $allBet * 80;
-                    }
                     $slotSettings->SaveLogReport(json_encode($gamelog), $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
                 }
             }
@@ -489,9 +473,6 @@ namespace VanguardLTE\Games\EightEightEightCQ9
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
             $currentTime = $this->getCurrentTime();
             $allBet = ($betline /  $this->demon) * $lines;
-            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                $allBet = $allBet * 80;
-            }
             $proof = [];
             $proof['win_line_data']             = [];
             if(isset($result_val['SymbolResult'])){

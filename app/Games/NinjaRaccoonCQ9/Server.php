@@ -291,9 +291,6 @@ namespace VanguardLTE\Games\NinjaRaccoonCQ9
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
             }
-            if(isset($stack['IsRespin']) && $stack['IsRespin'] == true){
-                $freespinNum = 1;
-            }
             $stack['Type'] = $result_val['Type'];
             $stack['ID'] = $result_val['ID'];
             $stack['Version'] = $result_val['Version'];
@@ -324,10 +321,8 @@ namespace VanguardLTE\Games\NinjaRaccoonCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                //$result_val['Multiple'] = "'". $currentSpinTimes . "'";
-                $result_val['Multiple'] = $stack['Multiple'];
                 //if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
-                if(( isset($stack['IsRespin']) && $stack['IsRespin'] == false)&&($awardSpinTimes == $currentSpinTimes)){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

@@ -37,7 +37,7 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 }else if($paramData['req'] == 2){
@@ -132,16 +132,16 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 }
-                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
+                                //$slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 
                                 $slotSettings->SetBet(); 
                                 $isBuyFreespin = false;
                                 $allBet = ($betline /  $this->demon) * $lines;
-                                if($pur_level == 0){
-                                    $allBet = $allBet * 60;
-                                    $isBuyFreespin = true;
-                                }       
+                                // if($pur_level == 0){
+                                //     $allBet = $allBet * 60;
+                                //     $isBuyFreespin = true;
+                                // }       
                                 if(isset($slotEvent['slotEvent'])){
                                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                                 }
@@ -196,6 +196,8 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                             }
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -281,7 +283,7 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -291,10 +293,11 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                 
                 
             }else{
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
-                    $winType = 'bonus';
-                }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                // if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
+                //     $winType = 'bonus';
+                // }
+                // $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -326,20 +329,28 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                 $stack['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
             }
 
-
-            $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',$stack['Multiple']);
+            if(isset($stack['Multiple'])){
+                $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',$stack['Multiple']);
+            }
+            
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
+                
             }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
+            }
+            
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
             }
@@ -350,7 +361,7 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
 
             $newRespin = false;
             if($slotEvent != 'freespin'){
-                if($stack['IsRespin'] == true){
+                if(isset($stack['IsRespin']) && $stack['IsRespin'] == true){
                     if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == false){
                         $newRespin = true;
                         $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
@@ -390,15 +401,17 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                 $isState = false;
             }
             if($slotEvent == "respin"){
-                if(($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
+                if((isset($stack['IsRespin']))&&($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
                 }
             }
 
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes &&(isset($stack['IsRespin']) && $stack['IsRespin'] == false)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
                     $isState = true;
                 }
             }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){
@@ -406,7 +419,7 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 $slotEvent = 'freespin';
                 $isState = false;
-            }else if($slotEvent == 'respin' && $stack['IsTriggerFG'] == true){
+            }else if($slotEvent == 'respin' && (isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true)){
                 $isState = false;
             }else if($newRespin == true){
                 $isState = false;
@@ -416,9 +429,9 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
                 $allBet = ($betline /  $this->demon) * $lines;
-                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                    $allBet = $allBet * 60;
-                }
+                // if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                //     $allBet = $allBet * 60;
+                // }
                 $slotSettings->SaveLogReport(json_encode($gamelog), $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
                 
             }
@@ -431,9 +444,9 @@ namespace VanguardLTE\Games\SakuraLegendCQ9
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
             $currentTime = $this->getCurrentTime();
             $allBet = ($betline /  $this->demon) * $lines;
-            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                $allBet = $allBet * 60;
-            }
+            // if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+            //     $allBet = $allBet * 60;
+            // }
             $proof = [];
             $proof['win_line_data']             = [];
             $proof['symbol_data']               = $result_val['SymbolResult'];

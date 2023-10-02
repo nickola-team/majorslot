@@ -33,6 +33,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                     //$slotSettings->SetGameData($slotSettings->slotId . 'FreeSpinAction', 'bet');
                 }else if($paramData['req'] == 2){
@@ -229,7 +230,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                     $lines = 10;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
-                        $pur_level = 0;
+                        $pur_level = $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin');
                         $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', ($betline) * $lines, $pur_level);
                         if($tumbAndFreeStacks == null){
                             $response = 'unlogged';
@@ -284,7 +285,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet,$packetID){
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline) * $lines, $lines);
                 $winType = $_spinSettings[0];
-                //$winType = 'win';
+                //$winType = 'bonus';
             if($slotEvent == 'bonus'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
@@ -347,11 +348,13 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 //$currentSpinTimes = $stack['CurrentSpinTimes'];    
             }
             if($packetID ==31){
-                foreach($stack['udsOutputWinLine'] as $index => $value){
-                    if($value['LinePrize'] > 0){
-                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                    foreach($stack['udsOutputWinLine'] as $index => $value){
+                        if($value['LinePrize'] > 0){
+                            $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                        }
+                        $stack['udsOutputWinLine'][$index] = $value;
                     }
-                    $stack['udsOutputWinLine'][$index] = $value;
                 }
             }
             

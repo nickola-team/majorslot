@@ -783,7 +783,7 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-
+                $left_specialsymbol_count=0;
                 $left_specialsymbol_count = 3 - $this->GetGameData($this->slotId . 'SymbolCount');
                 if($left_specialsymbol_count<0){
                     $left_specialsymbol_count = 0;
