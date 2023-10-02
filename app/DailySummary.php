@@ -118,7 +118,76 @@ namespace VanguardLTE
             }
             return $betwin;
         }
-
+        public static function rangebetwin($user_id, $date){
+            $param = explode('~', $date);
+            if(!is_array($param) || count($param) < 2){
+                return redirect()->back()->withErrors('찾을수 없습니다.');
+            }
+            $summary = \VanguardLTE\DailySummary::where('date', '>=', $param[0])->where('date', '<=', $param[1])->where('user_id', $user_id);
+            $betwin = [
+                'live' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'slot' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'pball' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+                'total' => [
+                    'totalbet' => 0,
+                    'totalwin' => 0,
+                    'totaldealbet' => 0,
+                    'totaldealwin' => 0,
+                    'total_deal' => 0,
+                    'total_mileage' => 0,
+                    'total_ggr' => 0,
+                    'total_ggr_mileage' => 0,
+                ],
+            ];
+            $totalSumm = $summary->get();
+            foreach ($totalSumm as $su)
+            {
+                foreach ($betwin as $type => $tdata)
+                {
+                    if ($type != 'total')
+                    {
+                        $categories = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'type' => $type])->pluck('id')->toArray();
+                        $catsums = $su->categorySummary->whereIn('category_id', $categories);
+                        foreach ($catsums as $csum)
+                        {
+                            foreach ($tdata as $field => $tvalue)
+                            {
+                                $betwin[$type][$field] = $betwin[$type][$field] + $csum->{$field};
+                                $betwin['total'][$field] = $betwin['total'][$field] + $csum->{$field};
+                            }
+                        }
+                    }
+                }
+            }
+            return $betwin;
+        }
         public function calcInOut()
         {
             $adj = [
