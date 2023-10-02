@@ -44,6 +44,7 @@
         data-confirm-cancel="취소">
         <button class="btn btn-warning btn-sm" >완료</button>
     	</a>
+		{{--
 		@else
 		<a href="{{ argon_route('argon.happyhour.delete', ['id'=>$happyhour->id]) }}" 
         data-method="DELETE"
@@ -53,6 +54,7 @@
         data-confirm-cancel="취소">
         <button class="btn btn-danger btn-sm" >삭제</button>
     	</a>
+		--}}
 		@endif
 	</td>
 </tr>
