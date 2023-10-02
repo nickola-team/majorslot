@@ -27,8 +27,13 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $availableUsers = auth()->user()->availableUsers();
             $availableUsers[] = auth()->user()->id;
             $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->whereIn('admin_id', $availableUsers)->orderBy('happyhour_users.created_at', 'DESC');
+            $total = [
+                'totalbank' => (clone $happyhours)->sum('total_bank'),
+                'currentbank' => (clone $happyhours)->sum('current_bank'),
+                'overbank' => (clone $happyhours)->sum('over_bank'),
+            ];
             $happyhours = $happyhours->paginate(10);
-            return view('backend.argon.happyhour.list', compact('happyhours'));
+            return view('backend.argon.happyhour.list', compact('happyhours', 'total'));
         }
         public function create()
         {
