@@ -37,8 +37,11 @@
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 
 <header>
+	@if (empty($logo))
+	<?php $logo = 'punch'; ?>
+	@endif
 	<ul class="nav">
-		<li class="logo" onclick="goHome()"><img src="/frontend/punch/img/logo.png?5" alt="" /></li>
+		<li class="logo" onclick="goHome()"><img src="/frontend/{{ $logo }}/img/logo.png?5" alt="" /></li>
 		<li class="deposit" onclick="goDeposit()"><div></div></li>
 		<li class="withdraw" onclick="goWithdraw()"><div></div></li>
 		<li class="aboutgame" onclick="goCasino()"><div></div></li>
@@ -128,7 +131,7 @@
 		
 			</li>
 		</ul>
-		<div><img src="/frontend/punch/img/logo.png?5"/></div>
+		<div><img src="/frontend/{{ $logo }}/img/logo.png?5"/></div>
 		<font>Copyright&copy; 펀치. ALL RIGHT RESERVED</font>
 	</footer>
 
