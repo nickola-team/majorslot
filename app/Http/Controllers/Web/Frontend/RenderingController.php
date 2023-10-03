@@ -462,9 +462,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 abort(404);
             }
 
-            Log::channel('monitor_game')->info('Delete gamelaunch | ' . strtoupper($launchRequest->provider) . ':' . $launchRequest->gamecode . ' : ' . $user->username . '('. $user->id . ') : ' . $launchRequest->id);
-
-            $launchRequest->delete();
+            
             $object = '\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider)  . 'Controller';
             if (!class_exists($object))
             {
@@ -629,6 +627,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404);
             }
+            Log::channel('monitor_game')->info('Delete gamelaunch | ' . strtoupper($launchRequest->provider) . ':' . $launchRequest->gamecode . ' : ' . $user->username . '('. $user->id . ') : ' . $launchRequest->id);
+            $launchRequest->delete();
             return redirect($url);
             
         }
