@@ -33,7 +33,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                     $availableUsers = $partner->availableUsers();
                     $availableUsers[] = $partner->id;            
                 }else{
-                    $availableUsers = [];
+                    return redirect()->back()->withErrors('작성자를 찾을수 없습니다');
                 }
             }
             $start_date = date("Y-m-d H:i:s", strtotime("-24 hours"));
