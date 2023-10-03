@@ -739,7 +739,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10){
+                if($limitOdd > 10 || $winType == 'bonus'){
                     $winType = 'bonus';
                     if($ind > -1){
                         $spintype = 1;

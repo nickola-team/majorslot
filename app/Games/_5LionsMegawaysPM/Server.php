@@ -550,7 +550,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbWin', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbleState', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'FSOption', 0) ; 
+                $slotSettings->SetGameData($slotSettings->slotId . 'FSOption', $ind) ; 
                 $response = 'fsmul=1&fs_opt_mask=fs,m,ts,rm&balance='.$Balance.'&fsmax='.$fs_max.'&index=3&balance_cash='.$Balance.'&balance_bonus=0.00&na=s&fswin=0.00&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&fs=1&fs_opt=' . $fs_opt .'&fsres=0.00&sver=5&counter='.((int)$slotEvent['counter'] + 1).'&fsopt_i=' . $fsopt_i;
                 //------------ ReplayLog ---------------        
                 $replayLog = $slotSettings->GetGameData($slotSettings->slotId . 'ReplayGameLogs');
