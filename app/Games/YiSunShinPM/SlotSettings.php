@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\TheWildMachinePM
+namespace VanguardLTE\Games\YiSunShinPM
 {
     class SlotSettings
     {
@@ -73,19 +73,18 @@ namespace VanguardLTE\Games\TheWildMachinePM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1]  = [0,0,0,0,0,0,0,0];
-            $this->Paytable[2]  = [0,0,0,25,200,500,0,3500];
-            $this->Paytable[3]  = [0,0,0,25,100,500,0,3500];
-            $this->Paytable[4]  = [0,0,0,10,75,250,0,1000];
-            $this->Paytable[5]  = [0,0,0,10,50,125,0,750];
-            $this->Paytable[6]  = [0,0,0,5,25,100,0,600];
-            $this->Paytable[7]  = [0,0,0,5,18,85,0,450];
-            $this->Paytable[8]  = [0,0,0,5,12,75,0,375];
-            $this->Paytable[9]  = [0,0,0,2,8,50,0,250];
-            $this->Paytable[10]  = [0,0,0,2,8,50,0,250];
-            $this->Paytable[11]  = [0,0,0,2,8,50,0,250];
-            $this->Paytable[12]  = [0,0,0,2,8,50,0,250];
-            $this->Paytable[13]  = [0,0,0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,0,0,0,20,30,35,40,50,100,150,300,700,1400,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000];
+            $this->Paytable[4] = [0,0,0,0,0,15,20,25,30,40,80,120,250,600,1200,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000];
+            $this->Paytable[5] = [0,0,0,0,0,10,15,20,25,30,60,90,200,500,1000,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800,1800];
+            $this->Paytable[6] = [0,0,0,0,0,8,10,15,20,25,40,60,100,400,800,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600];
+            $this->Paytable[7] = [0,0,0,0,0,6,8,10,15,20,30,50,70,300,600,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200];
+            $this->Paytable[8] = [0,0,0,0,0,5,6,8,10,15,25,40,60,200,400,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800,800];
+            $this->Paytable[9] = [0,0,0,0,0,4,5,6,8,10,20,30,50,100,200,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400];
+            $this->Paytable[10] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            $this->Paytable[11] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -318,6 +317,10 @@ namespace VanguardLTE\Games\TheWildMachinePM
                     $this->happyhouruser->save();
                     return $game;
                 }
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -461,9 +464,9 @@ namespace VanguardLTE\Games\TheWildMachinePM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'doBonus' ) 
+            else if( $slotState == 'slotGamble' ) 
             {
-                $slotstate = $this->slotId . ' BS';
+                $slotstate = $this->slotId . ' DG';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -709,23 +712,23 @@ namespace VanguardLTE\Games\TheWildMachinePM
         } 
 
 
-        public function GetReelStrips($winType, $bet, $ind=-1)
+        public function GetReelStrips($winType, $pur, $bet, $ind = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheWildMachineStack::where('id', 11671)->first();
-                // return json_decode($stack->spin_stack, true);
+            //     $stack = \VanguardLTE\PPGameStackModel\PPGameSugarRushStack::where('id', 62)->first();
+            //     return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
-            if($ind >= 0){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
-            }else if($winType == 'bonus'){
-                $winAvaliableMoney = $this->GetBank('');
-                $spintype = 2;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
+            }
+            if($ind > -1){
+                $spintype = 1;
             }
             $limitOdd = 0;
             if($winType != 'none'){
@@ -733,13 +736,9 @@ namespace VanguardLTE\Games\TheWildMachinePM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10 || $winType == 'bonus'){
+                if($limitOdd > 10){
                     $winType = 'bonus';
-                    if($ind > -1){
-                        $spintype = 1;
-                    }else{
-                        $spintype = 2;
-                    }
+                    $spintype = 1;
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
@@ -752,29 +751,32 @@ namespace VanguardLTE\Games\TheWildMachinePM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheWildMachineStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
-                $index = mt_rand(0, 38000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameSugarRushStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $index = mt_rand(0, 37000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index =  mt_rand(0, 70000);
-                }
-                if($ind >= 0){
-                    $stacks = $stacks->where('pur_level', $ind);
                 }
                 if($isLowBank == true){
-                    if($ind >= 0){
-                        $stacks = $stacks->where('odd', '<=', 10);    
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
+                    if($limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_special_winbonus = 0;
                         $win = explode(',', $this->game->game_win->special_winbonus);
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($ind >= 0){
+                        if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
+                                $miniOdd = $limitOdd / mt_rand(2,4);
+                                if($miniOdd > 30){
+                                    $miniOdd = 30;
+                                }
+                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                            }
                             if ($this->happyhouruser)
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
