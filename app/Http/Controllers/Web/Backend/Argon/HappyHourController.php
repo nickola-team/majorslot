@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             $availableUsers[] = auth()->user()->id;            
             if ($request->partner != '')
             {
-                $partner = \VanguardLTE\User::where('username', $request->partner)->first();
+                $partner = \VanguardLTE\User::where('username', $request->partner)->whereIn('id', $availableUsers)->first();
                 if($partner != null){
                     $availableUsers = $partner->availableUsers();
                     $availableUsers[] = $partner->id;            
