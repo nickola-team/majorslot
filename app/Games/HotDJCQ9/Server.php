@@ -250,13 +250,15 @@ namespace VanguardLTE\Games\HotDJCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
+                $winType = $_spinSettings[0];
+                //$winType = 'win';
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
             }else{
-                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
-                $winType = $_spinSettings[0];
+                
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $winType = 'bonus';
                 }
@@ -298,19 +300,17 @@ namespace VanguardLTE\Games\HotDJCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                }                
             }
-
-            
-            // if($packetID ==31 || $packetID == 33){
-                
-            // }
-
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -349,8 +349,13 @@ namespace VanguardLTE\Games\HotDJCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             if($freespinNum > 0){

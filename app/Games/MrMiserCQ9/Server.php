@@ -267,7 +267,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'win';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -315,13 +315,17 @@ namespace VanguardLTE\Games\MrMiserCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
+            }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -352,8 +356,7 @@ namespace VanguardLTE\Games\MrMiserCQ9
                 }else{
                     $newRespin = false;
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
-                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
-                        //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
+                    if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
                     }
                 }
@@ -387,24 +390,40 @@ namespace VanguardLTE\Games\MrMiserCQ9
                 }
                 $isState = false;
             }
+            // if($slotEvent == 'freespin'){                
+            //     $isState = false;
+            //     if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound'] && $stack['IsRespin'] == false){
+            //         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+            //         $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
+            //         $isState = true;
+            //         if($packId == 1000){
+            //             $isState = true;
+            //         }
+                    
+            //     }
+            // }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0 && $stack['IsRespin'] == false){
+            //     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+            //     $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
+            //     $slotEvent = 'freespin';
+            //     $isState = true;
+            // }else if($newRespin == true){
+            //     $isState = false;
+            // }
+            
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound'] && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
+                    $isState = true;
                     if($packId == 1000){
                         $isState = true;
                     }
                     
                 }
-            }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0 && $stack['IsRespin'] == false){
-                $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
-                $slotEvent = 'freespin';
-                $isState = true;
             }else if($newRespin == true){
                 $isState = false;
             }
-            
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
@@ -527,18 +546,18 @@ namespace VanguardLTE\Games\MrMiserCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = "'" . $betline * $lines. "'";
+                $wager['play_bet']              = $betline * $lines;
                 $wager['play_denom']            = "100";
-                $wager['bet_multiple']          = "'" . $betline . "'";
+                $wager['bet_multiple']          = $betline;
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = "'" . $result_val['TotalWin'] . "'";
+                $wager['base_game_win']         = $result_val['TotalWin'];
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];
                 $wager['settle_type']           = 0;
                 $wager['wager_type']            = 0;
-                $wager['total_win']             = "'" . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . "'";
+                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                 $wager['win_line_count']        = $result_val['WinLineCount'];
                 $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
                 $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];

@@ -728,7 +728,7 @@ namespace VanguardLTE\Games\GaneshaJrCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGaneshaJrStack::where('id', 48384)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGaneshaJrStack::where('id', 10719)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

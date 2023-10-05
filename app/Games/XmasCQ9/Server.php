@@ -78,7 +78,7 @@ namespace VanguardLTE\Games\XmasCQ9
                             $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
-                            $result_val['FeedbackURL'] = null;
+                            $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
                             $result_val['UserAccount'] = $user->username;
                             $result_val['FreeTicketList'] = null;
                             $result_val['DenomMultiple'] = $initDenom;
@@ -165,8 +165,6 @@ namespace VanguardLTE\Games\XmasCQ9
                                 $roundstr = str_replace('.', '', $roundstr);
                                 $roundstr = '565' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
-
-                                
                             }
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
@@ -371,14 +369,19 @@ namespace VanguardLTE\Games\XmasCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                $awardSpinTimes = $stack['AwardSpinTimes']; 
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                }   
+                
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -386,6 +389,10 @@ namespace VanguardLTE\Games\XmasCQ9
             $freespinNum = 0;
             if(isset($stack['FreeSpin']) && count($stack['FreeSpin']) > 0){
                 $freespinNum = $stack['FreeSpin'][0];
+            }else{
+                if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
+                    $freespinNum = 10;
+                }
             }
             $newRespin = false;
             if($stack['IsRespin'] == true){
@@ -404,8 +411,13 @@ namespace VanguardLTE\Games\XmasCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
             //$result_val['Multiple'] = 0;
@@ -421,7 +433,7 @@ namespace VanguardLTE\Games\XmasCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $newRespin == false){
+                if($awardSpinTimes > 0 && ($awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound']) && $newRespin == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

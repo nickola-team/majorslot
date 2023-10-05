@@ -874,7 +874,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             {
                 return redirect()->back()->withSuccess(['게임종료시 오류가 발생했습니다.']);
             }
-
+            $user->update(['api_token' => 'playerterminate']);
             event(new \VanguardLTE\Events\User\TerminatedByAdmin($user));
 
             return redirect()->back()->withSuccess(['플레이어의 게임을 종료하였습니다']);

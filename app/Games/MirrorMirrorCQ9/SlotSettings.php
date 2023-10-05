@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\MirrorMirrorCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
             //if($winType == 'bonus'){
                 //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMirrorMirrorStack::where('id', 2465)->first();    //17660,195,1076,1336,1986,2113,2465

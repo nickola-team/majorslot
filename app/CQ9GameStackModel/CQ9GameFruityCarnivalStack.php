@@ -3,7 +3,7 @@ namespace VanguardLTE\CQ9GameStackModel;
 {
     class CQ9GameFruityCarnivalStack extends \Illuminate\Database\Eloquent\Model
     {
-        protected $table = 'cqgame_FruityCarnival_stack';
+        protected $table = 'cqgame_fruitycarnival_stack';
         protected $fillable = [
             'id', 
             'game_id', 

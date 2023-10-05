@@ -25,10 +25,63 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         public function index(\Illuminate\Http\Request $request)
         {
             $availableUsers = auth()->user()->availableUsers();
-            $availableUsers[] = auth()->user()->id;
-            $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->whereIn('admin_id', $availableUsers)->orderBy('happyhour_users.created_at', 'DESC');
+            $availableUsers[] = auth()->user()->id;            
+            if ($request->partner != '')
+            {
+                $partner = \VanguardLTE\User::where('username', $request->partner)->whereIn('id', $availableUsers)->first();
+                if($partner != null){
+                    $availableUsers = $partner->availableUsers();
+                    $availableUsers[] = $partner->id;            
+                }else{
+                    return redirect()->back()->withErrors('작성자를 찾을수 없습니다');
+                }
+            }
+            $start_date = date("Y-m-d H:i:s", strtotime("-24 hours"));
+            $end_date = date("Y-m-d H:i:s");
+            if ($request->dates != '')
+            {
+                // $dates = explode(' - ', $request->dates);
+                $start_date = preg_replace('/T/',' ', $request->dates[0]);
+                $end_date = preg_replace('/T/',' ', $request->dates[1]);            
+            }
+            $happyhours = \VanguardLTE\HappyHourUser::select('happyhour_users.*')->whereIn('admin_id', $availableUsers);
+            $happyhours = $happyhours->where('happyhour_users.created_at', '>=', $start_date);
+            $happyhours = $happyhours->where('happyhour_users.created_at', '<=', $end_date );
+            $happyhours = $happyhours->join('users', 'users.id', '=', 'happyhour_users.user_id');
+            if ($request->user != '')
+            {
+                if ($request->includename == 'on')
+                {
+                    $happyhours = $happyhours->where('users.username', 'like', '%' . $request->player . '%');
+                }
+                else
+                {
+                    $happyhours = $happyhours->where('users.username', $request->user);
+                }
+            }
+            if ($request->status != '')
+            {
+                $happyhours = $happyhours->where('happyhour_users.status', $request->status);
+            }
+            if ($request->total_bank == 1)
+            {
+                $happyhours = $happyhours->orderBy('happyhour_users.total_bank', 'DESC');
+            }
+            else if ($request->total_bank == 2)
+            {
+                $happyhours = $happyhours->orderBy('happyhour_users.total_bank', 'ASC');
+            }
+            else
+            {
+                $happyhours = $happyhours->orderBy('happyhour_users.created_at', 'DESC');
+            }
+            $total = [
+                'totalbank' => (clone $happyhours)->sum('total_bank'),
+                'currentbank' => (clone $happyhours)->sum('current_bank'),
+                'overbank' => (clone $happyhours)->sum('over_bank'),
+            ];
             $happyhours = $happyhours->paginate(10);
-            return view('backend.argon.happyhour.list', compact('happyhours'));
+            return view('backend.argon.happyhour.list', compact('happyhours', 'total'));
         }
         public function create()
         {
@@ -69,6 +122,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if (isset($data['jackpot']) && $data['jackpot'] > 0)
             {
                 $data['progressive'] = mt_rand(2,5);
+            }
+            if($data['total_bank'] > 20000000){
+                return redirect()->back()->withErrors('총 담첨금을 2천만으로 제한시켜주세요.');
             }
             $data['admin_id'] = auth()->user()->id;
             if (!auth()->user()->hasRole('admin'))
@@ -131,6 +187,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             if ($data['jackpot'] > 0)
             {
                 $data['progressive'] = mt_rand(2,5);
+            }
+            if($data['total_bank'] > 20000000){
+                return redirect()->back()->withErrors('총 담첨금을 2천만으로 제한시켜주세요.');
             }
             $data['admin_id'] = auth()->user()->id;
             $happyhour->update($data);

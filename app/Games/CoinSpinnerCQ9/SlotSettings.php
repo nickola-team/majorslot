@@ -302,9 +302,9 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
                 return $this->Bank / $this->CurrentDenom;
             }
             //------- *** -------//
-            if( $this->isBonusStart || $slotState == 'bonusspin' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
-                $slotState = 'bonusspin';
+                $slotState = 'bonus';
             }
             else
             {
@@ -346,9 +346,9 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-            if( $this->isBonusStart || $slotState == 'bonusspin' || $slotState == 'freespin' || $slotState == 'respin' ) 
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
-                $slotState = 'bonusspin';
+                $slotState = 'bonus';
             }
             else
             {
@@ -367,13 +367,13 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
                 $normal_sum = $_allBets * 10 / 100;
                 $game->set_gamebank($normal_sum, 'inc', '');
                 $sum = $sum - $normal_sum;
-                $game->set_gamebank($sum, 'inc', 'bonusspin');
+                $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
             }
             if( $this->GetBank($slotState) + $sum < 0 ) 
             {                
-                if($slotState == 'bonusspin'){
+                if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
@@ -449,7 +449,7 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
                 if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
-                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonusspin');
+                    $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
                 }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
@@ -481,18 +481,18 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
             {
                 $user->update([
                     'wager' => 0, 
-                    'bonusspin' => 0
+                    'bonus' => 0
                 ]);
             }
             if( $user->wager == 0 ) 
             {
-                $user->update(['bonusspin' => 0]);
+                $user->update(['bonus' => 0]);
             }
             if( $user->wager < 0 ) 
             {
                 $user->update([
                     'wager' => 0, 
-                    'bonusspin' => 0
+                    'bonus' => 0
                 ]);
             }
             if( $user->count_balance < 0 ) 
@@ -525,7 +525,7 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
             else if( $slotState == 'slotGamble' ) 
             {
                 $_obf_slotstate = $this->slotId . ' DG';
-            }else if($slotState == 'bonusspin'){
+            }else if($slotState == 'bonus'){
                 $_obf_slotstate = $this->slotId . ' BG';
             }
             $game = $this->game;
@@ -612,10 +612,10 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
             if( $bonusWin == 1 && $this->slotBonus ) 
             {
                 $this->isBonusStart = true;
-                $garantType = 'bonusspin';
+                $garantType = 'bonus';
                 $_obf_currentbank = $this->GetBank($garantType);
                 $return = [
-                    'bonusspin', 
+                    'bonus', 
                     $_obf_currentbank
                 ];
                 if( $_obf_currentbank < ($this->CheckBonusWin() * $bet) ) 
@@ -729,12 +729,12 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
         } 
         public function GetReelStrips($winType, $bet, $pur)
         {
-            // if($winType == 'bonusspin'){
+            // if($winType == 'bonus'){
                 //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameCoinSpinnerStack::where('id', 47160)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
-            if($winType == 'bonusspin'){
-                $winAvaliableMoney = $this->GetBank('bonusspin');
+            if($winType == 'bonus'){
+                $winAvaliableMoney = $this->GetBank('bonus');
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -744,13 +744,23 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
             }
+            if($this->happyhouruser){
+                $limitOdd = $this->GetBank('') / $bet;
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
+                }
+            }
             $isLowBank = false;
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonusspin'){
+                if($winType == 'bonus'){
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameCoinSpinnerStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameCoinSpinnerStack::where('spin_type', 0)->whereNotIn('id', $existIds);
@@ -764,7 +774,7 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonusspin'){
+                    if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', 21);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
@@ -776,7 +786,7 @@ namespace VanguardLTE\Games\CoinSpinnerCQ9
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonusspin'){
+                        if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){

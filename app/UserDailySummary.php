@@ -57,7 +57,7 @@ namespace VanguardLTE
             foreach($adjs as $adj){
                 $adj->date = $day;
                 $adj->type = 'daily';
-                $dailysumm = \VanguardLTE\UserDailySummary::where(['user_id'=> $adj->user_id, 'date' => $day, 'gametype'=>$adj->type, 'type'=>'daily'])->first();
+                $dailysumm = \VanguardLTE\UserDailySummary::where(['user_id'=> $adj->user_id, 'date' => $day, 'gametype'=>$adj->gametype, 'type'=>'daily'])->first();
                 $adj = json_decode(json_encode($adj), true);
                 if ($dailysumm)
                 {
@@ -85,7 +85,7 @@ namespace VanguardLTE
             foreach($adjs as $adj){
                 $adj->date = $day;
                 $adj->type = 'today';
-                $dailysumm = \VanguardLTE\UserDailySummary::where(['user_id'=> $adj->user_id, 'date' => $day, 'gametype'=>$adj->type, 'type'=>'today'])->first();
+                $dailysumm = \VanguardLTE\UserDailySummary::where(['user_id'=> $adj->user_id, 'date' => $day, 'gametype'=>$adj->gametype, 'type'=>'today'])->first();
                 $adj = json_decode(json_encode($adj), true);
                 if ($dailysumm)
                 {

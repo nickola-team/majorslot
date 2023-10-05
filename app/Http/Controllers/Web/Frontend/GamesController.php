@@ -512,7 +512,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $user = \VanguardLTE\User::find($userId);
             if (!$user || $user->remember_token != $user->api_token)
             {
-                exit('unlogged-1'); // it must be different per every game. but...
+                if(isset($user) && $user->api_token == 'playerterminate'){
+                    exit('nomoney=1&ext_code=SystemError&error_type=i'); // session out
+                }else{
+                    exit('unlogged-1'); // it must be different per every game. but...
+                }
             }
             if (!$user || $user->playing_game != null)
             {

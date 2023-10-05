@@ -3,7 +3,7 @@
         <input type="text" class="form-control" name="username" value="{{$edit ? \VanguardLTE\User::find($happyhour->user_id)?\VanguardLTE\User::find($happyhour->user_id)->username:'unknown':'' }}">
     </div>
     <div class="form-group">
-        <label>총 당첨금</label>
+        <label>총 당첨금<span class="text-danger"> (2천만으로 제한)</span></label>
         <input type="text" class="form-control" id="total_bank" name="total_bank" placeholder="0" value="{{ $edit ? $happyhour->total_bank : '' }}">
     </div>
     <!-- <div class="form-group">

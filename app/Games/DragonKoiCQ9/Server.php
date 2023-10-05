@@ -28,7 +28,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1,{"E": "'.$paramData['vals'][3].'","V": 5}],"msg": null}');
                     $response = $response . '------' . $this->encryptMessage('{"vals":[1,'.$slotSettings->GetBalance().'],"evt": 1}');                    
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
-                    
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -234,17 +234,19 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline / $this->demon) * $lines, $lines);
+                $winType = $_spinSettings[0];
+                //$winType = 'win';
             if($slotEvent == 'freespin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
             }else{
-                $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
-                $winType = $_spinSettings[0];
+                
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $winType = 'bonus';
                 }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -263,14 +265,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             }
             $totalWin = 0;
             if(isset($stack['TotalWin']) && $stack['TotalWin'] > 0){
-                //$stack['TotalWin'] = floor(($stack['TotalWin'] / $originalbet * $betline) / $this->demon + 0.05);
                 $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline);
-                /*if($slotEvent == 'freespin'){
-                    
-                    
-                }else{
-                    $stack['TotalWin'] = ($stack['TotalWin'] / $originalbet * $betline);
-                }*/
                 $totalWin = $stack['TotalWin'] / $this->demon;
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
@@ -288,15 +283,21 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                $awardSpinTimes = $stack['AwardSpinTimes'];   
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                } 
+                
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
+            
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
             }
@@ -312,7 +313,12 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                if($winType == 'bonus'){
+                    $slotSettings->SetBank('bonus', -1 * $totalWin);   
+                }else{
+                    $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                }
+                //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
@@ -327,7 +333,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['AwardRound'] == $stack['CurrentRound']){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['RetriggerAddSpins'] == 0){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }
@@ -394,7 +400,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
                 $lineData = [];
                 $lineData['line_extra_data']    = $outWinLine['LineExtraData'];
                 $lineData['line_multiplier']    = $outWinLine['LineMultiplier'];
-                $lineData['line_prize']         = $outWinLine['LinePrize'] /  $this->demon;
+                $lineData['line_prize']         = $outWinLine['LinePrize'];
                 $lineData['line_type']          = $outWinLine['LineType'];
                 $lineData['symbol_id']          = $outWinLine['SymbolId'];
                 $lineData['symbol_count']       = $outWinLine['SymbolCount'];

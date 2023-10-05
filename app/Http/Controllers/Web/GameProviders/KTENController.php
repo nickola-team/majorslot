@@ -31,11 +31,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'kten-evoplay' => ['thirdname' =>'Evoplay','type' => 'slot'],
 
             //==== CASINO ====
-            'kten-og' => ['thirdname' =>'Og','type' => 'live'],
-            'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'live'],
-            'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'live'],
-            'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'live'],
-            'kten-asia' => ['thirdname' =>'Ag','type' => 'live'],
+            'kten-og' => ['thirdname' =>'Og','type' => 'casino'],
+            'kten-ppl' => ['thirdname' =>'Pragmatic','type' => 'casino'],
+            'kten-mgl' => ['thirdname' =>'Microgaming','type' => 'casino'],
+            'kten-dg' => ['thirdname' =>'Dreamgame','type' => 'casino'],
+            'kten-asia' => ['thirdname' =>'Ag','type' => 'casino'],
         ];
 
         public static function getGameObj($uuid)
@@ -125,7 +125,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $url = config('app.kten_api') . '/api/getGameList';
             }
-            elseif ($type=='live')
+            elseif ($type=='casino')
             {
                 $url = config('app.kten_api') . '/api/getLobbyList';
             }
@@ -199,7 +199,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
                         'title' => $korname,
                         'icon' => $game['thumbnail'],
-                        'type' => (($type=='live')?'table':'slot'),
+                        'type' => (($type=='casino')?'table':'slot'),
                         'view' => $view
                     ]);
                 }
@@ -215,7 +215,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
                 'icon' => '',
-                'type' => (($type=='live')?'table':'slot'),
+                'type' => (($type=='casino')?'table':'slot'),
                 'view' => 0
             ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -455,7 +455,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='live')
+            if (isset(self::KTEN_GAME_IDENTITY[$gamecode]) && self::KTEN_GAME_IDENTITY[$gamecode]['type']=='casino')
             {
                 $gamelist = KTENController::getgamelist($gamecode);
                 if (count($gamelist) > 0)
@@ -1269,7 +1269,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
 
                 $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme'];
-                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking', 'vswaysrockblst'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking', 'vswaysrockblst','vs20maskgame'];
                 $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
 
                 $cver = 99951;
