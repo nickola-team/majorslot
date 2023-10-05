@@ -532,12 +532,11 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
                 if($rs_p >= 0){
                     $isState = false;
                     $spinType = 's';
-                }
-                if($rs_p >= 0){
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_c='. $rs_c .'&rs_m=' . $rs_m;
                 }
                 if($rs_t > 0){
                     $strOtherResponse = $strOtherResponse.'&rs_t='.$rs_t;
+                    $spinType = 'c';
                 }
                 if($str_rs != ''){
                     $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;

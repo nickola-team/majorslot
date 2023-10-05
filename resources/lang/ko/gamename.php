@@ -1152,6 +1152,10 @@ return [
         "GoldOasis" => "골드 오아시스",
         "_8GoldenDragonChallenge" => "8 골든 드래곤 첼린지",
         "BookofTutMegaways" => "북 오브 투트 메가웨이즈",
+        "CandyBlitz" => "캔디 블리츠",
+        "FortunesofAztec" => "포츈스 오브 아즈텍",
+        "YiSunShin" => "이순신",
+        "CashChips" => "캐시 칩스",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
