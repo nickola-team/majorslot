@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_8GoldenDragonChallengePM
+namespace VanguardLTE\Games\CashChipsPM
 {
     class SlotSettings
     {
@@ -102,11 +102,11 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 8,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -467,9 +467,9 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'slotGamble' ) 
+            else if( $slotState == 'doBonus' ) 
             {
-                $slotstate = $this->slotId . ' DG';
+                $slotstate = $this->slotId . ' doRespin';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -636,7 +636,7 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < (20 * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
+                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -695,25 +695,6 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function BonusWinChance($currentIndex, $bet)
-        {
-            $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = floor($winAvaliableMoney / $bet);
-            $fsChance = [63, 69, 73, 50, 50, 50]; // [10, 14, 18, 22, 26]
-            $percent = mt_rand(0, 100);
-            if($currentIndex == 1 && $limitOdd < 25){
-                return false;
-            }else if($currentIndex == 2 && $limitOdd < 50){
-                return false;
-            }else if($currentIndex == 3 && $limitOdd < 100){
-                return false;
-            }else if($fsChance[$currentIndex] > $percent){
-                return true;
-            }else{
-                return false;
-            }
-        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -728,17 +709,15 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $ind=-1)
         {
-            // if($winType='bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGame8GoldenDragonChallengeStack::where([
-                //     'id' => 18
-                // ])->first();
+            // if($fsmax > 0){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameCashChipsStack::where('id', 38578)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            if($winType == 'bonus'){
+            if($ind >= 0){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win'){
+            }else if($winType == 'win' || $winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -749,7 +728,7 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10){
+                if($limitOdd > 10 || $winType == 'bonus'){
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
@@ -763,19 +742,21 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGame8GoldenDragonChallengeStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                if($ind >= 0){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCashChipsStack::where('spin_type', 1)->where('pur_level', $ind)->whereNotIn('id', $existIds);
+                }else if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCashChipsStack::where('spin_type', 2)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGame8GoldenDragonChallengeStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCashChipsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
                 $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 65000);
+                    $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 30);
+                    if($ind>=0){
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -786,7 +767,7 @@ namespace VanguardLTE\Games\_8GoldenDragonChallengePM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
+                        if($ind >= 0){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){
