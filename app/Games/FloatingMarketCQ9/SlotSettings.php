@@ -730,10 +730,10 @@ namespace VanguardLTE\Games\FloatingMarketCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet,$pur)
+        public function GetReelStrips($winType, $bet,$pur=-1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFloatingMarketStack::where('id', 12412)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFloatingMarketStack::where('id', 44266)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -771,7 +771,7 @@ namespace VanguardLTE\Games\FloatingMarketCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
