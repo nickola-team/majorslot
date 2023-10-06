@@ -136,16 +136,12 @@ namespace VanguardLTE\Games\FootballBootsCQ9
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
-                            // if($type == 3){
-
-                            //     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
-                            // }
+                            
                             if($packet_id == 41){
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                                 $result_val['PlayerBet'] = $betline;
-                                // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                                // $originalbet = round($originalbet,2);
+                                
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -153,7 +149,7 @@ namespace VanguardLTE\Games\FootballBootsCQ9
                                 $result_val['AccumlateWinAmt'] = ($result_val['AccumlateWinAmt'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
                                 $result_val['AccumlateJPAmt'] = 0;
                                 $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
-                                //$result_val['ScatterPayFromBaseGame'] = ($result_val['ScatterPayFromBaseGame'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                                
                                 $result_val['MaxRound'] = $stack['MaxRound'];
                                 $result_val['AwardRound'] = $stack['AwardRound'];
                                 $result_val['CurrentRound'] = $stack['CurrentRound'];
@@ -166,8 +162,7 @@ namespace VanguardLTE\Games\FootballBootsCQ9
                             }
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                            // $originalbet = 38 / $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
-                            // $originalbet = round($originalbet,2);
+                            
                             $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -258,7 +253,6 @@ namespace VanguardLTE\Games\FootballBootsCQ9
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
-                
             }else{
                 $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'),$roundId);
                 if($tumbAndFreeStacks == null){
@@ -302,15 +296,20 @@ namespace VanguardLTE\Games\FootballBootsCQ9
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
                 $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];   
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = (($value['LinePrize'] / $originalbet * $betline) / $this->demon);
-                    //$value['LinePrize'] = ($value['LinePrize'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];   
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = (($value['LinePrize'] / $originalbet * $betline) / $this->demon);
+                        //$value['LinePrize'] = ($value['LinePrize'] / 38) * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet');
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
+            }
+            
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
             }
@@ -361,7 +360,7 @@ namespace VanguardLTE\Games\FootballBootsCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline / $this->demon) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 
