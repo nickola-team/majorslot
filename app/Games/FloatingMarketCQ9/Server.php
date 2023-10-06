@@ -126,7 +126,7 @@ namespace VanguardLTE\Games\FloatingMarketCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 }
-                                
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
                                 
                                 $slotSettings->SetBet(); 
@@ -276,7 +276,7 @@ namespace VanguardLTE\Games\FloatingMarketCQ9
            
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
                 $winType = $_spinSettings[0];
-                //$winType = 'bonus';
+             //   $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
@@ -328,15 +328,21 @@ namespace VanguardLTE\Games\FloatingMarketCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                $awardSpinTimes = $stack['AwardSpinTimes']; 
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                }   
+                
             }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
             }
+            
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
             }
