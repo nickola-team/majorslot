@@ -24,7 +24,7 @@
         <link type="text/css" href="{{ asset('back/argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
         @stack('css')
         <link type="text/css" href="{{ asset('back/argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
-        <link type="text/css" href="{{ asset('back/argon') }}/css/{{$layout}}.css?v=1.0.0" rel="stylesheet">
+        {{-- <link type="text/css" href="{{ asset('back/argon') }}/css/{{$layout}}.css?v=1.0.0" rel="stylesheet"> --}}
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
