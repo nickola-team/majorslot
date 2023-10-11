@@ -1241,6 +1241,10 @@ return [
         "ladyfortune" => "레이디 포츈",
         "ladyfortune" => "레이디 포츈",
         "greenchilli2" => "그린 칠리 2",
+        "blackwolf2bng" => "블랙 울프 2",
+        "littlefarmbng" => "리틀 팜",
+        "_3hotchilliesbng" => "3 핫 칠리즈",
+        "_777coinsbng" => "777 코인즈",
 
         // CQ9
         "Double Fly" => "더블 플라이",
@@ -1327,5 +1331,15 @@ return [
         "TreasureHouse" => "트래져 하우스",
         "WildTarzan" => "와일드 타잔",
         "GodOfChess" => "갓 오브 체스",
-        "NinjaRaccoon" => "Ninja Raccoon"
+        "NinjaRaccoon" => "Ninja Raccoon",
+        "FloatingMarket" => "Floating Market",
+        "MoneyTree" => "Money Tree",
+        "DollarBomb" => "DollarBomb",
+        "FortuneDragon" => "포춘 드래곤",
+        "SongkranFestival" => "송크란 축제",
+        "Dragonheart" => "드래곤 하트",
+        "MagicWorld" => "매직 월드",
+        "FootballBoots" => "풋볼 부츠",
+        "FruitKing2" => "후르츠 킹 II",
+        "Acrobatics" => "곡예"
 ];
