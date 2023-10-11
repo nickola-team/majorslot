@@ -1301,7 +1301,6 @@ namespace VanguardLTE
             }
             return $hirechy;
         }
-
         public function childBalanceSum()
         {
             if ($this->hasRole('user'))
@@ -1316,6 +1315,28 @@ namespace VanguardLTE
                 $sumShop = Shop::whereIn('id', $shops)->sum('balance');
             }
             return $sum + $sumShop - $this->balance;
+        }
+        public function childPartnerBalanceSum()
+        {
+            if ($this->hasRole('user'))
+            {
+                return 0;
+            }
+            $ids = $this->hierarchyPartners();
+            $sum = User::whereIn('id', $ids)->sum('balance');
+            $sumShop = 0;
+            if (!$this->hasRole('manager')){
+                $shops = $this->availableShops();
+                $sumShop = Shop::whereIn('id', $shops)->sum('balance');
+            }
+            return $sum + $sumShop;
+        }
+        public function childDealSum()  // 롤링금
+        {
+            $ids = $this->availableUsers();
+            $sumDealBalance = User::whereIn('id',$ids)->sum('deal_balance'); 
+            $sumMileage = User::whereIn('id',$ids)->sum('mileage');
+            return $sumDealBalance - $sumMileage;
         }
         
         public function bankInfo($bmask=false)

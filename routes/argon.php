@@ -476,7 +476,25 @@ Route::prefix('{slug}')->middleware(['argonbackend', 'auth', 'argonaccessrule'])
             'as' => 'argon.website.delete',
             'uses' => 'SettingsController@delete',
         ]);
-
+        /**
+         * IP Block List
+         */
+        Route::get('ipblocks', [
+            'as' => 'argon.ipblock.list',
+            'uses' => 'SettingsController@ipblock_list',
+        ]);
+        Route::get('ipblock/add', [
+            'as' => 'argon.ipblock.add',
+            'uses' => 'SettingsController@ipblock_add',
+        ]);
+        Route::post('ipblock/add', [
+            'as' => 'argon.ipblock.store',
+            'uses' => 'SettingsController@ipblock_store',
+        ]);
+        Route::delete('ipblock/{ip}/delete', [
+            'as' => 'argon.ipblock.delete',
+            'uses' => 'SettingsController@ipblock_delete',
+        ]);
         /**
          * Activity Log
          */

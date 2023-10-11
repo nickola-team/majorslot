@@ -441,6 +441,12 @@
                                     도메인
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{argon_route('argon.ipblock.list')}}">
+                                <i class="far fa-circle text-white sub-i"></i>
+                                    IP 차단목록
+                                </a>
+                            </li>
                             @if (auth()->user()->hasRole('admin'))
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.activity.index')}}">

@@ -648,7 +648,7 @@ namespace VanguardLTE\Games\littlefarmbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLittleFarmStack::where('id', 605)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLittleFarmStack::where('id', 23164)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
