@@ -274,7 +274,48 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             exec('nohup php '. base_path() .'/artisan game:withdrawAll > /dev/null &');
             return redirect()->back()->withSuccess(['게임사 머니회수 스케줄을 작동하였습니다']);
         }
-
+        public function ipblock_list(\Illuminate\Http\Request $request)
+        {     
+            $availablePartners = auth()->user()->hierarchyPartners();
+            $availablePartners[] = auth()->user()->id;       
+            if( !auth()->user()->isInoutPartner()) 
+            {
+                return redirect()->back()->withErrors([trans('app.no_permission')]);
+            }
+            $ipblocks = \VanguardLTE\IPBlockList::whereIn('user_id', $availablePartners)->orderBy('created_at', 'DESC');
+            if( $request->partner != '' ) 
+            {
+                $findusers = \VanguardLTE\User::where('username', 'like', '%' . $request->partner . '%')->pluck('id')->toArray();
+                $ipblocks = $ipblocks->whereIn('user_id', $findusers);
+            }
+            if( $request->ip != '' ) 
+            {
+                $ipblocks = $ipblocks->where('ip_address', 'like', '%' . $request->ip . '%');
+            }
+            $ipblocks = $ipblocks->paginate(50);
+            return view('backend.argon.setting.ipblocklist', compact('ipblocks'));
+        }
+        public function ipblock_add(\Illuminate\Http\Request $request)
+        {            
+            return view('backend.argon.setting.ipblock_add');
+        }
+        public function ipblock_store(\Illuminate\Http\Request $request)
+        {
+            if( $request->ip_address == '' ) 
+            {
+                return redirect()->back()->withErrors('IP을 입력해주세요');
+            }
+            $ip = \VanguardLTE\IPBlockList::create([
+                'user_id' => auth()->user()->id,
+                'ip_address' => $request->ip_address
+            ]);
+            return redirect()->to(argon_route('argon.ipblock.list'))->withSuccess(['도메인이 추가되었습니다.']);
+        }
+        public function ipblock_delete(\Illuminate\Http\Request $request, $argon, $ip)
+        {
+            \VanguardLTE\IPBlockList::where('id', $ip)->delete();
+            return redirect()->to(argon_route('argon.ipblock.list'))->withSuccess(['IP가 삭제되었습니다.']);
+        }
     }
 
 }

@@ -648,8 +648,8 @@ namespace VanguardLTE\Games\_777coinsbng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                $stack = \VanguardLTE\BNGGameStackModel\BNGGame777CoinsStack::where('id', 101)->first();
-                return json_decode($stack->spin_stack, true);
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame777CoinsStack::where('id', 147748)->first();
+                // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
@@ -678,7 +678,7 @@ namespace VanguardLTE\Games\_777coinsbng
             while(true){
                 if($winType == 'bonus'){
                     $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
-                    if($currentHill[0] >= 6){
+                    if($currentHill[0] >= 8){
                         $stacks = \VanguardLTE\BNGGameStackModel\BNGGame777CoinsStack::where('spin_type', 2);
                     }else{
                         $stacks = \VanguardLTE\BNGGameStackModel\BNGGame777CoinsStack::where('spin_type','>', 0);
@@ -686,14 +686,14 @@ namespace VanguardLTE\Games\_777coinsbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame777CoinsStack::where('spin_type', 0);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 55000);
+                    $index = mt_rand(0, 105000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 25);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

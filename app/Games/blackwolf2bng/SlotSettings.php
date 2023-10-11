@@ -669,7 +669,7 @@ namespace VanguardLTE\Games\blackwolf2bng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolf2Stack::where('id', 1024)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolf2Stack::where('id', 109854)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -708,10 +708,10 @@ namespace VanguardLTE\Games\blackwolf2bng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameBlackWolf2Stack::where('spin_type', 0);
                 }
-                $index = 0;// mt_rand(0, 28000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = 0;// mt_rand(0, 78000);
+                    $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){

@@ -4,7 +4,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
             <!-- Navbar links -->
-            <ul class="navbar-nav align-items-center ml-md-auto">
+            <ul class="navbar-nav align-items-center">
                 <li class="nav-item d-xl-none">
                 <!-- Sidenav toggler -->
                     <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
@@ -15,7 +15,44 @@
                         </div>
                     </div>
                 </li>
-                @if (!auth()->user()->hasRole('admin'))
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a class="nav-link font-weight-bold text-dark" href="#">
+                        현재 보유금 : 
+                        @if (auth()->user()->hasRole('manager'))
+                            {{number_format(auth()->user()->shop->balance)}}
+                        @else
+                            {{number_format(auth()->user()->balance)}}
+                        @endif
+                    </a>
+                </li>
+                @if (auth()->user()->role_id > 3)
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a class="nav-link font-weight-bold text-dark" href="{{argon_route('argon.player.list', ['balance' => 1])}}">
+                        하부 파트너 총 보유금 : {{number_format(auth()->user()->childPartnerBalanceSum())}}
+                    </a>
+                </li>
+                @endif
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a class="nav-link font-weight-bold text-dark" href="#">
+                        하부 총 보유금 : {{number_format(auth()->user()->childBalanceSum())}}
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a class="nav-link font-weight-bold text-dark" href="#">
+                        롤링금 : 
+                        @if (auth()->user()->isInoutPartner())
+                        {{ number_format(auth()->user()->childDealSum(), 0) }}
+                        @elseif (auth()->user()->hasRole('manager'))
+                        {{ number_format(auth()->user()->shop->deal_balance - auth()->user()->shop->mileage,0) }}
+                        @else
+                        {{ number_format(auth()->user()->deal_balance - auth()->user()->mileage,0) }}
+                        @endif
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav align-items-center ml-md-auto">
+                
+                @if (!auth()->user()->hasRole('admin'))                
                 @if (auth()->user()->isInoutPartner())
                     <li class="nav-item d-none d-lg-block ml-lg-4">
                         <div class="nav-item-btn align-items-center">
@@ -73,21 +110,6 @@
                         </div>
                     </li>
                 @endif
-                <li class="nav-item d-none d-lg-block ml-lg-4">
-                    <a class="nav-link text-dark" href="#">
-                        현재 보유금 
-                        @if (auth()->user()->hasRole('manager'))
-                            {{number_format(auth()->user()->shop->balance)}}
-                        @else
-                            {{number_format(auth()->user()->balance)}}
-                        @endif
-                    </a>
-                </li>
-                <li class="nav-item d-none d-lg-block ml-lg-4">
-                    <a class="nav-link text-dark" href="{{argon_route('argon.player.list', ['balance' => 1])}}">
-                        하부 총 보유금 {{number_format(auth()->user()->childBalanceSum())}}
-                    </a>
-                </li>
                 @endif
                 
                 <li class="nav-item dropdown">
