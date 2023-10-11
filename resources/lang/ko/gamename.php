@@ -1241,10 +1241,10 @@ return [
         "ladyfortune" => "레이디 포츈",
         "ladyfortune" => "레이디 포츈",
         "greenchilli2" => "그린 칠리 2",
-        "blackwolf2bng" => "블랙 울프 2",
-        "littlefarmbng" => "리틀 팜",
-        "_3hotchilliesbng" => "3 핫 칠리즈",
-        "_777coinsbng" => "777 코인즈",
+        "blackwolf2" => "블랙 울프 2",
+        "littlefarm" => "리틀 팜",
+        "_3hotchillies" => "3 핫 칠리즈",
+        "_777coins" => "777 코인즈",
 
         // CQ9
         "Double Fly" => "더블 플라이",
