@@ -728,8 +728,8 @@ namespace VanguardLTE\Games\Thor2CQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('id', 4083)->first();
-                //  return json_decode($stack->spin_stack, true);
+                 $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('id', 4102)->first();    //4102
+                 return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');

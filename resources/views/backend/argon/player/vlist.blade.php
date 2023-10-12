@@ -263,6 +263,8 @@
             $('#addusername').text(arr_user[1]);
             $('#adduserlevel').text('회원');
             $('#adduserbalance').text('머니요청중...');
+            var url = '{{argon_route('argon.player.terminate', ['id' =>'default' ])}}';
+            $('#addterminate').prop('href', url.replace('default', arr_user[0]));
             $.ajax({
                 url: "{{argon_route('argon.player.refresh')}}",
                 type: "GET",
@@ -292,6 +294,8 @@
             $('#outusername').text(arr_user[1]);
             $('#outuserlevel').text('회원');
             $('#outuserbalance').text('머니요청중...');
+            var url = '{{argon_route('argon.player.terminate', ['id' =>'default' ])}}';
+            $('#outterminate').prop('href', url.replace('default', arr_user[0]));
             $.ajax({
                 url: "{{argon_route('argon.player.refresh')}}",
                 type: "GET",

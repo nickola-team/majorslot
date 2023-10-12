@@ -783,7 +783,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFlyingCaiShenStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-
+                $left_specialsymbol_count = 0;
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index =  0;

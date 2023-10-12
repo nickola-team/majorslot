@@ -101,8 +101,7 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                             }
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
-                                //$slotSettings->SetGameData($slotSettings->slotId. 'GameRounds',$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'));
-                                //$slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount',$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'));
+                                
                             }else if($packet_id == 33 && $slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
                                 $slotEvent['slotEvent'] = 'respin';
                             }else{
@@ -133,8 +132,6 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                                 $roundstr = str_replace('.', '', $roundstr);
                                 $roundstr = '565' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
-
-                                
                             }
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
@@ -176,7 +173,6 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                                             $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
                                         }
                                         
-                                        //$stack['ExtraData'] = [$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),15,0];
                                         $nextRoundAction = false;
                                         $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 0);
                                     }
@@ -338,8 +334,10 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                $awardSpinTimes = $stack['AwardSpinTimes'];  
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
+                }
             }
             foreach($stack['udsOutputWinLine'] as $index => $value){
                 if($value['LinePrize'] > 0){
