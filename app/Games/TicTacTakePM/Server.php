@@ -417,7 +417,7 @@ namespace VanguardLTE\Games\TicTacTakePM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    if($winType == 'bonus'){
+                    if($winType == 'bonus' || $rs_p >= 0){
                         $slotSettings->SetBank('bonus', -1 * $totalWin);
                     }else{
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
