@@ -227,6 +227,7 @@
             $('#adduserbalance').text(arr_user[1]);
             $('#adduserlevel').text(arr_user[2]);
             $('#addusername').text(arr_user[3]);
+            $('#addterminate').css("display" ,"none");
         }
     }
     function OutPayment(userinfo){
@@ -237,6 +238,7 @@
             $('#outuserbalance').text(arr_user[1]);
             $('#outuserlevel').text(arr_user[2]);
             $('#outusername').text(arr_user[3]);
+            $('#outterminate').css("display" ,"none");
         }              
         }
     }
