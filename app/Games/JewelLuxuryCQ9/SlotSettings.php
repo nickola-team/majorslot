@@ -772,16 +772,17 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameJewelLuxuryStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
+                $left_specialsymbol_count = 0;
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 0;// mt_rand(0, 48000);
-                /*if($gameRound == 1){
-                    $index = mt_rand(0, 70000);
+                if($gameRound == 1){
+                    $index =0;// mt_rand(0, 70000);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 140000);
+                    $index =0;// mt_rand(0, 140000);
                 }else if($gameRound == 3){
-                    $index = mt_rand(0, 210000);
-                }*/
+                    $index =0;// mt_rand(0, 210000);
+                }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

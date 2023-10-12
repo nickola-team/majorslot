@@ -185,8 +185,8 @@ namespace VanguardLTE\Games\HotSpinCQ9
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                     $lines = 20;
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
-                        $pur_level = 0;
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', ($betline /  $this->demon) * $lines, $pur_level);
+                        $pur_level = -1;
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bonus', ($betline /  $this->demon) * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                         if($tumbAndFreeStacks == null){
                             $response = 'unlogged';
                             exit( $response );
@@ -296,11 +296,13 @@ namespace VanguardLTE\Games\HotSpinCQ9
                 //$currentSpinTimes = $stack['CurrentSpinTimes'];    
             }
             if($packetID ==31){
-                foreach($stack['udsOutputWinLine'] as $index => $value){
-                    if($value['LinePrize'] > 0){
-                        $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                    foreach($stack['udsOutputWinLine'] as $index => $value){
+                        if($value['LinePrize'] > 0){
+                            $value['LinePrize'] = $value['LinePrize'] / $originalbet * $betline;
+                        }
+                        $stack['udsOutputWinLine'][$index] = $value;
                     }
-                    $stack['udsOutputWinLine'][$index] = $value;
                 }
             }
             
