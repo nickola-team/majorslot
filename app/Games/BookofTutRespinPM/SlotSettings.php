@@ -784,7 +784,7 @@ namespace VanguardLTE\Games\BookofTutRespinPM
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {

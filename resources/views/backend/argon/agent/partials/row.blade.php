@@ -40,9 +40,23 @@
 <td>{{ $user->created_at }}</td>
 <td class="text-right">
 @if ($user->status == \VanguardLTE\Support\Enum\UserStatus::ACTIVE)
-<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
+{{--<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>--}}
+@if ($user->hasRole('manager'))
+<a href="#" onclick="AddPayment('{{$user->id}}--{{number_format($user->shop->balance)}}--{{$user->role->description}}--{{$user->username}}');" data-toggle="modal" data-target="#AddPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">지 급</button></a>
+@else
+<a href="#" onclick="AddPayment('{{$user->id}}--{{number_format($user->balance)}}--{{$user->role->description}}--{{$user->username}}');" data-toggle="modal" data-target="#AddPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">지 급</button></a>
+@endif
 @if ($moneyperm || (auth()->user()->role_id==$user->role_id+1))
-<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm">회 수</button></a>
+{{--<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => argon_route('argon.agent.list')])}}"><button class="btn btn-warning btn-sm">회 수</button></a>--}}
+@if ($user->hasRole('manager'))
+<a href="#" onclick="OutPayment('{{$user->id}}--{{number_format($user->shop->balance)}}--{{$user->role->description}}--{{$user->username}}');" data-toggle="modal" data-target="#OutPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">회 수</button></a>
+@else
+<a href="#" onclick="OutPayment('{{$user->id}}--{{number_format($user->balance)}}--{{$user->role->description}}--{{$user->username}}');" data-toggle="modal" data-target="#OutPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">회 수</button></a>
+@endif
 @else
 <a href="#"><button class="btn btn-warning btn-sm" disabled>회 수</button></a>
 @endif

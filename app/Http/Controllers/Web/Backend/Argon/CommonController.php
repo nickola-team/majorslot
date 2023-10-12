@@ -203,7 +203,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
             \DB::commit();
-            return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
+            // return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
+            return redirect()->back()->withSuccess(['조작이 성공했습니다.']);
         }
 
         public function profile(\Illuminate\Http\Request $request, \VanguardLTE\Repositories\Activity\ActivityRepository $activities)

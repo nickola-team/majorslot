@@ -14,6 +14,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function index()
         {
+            set_time_limit(0);
             $user = auth()->user();
             $ids = auth()->user()->hierarchyUsersOnly();
             $availableShops = auth()->user()->availableShops();
