@@ -24,9 +24,13 @@
 <td>{{ $user->created_at }}</td>
 <td>{{ $user->last_login }}</td>
 <td class="text-right">
-<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>
+{{--<a href="{{argon_route('argon.common.balance', ['type' => 'add', 'id' => $user->id, 'url' => Request::getRequestUri()])}}" ><button class="btn btn-success btn-sm" >지 급</button></a>--}}
+<a href="#" onclick="AddPayment('{{$user->id}}--{{$user->username}}');" data-toggle="modal" data-target="#AddPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">지 급</button></a>
 @if ($moneyperm || (auth()->user()->role_id==$user->role_id+1))
-<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm">회 수</button></a>
+{{--<a href="{{argon_route('argon.common.balance', ['type' => 'out', 'id' => $user->id, 'url' => Request::getRequestUri()])}}"><button class="btn btn-warning btn-sm">회 수</button></a>--}}
+<a href="#" onclick="OutPayment('{{$user->id}}--{{$user->username}}');" data-toggle="modal" data-target="#OutPaymentModal" >
+		<button type="button" class="btn btn-success btn-sm">회 수</button></a>
 @else
 <a href="#"><button class="btn btn-warning btn-sm" disabled>회 수</button></a>
 @endif

@@ -259,6 +259,7 @@
     </div>
 </div>
 </div>
+@include('backend.argon.common.balance')
 @stop
 
 
@@ -292,6 +293,64 @@
             error: function () {
             }
         });
+    }
+    function AddPayment(userinfo){
+        if(userinfo != ''){
+            var arr_user = userinfo.split("--");
+            $('#add_user_id').val(arr_user[0]);
+            $('#addusername').text(arr_user[1]);
+            $('#adduserlevel').text('회원');
+            $('#adduserbalance').text('머니요청중...');
+            $.ajax({
+                url: "{{argon_route('argon.player.refresh')}}",
+                type: "GET",
+                data: {id:  arr_user[0]},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error)
+                    {
+                        alert(data.msg);
+                    }
+                    else
+                    {
+                        $('#adduserbalance').text(data.balance);
+                    }
+                    
+                },
+                error: function () {
+                }
+            });
+        }
+    }
+    function OutPayment(userinfo){
+        if(userinfo != null){
+            if(userinfo != ''){
+            var arr_user = userinfo.split("--");
+            $('#out_user_id').val(arr_user[0]);
+            $('#outusername').text(arr_user[1]);
+            $('#outuserlevel').text('회원');
+            $('#outuserbalance').text('머니요청중...');
+            $.ajax({
+                url: "{{argon_route('argon.player.refresh')}}",
+                type: "GET",
+                data: {id:  arr_user[0]},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error)
+                    {
+                        alert(data.msg);
+                    }
+                    else
+                    {
+                        $('#outuserbalance').text(data.balance);
+                    }
+                    
+                },
+                error: function () {
+                }
+            });
+        }              
+        }
     }
 </script>
 @endpush
