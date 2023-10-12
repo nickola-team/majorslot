@@ -193,6 +193,7 @@
     </div>
 </div>
 </div>
+@include('backend.argon.common.balance')
 @stop
 
 @push('js')
@@ -218,6 +219,26 @@
                     $('#waitAjax').hide();
             });
         }
-        });
+    });
+    function AddPayment(userinfo){
+        if(userinfo != ''){
+            var arr_user = userinfo.split("--");
+            $('#add_user_id').val(arr_user[0]);
+            $('#adduserbalance').text(arr_user[1]);
+            $('#adduserlevel').text(arr_user[2]);
+            $('#addusername').text(arr_user[3]);
+        }
+    }
+    function OutPayment(userinfo){
+        if(userinfo != null){
+            if(userinfo != ''){
+            var arr_user = userinfo.split("--");
+            $('#out_user_id').val(arr_user[0]);
+            $('#outuserbalance').text(arr_user[1]);
+            $('#outuserlevel').text(arr_user[2]);
+            $('#outusername').text(arr_user[3]);
+        }              
+        }
+    }
 </script>
 @endpush
