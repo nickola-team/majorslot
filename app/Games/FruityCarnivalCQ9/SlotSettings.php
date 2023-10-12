@@ -772,6 +772,7 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
+                $left_specialsymbol_count = 0;
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 1;// mt_rand(0, 48000);
@@ -806,7 +807,7 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                //$stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {

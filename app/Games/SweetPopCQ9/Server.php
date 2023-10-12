@@ -38,7 +38,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempTotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
@@ -117,9 +117,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
                                     $slotEvent['slotEvent'] = 'bet';
                                 }
                                 $pur_level = -1;
-                                if($gameData->ReelPay > 0){
-                                    $pur_level = 0;
-                                }
+                                
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
@@ -139,10 +137,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
                                 $slotSettings->SetBet(); 
                                 $isBuyFreespin = false;
                                 $allBet = ($betline /  $this->demon) * $lines;
-                                if($pur_level == 0){
-                                    $allBet = $allBet * 60;
-                                    $isBuyFreespin = true;
-                                }       
+                                      
                                 if(isset($slotEvent['slotEvent'])){
                                     $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                                 }
@@ -162,26 +157,17 @@ namespace VanguardLTE\Games\SweetPopCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-                            // if($packet_id == 33){
-                            //     if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
-                            //         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                            //     }
-                            // }
+                            
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
-                            // if($type == 3){
-
-                            //     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
-                            // }
+                            
                             if($packet_id == 41){
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                                 $result_val['PlayerBet'] = $betline;
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
-                                /*if(isset($slotEvent['slotEvent']) && $slotEvent['$slotEvent'] == 'respin'){
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
-                                }*/
+                                
                                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                                 $result_val['AccumlateWinAmt'] = ($stack['AccumlateWinAmt'] / $originalbet * $betline);
@@ -208,7 +194,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
                             $result_val['ScatterPayFromBaseGame'] = ($stack['ScatterPayFromBaseGame'] / $originalbet * $betline);
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
+                            //$slotSettings->SetGameData($slotSettings->slotId . 'Respin',1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -291,11 +277,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
-                
             }else{
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
-                    $winType = 'bonus';
-                }
                 $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
@@ -320,9 +302,6 @@ namespace VanguardLTE\Games\SweetPopCQ9
                  if($slotEvent != 'freespin'){
                     $totalWin = $stack['TotalWin'];
                  }
-                //  else{
-                //     $this->tempTotalWin = $stack['TotalWin'];
-                //  }
                 
             }
             if(isset($stack['SpecialAward']) && $stack['SpecialAward'] > 0){
@@ -353,14 +332,18 @@ namespace VanguardLTE\Games\SweetPopCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                $currentSpinTimes = $stack['CurrentSpinTimes'];    
-            }
-            foreach($stack['udsOutputWinLine'] as $index => $value){
-                if($value['LinePrize'] > 0){
-                    $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                $awardSpinTimes = $stack['AwardSpinTimes'];  
+                if(isset($stack['CurrentSpinTimes'])){
+                    $currentSpinTimes = $stack['CurrentSpinTimes'];    
                 }
-                $stack['udsOutputWinLine'][$index] = $value;
+            }
+            if(isset($stack['udsOutputWinLine']) && $stack['udsOutputWinLine'] != null){
+                foreach($stack['udsOutputWinLine'] as $index => $value){
+                    if($value['LinePrize'] > 0){
+                        $value['LinePrize'] = ($value['LinePrize'] / $originalbet * $betline);
+                    }
+                    $stack['udsOutputWinLine'][$index] = $value;
+                }
             }
             if($slotEvent != 'freespin' && isset($stack['IsTriggerFG'])){
                 $isTriggerFG = $stack['IsTriggerFG'];
@@ -381,15 +364,10 @@ namespace VanguardLTE\Games\SweetPopCQ9
                     if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == false){
                         $newRespin = true;
                         $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
-                        //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
                     }
                 }else{
                     $newRespin = false;
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
-                    /*if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount',$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1 );
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 1);
-                    }*/
                 }
             }else{
                 if($stack['IsRespin'] == false){
@@ -452,20 +430,13 @@ namespace VanguardLTE\Games\SweetPopCQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
                 $allBet = ($betline /  $this->demon) * $lines;
-                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                    $allBet = $allBet * 60;
-                }
+                
                 $slotSettings->SaveLogReport(json_encode($gamelog), $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
                 
             }
 
             if($slotEvent != 'freespin' && $stack['WinType'] <2){
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                // if($slotEvent == 'respin' && ($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
-
-                // }else{
-                //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                // }
                 
             }
             return $result_val;
@@ -473,9 +444,7 @@ namespace VanguardLTE\Games\SweetPopCQ9
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
             $currentTime = $this->getCurrentTime();
             $allBet = ($betline /  $this->demon) * $lines;
-            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
-                $allBet = $allBet * 60;
-            }
+            
             $proof = [];
             $proof['win_line_data']             = [];
             $proof['symbol_data']               = $result_val['SymbolResult'];

@@ -239,7 +239,7 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
-                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',-1);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -259,25 +259,54 @@ namespace VanguardLTE\Games\FlyingCaiShenCQ9
                     $game_id = json_decode($gameDatas[0])->GameID;
                     $response = $this->encryptMessage('{"err":200,"res":'.$paramData['req'].',"vals":[1, "'. $slotSettings->GetNewGameLink($game_id) .'"],"msg": null}');
                 }else if($paramData['req'] == 1000){  // socket closed
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 44 || $slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 45){
+                        $pur_level = -1;
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        if($tumbAndFreeStacks == null){
+                            $response = 'unlogged';
+                            exit( $response );
+                        }
+                        $stack = $tumbAndFreeStacks[0];
+                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
+                        if(isset($stack['TotalWinAmt'])){
+                            $stack['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                        }
+                        if(isset($stack['ScatterPayFromBaseGame'])){
+                            $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                        }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'ScatterGameValue', $stack['ScatterPayFromBaseGame']);
+                    }
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $stack = $tumbAndFreeStacks[0];
+                        $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
+                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                         // FreeSpin Balance add
                         $slotEvent['slotEvent'] = 'freespin';
-                        $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-                        $lines = 88;
+                        
+                       
                         $count = 0;
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
-                            $result_val['ID'] = 142;
+                            $result_val['ID'] = 145;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
-                            if($slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') == 1){
-                                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                            }
                             $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet,30);
                         }
                     }
+                }
                 }
             }else if(isset($paramData['irq']) && $paramData['irq'] == 1){
                 $response = $this->encryptMessage('{"err":0,"irs":1,"vals":[1,-2147483648,2,988435344],"msg":null}');

@@ -390,9 +390,7 @@ namespace VanguardLTE\Games\LonelyPlanetCQ9
                     if(isset($stack['CurrentSpinTimes'])){
                         $currentSpinTimes = $stack['CurrentSpinTimes'];
                     }
-                    
                 }
-                    
             }
             if(isset($stack['udsOutputWinLine']) && count($stack['udsOutputWinLine'])>0){
                 foreach($stack['udsOutputWinLine'] as $index => $value){
@@ -444,7 +442,7 @@ namespace VanguardLTE\Games\LonelyPlanetCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
                 }

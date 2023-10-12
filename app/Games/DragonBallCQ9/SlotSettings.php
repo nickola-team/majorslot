@@ -783,7 +783,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-
+                $left_specialsymbol_count = 0;
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 1;
@@ -823,7 +823,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                //$stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {
