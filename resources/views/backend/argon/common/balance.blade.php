@@ -26,7 +26,15 @@
                         <div class="col-5 text-center">
                             현재 보유금
                         </div>
-                        <div class="col-7" id="adduserbalance">
+                        <div class="col-7">
+                        <span  id="adduserbalance"></span>
+                        &nbsp;<a class="btn btn-success btn-sm" id="addterminate" href="" data-method="DELETE"
+                                data-confirm-title="확인"
+                                data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
+                                data-confirm-delete="확인"
+                                data-confirm-cancel="취소"
+                                onClick="$(this).css('pointer-events', 'none');"
+                                >게임종료</a>
                         </div>
                     </div>
                     
@@ -92,7 +100,15 @@
                         <div class="col-5 text-center">
                             현재 보유금
                         </div>
-                        <div class="col-7" id="outuserbalance">
+                        <div class="col-7">
+                        <span  id="outuserbalance"></span>
+                        &nbsp;<a class="btn btn-success btn-sm" id="outterminate" href="" data-method="DELETE"
+                                data-confirm-title="확인"
+                                data-confirm-text="유저의 게임을 종료하시겠습니까? 종료버튼클릭후 진행한 배팅은 무시됩니다."
+                                data-confirm-delete="확인"
+                                data-confirm-cancel="취소"
+                                onClick="$(this).css('pointer-events', 'none');"
+                                >게임종료</a>
                         </div>
                     </div>
                     
