@@ -760,11 +760,13 @@ namespace VanguardLTE\Games\Thor2CQ9
             while(true){
                 if($winType == 'bonus'){
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    if($pur >= 0){
+                        $stacks = $stacks->where('pur_level', $pur);
+                    }else{
+                        $stacks = $stacks->where('pur_level', -1);
+                    }
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameThor2Stack::where('spin_type', 0)->whereNotIn('id', $existIds);
-                }
-                if($pur >= 0){
-                    $stacks = $stacks->where('pur_level', $pur);
                 }
                 $index = mt_rand(0, 38000);
                 if($winType == 'win'){
@@ -790,7 +792,11 @@ namespace VanguardLTE\Games\Thor2CQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
+<<<<<<< HEAD
                                 //$stacks = $stacks->where('odd', '>=', $miniOdd);
+=======
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
+>>>>>>> 203dbaf74e8440df7bc4e6cd45c7eb0590ed3430
                             }
                             if ($this->happyhouruser)
                             {

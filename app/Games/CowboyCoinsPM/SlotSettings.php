@@ -783,7 +783,7 @@ namespace VanguardLTE\Games\CowboyCoinsPM
                                         $miniOdd = 30;
                                     }
                                 }
-                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {

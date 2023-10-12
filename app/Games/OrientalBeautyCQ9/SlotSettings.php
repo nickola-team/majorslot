@@ -792,7 +792,11 @@ namespace VanguardLTE\Games\OrientalBeautyCQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
+<<<<<<< HEAD
                                 //$stacks = $stacks->where('odd', '>=', $miniOdd);
+=======
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
+>>>>>>> 203dbaf74e8440df7bc4e6cd45c7eb0590ed3430
                             }
                             if ($this->happyhouruser)
                             {

@@ -1152,6 +1152,10 @@ return [
         "GoldOasis" => "골드 오아시스",
         "_8GoldenDragonChallenge" => "8 골든 드래곤 첼린지",
         "BookofTutMegaways" => "북 오브 투트 메가웨이즈",
+        "CandyBlitz" => "캔디 블리츠",
+        "FortunesofAztec" => "포츈스 오브 아즈텍",
+        "YiSunShin" => "이순신",
+        "CashChips" => "캐시 칩스",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1237,6 +1241,10 @@ return [
         "ladyfortune" => "레이디 포츈",
         "ladyfortune" => "레이디 포츈",
         "greenchilli2" => "그린 칠리 2",
+        "blackwolf2" => "블랙 울프 2",
+        "littlefarm" => "리틀 팜",
+        "_3hotchillies" => "3 핫 칠리즈",
+        "_777coins" => "777 코인즈",
 
         // CQ9
         "Double Fly" => "더블 플라이",
@@ -1323,5 +1331,15 @@ return [
         "TreasureHouse" => "트래져 하우스",
         "WildTarzan" => "와일드 타잔",
         "GodOfChess" => "갓 오브 체스",
-        "NinjaRaccoon" => "Ninja Raccoon"
+        "NinjaRaccoon" => "Ninja Raccoon",
+        "FloatingMarket" => "Floating Market",
+        "MoneyTree" => "Money Tree",
+        "DollarBomb" => "DollarBomb",
+        "FortuneDragon" => "포춘 드래곤",
+        "SongkranFestival" => "송크란 축제",
+        "Dragonheart" => "드래곤 하트",
+        "MagicWorld" => "매직 월드",
+        "FootballBoots" => "풋볼 부츠",
+        "FruitKing2" => "후르츠 킹 II",
+        "Acrobatics" => "곡예"
 ];

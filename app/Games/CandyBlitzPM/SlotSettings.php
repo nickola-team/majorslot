@@ -768,7 +768,7 @@ namespace VanguardLTE\Games\CandyBlitzPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyBlitzStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 55000);
@@ -792,7 +792,7 @@ namespace VanguardLTE\Games\CandyBlitzPM
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {
