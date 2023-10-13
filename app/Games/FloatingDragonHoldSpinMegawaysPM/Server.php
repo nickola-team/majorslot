@@ -184,6 +184,9 @@ namespace VanguardLTE\Games\FloatingDragonHoldSpinMegawaysPM
                             $arr_g['main']['def_s'] = "8,10,11,11,5,5,6,7,3,8,4,5,11,5,10,5,13,4,4,12,7,5,13,8,13,1,9,13,13,8,13,13,13,13,13,9";
                             $arr_g['main']['def_sa'] = "9,9,9,11,5,7";
                             $arr_g['main']['def_sb'] = "1,7,12,10,7,7";
+                            if(!isset($arr_g['main']['reel_set'])){
+                                $arr_g['main']['reel_set'] = "0";
+                            }
                             // $arr_g['main'] = [
                             //     "def_s" => "8,10,11,11,5,5,6,7,3,8,4,5,11,5,10,5,13,4,4,12,7,5,13,8,13,1,9,13,13,8,13,13,13,13,13,9",
                             //     "def_sa" => "9,9,9,11,5,7",
