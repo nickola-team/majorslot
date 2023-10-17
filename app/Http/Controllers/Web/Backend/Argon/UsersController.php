@@ -1,7 +1,6 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 {
-    use Log;
     class UsersController extends \VanguardLTE\Http\Controllers\Controller
     {
         private $users = null;
@@ -733,11 +732,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function player_list(\Illuminate\Http\Request $request)
         {
-            Log::info("start player_list");
             set_time_limit(0);
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
-            Log::info("start player_list11 : " . $user->username);
             $parent = $user;
             while ($parent && !$parent->isInOutPartner())
             {
@@ -753,9 +750,9 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $moneyperm = $parent->sessiondata()['moneyperm'];
             }
 
-            Log::info("start player_list7 : " . $user->username);
+
             $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
-            Log::info("start player_list1 : " . $user->username);
+
             if ($request->user != '')
             {
                 if ($request->includename == 'on')
@@ -813,12 +810,12 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             }
 
             $usersId = (clone $users)->pluck('id')->toArray();
-            Log::info("start player_list2 : " . $user->username);
+
             $validTimestamp = \Carbon\Carbon::now()->subMinutes(config('session.lifetime'))->timestamp;
             $validTime = date('Y-m-d H:i:s', strtotime("-5 minutes"));
             $onlineUsers = \VanguardLTE\Session::whereIn('user_id', $usersId)->where('last_activity', '>=', $validTimestamp)->pluck('user_id')->toArray();
             $onlineUserByGame = \VanguardLTE\StatGame::whereIn('user_id', $usersId)->where('date_time', '>=', $validTime)->pluck('user_id')->toArray();
-            Log::info("start player_list3 : " . $user->username);
+            
             $onlineUsers = array_unique($onlineUsers);
             $onlineUserByGame = array_unique($onlineUserByGame);
             
@@ -853,9 +850,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'online' => $onlinecount,
                 'new' => count($newusers)
             ];
-            Log::info("end player_list : " . $user->username);
+            
             $users = $users->paginate(20);
-            Log::info("end player_list1 : " . $user->username);
             return view('backend.argon.player.list', compact('users','total','moneyperm'));
         }
         public function player_terminate(\Illuminate\Http\Request $request)
