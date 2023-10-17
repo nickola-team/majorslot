@@ -1,7 +1,6 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 {
-    use Log;
     class CommonController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function __construct(\VanguardLTE\Repositories\User\UserRepository $users)
@@ -40,7 +39,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
         public function updateBalance(\Illuminate\Http\Request $request)
         {
-            Log::info("start update balance user id => " . $request->user_id);
             \DB::beginTransaction();
             $data = $request->all();
             if( !array_get($data, 'type') ) 
@@ -205,7 +203,6 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 }
             }
             \DB::commit();
-            Log::info("end update balance user id => " . $request->user_id);
             // return redirect($request->url)->withSuccess(['조작이 성공했습니다.']);
             return redirect()->back()->withSuccess(['조작이 성공했습니다.']);
         }
