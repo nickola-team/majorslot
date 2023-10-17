@@ -737,6 +737,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
             set_time_limit(0);
             $user = auth()->user();
             $availableUsers = $user->hierarchyUsersOnly();
+            Log::info("start player_list11");
             $parent = $user;
             while ($parent && !$parent->isInOutPartner())
             {
@@ -752,7 +753,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $moneyperm = $parent->sessiondata()['moneyperm'];
             }
 
-
+            Log::info("start player_list7");
             $users = \VanguardLTE\User::whereIn('id', $availableUsers)->whereIn('status', [\VanguardLTE\Support\Enum\UserStatus::ACTIVE, \VanguardLTE\Support\Enum\UserStatus::BANNED]);
             Log::info("start player_list1");
             if ($request->user != '')
