@@ -1433,7 +1433,7 @@ namespace VanguardLTE
         public static function syncBalance(\VanguardLTE\User $user, $reason='')
         {
             \DB::beginTransaction();
-            Log::nfo($user->username . "님이 찾기 시작" );
+            Log::info($user->username . "님이 찾기 시작" );
             $lockUser = \VanguardLTE\User::lockForUpdate()->find($user->id);
             Log::info($user->username . "님이 찾기 끝" );
             if ($lockUser->playing_game == null)
