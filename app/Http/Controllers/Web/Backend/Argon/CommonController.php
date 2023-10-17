@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 {
+    use Log;
     class CommonController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function __construct(\VanguardLTE\Repositories\User\UserRepository $users)
