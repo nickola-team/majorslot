@@ -374,7 +374,9 @@ namespace VanguardLTE
             }
             $role = \jeremykenedy\LaravelRoles\Models\Role::where('slug', $roleName)->first();
             Log::info("startupdate balance roleName2 => " . $roleName);
-            return User::where('role_id', $role->id)->whereIn('id', $users)->pluck('id')->toArray();
+            $users = User::where('role_id', $role->id)->whereIn('id', $users)->pluck('id')->toArray();
+            Log::info("startupdate balance roleName3 => " . $roleName);
+            return $users; 
         }
         public function availableShops()
         {
