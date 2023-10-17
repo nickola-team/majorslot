@@ -365,16 +365,20 @@ namespace VanguardLTE
         }
         public function availableUsersByRole($roleName)
         {
+            if($roleName == 'user')
             Log::info("startupdate balance roleName => " . $roleName);
             $users = $this->availableUsers();
+            if($roleName == 'user')
             Log::info("startupdate balance roleName1 => " . $roleName);
             if( !count($users) ) 
             {
                 return [];
             }
             $role = \jeremykenedy\LaravelRoles\Models\Role::where('slug', $roleName)->first();
+            if($roleName == 'user')
             Log::info("startupdate balance roleName2 => " . $roleName);
             $users = User::where('role_id', $role->id)->whereIn('id', $users)->selectRaw('id')->get();
+            if($roleName == 'user')
             Log::info("startupdate balance roleName3 => " . $roleName);
             return $users; 
         }
