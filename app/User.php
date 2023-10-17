@@ -365,6 +365,11 @@ namespace VanguardLTE
         }
         public function availableUsersByRole($roleName)
         {
+            $role = \jeremykenedy\LaravelRoles\Models\Role::where('slug', $roleName)->first();
+            if( $this->hasRole(['admin']) ) 
+            {
+                return User::where('role_id' , $role->id)->pluck('id')->toArray(); 
+            }
             Log::info("startupdate balance roleName => " . $roleName);
             $users = $this->availableUsers();
             Log::info("startupdate balance roleName1 => " . $roleName);
@@ -372,10 +377,9 @@ namespace VanguardLTE
             {
                 return [];
             }
-            $role = \jeremykenedy\LaravelRoles\Models\Role::where('slug', $roleName)->first();
             Log::info("startupdate balance roleName2 => " . $roleName);
-            $users = User::where('role_id', $role->id)->whereIn('id', $users)->selectRaw('id')->get();
-            Log::info("startupdate balance roleName3 => " . $roleName);
+            $users = User::where('role_id', $role->id)->whereIn('id', $users)->pluck('id')->toArray();
+            Log::info("startupdate balance roleName2 => " . $roleName);
             return $users; 
         }
         public function availableShops()
