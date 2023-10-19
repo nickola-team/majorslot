@@ -600,6 +600,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             'language' => 'ko',
                             'dollarsign' => 'Y',
                             'app' => 'N',
+                            'alonegame' => 1,
                             'detect' => 'N',
                             'game' => $gamename, //this is real param
                         ];
