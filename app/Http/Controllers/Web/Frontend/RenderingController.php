@@ -602,7 +602,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                             'app' => 'N',
                             'alonegame' => 1,
                             'detect' => 'N',
-                            'game' => $gamename, //this is real param
+                            'game' => $embed_games->name, //this is real param
                         ];
                         return redirect(route('frontend.game.startgame',$fakeparams));
                     }

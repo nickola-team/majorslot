@@ -102,10 +102,10 @@ namespace VanguardLTE\Console
             })->dailyAt('08:00');
 
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
-            $schedule->command('daily:sharesummary')->dailyAt('02:00')->runInBackground();
+            $schedule->command('daily:sharesummary')->dailyAt('03:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('01:00')->runInBackground();
-            $schedule->command('daily:gamesummary')->dailyAt('01:30')->runInBackground();
-            $schedule->command('daily:usersummary')->dailyAt('01:00')->runInBackground();
+            $schedule->command('daily:gamesummary')->dailyAt('02:00')->runInBackground();
+            $schedule->command('daily:usersummary')->dailyAt('04:00')->runInBackground();
 
             // $schedule->command('kten:omitted')->dailyAt('02:00')->runInBackground();
 
