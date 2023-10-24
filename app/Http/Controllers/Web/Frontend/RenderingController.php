@@ -578,6 +578,34 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         ];
                         return redirect(route('frontend.game.startgame',$fakeparams));
                     }
+                }else if ($game['href'] == 'honor-hbn') {
+                    $gamename = $game['name'];
+                    $gamename = preg_replace('/[^a-zA-Z0-9 -]+/', '', $gamename) . 'HBN';
+                    $gamename = preg_replace('/^(\d)([a-zA-Z0-9 -]+)/', '_$1$2', $gamename);
+                    $shop_id = \Auth::user()->shop_id;
+                    $cat = \VanguardLTE\Category::where([
+                        'shop_id' => $shop_id,
+                        'href' => 'habaneroplay',
+                        'view' => 1
+                    ])->first();
+                    $embed_games = \VanguardLTE\Game::where([
+                        'shop_id' => $shop_id,
+                        'name' => 'SGThe' . $gamename,
+                        'view' => 1,
+                        ]
+                    )->first();
+                    if ($embed_games && $cat) {
+                        $fakeparams = [
+                            'token' => uniqid(''),
+                            'language' => 'ko',
+                            'dollarsign' => 'Y',
+                            'app' => 'N',
+                            'alonegame' => 1,
+                            'detect' => 'N',
+                            'game' => $embed_games->name, //this is real param
+                        ];
+                        return redirect(route('frontend.game.startgame',$fakeparams));
+                    }
                 }
                 $user->update([
                     'playing_game' => $game['href'],

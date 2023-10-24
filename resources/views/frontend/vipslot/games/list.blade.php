@@ -1,4 +1,4 @@
-@extends('frontend.boss.layouts.app', ['logo' => 'vipslot','telegram' => 'soda2277'])
+@extends('frontend.boss.layouts.app', ['logo' => 'vipslot','telegram' => 'roelxcall'])
 @section('page-title', $title)
 
 @section('content')

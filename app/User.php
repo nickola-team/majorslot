@@ -365,13 +365,21 @@ namespace VanguardLTE
         }
         public function availableUsersByRole($roleName)
         {
-            $users = $this->availableUsers();
-            if( !count($users) ) 
-            {
-                return [];
-            }
             $role = \jeremykenedy\LaravelRoles\Models\Role::where('slug', $roleName)->first();
-            return User::where('role_id', $role->id)->whereIn('id', $users)->pluck('id')->toArray();
+            if( $this->hasRole(['admin']) ) 
+            {
+                $users = User::where('role_id' , $role->id)->pluck('id')->toArray(); 
+            }
+            else
+            {
+                $users = $this->availableUsers();
+                if( !count($users) ) 
+                {
+                    return [];
+                }
+                $users = User::where('role_id', $role->id)->whereIn('id', $users)->pluck('id')->toArray();
+            }
+            return $users; 
         }
         public function availableShops()
         {

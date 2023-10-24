@@ -229,7 +229,7 @@ namespace VanguardLTE\Games\VampireKissCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet'), $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
