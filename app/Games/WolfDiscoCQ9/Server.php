@@ -225,7 +225,7 @@ namespace VanguardLTE\Games\WolfDiscoCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'bonus';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -357,16 +357,23 @@ namespace VanguardLTE\Games\WolfDiscoCQ9
             }
             
             $proof['respin_reels']              = $result_val['RespinReels'];
+            $proof['s_v']                       = "5.27.1.0";
             $proof['bonus_type']                = $result_val['BonusType'];
             $proof['special_award']             = $result_val['SpecialAward'];
             $proof['special_symbol']            = $result_val['SpecialSymbol'];
+            $proof['l_v']                       = "2.5.1.5";
+            $proof['denom_multiple']            = 100;
             $proof['is_respin']                 = $result_val['IsRespin'];
-            $proof['fg_times']                  = $result_val['FreeSpin'];
+            $proof['fg_times']                  = $result_val['FreeSpin'][0];
             $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'));
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
             $proof['extend_feature_by_game2']   = [];
-
+            if(isset($result_val['LockPos'])){
+                $proof['lock_position']         = $result_val['LockPos'];
+            }else{
+                $proof['lock_position']         = [];
+            }            
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {
                 $lineData = [];
@@ -423,25 +430,25 @@ namespace VanguardLTE\Games\WolfDiscoCQ9
                 $wager['seq_no']                = $result_val['GamePlaySerialNumber'];
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
-                $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 183;
+                $wager['user_id']               = strval($slotSettings->playerId);
+                $wager['game_id']               = "183";
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $betline * $lines;
-                $wager['play_denom']            = 100;
-                $wager['bet_multiple']          = $betline;
+                $wager['play_bet']              = strval($betline * $lines);
+                $wager['play_denom']            = "100";
+                $wager['bet_multiple']          = strval($betline);
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = $result_val['Multiple'];
-                $wager['base_game_win']         = $result_val['TotalWin'];
+                $wager['base_game_win']         = strval($result_val['TotalWin']);
                 $wager['win_over_limit_lock']   = 0;
                 $wager['game_type']             = 0;
                 $wager['win_type']              = $result_val['WinType'];
                 $wager['settle_type']           = 0;
                 $wager['wager_type']            = 0;
-                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $wager['total_win']             = strval($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                 $wager['win_line_count']        = $result_val['WinLineCount'];
                 $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
                 $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];

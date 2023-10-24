@@ -324,7 +324,6 @@ namespace VanguardLTE\Games\PoseidonCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                $result_val['Multiple'] = strval($currentSpinTimes);
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] == false){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     $isState = true;
