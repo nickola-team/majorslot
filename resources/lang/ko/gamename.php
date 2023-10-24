@@ -1156,6 +1156,13 @@ return [
         "FortunesofAztec" => "포츈스 오브 아즈텍",
         "YiSunShin" => "이순신",
         "CashChips" => "캐시 칩스",
+        "GravityBonanza" => "그라비티 보난자",
+        "InfectiveWild" => "인펙티브 와일드",
+        "Gemstone" => "젬스톤",
+        "TundrasFortune" => "툰드라즈 포츈",
+        "BigBassHalloween" => "빅 배스 할로윈",
+        "RainbowReels" => "레인보우 릴스",
+        "SweetBonanzaDice" => "스위트 보난자 다이스",
 
         //Booongo
         "tigerstone" => "타이거 스톤",
