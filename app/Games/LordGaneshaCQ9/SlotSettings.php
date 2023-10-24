@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\LordGaneshaCQ9
         public function GetReelStrips($winType, $bet)
         {
             // // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLordGaneshaStack::where('id', 54017)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLordGaneshaStack::where('id', 119120)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -768,7 +768,7 @@ namespace VanguardLTE\Games\LordGaneshaCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameLordGaneshaStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
