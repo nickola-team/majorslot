@@ -1341,5 +1341,15 @@ return [
         "MagicWorld" => "매직 월드",
         "FootballBoots" => "풋볼 부츠",
         "FruitKing2" => "후르츠 킹 II",
-        "Acrobatics" => "곡예"
+        "Acrobatics" => "곡예",
+        "LordGanesha" => "가네샤",
+        "Fire777" => "파이어 777",
+        "LonelyPlanet" => "론리 플래닛",
+        "RaveJump2" => "레이브 점프 2",
+        "VampireKiss" => "뱀파이어 키스",
+        "Super5" => "오행",
+        "SweetPop" => "Sweet POP",
+        "Poseidon" => "포세이돈",
+        "WolfDisco" => "늑대 디스코",
+        "BurningXiYou" => "Burning Xi-You"
 ];
