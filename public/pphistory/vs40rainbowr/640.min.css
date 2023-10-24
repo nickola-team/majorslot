@@ -1,0 +1,126 @@
+:root {
+    --slot-item-height: 46px;
+    --slot-item-width: 62px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.ReelsSlot .ItemLevel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-position: 100% 100%
+}
+
+.ReelsSlot .ItemLevel--1 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg1.png) 1x, url(./images/vs40rainbowr/bg1@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--2 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg2.png) 1x, url(./images/vs40rainbowr/bg2@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--3 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg3.png) 1x, url(./images/vs40rainbowr/bg3@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--4 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg4.png) 1x, url(./images/vs40rainbowr/bg4@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--5 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg5.png) 1x, url(./images/vs40rainbowr/bg5@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--6 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg6.png) 1x, url(./images/vs40rainbowr/bg6@2x.png) 2x)
+}
+
+.ReelsSlot .ItemLevel--7 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/bg7.png) 1x, url(./images/vs40rainbowr/bg7@2x.png) 2x)
+}
+
+.LevelProgress {
+    width: 22px;
+    height: 165px;
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/prgBg.png) 1x, url(./images/vs40rainbowr/progress/prgBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 100%;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.LevelProgress__Item {
+    flex-basis: 22px;
+    width: 22px;
+    filter: brightness(.3);
+    line-height: 22px;
+    font-size: .64rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.LevelProgress__Item--active {
+    filter: brightness(1)
+}
+
+.LevelProgress__Item--1 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p1.png) 1x, url(./images/vs40rainbowr/progress/p1@2x.png) 2x)
+}
+
+.LevelProgress__Item--2 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p2.png) 1x, url(./images/vs40rainbowr/progress/p2@2x.png) 2x)
+}
+
+.LevelProgress__Item--3 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p3.png) 1x, url(./images/vs40rainbowr/progress/p3@2x.png) 2x)
+}
+
+.LevelProgress__Item--4 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p4.png) 1x, url(./images/vs40rainbowr/progress/p4@2x.png) 2x)
+}
+
+.LevelProgress__Item--5 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p5.png) 1x, url(./images/vs40rainbowr/progress/p5@2x.png) 2x)
+}
+
+.LevelProgress__Item--6 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p6.png) 1x, url(./images/vs40rainbowr/progress/p6@2x.png) 2x)
+}
+
+.LevelProgress__Item--7 {
+    background-image: -webkit-image-set(url(./images/vs40rainbowr/progress/p7.png) 1x, url(./images/vs40rainbowr/progress/p7@2x.png) 2x)
+}
+
+.WildLayer {
+    line-height: normal
+}
+
+.WildLayer .MoneyScatter__LabelWrap {
+    justify-content: flex-end;
+    margin-bottom: 9px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
