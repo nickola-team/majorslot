@@ -178,7 +178,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             s = function(e, t, a) {
                 var n = "";
-                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
             },
             l = function(e, t, a) {
                 return e.line_multiplier
@@ -219,7 +219,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(e, n) {
             e.forEach(function(e, o) {
                 null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -244,7 +244,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
     "use strict";
     var n = function(e, t) {
         var a = e,
-            n = "https://images.cq9web.com/order-detail/common/" + t.__this.orderData.gameId;
+            n = "https://images.yinuoshiye.com/order-detail/common/" + t.__this.orderData.gameId;
         return "freeGame" === t.gameType && t.lockPosition && t.lockPosition.forEach(function(e, t) {
             e.forEach(function(e, o) {
                 1 === e && (a[t][o] = n + "/W_Lock.png")
@@ -639,7 +639,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         return a < 3 ? t < 3 : t > 2
                     })
                 }),
-                a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+                a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
             return t.forEach(function(e, n) {
                 e.forEach(function(e, o) {
                     null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -3219,7 +3219,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return t.map(function(t, n) {
                     var i = r()({}, t),
                         s = e.role[e.gameData.proof.reel_len_change[n]];
-                    if (-1 !== i.value.indexOf("H6") && (i.value = "https://images.cq9web.com/order-detail/common/113/" + e.specialSymbol[e.gameData.proof.special_symbol] + ".png"), 5 === parseInt(e.gameData.game_type / 10)) {
+                    if (-1 !== i.value.indexOf("H6") && (i.value = "https://images.yinuoshiye.com/order-detail/common/113/" + e.specialSymbol[e.gameData.proof.special_symbol] + ".png"), 5 === parseInt(e.gameData.game_type / 10)) {
                         var l = new o.a(e.gameData.proof.reel_len_change);
                         return i.display = a <= l.values().next().value - 1, i
                     }
@@ -3438,7 +3438,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 });
             if (0 === this.$props.gameData.proof.reel_pos_chg[0]) return t = t.map(function(e, t) {
                 return t > 1 && t < 5 ? e : e.map(function(e) {
-                    return "https://images.cq9web.com/order-detail/common/116/N.png"
+                    return "https://images.yinuoshiye.com/order-detail/common/116/N.png"
                 })
             }), this.showData = t, void(this.gameData.displayData = t);
             t.forEach(function(a, n) {
@@ -3503,7 +3503,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getLevel1Image: function() {
                 var e = this.gameData.proof.extend_feature_by_game[0].value,
                     t = this.gameData.proof.extend_feature_by_game[3].value,
-                    a = "https://images.cq9web.com/order-detail/common/117",
+                    a = "https://images.yinuoshiye.com/order-detail/common/117",
                     n = [];
                 if (3 === e && 2 === t) {
                     var o = {
@@ -3526,7 +3526,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     };
                 if (3 === e) {
                     var n = [2, 3, 4, 5],
-                        o = "https://images.cq9web.com/order-detail/common/117";
+                        o = "https://images.yinuoshiye.com/order-detail/common/117";
                     return n.map(function(e) {
                         var n = {
                             symbol: o + "/" + a[e] + "L.png",
@@ -3605,7 +3605,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 });
             if (0 === this.$props.gameData.proof.reel_pos_chg[0]) return t = t.map(function(e, t) {
                 return t > 1 && t < 5 ? e : e.map(function(e) {
-                    return "https://images.cq9web.com/order-detail/common/116/N.png"
+                    return "https://images.yinuoshiye.com/order-detail/common/116/N.png"
                 })
             }), this.showData = t, void(this.gameData.displayData = t);
             t.forEach(function(a, n) {
@@ -3662,7 +3662,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
-    var n = "https://images.cq9web.com/order-detail/common/118/";
+    var n = "https://images.yinuoshiye.com/order-detail/common/118/";
     t.default = {
         props: ["symbolData", "gameData"],
         data: function() {
@@ -3761,7 +3761,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         methods: {
             getSymbol: function() {
                 var e = "";
-                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.cq9web.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
+                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
             },
             getJackpotType: function() {
                 return ["Grand", "Major", "Minor"][a.i(n.get)(this.gameData, "pick[0].proof.jp_item_level") - 1]
@@ -3780,7 +3780,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         methods: {
             getSymbol: function() {
                 var e = "";
-                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.cq9web.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
+                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
             },
             getFreeSymbol: function() {
                 return 1 === this.item.line_type
@@ -3809,7 +3809,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 var e = this.$props.gameData.proof.reel_pos_chg;
                 return this.$props.symbolData.map(function(t, a) {
                     return t.map(function(t, n) {
-                        return n > 0 && n < 4 && e[3 * (n - 1) + a] ? "https://images.cq9web.com/order-detail/common/122/W.png" : t
+                        return n > 0 && n < 4 && e[3 * (n - 1) + a] ? "https://images.yinuoshiye.com/order-detail/common/122/W.png" : t
                     })
                 })
             }
@@ -3986,7 +3986,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     a = this.symbolData;
                 return t.map(function(t, n) {
                     t.split(",").map(function(t, o) {
-                        return e.length && 50 === (e[n][o] || []) && "F" === t ? a[n][o] = "https://images.cq9web.com/order-detail/common/145/F1.png" : a[n][o] = "https://images.cq9web.com/order-detail/common/145/N6.png"
+                        return e.length && 50 === (e[n][o] || []) && "F" === t ? a[n][o] = "https://images.yinuoshiye.com/order-detail/common/145/F1.png" : a[n][o] = "https://images.yinuoshiye.com/order-detail/common/145/N6.png"
                     })
                 }), a
             }
@@ -4003,7 +4003,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 var e = this.gameData.proof.lock_position;
                 return this.gameData.proof.symbol_data.map(function(t, a) {
                     return t.split(",").map(function(t, n) {
-                        return "F" !== t || 1 !== e[a][n] && 2 !== e[a][n] ? "https://images.cq9web.com/order-detail/common/146/N7.png" : "https://images.cq9web.com/order-detail/common/146/F.png"
+                        return "F" !== t || 1 !== e[a][n] && 2 !== e[a][n] ? "https://images.yinuoshiye.com/order-detail/common/146/N7.png" : "https://images.yinuoshiye.com/order-detail/common/146/F.png"
                     })
                 })
             },
@@ -4029,7 +4029,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     a = this.symbolData;
                 return t.map(function(t, n) {
                     t.split(",").map(function(t, o) {
-                        return e.length && "F" === t && 1 === e[n][o] ? a[n][o] = "https://images.cq9web.com/order-detail/common/148/F.png" : a[n][o] = "https://images.cq9web.com/order-detail/common/148/N6.png"
+                        return e.length && "F" === t && 1 === e[n][o] ? a[n][o] = "https://images.yinuoshiye.com/order-detail/common/148/F.png" : a[n][o] = "https://images.yinuoshiye.com/order-detail/common/148/N6.png"
                     })
                 }), a
             }
@@ -4099,7 +4099,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return this.extraLightData.split(",").filter(function(e) {
                     return "0" !== e
                 }).map(function(e) {
-                    return "https://images.cq9web.com/order-detail/common/151/" + e + ".png"
+                    return "https://images.yinuoshiye.com/order-detail/common/151/" + e + ".png"
                 })
             },
             showExtraLight: function() {
@@ -4109,7 +4109,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             showMultiple: function() {
                 var e = this.gameData.multiple;
-                return e > 0 ? "https://images.cq9web.com/order-detail/common/151/" + e + "xxx.png" : "https://images.cq9web.com/order-detail/common/151/empty.png"
+                return e > 0 ? "https://images.yinuoshiye.com/order-detail/common/151/" + e + "xxx.png" : "https://images.yinuoshiye.com/order-detail/common/151/empty.png"
             }
         }
     }
@@ -4123,10 +4123,10 @@ webpackJsonp([0], [, , , function(e, t, a) {
             showScatter: function() {
                 var e = this.gameData.proof.lock_position,
                     t = this.gameData.proof.symbol_data,
-                    a = "https://images.cq9web.com/order-detail/common/154/empty.png";
+                    a = "https://images.yinuoshiye.com/order-detail/common/154/empty.png";
                 return t.map(function(t, n) {
                     return t.split(",").map(function(t, o) {
-                        return e.length && "F" === t && 1 === e[n][o] ? "https://images.cq9web.com/order-detail/common/154/N7.png" : a
+                        return e.length && "F" === t && 1 === e[n][o] ? "https://images.yinuoshiye.com/order-detail/common/154/N7.png" : a
                     })
                 })
             }
@@ -4355,7 +4355,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             a.i(n.get)(this.selectData, o);
             this.showData = this.symbolData.map(function(t, a) {
                 return t.map(function(t, n) {
-                    return 1 === e[n] ? "https://images.cq9web.com/order-detail/common/171/RH" + (o + 1) + "_" + (a + 1) + ".png" : t
+                    return 1 === e[n] ? "https://images.yinuoshiye.com/order-detail/common/171/RH" + (o + 1) + "_" + (a + 1) + ".png" : t
                 })
             })
         }
@@ -4387,7 +4387,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     t = a.i(n.get)(this.gameData, "proof.win_line_data[0]");
                 return console.log(t), "F" === a.i(n.get)(t, "symbol_id") && 995 === a.i(n.get)(t, "win_line_no") && a.i(n.get)(t, "win_position").forEach(function(t, a) {
                     console.log(t), t.forEach(function(t, n) {
-                        1 === t && (e[a - 1][n] = "https://images.cq9web.com/order-detail/common/173/F.png")
+                        1 === t && (e[a - 1][n] = "https://images.yinuoshiye.com/order-detail/common/173/F.png")
                     })
                 }), e
             }
@@ -4726,7 +4726,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 })
             }), 1 === this.gameType && this.transform ? this.showData = this.symbolData.map(function(e, a) {
                 return e.map(function(e, n) {
-                    return console.log(), e.match(/F.png/) && 1 === t.proof.lock_position[a][n] ? "FinWild" : 1 === t.proof.lock_position[a][n] ? "https://images.cq9web.com/order-detail/common/166/W.png" : e
+                    return console.log(), e.match(/F.png/) && 1 === t.proof.lock_position[a][n] ? "FinWild" : 1 === t.proof.lock_position[a][n] ? "https://images.yinuoshiye.com/order-detail/common/166/W.png" : e
                 })
             }) : this.showData = this.symbolData
         },
@@ -4735,7 +4735,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return this.transform && 1 === this.gameType
             },
             getSymbol: function(e, t, a) {
-                return "FinWild" === e ? "https://images.cq9web.com/order-detail/common/166/W.png" : 1 === this.gameData.game_type && 1 === this.gameData.proof.reel_pos_chg[0] && 1 === this.gameData.proof.reel_pos_chg[a + 1] ? "https://images.cq9web.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png" : 2 !== this.gameType || !e.match(/W.png/) || 1 !== a && 3 !== a ? e : "https://images.cq9web.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png"
+                return "FinWild" === e ? "https://images.yinuoshiye.com/order-detail/common/166/W.png" : 1 === this.gameData.game_type && 1 === this.gameData.proof.reel_pos_chg[0] && 1 === this.gameData.proof.reel_pos_chg[a + 1] ? "https://images.yinuoshiye.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png" : 2 !== this.gameType || !e.match(/W.png/) || 1 !== a && 3 !== a ? e : "https://images.yinuoshiye.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png"
             },
             setStyle: function(e) {
                 return {
@@ -4771,7 +4771,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         return e.split(",")
                     })[t][o],
                     r = a.i(n.get)(this.gameData, "proof.special_symbol"),
-                    s = "https://images.cq9web.com/order-detail/common/184/" + (r < 10 ? "H" : "N") + r % 10 + ".png",
+                    s = "https://images.yinuoshiye.com/order-detail/common/184/" + (r < 10 ? "H" : "N") + r % 10 + ".png",
                     l = a.i(n.get)(this.gameData, "proof.lock_position");
                 return 0 !== l.length ? 0 === l[t][o] ? e : s : 5 == i ? s : e
             },
@@ -4781,7 +4781,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getSymbol: function(e, t, o) {
                 var i = a.i(n.get)(this.gameData, "proof.lock_position");
-                return 1 === a.i(n.get)(i, "[" + t + "][" + o + "]") ? "https://images.cq9web.com/order-detail/common/184/M.png" : e
+                return 1 === a.i(n.get)(i, "[" + t + "][" + o + "]") ? "https://images.yinuoshiye.com/order-detail/common/184/M.png" : e
             },
             needToShow: function() {
                 return 0 !== a.i(n.get)(this.gameData, "proof.symbol_data").filter(function(e) {
@@ -4811,7 +4811,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getLevel1Image: function() {
                 var e = this.gameData.proof.extend_feature_by_game[0].value,
                     t = this.gameData.proof.extend_feature_by_game[3].value,
-                    a = "https://images.cq9web.com/order-detail/common/117",
+                    a = "https://images.yinuoshiye.com/order-detail/common/117",
                     n = [];
                 if (3 === e && 2 === t) {
                     var o = {
@@ -4834,7 +4834,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     };
                 if (3 === e) {
                     var n = [2, 3, 4, 5],
-                        o = "https://images.cq9web.com/order-detail/common/117";
+                        o = "https://images.yinuoshiye.com/order-detail/common/117";
                     return n.map(function(e) {
                         var n = {
                             symbol: o + "/" + a[e] + "L.png",
@@ -4925,19 +4925,19 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         var s = a.i(n.find)(i, {
                             name: "WildMultiplierReel2"
                         });
-                        return parseInt(s.value) > 0 && parseInt(r.value) > 3 ? "https://images.cq9web.com/order-detail/common/185/W1_" + s.value + "X.png" : e
+                        return parseInt(s.value) > 0 && parseInt(r.value) > 3 ? "https://images.yinuoshiye.com/order-detail/common/185/W1_" + s.value + "X.png" : e
                     }
                     if (2 === o) {
                         var l = a.i(n.find)(i, {
                             name: "WildMultiplierReel3"
                         });
-                        return parseInt(l.value) > 0 && parseInt(r.value) > 1 ? "https://images.cq9web.com/order-detail/common/185/W1_" + l.value + "X.png" : e
+                        return parseInt(l.value) > 0 && parseInt(r.value) > 1 ? "https://images.yinuoshiye.com/order-detail/common/185/W1_" + l.value + "X.png" : e
                     }
                     if (3 === o) {
                         var u = a.i(n.find)(i, {
                             name: "WildMultiplierReel4"
                         });
-                        return parseInt(u.value) > 0 && parseInt(r.value) > 2 ? "https://images.cq9web.com/order-detail/common/185/W1_" + u.value + "X.png" : e
+                        return parseInt(u.value) > 0 && parseInt(r.value) > 2 ? "https://images.yinuoshiye.com/order-detail/common/185/W1_" + u.value + "X.png" : e
                     }
                     return e
                 }
@@ -5022,7 +5022,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return a.i(n.get)(this.multiplier, "[" + (3 * t + o) + "]") > 1
             },
             getMultiplier: function(e, t, o) {
-                return "https://images.cq9web.com/order-detail/common/186/" + a.i(n.get)(this.multiplier, "[" + (3 * t + o) + "]") + "x_1.png"
+                return "https://images.yinuoshiye.com/order-detail/common/186/" + a.i(n.get)(this.multiplier, "[" + (3 * t + o) + "]") + "x_1.png"
             },
             getSymbol: function(e, t, a) {
                 return e
@@ -5079,7 +5079,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         value: !0
     });
     var n = a(7),
-        o = (a.n(n), "https://images.cq9web.com/order-detail/common/194/");
+        o = (a.n(n), "https://images.yinuoshiye.com/order-detail/common/194/");
     t.default = {
         props: ["orderData", "symbolData", "gameData", "gameType"],
         data: function() {
@@ -5184,7 +5184,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         value: !0
     });
     var n = a(7),
-        o = (a.n(n), "https://images.cq9web.com/order-detail/common/195/");
+        o = (a.n(n), "https://images.yinuoshiye.com/order-detail/common/195/");
     t.default = {
         props: ["orderData", "symbolData", "gameData", "gameType"],
         data: function() {
@@ -5336,13 +5336,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getNumberImage: function(e, t) {
                 var a = {
-                    "background-image": 'url("https://images.cq9web.com/order-detail/common/196/number/img_symbol_' + e + '.png")'
+                    "background-image": 'url("https://images.yinuoshiye.com/order-detail/common/196/number/img_symbol_' + e + '.png")'
                 };
                 return e.match(/B/) && (a.width = "120%", a.right = "-3px"), e.match(/B/) && t > 5 && (a.top = "-5px", a.right = "-5px", a.width = "120%"), a
             },
             getBackgroundImage: function() {
                 return {
-                    "background-image": 'url("https://images.cq9web.com/order-detail/common/196/' + (new URLSearchParams(window.location.search).get("language") || "en") + '.png")'
+                    "background-image": 'url("https://images.yinuoshiye.com/order-detail/common/196/' + (new URLSearchParams(window.location.search).get("language") || "en") + '.png")'
                 }
             }
         }
@@ -5415,7 +5415,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 this.gameData.proof.reel_pos_chg, this.gameData.proof.lock_position;
                 return this.symbolData.map(function(e, t) {
                     return e.map(function(e, a) {
-                        return e.match(/FW/) ? "https://images.cq9web.com/order-detail/common/199/W_" + (t + 1) + ".png" : e
+                        return e.match(/FW/) ? "https://images.yinuoshiye.com/order-detail/common/199/W_" + (t + 1) + ".png" : e
                     })
                 })
             },
@@ -5495,7 +5495,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         methods: {
             getSymbol: function() {
                 var e = "";
-                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.cq9web.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
+                return e = null != this.item.symbol_id.match(/^[0-9]+$/) ? parseInt(this.item.symbol_id) < 10 ? "H" + this.item.symbol_id : "N" + this.item.symbol_id.substr(this.item.symbol_id.length - 1) : this.item.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + this.orderData.gameId + "/" + e + ".png"
             },
             getFreeSymbol: function() {
                 return 1 === this.item.line_type
@@ -5536,7 +5536,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return t["number" + (this.getMultipler(e).length + 1)] = !0, t
             },
             getMultipler: function(e) {
-                var t = e.replace("https://images.cq9web.com/order-detail/common/206/", "").replace(".png", "");
+                var t = e.replace("https://images.yinuoshiye.com/order-detail/common/206/", "").replace(".png", "");
                 if (-1 !== t.indexOf("B")) {
                     var o = a.i(n.get)(this.gameData, "proof.extend_feature_by_game2", {})[t.replace("B", "")];
                     return a.i(n.get)(o, "value", "")
@@ -5546,7 +5546,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return -1 !== e.indexOf("B")
             },
             getImage: function(e) {
-                return -1 !== e.indexOf("B") ? "https://images.cq9web.com/order-detail/common/206/B1.png" : e
+                return -1 !== e.indexOf("B") ? "https://images.yinuoshiye.com/order-detail/common/206/B1.png" : e
             }
         }
     }
@@ -5697,7 +5697,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getSymbol: function() {
                 var e = a.i(n.get)(this.gameData, "proof.extend_feature_by_game2[1].value"),
                     t = e > 10 ? "N" + e[1] : "H" + e;
-                return "freeGame" !== this.gameType || "H1" !== t && "H3" !== t && "N2" !== t ? "https://images.cq9web.com/order-detail/common/210/" + t + ".png" : "https://images.cq9web.com/order-detail/common/210/" + t + "FG.png"
+                return "freeGame" !== this.gameType || "H1" !== t && "H3" !== t && "N2" !== t ? "https://images.yinuoshiye.com/order-detail/common/210/" + t + ".png" : "https://images.yinuoshiye.com/order-detail/common/210/" + t + "FG.png"
             }
         }
     }
@@ -5742,7 +5742,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getSymbolImage: function(e) {
                 var t = "";
-                return 50 == e ? (t = "W", console.log(e)) : t = null != e.match(/^[0-9]+$/) ? parseInt(e) < 10 ? "H" + e : "N" + e.substr(e.length - 1) : e, "https://images.cq9web.com/order-detail/common/210/" + t + ".png"
+                return 50 == e ? (t = "W", console.log(e)) : t = null != e.match(/^[0-9]+$/) ? parseInt(e) < 10 ? "H" + e : "N" + e.substr(e.length - 1) : e, "https://images.yinuoshiye.com/order-detail/common/210/" + t + ".png"
             },
             getImage: function(e) {
                 return e
@@ -5760,7 +5760,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         value: !0
     });
     var n = a(7),
-        o = (a.n(n), "https://images.cq9web.com/order-detail/common/211/");
+        o = (a.n(n), "https://images.yinuoshiye.com/order-detail/common/211/");
     t.default = {
         props: ["symbolData", "gameData", "gameType"],
         methods: {
@@ -5819,7 +5819,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getSymbolData: function() {
                 var e = a.i(n.get)(this.orderData, "gameId"),
                     t = a.i(n.get)(this.orderData, "wager.rng[0]");
-                return "https://images.cq9web.com/order-detail/common/" + e + "/" + (13 == t ? 0 : t) + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/" + e + "/" + (13 == t ? 0 : t) + ".png"
             }
         }
     }
@@ -6182,7 +6182,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getNumberImage: function(e, t) {
                 var a = {
-                    "background-image": 'url("https://images.cq9web.com/order-detail/common/217/' + e + '.png")'
+                    "background-image": 'url("https://images.yinuoshiye.com/order-detail/common/217/' + e + '.png")'
                 };
                 return e.match(/B/) && (a.width = "120%", a.right = "-3px"), e.match(/B/) && t > 5 && (a.top = "-5px", a.right = "-5px", a.width = "120%"), a
             },
@@ -6193,7 +6193,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getBackgroundImage: function() {
                 return {
-                    "background-image": 'url("https://images.cq9web.com/order-detail/common/217/' + (new URLSearchParams(window.location.search).get("language") || "en") + '.png")'
+                    "background-image": 'url("https://images.yinuoshiye.com/order-detail/common/217/' + (new URLSearchParams(window.location.search).get("language") || "en") + '.png")'
                 }
             }
         }
@@ -6231,7 +6231,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 })
             },
             getSymbol: function(e) {
-                return "https://images.cq9web.com/order-detail/common/218/" + e + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/218/" + e + ".png"
             }
         }
     }
@@ -6248,7 +6248,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getSymbolData: function() {
                 var e = this.symbolData,
                     t = a.i(n.get)(this.orderData, "wager.proof.extend_feature_by_game2[1].value").split(",");
-                return e[0][3] = "https://images.cq9web.com/order-detail/common/219/" + t[0] + ".png", e[1][3] = "https://images.cq9web.com/order-detail/common/219/" + t[1] + ".png", e[2][3] = "https://images.cq9web.com/order-detail/common/219/" + t[2] + ".png", e
+                return e[0][3] = "https://images.yinuoshiye.com/order-detail/common/219/" + t[0] + ".png", e[1][3] = "https://images.yinuoshiye.com/order-detail/common/219/" + t[1] + ".png", e[2][3] = "https://images.yinuoshiye.com/order-detail/common/219/" + t[2] + ".png", e
             }
         }
     }
@@ -6301,7 +6301,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 })
             },
             getSymbol: function(e) {
-                return "https://images.cq9web.com/order-detail/common/220/" + e + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/220/" + e + ".png"
             }
         }
     }
@@ -6374,17 +6374,17 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     return 0 == e
                 }).length ? this.symbolData.map(function(e) {
                     return e.map(function(e, a) {
-                        return -1 !== e.indexOf("N6W") && 0 == t[a] ? "https://images.cq9web.com/order-detail/common/222/W.png" : -1 !== e.indexOf("N6W") && a != o ? "https://images.cq9web.com/order-detail/common/222/W_noGlow.png" : e
+                        return -1 !== e.indexOf("N6W") && 0 == t[a] ? "https://images.yinuoshiye.com/order-detail/common/222/W.png" : -1 !== e.indexOf("N6W") && a != o ? "https://images.yinuoshiye.com/order-detail/common/222/W_noGlow.png" : e
                     })
                 }) : "extraGame" === this.gameType && 5 !== this.brightReel.filter(function(e) {
                     return 0 == e
                 }).length ? this.symbolData.map(function(t) {
                     return t.map(function(t, a) {
-                        return -1 !== t.indexOf("N6W") && 0 == e.brightReel[a] ? "https://images.cq9web.com/order-detail/common/222/W.png" : -1 !== t.indexOf("N6W") && a != o ? "https://images.cq9web.com/order-detail/common/222/W_noGlow.png" : t
+                        return -1 !== t.indexOf("N6W") && 0 == e.brightReel[a] ? "https://images.yinuoshiye.com/order-detail/common/222/W.png" : -1 !== t.indexOf("N6W") && a != o ? "https://images.yinuoshiye.com/order-detail/common/222/W_noGlow.png" : t
                     })
                 }) : this.symbolData.map(function(e) {
                     return e.map(function(e, t) {
-                        return -1 !== e.indexOf("N6W") && t != o ? "https://images.cq9web.com/order-detail/common/222/W_noGlow.png" : e
+                        return -1 !== e.indexOf("N6W") && t != o ? "https://images.yinuoshiye.com/order-detail/common/222/W_noGlow.png" : e
                     })
                 })
             },
@@ -6393,7 +6393,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     t = a.i(n.get)(this.gameData, "proof.extend_feature_by_game2[" + this.mappingType[this.gameType] + "].value");
                 return this.symbolData.map(function(a, n) {
                     return a.map(function(a, o) {
-                        return -1 !== a.indexOf("N6W") && 0 == e[o] ? "https://images.cq9web.com/order-detail/common/222/W.png" : -1 !== a.indexOf("N6W") && n !== t ? "https://images.cq9web.com/order-detail/common/222/W_noGlow.png" : a
+                        return -1 !== a.indexOf("N6W") && 0 == e[o] ? "https://images.yinuoshiye.com/order-detail/common/222/W.png" : -1 !== a.indexOf("N6W") && n !== t ? "https://images.yinuoshiye.com/order-detail/common/222/W_noGlow.png" : a
                     })
                 })
             },
@@ -6597,7 +6597,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return e
             },
             getSymbol: function(e) {
-                return "https://images.cq9web.com/order-detail/common/225/" + e + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/225/" + e + ".png"
             }
         }
     }
@@ -6644,7 +6644,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return this.symbolData
             },
             getImage: function(e, t, o) {
-                return "freeGame" === this.gameType && 0 != a.i(n.get)(this.gameData, "proof.lock_position")[t][o] ? "https://images.cq9web.com/order-detail/common/226/W.png" : e
+                return "freeGame" === this.gameType && 0 != a.i(n.get)(this.gameData, "proof.lock_position")[t][o] ? "https://images.yinuoshiye.com/order-detail/common/226/W.png" : e
             },
             getMultiple: function(e, t) {
                 var o = a.i(n.get)(this.gameData, "proof.extend_feature_by_game2.0.value").split(",")[5 * e + t];
@@ -6681,10 +6681,10 @@ webpackJsonp([0], [, , , function(e, t, a) {
         props: ["symbolData", "gameData", "orderData"],
         methods: {
             getSymbol: function(e) {
-                return "https://images.cq9web.com/order-detail/common/227/" + e + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/227/" + e + ".png"
             },
             getReelSymbol: function(e, t) {
-                return "https://images.cq9web.com/order-detail/common/227/WW_1" + (1 === this.reelPosChg[e] ? "" : "_" + this.multiple[e] + "X") + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/227/WW_1" + (1 === this.reelPosChg[e] ? "" : "_" + this.multiple[e] + "X") + ".png"
             }
         }
     }
@@ -6759,13 +6759,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     r = JSON.parse(a.i(n.get)(this.gameData, "proof.extend_feature_by_game2[0]].value")),
                     s = r[t].split(",")[o],
                     l = a.i(n.get)(this.gameData, "proof.special_award");
-                return parseInt(s) > 100 ? 0 != l ? "https://images.cq9web.com/order-detail/common/229/B_02.png" : "https://images.cq9web.com/order-detail/common/229/B.png" : i == t + 1 && 0 != i ? "https://images.cq9web.com/order-detail/common/229/F.png" : e
+                return parseInt(s) > 100 ? 0 != l ? "https://images.yinuoshiye.com/order-detail/common/229/B_02.png" : "https://images.yinuoshiye.com/order-detail/common/229/B.png" : i == t + 1 && 0 != i ? "https://images.yinuoshiye.com/order-detail/common/229/F.png" : e
             },
             getMultiple: function(e, t) {
                 var o = JSON.parse(a.i(n.get)(this.gameData, "proof.extend_feature_by_game2[0]].value")),
                     i = o[e].split(",")[t],
                     r = a.i(n.get)(this.gameData, "proof.special_award");
-                return i > 100 && 0 == r ? null : 0 != i ? "https://images.cq9web.com/order-detail/common/229/" + (i < 100 ? i + "x" : "x" + (i - 100)) + ".png" : void 0
+                return i > 100 && 0 == r ? null : 0 != i ? "https://images.yinuoshiye.com/order-detail/common/229/" + (i < 100 ? i + "x" : "x" + (i - 100)) + ".png" : void 0
             }
         }
     }
@@ -6790,10 +6790,10 @@ webpackJsonp([0], [, , , function(e, t, a) {
         props: ["symbolData", "transformMode", "gameData"],
         methods: {
             getValue: function(e, t, a) {
-                return this.getWinposition(e, t) ? "https://images.cq9web.com/order-detail/common/230/W_bg.png" : a
+                return this.getWinposition(e, t) ? "https://images.yinuoshiye.com/order-detail/common/230/W_bg.png" : a
             },
             getMultiple: function(e) {
-                return "https://images.cq9web.com/order-detail/common/230/W_" + this.gameData.multiple.split(" ")[e - 2] + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/230/W_" + this.gameData.multiple.split(" ")[e - 2] + ".png"
             },
             getMultipleNumber: function(e) {
                 return this.gameData.multiple.split(" ")[e - 2]
@@ -6834,7 +6834,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getValue: function(e, t, a) {
                 var n = this.gameData.proof.special_symbol,
                     o = JSON.parse(this.gameData.proof.extend_feature_by_game2[0].value);
-                return "6" === this.gameData.proof.symbol_data[e].split(",")[t] ? "https://images.cq9web.com/order-detail/common/231/" + this.dataList[n] + (4 === t && 1 == o[e] ? "_1" : "") + ".png" : 4 === t && 1 == o[e] ? a.replace(".png", "_1.png") : a
+                return "6" === this.gameData.proof.symbol_data[e].split(",")[t] ? "https://images.yinuoshiye.com/order-detail/common/231/" + this.dataList[n] + (4 === t && 1 == o[e] ? "_1" : "") + ".png" : 4 === t && 1 == o[e] ? a.replace(".png", "_1.png") : a
             }
         }
     }
@@ -6917,17 +6917,17 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     return 0 == e
                 }).length ? this.symbolData.map(function(e) {
                     return e.map(function(e, a) {
-                        return -1 !== e.indexOf("N6W") && 0 == t[a] ? "https://images.cq9web.com/order-detail/common/239/W.png" : -1 !== e.indexOf("N6W") && a != o ? "https://images.cq9web.com/order-detail/common/239/N6W.png" : e
+                        return -1 !== e.indexOf("N6W") && 0 == t[a] ? "https://images.yinuoshiye.com/order-detail/common/239/W.png" : -1 !== e.indexOf("N6W") && a != o ? "https://images.yinuoshiye.com/order-detail/common/239/N6W.png" : e
                     })
                 }) : "extraGame" === this.gameType && 5 !== this.brightReel.filter(function(e) {
                     return 0 == e
                 }).length ? this.symbolData.map(function(t) {
                     return t.map(function(t, a) {
-                        return -1 !== t.indexOf("N6W") && 0 == e.brightReel[a] ? "https://images.cq9web.com/order-detail/common/239/W.png" : -1 !== t.indexOf("N6W") && a != o ? "https://images.cq9web.com/order-detail/common/239/N6W.png" : t
+                        return -1 !== t.indexOf("N6W") && 0 == e.brightReel[a] ? "https://images.yinuoshiye.com/order-detail/common/239/W.png" : -1 !== t.indexOf("N6W") && a != o ? "https://images.yinuoshiye.com/order-detail/common/239/N6W.png" : t
                     })
                 }) : this.symbolData.map(function(e) {
                     return e.map(function(e, t) {
-                        return -1 !== e.indexOf("N6W") && t != o ? "https://images.cq9web.com/order-detail/common/239/N6W.png" : e
+                        return -1 !== e.indexOf("N6W") && t != o ? "https://images.yinuoshiye.com/order-detail/common/239/N6W.png" : e
                     })
                 })
             },
@@ -6936,7 +6936,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 a.i(n.get)(this.gameData, "proof.extend_feature_by_game2[" + this.mappingType[this.gameType] + "].value");
                 return this.symbolData.map(function(t, a) {
                     return t.map(function(t, a) {
-                        return -1 !== t.indexOf("N6W") && 0 == e[a] ? "https://images.cq9web.com/order-detail/common/239/W.png" : t
+                        return -1 !== t.indexOf("N6W") && 0 == e[a] ? "https://images.yinuoshiye.com/order-detail/common/239/W.png" : t
                     })
                 })
             },
@@ -7029,7 +7029,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     var i = a.i(n.get)(this.gameData, "proof.lock_position")[t][o];
                     console.log(i);
                     var r = 5 === i ? "mix" : "gold";
-                    return 0 != i ? "https://images.cq9web.com/order-detail/common/" + this.orderData.gameId + "/" + r + ".png" : e
+                    return 0 != i ? "https://images.yinuoshiye.com/order-detail/common/" + this.orderData.gameId + "/" + r + ".png" : e
                 }
                 return e
             },
@@ -7108,7 +7108,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 })
             }), 1 === this.gameType && this.transform ? this.showData = this.symbolData.map(function(e, a) {
                 return e.map(function(e, n) {
-                    return console.log(), e.match(/F.png/) && 1 === t.proof.lock_position[a][n] ? "FinWild" : 1 === t.proof.lock_position[a][n] ? "https://images.cq9web.com/order-detail/common/166/W.png" : e
+                    return console.log(), e.match(/F.png/) && 1 === t.proof.lock_position[a][n] ? "FinWild" : 1 === t.proof.lock_position[a][n] ? "https://images.yinuoshiye.com/order-detail/common/166/W.png" : e
                 })
             }) : this.showData = this.symbolData
         },
@@ -7117,7 +7117,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return this.transform && 1 === this.gameType
             },
             getSymbol: function(e, t, a) {
-                return "FinWild" === e ? "https://images.cq9web.com/order-detail/common/166/W.png" : 1 === this.gameData.game_type && 1 === this.gameData.proof.reel_pos_chg[0] && 1 === this.gameData.proof.reel_pos_chg[a + 1] ? "https://images.cq9web.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png" : 2 !== this.gameType || !e.match(/W.png/) || 1 !== a && 3 !== a ? e : "https://images.cq9web.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png"
+                return "FinWild" === e ? "https://images.yinuoshiye.com/order-detail/common/166/W.png" : 1 === this.gameData.game_type && 1 === this.gameData.proof.reel_pos_chg[0] && 1 === this.gameData.proof.reel_pos_chg[a + 1] ? "https://images.yinuoshiye.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png" : 2 !== this.gameType || !e.match(/W.png/) || 1 !== a && 3 !== a ? e : "https://images.yinuoshiye.com/order-detail/common/166/img_scroll_" + (t + 1) + ".png"
             },
             setStyle: function(e) {
                 return {
@@ -8935,7 +8935,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             getWildImage: function() {
                 var e = this.gameData.proof.extra_data,
                     t = [2, 4, 6, 8],
-                    a = "https://images.cq9web.com/order-detail/common/81";
+                    a = "https://images.yinuoshiye.com/order-detail/common/81";
                 return t.map(function(t, n) {
                     var o = {
                         wild: a + "/H" + (n + 1) + "W.png",
@@ -9144,7 +9144,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     })
                 }).map(function(e) {
                     return e.map(function(e) {
-                        return e >= 10 ? "https://images.cq9web.com/order-detail/common/86/N" + e % 10 + ".png" : e < 10 ? "https://images.cq9web.com/order-detail/common/86/H" + e + ".png" : "https://images.cq9web.com/order-detail/common/86/" + e + ".png"
+                        return e >= 10 ? "https://images.yinuoshiye.com/order-detail/common/86/N" + e % 10 + ".png" : e < 10 ? "https://images.yinuoshiye.com/order-detail/common/86/H" + e + ".png" : "https://images.yinuoshiye.com/order-detail/common/86/" + e + ".png"
                     })
                 })
             }
@@ -9782,7 +9782,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         props: ["symbolData", "transformMode", "orderData"],
         methods: {
             getSymbolData: function() {
-                return "https://images.cq9web.com/order-detail/common/" + a.i(n.get)(this.orderData, "gameId") + "/" + a.i(n.get)(this.orderData, "wager.rng[0]") + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/" + a.i(n.get)(this.orderData, "gameId") + "/" + a.i(n.get)(this.orderData, "wager.rng[0]") + ".png"
             }
         }
     }
@@ -9840,7 +9840,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             return {
                 extendData: t,
                 dataMap: e,
-                imageUrl: "https://images.cq9web.com/order-detail/common/GB10/",
+                imageUrl: "https://images.yinuoshiye.com/order-detail/common/GB10/",
                 self: a.i(n.get)(t, "0.value", ""),
                 account: a.i(n.get)(this.orderData, "orderDetail.data.account"),
                 respinSeat: i
@@ -10100,7 +10100,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         value: !0
     });
     var n = a(7),
-        o = (a.n(n), "https://images.cq9web.com/order-detail/common/GB12/");
+        o = (a.n(n), "https://images.yinuoshiye.com/order-detail/common/GB12/");
     t.default = {
         props: ["orderData", "symbolData", "gameData", "gameType"],
         data: function() {
@@ -10255,7 +10255,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         props: ["item", "orderData", "thisObject", "gameData"],
         data: function() {
             return {
-                imageUrl: "https://images.cq9web.com/order-detail/common/GB14/"
+                imageUrl: "https://images.yinuoshiye.com/order-detail/common/GB14/"
             }
         },
         methods: {}
@@ -10337,7 +10337,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     l = l.map(function(e, t) {
                         return e.map(function(e, a) {
                             var n = c[a + 3 * (t - m) - 1];
-                            return t >= m && a > 0 && a < 4 && n ? "https://images.cq9web.com/order-detail/common/GB15/" + i.largeSymbolMap[s] + "_5_" + n + ".png" : e
+                            return t >= m && a > 0 && a < 4 && n ? "https://images.yinuoshiye.com/order-detail/common/GB15/" + i.largeSymbolMap[s] + "_5_" + n + ".png" : e
                         })
                     })
                 }
@@ -10423,7 +10423,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         },
         methods: {
             getImage: function(e) {
-                return "https://images.cq9web.com/order-detail/common/GB198/" + this.ballTable[e] + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/GB198/" + this.ballTable[e] + ".png"
             },
             getClassName: function(e) {
                 return {
@@ -10668,7 +10668,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             return {
                 extraData: [],
                 itemIcon: u.map(function(t, a) {
-                    if (0 != t) return "https://images.cq9web.com/order-detail/common/GB198/item/" + e._i18n.locale + "/" + c[a + 1] + ".png"
+                    if (0 != t) return "https://images.yinuoshiye.com/order-detail/common/GB198/item/" + e._i18n.locale + "/" + c[a + 1] + ".png"
                 }).filter(Boolean),
                 shopAmount: (a.i(n.get)(this.gameData, "proof.extend_feature_by_game2.21.value").split(",") || []).filter(function(e) {
                     return 0 != e
@@ -10735,12 +10735,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return this.betArray[1]
             },
             getSymbolData: function(e) {
-                return e.replace("https://images.cq9web.com/order-detail/common/GB198/", "").replace(".png", "")
+                return e.replace("https://images.yinuoshiye.com/order-detail/common/GB198/", "").replace(".png", "")
             },
             getImage: function() {
                 var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
                     t = this.getSymbolData(e);
-                return t.match(/SCG/) ? "https://images.cq9web.com/order-detail/common/GB198/SCG.png" : t.match(/SC/) ? "https://images.cq9web.com/order-detail/common/GB198/SC.png" : e
+                return t.match(/SCG/) ? "https://images.yinuoshiye.com/order-detail/common/GB198/SCG.png" : t.match(/SC/) ? "https://images.yinuoshiye.com/order-detail/common/GB198/SC.png" : e
             },
             getWinRate: function(e, t) {
                 var a = e;
@@ -10842,7 +10842,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             },
             getImage: function() {
                 var e = this.getSymbolData(this.item.symbol_id) || "";
-                return e.match(/SCG/) ? "https://images.cq9web.com/order-detail/common/GB198/SCG.png" : e.match(/SC/) ? "https://images.cq9web.com/order-detail/common/GB198/SC.png" : "LINE_HIT" == e ? "https://images.cq9web.com/order-detail/common/GB198/MatchMainCard/LINE_HIT_" + this._i18n.locale + ".png" : "https://images.cq9web.com/order-detail/common/GB198/" + e + ".png"
+                return e.match(/SCG/) ? "https://images.yinuoshiye.com/order-detail/common/GB198/SCG.png" : e.match(/SC/) ? "https://images.yinuoshiye.com/order-detail/common/GB198/SC.png" : "LINE_HIT" == e ? "https://images.yinuoshiye.com/order-detail/common/GB198/MatchMainCard/LINE_HIT_" + this._i18n.locale + ".png" : "https://images.yinuoshiye.com/order-detail/common/GB198/" + e + ".png"
             },
             getWinRate: function(e) {
                 var t = e;
@@ -11045,7 +11045,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         value: !0
     });
     var n = a(7),
-        o = (a.n(n), "https://images.cq9web.com/order-detail/common/GB6/");
+        o = (a.n(n), "https://images.yinuoshiye.com/order-detail/common/GB6/");
     t.default = {
         props: ["orderData", "symbolData", "gameData", "gameType"],
         data: function() {
@@ -11136,7 +11136,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         },
         methods: {
             getImage: function() {
-                return "https://images.cq9web.com/order-detail/common/GB6/" + this.symbol + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/GB6/" + this.symbol + ".png"
             },
             getClassName: function() {
                 return {
@@ -11179,7 +11179,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         },
         methods: {
             getSymbol: function(e, t, a) {
-                return 0 == this.gameData.proof.extend_feature_by_game2[2].value && -1 !== this.extraDataTarget.indexOf(this.extraData) && 5 * a + t == this.gameData.proof.extend_feature_by_game2[0].value ? (console.log(e), "https://images.cq9web.com/order-detail/common/GB7/H3.png") : e
+                return 0 == this.gameData.proof.extend_feature_by_game2[2].value && -1 !== this.extraDataTarget.indexOf(this.extraData) && 5 * a + t == this.gameData.proof.extend_feature_by_game2[0].value ? (console.log(e), "https://images.yinuoshiye.com/order-detail/common/GB7/H3.png") : e
             },
             classNames: function() {
                 return {
@@ -11363,7 +11363,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 }] : n
             },
             getImage: function(e) {
-                return "https://images.cq9web.com/order-detail/common/GO01/" + (a.i(r.a)()[e] || {}).symbol + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/GO01/" + (a.i(r.a)()[e] || {}).symbol + ".png"
             },
             hasHoleWin: function() {
                 return a.i(i.get)(this.orderData, "wager.proof.playList.HoleInWin")
@@ -13236,7 +13236,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(e, n) {
             e.forEach(function(e, o) {
                 null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -13325,7 +13325,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(e, n) {
             e.forEach(function(e, o) {
                 null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -13578,13 +13578,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     var i = parseInt(e / 10, 10);
                     if (7 === i) {
                         var r = e % 70;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/H" + r + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/H" + r + "F.png"
                     }
                     if (8 === i) {
                         var s = e % 80;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/N" + s + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/N" + s + "F.png"
                     }
-                    36 === e && (o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/FW.png")
+                    36 === e && (o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/FW.png")
                 })
             }), [o, r]
         };
@@ -13672,7 +13672,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png";
@@ -13772,7 +13772,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png";
@@ -14487,7 +14487,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
     "use strict";
     var n = function(e, t) {
         var a = e,
-            n = "https://images.cq9web.com/order-detail/common/" + t.__this.orderData.gameId;
+            n = "https://images.yinuoshiye.com/order-detail/common/" + t.__this.orderData.gameId;
         return "freeGame" === t.gameType && t.lockPosition && t.lockPosition.forEach(function(e, t) {
             e.forEach(function(e, o) {
                 50 === e && (a[t][o] = n + "/W_Lock.png")
@@ -15022,7 +15022,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             symbol: function(e, t, a) {
                 var n = a.gameId,
                     o = e.symbol_id,
-                    i = "https://images.cq9web.com/order-detail/common/" + n + "/",
+                    i = "https://images.yinuoshiye.com/order-detail/common/" + n + "/",
                     r = "";
                 return r = null != o.match(/^[0-9]+$/) ? parseInt(o) < 10 ? "H" + o : "N" + o.substr(o.length - 1) : o, "H1_1" === r || "H1_2" === r ? i + "H1.png" : "W1" === r || "W2" === r ? i + "W.png" : "" + i + r + ".png"
             }
@@ -15198,8 +15198,8 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 0 !== e && (c[t][a] = "F1")
             })
         });
-        var d = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
-        return "freeGame" === t && (d = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId + "/freeGame"), c.forEach(function(e, t) {
+        var d = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
+        return "freeGame" === t && (d = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId + "/freeGame"), c.forEach(function(e, t) {
             e.forEach(function(e, a) {
                 null != c[t][a].match(/^[0-9]+$/) ? parseInt(c[t][a]) < 10 ? c[t][a] = d + "/H" + e + ".png" : c[t][a] = d + "/N" + c[t][a].substr(c[t][a].length - 1) + ".png" : c[t][a] = d + "/" + c[t][a] + ".png"
             })
@@ -15275,7 +15275,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         record: ["lineGraph", "winLine", "symbol", "multiple", "payout"],
                         method: r()({}, l.a, {
                             symbol: function() {
-                                return "https://images.cq9web.com/order-detail/common/132/freeGame/F1.png"
+                                return "https://images.yinuoshiye.com/order-detail/common/132/freeGame/F1.png"
                             }
                         })
                     }
@@ -17730,7 +17730,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             a = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            n = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            n = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return a.forEach(function(o, i) {
             o.forEach(function(o, r) {
                 if (!e.gameData.sub && 0 !== e.lockPosition[i][r]) {
@@ -17788,7 +17788,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         method: o()(l.a, {
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id.match(/_1/) ? e.symbol_id.replace("_1", "") : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id.match(/_1/) ? e.symbol_id.replace("_1", "") : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -17801,7 +17801,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         method: o()(l.a, {
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id.match(/_1/) ? e.symbol_id.replace("_1", "") : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id.match(/_1/) ? e.symbol_id.replace("_1", "") : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -18339,13 +18339,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     var i = parseInt(e / 10, 10);
                     if (7 === i) {
                         var r = e % 70;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/H" + r + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/H" + r + "F.png"
                     }
                     if (8 === i) {
                         var s = e % 80;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/N" + s + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/N" + s + "F.png"
                     }
-                    36 === e && (o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/FW.png")
+                    36 === e && (o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/FW.png")
                 })
             }), [o, r]
         };
@@ -18644,7 +18644,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             var t = e.symbolData.map(function(e) {
                     return e.split(",")
                 }),
-                o = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+                o = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
             return t.forEach(function(i, r) {
                 i.forEach(function(i, s) {
                     if (50 == a.i(n.get)(e, "orderData.wager.proof.special_symbol") && "6" == i) return void(t[r][s] = o + "/W.png");
@@ -19106,10 +19106,10 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 var o = e.line_extra_data.filter(Boolean).reduce(function(e, t) {
                     return e !== t ? t : e
                 });
-                return "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n[o] + ".png"
+                return "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n[o] + ".png"
             }
             var i = "";
-            return i = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + i + ".png"
+            return i = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + i + ".png"
         }),
         f = function e() {
             r()(this, e)
@@ -19281,7 +19281,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
 }, function(e, t, a) {
     "use strict";
     t.a = function(e) {
-        var t = "https://images.cq9web.com/order-detail/common/184",
+        var t = "https://images.yinuoshiye.com/order-detail/common/184",
             a = e.symbol_id;
         return "F" == a ? t + "/F.png" : a < 10 ? t + "/H" + a + ".png" : t + "/N" + a.substr(a.length - 1) + ".png"
     }
@@ -19292,7 +19292,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             var t = e.symbolData.map(function(e) {
                     return e.split(",")
                 }),
-                a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+                a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
             return t.forEach(function(e, n) {
                 e.forEach(function(e, o) {
                     null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -19378,7 +19378,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png";
@@ -21482,9 +21482,9 @@ webpackJsonp([0], [, , , function(e, t, a) {
                                 var n = "";
                                 if (n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, -1 !== n.indexOf("_")) {
                                     var o = n[0] + n[1];
-                                    return "freeGame" !== a.gameType || "H1" !== o && "H3" !== o && "N2" !== o ? "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + (n[0] + n[1]) + ".png" : "https://images.cq9web.com/order-detail/common/210/" + o + "FG.png"
+                                    return "freeGame" !== a.gameType || "H1" !== o && "H3" !== o && "N2" !== o ? "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + (n[0] + n[1]) + ".png" : "https://images.yinuoshiye.com/order-detail/common/210/" + o + "FG.png"
                                 }
-                                return "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -21862,13 +21862,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     var i = parseInt(e / 10, 10);
                     if (7 === i) {
                         var r = e % 70;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/H" + r + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/H" + r + "F.png"
                     }
                     if (8 === i) {
                         var s = e % 80;
-                        o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/N" + s + "F.png"
+                        o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/N" + s + "F.png"
                     }
-                    36 === e && (o[a][n] = "https://images.cq9web.com/order-detail/common/" + t + "/FW.png")
+                    36 === e && (o[a][n] = "https://images.yinuoshiye.com/order-detail/common/" + t + "/FW.png")
                 })
             }), [o, r]
         };
@@ -22508,7 +22508,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }).filter(function(e, t) {
                 return t < 3
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png";
@@ -22941,7 +22941,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                                     r = -1 !== (h[i] || "").indexOf("B"),
                                     s = h[i],
                                     l = parseInt(a.i(g.get)(o, "proof.extend_feature_by_game2.6.value"));
-                                return console.log(i), i > 13 ? "https://images.cq9web.com/order-detail/common/" + n.gameId + "/H6.png" : "https://images.cq9web.com/order-detail/common/" + n.gameId + "/" + (r ? "img_" + s + "_" + (l > 3 ? 4 : l + 1) : s) + ".png"
+                                return console.log(i), i > 13 ? "https://images.yinuoshiye.com/order-detail/common/" + n.gameId + "/H6.png" : "https://images.yinuoshiye.com/order-detail/common/" + n.gameId + "/" + (r ? "img_" + s + "_" + (l > 3 ? 4 : l + 1) : s) + ".png"
                             }
                         })
                     }
@@ -23717,7 +23717,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }).filter(function(e, t) {
                 return t < 3
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png";
@@ -24424,7 +24424,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(e, n) {
             e.forEach(function(e, o) {
                 null != t[n][o].match(/^[0-9]+$/) ? parseInt(t[n][o]) < 10 ? t[n][o] = a + "/H" + e + ".png" : t[n][o] = a + "/N" + t[n][o].substr(t[n][o].length - 1) + ".png" : t[n][o] = a + "/" + t[n][o] + ".png"
@@ -25168,7 +25168,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
 }, function(e, t, a) {
     "use strict";
     var n = function(e) {
-        var t = "https://images.cq9web.com/order-detail/common/",
+        var t = "https://images.yinuoshiye.com/order-detail/common/",
             a = [0, 0, 0, 0, 0],
             n = [0, 0, 0, 0, 0],
             o = [0, 0, 0, 0, 0],
@@ -25731,7 +25731,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             a = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            n = (e.gameType, "https://images.cq9web.com/order-detail/common/" + t);
+            n = (e.gameType, "https://images.yinuoshiye.com/order-detail/common/" + t);
         return a.forEach(function(t, o) {
             t.forEach(function(t, i) {
                 null != a[o][i].match(/^[0-9]+$/) ? (parseInt(a[o][i]) < 10 ? a[o][i] = n + "/H" + t + ".png" : a[o][i] = n + "/N" + a[o][i].substr(a[o][i].length - 1) + ".png", 1 === (e.lockPosition[o] || [])[i] && (a[o][i] = n + "/W.png")) : a[o][i] = n + "/" + a[o][i] + ".png"
@@ -30305,7 +30305,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                             symbol: function(e, t, a) {
                                 var n = a._i18n._vm.locale,
                                     o = "",
-                                    i = "https://images.cq9web.com/order-detail/common/" + a.gameId + "/",
+                                    i = "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/",
                                     r = ["BANKER", "TIE", "PLAYER"];
                                 return o = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "en" === n ? -1 === r.indexOf(o) ? "" + i + o + ".png" : "" + i + o + "_en.png" : "" + i + o + ".png"
                             },
@@ -30400,7 +30400,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                             symbol: function(e, t, a) {
                                 var n = "",
                                     o = a._i18n._vm.locale,
-                                    i = "https://images.cq9web.com/order-detail/common/" + a.gameId + "/";
+                                    i = "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/";
                                 return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "en" === o ? i + "en/" + n + ".png" : "" + i + n + ".png"
                             },
                             betArea: function(e, t, a) {
@@ -30613,7 +30613,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
 }, function(e, t, a) {
     "use strict";
     var n = function(e) {
-        var t = ["https://images.cq9web.com/order-detail/common/65/"],
+        var t = ["https://images.yinuoshiye.com/order-detail/common/65/"],
             a = e.symbolData[0],
             n = e.orderData.wager.proof.win_line_data[0].symbol_id,
             o = e.orderData.wager.multiple,
@@ -31536,7 +31536,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/) ? parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png" : t[o][i] = a + "/" + t[o][i] + ".png", (e.lockPosition || []).length) {
@@ -31853,7 +31853,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             };
             return a.i(n.a)(e).map(function(e, a) {
                 return t[a] ? e.map(function(e, n) {
-                    return -1 === t[a].indexOf(n) ? e : "https://images.cq9web.com/order-detail/common/80/N.png"
+                    return -1 === t[a].indexOf(n) ? e : "https://images.yinuoshiye.com/order-detail/common/80/N.png"
                 }) : e
             })
         };
@@ -32019,7 +32019,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 if (null != t[o][i].match(/^[0-9]+$/)) parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/H" + (parseInt(t[o][i].substr(t[o][i].length - 1)) + 5) + ".png";
@@ -32077,7 +32077,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         method: o()({}, u.a, {
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -32090,7 +32090,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         method: o()({}, u.a, {
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -32103,7 +32103,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         method: o()({}, u.a, {
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "H" + (parseInt(e.symbol_id.substr(e.symbol_id.length - 1)) + 5) : e.symbol_id, "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -32519,7 +32519,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             return a.i(n.a)(e).map(function(t, a) {
                 var n = e.gameData.proof.reel_pos_chg;
                 return t.map(function(e, t) {
-                    return -1 === n.indexOf(t + 1) ? e : "https://images.cq9web.com/order-detail/common/88/W.png"
+                    return -1 === n.indexOf(t + 1) ? e : "https://images.yinuoshiye.com/order-detail/common/88/W.png"
                 })
             })
         };
@@ -34139,7 +34139,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                             lineGraph: m.a,
                             symbol: function(e, t, a) {
                                 var n = "";
-                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "W" === e.symbol_id && (n = "W1"), "https://images.cq9web.com/order-detail/common/" + a.gameId + "/" + n + ".png"
+                                return n = null != e.symbol_id.match(/^[0-9]+$/) ? parseInt(e.symbol_id) < 10 ? "H" + e.symbol_id : "N" + e.symbol_id.substr(e.symbol_id.length - 1) : e.symbol_id, "W" === e.symbol_id && (n = "W1"), "https://images.yinuoshiye.com/order-detail/common/" + a.gameId + "/" + n + ".png"
                             }
                         })
                     }
@@ -34493,7 +34493,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return e.split(",")
             }),
             n = e.__this._i18n._vm.locale,
-            o = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            o = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return a.forEach(function(e, i) {
             e.forEach(function(e, r) {
                 null != a[i][r].match(/^[0-9]+$/) ? parseInt(a[i][r]) < 10 ? a[i][r] = o + "/H" + e + ".png" : a[i][r] > 100 && 106 > a[i][r] ? a[i][r] = o + "/" + n + "/" + t[a[i][r]] + ".png" : a[i][r] = o + "/" + t[a[i][r]] + ".png" : a[i][r] = o + "/" + a[i][r] + ".png"
@@ -35177,7 +35177,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
         var t = e.symbolData.map(function(e) {
                 return e.split(",")
             }),
-            a = "https://images.cq9web.com/order-detail/common/" + e.__this.orderData.gameId;
+            a = "https://images.yinuoshiye.com/order-detail/common/" + e.__this.orderData.gameId;
         return t.forEach(function(n, o) {
             n.forEach(function(n, i) {
                 null != t[o][i].match(/^[0-9]+$/) ? parseInt(t[o][i]) < 10 ? t[o][i] = a + "/H" + n + ".png" : t[o][i] = a + "/N" + t[o][i].substr(t[o][i].length - 1) + ".png" : "baseGame" === e.gameType && 50 === e.orderData.wager.proof.special_symbol && "W1" === t[o][i] && 2 === i ? t[o][i] = a + "/W.png" : t[o][i] = a + "/" + t[o][i] + ".png"
@@ -38231,7 +38231,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             isMobile: a.i(b.a)()
         },
         D = (n = {}, u()(n, v.ORDERDETAIL, function(e, t) {
-            m.default.set(w.orderData, "isMobile", w.isMobile), m.default.set(w.orderData, "orderDetail", t), m.default.set(w.orderData, "wager", t.data.detail.wager), m.default.set(w.orderData, "symbolData", t.data.detail.wager.proof.symbol_data), m.default.set(w.orderData, "winLineData", t.data.detail.wager.proof.win_line_data || []), m.default.set(w.orderData, "gameId", t.data.detail.wager.game_id), m.default.set(w.orderData, "freeGame", t.data.detail.wager.sub || []), m.default.set(w.orderData, "extraData", t.data.detail.wager.proof.extra_data), m.default.set(w.orderData, "playBet", t.data.detail.wager.play_bet), m.default.set(w.orderData, "baseGameWin", t.data.detail.wager.base_game_win), m.default.set(w.orderData, "startTime", t.data.detail.wager.start_time), m.default.set(w.orderData, "winLineCount", t.data.detail.wager.win_line_count), m.default.set(w.orderData, "statusCode", t.status.code), m.default.set(w.orderData, "imageDomain", "https://images.cq9web.com/order-detail/common/" + t.data.detail.wager.game_id + "/"), m.default.set(w.orderData, "winLineGroup", t.data.detail.wager.sub ? Array(t.data.detail.wager.sub.length + 1).fill(!1) : Array(1).fill(!1))
+            m.default.set(w.orderData, "isMobile", w.isMobile), m.default.set(w.orderData, "orderDetail", t), m.default.set(w.orderData, "wager", t.data.detail.wager), m.default.set(w.orderData, "symbolData", t.data.detail.wager.proof.symbol_data), m.default.set(w.orderData, "winLineData", t.data.detail.wager.proof.win_line_data || []), m.default.set(w.orderData, "gameId", t.data.detail.wager.game_id), m.default.set(w.orderData, "freeGame", t.data.detail.wager.sub || []), m.default.set(w.orderData, "extraData", t.data.detail.wager.proof.extra_data), m.default.set(w.orderData, "playBet", t.data.detail.wager.play_bet), m.default.set(w.orderData, "baseGameWin", t.data.detail.wager.base_game_win), m.default.set(w.orderData, "startTime", t.data.detail.wager.start_time), m.default.set(w.orderData, "winLineCount", t.data.detail.wager.win_line_count), m.default.set(w.orderData, "statusCode", t.status.code), m.default.set(w.orderData, "imageDomain", "https://images.yinuoshiye.com/order-detail/common/" + t.data.detail.wager.game_id + "/"), m.default.set(w.orderData, "winLineGroup", t.data.detail.wager.sub ? Array(t.data.detail.wager.sub.length + 1).fill(!1) : Array(1).fill(!1))
         }), u()(n, v.ERROR, function(e, t) {
             w.Error = t
         }), u()(n, v.WINLINEGROUP, function(e, t) {
@@ -40533,7 +40533,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.jpItemLevel[0], function(e, t) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/1067/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/1067/" + e + ".png"
                     }
                 })])
             }), 0)])]) : e._e()
@@ -40794,7 +40794,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: t.display ? t.value : "https://images.cq9web.com/order-detail/common/160/empty2.png"
+                            src: t.display ? t.value : "https://images.yinuoshiye.com/order-detail/common/160/empty2.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -40980,7 +40980,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getSymbolData(), function(e) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/174/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/174/" + e + ".png"
                     }
                 })])
             }), 0)
@@ -41009,7 +41009,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }), a("span", [e._v(e._s(e.$t("OD.lianzhuang")))])]) : e._e()
         },
@@ -41076,7 +41076,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/115/purple_" + t + "x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/115/purple_" + t + "x.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -41149,7 +41149,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.jpItemLevel[0], function(e, t) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/1010/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/1010/" + e + ".png"
                     }
                 })])
             }), 0)])]) : e._e()
@@ -41224,7 +41224,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }, [e.getWinposition(n, o) && 1 == e.getMultipleNumber(o) ? a("img", {
                         staticClass: "wild",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/230/wild.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/230/wild.png"
                         }
                     }) : e._e(), e._v(" "), e.getWinposition(n, o) && 1 != e.getMultipleNumber(o) ? a("img", {
                         attrs: {
@@ -41232,7 +41232,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         }
                     }) : e._e(), e._v(" "), e.getWinposition(n, o) && 1 != e.getMultipleNumber(o) ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/230/W_x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/230/W_x.png"
                         }
                     }) : e._e()])])
                 }), 0)
@@ -41395,22 +41395,22 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 }, [a("img", {
                     class: e.getClassName(t),
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/207/" + e._i18n._vm.locale + "/" + t + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/207/" + e._i18n._vm.locale + "/" + t + ".png"
                     }
                 }), e._v(" "), e.getBackgroundImage(e.item) && n == e.getSymbol().length - 1 && e.winMultiplier[e.item.win_line_no] / e.orderData.wager.proof.denom_multiple != 0 ? a("img", {
                     staticClass: "multiplier symbolImage",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/207/multiple_bg2.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/207/multiple_bg2.png"
                     }
                 }) : e._e(), e._v(" "), e.winMultiplier[e.item.win_line_no] / e.orderData.wager.proof.denom_multiple != 0 && n == e.getSymbol().length - 1 ? a("img", {
                     staticClass: "multiplier symbolImage number",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/207/" + e.getMultiplier(e.item, n) + "x.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/207/" + e.getMultiplier(e.item, n) + "x.png"
                     }
                 }) : e._e(), e._v(" "), a("img", {
                     staticClass: "backgroundImage",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/207/bg.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/207/bg.png"
                     }
                 })])
             }), 0)
@@ -41439,15 +41439,15 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return a("table", [a("span", [e._v("\n        #" + e._s(n + 1) + "\n    ")]), e._v(" "), e._l(t.SymbolResult, function(t, n) {
                     return a("tr", [a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[0]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[0]] + ".png"
                         }
                     })]), e._v(" "), a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[1]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[1]] + ".png"
                         }
                     })]), e._v(" "), a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[2]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[2]] + ".png"
                         }
                     })])])
                 })], 2)
@@ -41556,7 +41556,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [e.item.line_type ? a("img", {
                 staticClass: "lightSign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/231/" + e.item.line_type + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/231/" + e.item.line_type + ".png"
                 }
             }) : e._e(), e._v(" "), a("span", [e._v(e._s(999 === e.item.win_line_no ? "F" : 996 === e.item.win_line_no || 997 === e.item.win_line_no || 998 === e.item.win_line_no ? "B" : e.item.win_line_no + 1))]), e._v(" "), a("table", {
                 staticClass: "square"
@@ -41652,7 +41652,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/185/F1.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/185/F1.png"
                 }
             })]), e._v(" "), a("span", [e._v(": " + e._s(e.getQuantity()))])]) : e._e()])
         },
@@ -41668,7 +41668,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/32/" + e.getID(e.extraData[1]) + "-E.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/32/" + e.getID(e.extraData[1]) + "-E.png"
                 }
             })]) : e._e()
         },
@@ -41684,7 +41684,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/" + e.isShow() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/" + e.isShow() + ".png"
                 }
             })]) : e._e()
         },
@@ -41741,12 +41741,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 }, [a("img", {
                     class: e.getClassName(t),
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/174/" + t + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/174/" + t + ".png"
                     }
                 }), e._v(" "), n == e.getSymbol().length - 1 && 1 != e.item.line_multiplier ? a("img", {
                     staticClass: "multiplier",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/174/" + e.item.line_multiplier + "x.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/174/" + e.item.line_multiplier + "x.png"
                     }
                 }) : e._e()])
             }), 0)
@@ -41763,7 +41763,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/115/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/115/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -41784,7 +41784,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.jpItemLevel[0], function(e, t) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/1074/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/1074/" + e + ".png"
                     }
                 })])
             }), 0)])]) : e._e()
@@ -41831,7 +41831,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/83/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/83/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -41941,7 +41941,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [e.item.line_type ? a("img", {
                 staticClass: "lightSign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }) : e._e(), e._v(" "), a("span", [e._v(e._s(999 === e.item.win_line_no ? "F" : 996 === e.item.win_line_no || 997 === e.item.win_line_no || 998 === e.item.win_line_no ? "B" : e.item.win_line_no + 1))]), e._v(" "), a("table", {
                 staticClass: "square"
@@ -41970,7 +41970,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/178/littlebell.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/178/littlebell.png"
                 }
             }), e._v("：" + e._s(e.result - 1))])]) : e._e()
         },
@@ -42235,7 +42235,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/115/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/115/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -42255,12 +42255,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 }, [a("img", {
                     class: e.getClassName(t),
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/216/" + e.getImage(t) + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/216/" + e.getImage(t) + ".png"
                     }
                 }), e._v(" "), e.specialOdd == t ? a("img", {
                     staticClass: "multiplier",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/216/odd/" + e.specialOdd + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/216/odd/" + e.specialOdd + ".png"
                     }
                 }) : e._e()])
             }), 0)
@@ -42308,7 +42308,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }) : e._e(), e._v(" "), 1 === n && 3 === o ? a("img", {
                         staticClass: "mutiframe",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/219/img_mutiframe.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/219/img_mutiframe.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -42355,7 +42355,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [e.item.line_type ? a("img", {
                 staticClass: "lightSign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }) : e._e(), e._v(" "), a("span", [e._v(e._s(999 === e.item.win_line_no ? "F" : 996 === e.item.win_line_no || 997 === e.item.win_line_no || 998 === e.item.win_line_no ? "B" : e.item.win_line_no + 1))]), e._v(" "), a("table", {
                 staticClass: "square"
@@ -42490,7 +42490,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "row"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GB198/PickChosen/" + e._i18n._vm.locale + "/" + e.getSymbolData() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GB198/PickChosen/" + e._i18n._vm.locale + "/" + e.getSymbolData() + ".png"
                 }
             })])])
         },
@@ -42705,17 +42705,17 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         }
                     }) : a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/145/N6.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/145/N6.png"
                         }
                     }), e._v(" "), t.match(/_1/) ? a("img", {
                         staticClass: "goldframe",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/228/goldframe.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/228/goldframe.png"
                         }
                     }) : e._e(), e._v(" "), t.match(/_2/) ? a("img", {
                         staticClass: "x2",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/228/x2.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/228/x2.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -42733,7 +42733,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/83/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/83/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -42782,7 +42782,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }), e._v(" "), e.checkFrame(n) ? a("img", {
                         staticClass: "frame",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/GB5/" + e.getFrame(n) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/GB5/" + e.getFrame(n) + ".png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -43076,12 +43076,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "multiple"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/226/" + e.getMultiple(n, o) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/226/" + e.getMultiple(n, o) + ".png"
                         }
                     }), e._v(" "), a("img", {
                         staticClass: "multipleSign",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/226/X.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/226/X.png"
                         }
                     })]) : e._e()])
                 }), 0)
@@ -43157,7 +43157,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/222/F.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/222/F.png"
                 }
             })]), e._v(" "), a("span", [e._v(":  ")]), e._v(" "), a("span", {
                 staticClass: "value"
@@ -43204,7 +43204,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getSymbol(), function(e) {
                 return a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/GB2/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/GB2/" + e + ".png"
                     }
                 })
             }), 0)
@@ -43288,7 +43288,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [a("img", {
                 staticClass: "addBg",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/226/add_bg.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/226/add_bg.png"
                 }
             }), e._v(" "), a("div", {
                 staticClass: "multipleArea"
@@ -43297,11 +43297,11 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     staticClass: "multiple"
                 }, [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/226/add.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/226/add.png"
                     }
                 }), e._v(" "), a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/226/add_" + t + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/226/add_" + t + ".png"
                     }
                 })])
             }), 0)])]) : e._e()
@@ -43345,7 +43345,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }, ["FinWild" === t ? a("img", {
                         staticClass: "Fsymbol",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/166/F.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/166/F.png"
                         }
                     }) : e._e(), e._v(" "), t ? a("img", {
                         attrs: {
@@ -43370,7 +43370,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [a("img", {
                 staticClass: "boss",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/224/H6.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/224/H6.png"
                 }
             })]) : e._e(), e._v(" "), e.isAttack() || -1 !== (this.symbolList[e.gameData.game_type] || "").indexOf("H6") ? e._e() : a("div", {
                 staticClass: "blood"
@@ -43382,14 +43382,14 @@ webpackJsonp([0], [, , , function(e, t, a) {
             })]), e._v(" "), a("img", {
                 staticClass: "boss",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/224/" + e.getSymbol() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/224/" + e.getSymbol() + ".png"
                 }
             })]), e._v(" "), e.isAttack() ? a("div", {
                 staticClass: "energy"
             }, [a("img", {
                 staticClass: "boss",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/224/" + e.getSymbol() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/224/" + e.getSymbol() + ".png"
                 }
             }), e._v(" "), a("div", {
                 staticClass: "progressBar energyProgressBar"
@@ -43405,20 +43405,20 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     class: "goldPig" + (n + 1)
                 }, [0 === t && 0 === e.getExtraOptions(n) ? a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/224/" + e.orderData.wager.proof.symbol_data + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/224/" + e.orderData.wager.proof.symbol_data + ".png"
                     }
                 }) : e.getExtraOptions(n) ? a("div", {
                     staticClass: "numberBingo"
                 }, [a("img", {
                     staticClass: "more",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/224/img_round.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/224/img_round.png"
                     }
                 })]) : a("div", {
                     staticClass: "numberBingo"
                 }, [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/224/img_coin.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/224/img_coin.png"
                     }
                 }), e._v(" "), a("div", [e._v(e._s(e.getWinScore(t)))])])])
             }), 0)])
@@ -43437,7 +43437,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/141/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/141/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -43528,7 +43528,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [a("img", {
                         attrs: {
-                            src: t.display ? e.getSymbol(t.value, n, o) : "https://images.cq9web.com/order-detail/common/116/N.png"
+                            src: t.display ? e.getSymbol(t.value, n, o) : "https://images.yinuoshiye.com/order-detail/common/116/N.png"
                         }
                     })])
                 }), 0)
@@ -43610,15 +43610,15 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 return a("table", [a("span", [e._v("\n        #" + e._s(n + 1) + "\n    ")]), e._v(" "), e._l(t.SymbolResult, function(t, n) {
                     return a("tr", [a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[0]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[0]] + ".png"
                         }
                     })]), e._v(" "), a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[1]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[1]] + ".png"
                         }
                     })]), e._v(" "), a("td", [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/169/" + e.symbol[t.split(",")[2]] + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/169/" + e.symbol[t.split(",")[2]] + ".png"
                         }
                     })])])
                 })], 2)
@@ -43720,15 +43720,15 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/196/number/" + e.getImage("B", "[3].value") + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/196/number/" + e.getImage("B", "[3].value") + ".png"
                 }
             }), e._v(" "), a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/196/number/" + e.getImage("B1", "[4].value") + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/196/number/" + e.getImage("B1", "[4].value") + ".png"
                 }
             }), e._v(" "), a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/196/number/" + e.getImage("B2", "[5].value") + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/196/number/" + e.getImage("B2", "[5].value") + ".png"
                 }
             })])]) : e._e()
         },
@@ -43762,7 +43762,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         }
                     }), e._v(" "), a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/211/x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/211/x.png"
                         }
                     })]) : e._e()])
                 }), 0)
@@ -43841,12 +43841,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "multiple"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/" + e.orderData.gameId + "/" + e.getMultiple(n, o) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/" + e.orderData.gameId + "/" + e.getMultiple(n, o) + ".png"
                         }
                     }), e._v(" "), a("img", {
                         staticClass: "multipleSign",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/" + e.orderData.gameId + "/X.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/" + e.orderData.gameId + "/X.png"
                         }
                     })]) : e._e()])
                 }), 0)
@@ -44336,7 +44336,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }, ["FinWild" === t ? a("img", {
                         staticClass: "Fsymbol",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/166/F.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/166/F.png"
                         }
                     }) : e._e(), e._v(" "), t ? a("img", {
                         attrs: {
@@ -44463,7 +44463,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/239/F1.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/239/F1.png"
                 }
             })]), e._v(" "), a("span", [e._v(":  ")]), e._v(" "), a("span", {
                 staticClass: "value"
@@ -44489,7 +44489,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "item"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/GB198/MatchMainCard/" + e.getImage(t) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/GB198/MatchMainCard/" + e.getImage(t) + ".png"
                         }
                     })])
                 }), 0)
@@ -44721,7 +44721,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/132/x0.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/132/x0.png"
                         }
                     }), e._v(" "), 0 !== t ? a("span", {
                         class: e.setColor(t)
@@ -44851,7 +44851,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "inner"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/static/Q7EbtzFq.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/static/Q7EbtzFq.png"
                 }
             }), e._v(" "), a("span", [e._v(e._s(e.$t("OD.copyMessage")) + " !")])])])])
         },
@@ -45001,7 +45001,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/134/x" + t + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/134/x" + t + ".png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -45297,7 +45297,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("span", [e._v(e._s(e.$t("OD.reelSymbol")) + " :")]), e._v(" "), null === e.isMiss() || 99 == e.isMiss() ? a("div", [e._v(" -")]) : 46 == e.isMiss() ? a("div", [e._v("Miss")]) : a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GO01/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GO01/" + e.getImgName() + ".png"
                 }
             })])
         },
@@ -45364,7 +45364,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getSymbolData(), function(e) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/207/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/207/" + e + ".png"
                     }
                 })])
             }), 0)
@@ -45496,7 +45496,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "multiSymbol"
             }, [a("div", [e._v(e._s(e.$t("OD.uniqueRoulette")) + ":")]), e._v(" "), a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GB3/" + e.getSymbol() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GB3/" + e.getSymbol() + ".png"
                 }
             })]) : e._e()
         },
@@ -45628,7 +45628,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [a("div", [a("img", {
                 staticClass: "lightSign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }), e._v(" "), a("span", [e._v(e._s(e.getTip()))])])]) : e._e()
         },
@@ -45670,7 +45670,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [a("div", [a("img", {
                 staticClass: "lightSign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }), e._v(" "), a("span", [e._v(e._s(e.$t("OD.extraRewards")))])])]) : e._e()
         },
@@ -46049,7 +46049,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GB7/H2.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GB7/H2.png"
                 }
             }), e._v("：\n    "), a("div", [e._v(e._s(e.extraData[0]))])]) : e._e()
         },
@@ -46137,7 +46137,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: t.display ? t.value : "https://images.cq9web.com/order-detail/common/116/N.png"
+                            src: t.display ? t.value : "https://images.yinuoshiye.com/order-detail/common/116/N.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -46177,7 +46177,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: t.display ? t.value : "https://images.cq9web.com/order-detail/common/116/N.png"
+                            src: t.display ? t.value : "https://images.yinuoshiye.com/order-detail/common/116/N.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -46195,7 +46195,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/171/green_light.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/171/green_light.png"
                 }
             }), a("span", [e._v(e._s(e.$t("OD.lianzhuangGame")))])]) : e._e()
         },
@@ -46279,7 +46279,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/115/purple_" + t + "x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/115/purple_" + t + "x.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -46435,7 +46435,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: t.display ? t.value : "https://images.cq9web.com/order-detail/common/113/N.png"
+                            src: t.display ? t.value : "https://images.yinuoshiye.com/order-detail/common/113/N.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -46568,13 +46568,13 @@ webpackJsonp([0], [, , , function(e, t, a) {
                     }, [a("img", {
                         staticClass: "multiplerImg",
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/206/number/X.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/206/number/X.png"
                         }
                     }), e._v(" "), e._l(e.getMultipler(t), function(e) {
                         return a("img", {
                             staticClass: "multiplerImg",
                             attrs: {
-                                src: "https://images.cq9web.com/order-detail/common/206/number/" + e + ".png"
+                                src: "https://images.yinuoshiye.com/order-detail/common/206/number/" + e + ".png"
                             }
                         })
                     })], 2) : e._e()])
@@ -46604,7 +46604,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "bingoInfo"
                     }, ["0" != o ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[0][n]]) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[0][n]]) + ".png"
                         }
                     }) : e._e(), e._v(" "), 2 == e.getSymbolAreaTop(e.prizeArea)[n][i] ? a("div", {
                         class: e.getBingoName()
@@ -46624,7 +46624,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "bingoInfo"
                     }, ["0" != o ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[1][n]]) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[1][n]]) + ".png"
                         }
                     }) : e._e(), e._v(" "), 2 == e.getSymbolArea1(e.prizeArea)[n][i] ? a("div", {
                         class: e.getBingoName()
@@ -46644,7 +46644,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "bingoInfo"
                     }, ["0" != o ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[2][n]]) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[2][n]]) + ".png"
                         }
                     }) : e._e(), e._v(" "), 2 == e.getSymbolArea2(e.prizeArea)[n][i] ? a("div", {
                         class: e.getBingoName()
@@ -46664,7 +46664,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "bingoInfo"
                     }, ["0" != o ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[3][n]]) + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getSymbol(o, t, [e.priceList[3][n]]) + ".png"
                         }
                     }) : e._e(), e._v(" "), 2 == e.getSymbolArea3(e.prizeArea)[n][i] ? a("div", {
                         class: e.getBingoName()
@@ -46677,7 +46677,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getScratchArea(), function(t, n) {
                 return "0" != t ? a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/217/" + e.getResultSymbol(t) + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getResultSymbol(t) + ".png"
                     }
                 }) : e._e()
             }), 0), e._v(" "), a("div", {
@@ -46685,7 +46685,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getScratchAreaBottom(), function(t, n) {
                 return "0" != t ? a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/217/" + e.getResultSymbol(t) + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/217/" + e.getResultSymbol(t) + ".png"
                     }
                 }) : e._e()
             }), 0)])
@@ -46703,7 +46703,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, [a("div", e._l(e.getSymbolData(), function(e) {
                 return a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/216/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/216/" + e + ".png"
                     }
                 })
             }), 0)])
@@ -46746,7 +46746,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "column"
                     }, [t ? a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/115/purple_" + t + "x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/115/purple_" + t + "x.png"
                         }
                     }) : e._e()])
                 }), 0)
@@ -46764,7 +46764,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "donut"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/224/donut.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/224/donut.png"
                 }
             }), e._v(" "), a("div", [e._v(": " + e._s(e.getSymbol()) + "/3")])]) : e._e()
         },
@@ -46796,11 +46796,11 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "multiplier"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/214/number/" + e.getNumber(n, o, 0) + "x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/214/number/" + e.getNumber(n, o, 0) + "x.png"
                         }
                     }), e._v(" "), a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/214/number/" + (10 == e.getNumber(n, o, 0) ? "X-10" : "X") + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/214/number/" + (10 == e.getNumber(n, o, 0) ? "X-10" : "X") + ".png"
                         }
                     })]) : e._e()])
                 }), 0)
@@ -46822,11 +46822,11 @@ webpackJsonp([0], [, , , function(e, t, a) {
                         staticClass: "multiplier"
                     }, [a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/214/number/" + e.getNumber(n, o, 1) + "x.png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/214/number/" + e.getNumber(n, o, 1) + "x.png"
                         }
                     }), e._v(" "), a("img", {
                         attrs: {
-                            src: "https://images.cq9web.com/order-detail/common/214/number/" + (10 == e.getNumber(n, o, 1) ? "X-10" : "X") + ".png"
+                            src: "https://images.yinuoshiye.com/order-detail/common/214/number/" + (10 == e.getNumber(n, o, 1) ? "X-10" : "X") + ".png"
                         }
                     })]) : e._e()])
                 }), 0)
@@ -46995,7 +46995,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/114/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/114/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47011,7 +47011,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/115/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/115/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -47081,7 +47081,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/114/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/114/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47125,7 +47125,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " :")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/113/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/113/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47473,7 +47473,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }, e._l(e.getSymbolData(), function(e) {
                 return a("div", [a("img", {
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/GB11/" + e + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/GB11/" + e + ".png"
                     }
                 })])
             }), 0)
@@ -47702,7 +47702,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/117/W3X.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/117/W3X.png"
                 }
             })]), e._v(" "), a("span", [e._v(": " + e._s(e.getQuantity()))])]) : e._e()])
         },
@@ -47720,7 +47720,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/104/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/104/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47738,7 +47738,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/103/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/103/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47756,7 +47756,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/102/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/102/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47774,7 +47774,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/101/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/101/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47792,7 +47792,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "content"
             }, [a("span", [e._v(e._s(e.$t("OD.keySymbol")) + " : ")]), e._v(" "), a("span", [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/100/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/100/" + e.getImgName() + ".png"
                 }
             })]), e._v(" "), a("span", [e._v(e._s(e.getQuantity()))])])]) : e._e()
         },
@@ -47847,12 +47847,12 @@ webpackJsonp([0], [, , , function(e, t, a) {
             }), e._v(" "), e.detectWildSign() ? a("img", {
                 staticClass: "sign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GB14/icon_w.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GB14/icon_w.png"
                 }
             }) : e._e(), e._v(" "), e.detectFreeSign() ? a("img", {
                 staticClass: "sign",
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/GB14/icon_f.png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/GB14/icon_f.png"
                 }
             }) : e._e()], 2)])
         },
@@ -47868,7 +47868,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/83/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/83/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
@@ -47913,17 +47913,17 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 }, [a("img", {
                     class: e.getClassName(t),
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/GB11/" + t + ".png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/GB11/" + t + ".png"
                     }
                 }), e._v(" "), e.getBackgroundImage(e.item) && n == e.getSymbol().length - 1 && e.winMultiplier[e.item.win_line_no] / e.orderData.wager.proof.denom_multiple != 0 ? a("img", {
                     staticClass: "multiplier symbolImage multiplierBG",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/GB11/multiple_bg2.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/GB11/multiple_bg2.png"
                     }
                 }) : e._e(), e._v(" "), e.winMultiplier[e.item.win_line_no] / e.orderData.wager.proof.denom_multiple != 0 && n == e.getSymbol().length - 1 ? a("img", {
                     staticClass: "multiplier symbolImage number",
                     attrs: {
-                        src: "https://images.cq9web.com/order-detail/common/GB11/" + e.getMultiplier(e.item, n) + "x.png"
+                        src: "https://images.yinuoshiye.com/order-detail/common/GB11/" + e.getMultiplier(e.item, n) + "x.png"
                     }
                 }) : e._e()])
             }), 0)
@@ -47940,7 +47940,7 @@ webpackJsonp([0], [, , , function(e, t, a) {
                 staticClass: "BasicGameExtra"
             }, [a("img", {
                 attrs: {
-                    src: "https://images.cq9web.com/order-detail/common/83/" + e.getImgName() + ".png"
+                    src: "https://images.yinuoshiye.com/order-detail/common/83/" + e.getImgName() + ".png"
                 }
             })]) : e._e()
         },
