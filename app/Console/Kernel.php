@@ -1843,6 +1843,23 @@ namespace VanguardLTE\Console
                 
                 $this->info("End");
             }); 
+            \Artisan::command('delete:userlist {date}', function ($date) {
+                $this->info("Begin");
+                if(isset($date)){
+                    $users = \VanguardLTE\User::where('role_id', 1)->where('last_login', '<=', $date)->get();
+                    for($k = 0; $k< count($users); $k++){
+                        $user = $users[$k];
+                        $shop_user = \VanguardLTE\ShopUser::where([
+                            'user_id' => $user->id
+                        ])->first();
+                        if($shop_user){
+                            $shop_user->delete();
+                        }
+                        $user->delete();
+                    }
+                }
+                $this->info("End");
+            }); 
         }
     }
 
