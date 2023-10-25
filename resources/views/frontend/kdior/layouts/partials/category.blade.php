@@ -8,7 +8,7 @@
         class="casino_1_open"
         @endif
         ><img src="/frontend/kdior/images/main_game1.png?v=202301301150" class="item front"><img src="/frontend/kdior/images/main_game1_h.png?v=202301301150" class="item back"></a></li>
-        @if (isset($logo) && $logo != 'dorosi')
+        @if (!isset($logo) && $logo != 'dorosi')
         <li><a href="#" 
         @if (isset($hotel) && $hotel=='disabled')
         onclick="alert('점검중입니다');"
