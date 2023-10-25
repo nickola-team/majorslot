@@ -11,6 +11,7 @@
                     class="casino_1_open"
                     @endif
                     ><img src="/frontend/kdior/images/gnb1.png?v=202301301150"></a></li>
+                    @if ($logo != 'dorosi')
                     <li><a href="#" 
                     @if (isset($hotel) && $hotel=='disabled')
                     onclick="alert('점검중입니다');"
@@ -25,7 +26,7 @@
                     class="casino_4_open"
                     @endif
                     ><img src="/frontend/kdior/images/gnb5.png?v=202301301150"></a></li>
-                    
+                    @endif
                 </ul>
             </div>
             <div class="logo" style="margin-left:-130px;"><a href="/"><img src="/frontend/venus/{{$logo}}.png?v=202302162217" class="bounce" width="260px"></a></div>

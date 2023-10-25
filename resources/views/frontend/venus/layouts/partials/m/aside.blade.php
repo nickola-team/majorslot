@@ -34,6 +34,7 @@
 									><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></a></td>
 								</tr>
 								</tr>	
+								@if($logo != 'dorosi')
 									<td width="10%" align="center"><a href="#" 
 									@if (isset($hotel) && $hotel=='disabled')
 									onclick="alert('점검중입니다');"
@@ -48,6 +49,7 @@
 									class="casino_4_open"
 									@endif
 									><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></td>
+								@endif
 								</tr>                                
 						</tbody></table>                 	
 					</div>                                    

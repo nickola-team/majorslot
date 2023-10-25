@@ -228,7 +228,7 @@ namespace VanguardLTE\Games\ZhongKuiCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -273,8 +273,9 @@ namespace VanguardLTE\Games\ZhongKuiCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                if(isset($stak['CurrentSpinTimes'])){
+                
+                if(isset($stack['CurrentSpinTimes'])){
+                    $awardSpinTimes = $stack['AwardSpinTimes']; 
                     $currentSpinTimes = $stack['CurrentSpinTimes'];   
                 }
             }
@@ -310,7 +311,10 @@ namespace VanguardLTE\Games\ZhongKuiCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
-            $result_val['Multiple'] = $stack['Multiple'];
+            if(isset($stack['Multiple'])){
+                $result_val['Multiple'] = $stack['Multiple'];
+            }
+            
             if($freespinNum > 0)
             {
                 $isTriggerFG = true;
@@ -323,11 +327,21 @@ namespace VanguardLTE\Games\ZhongKuiCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                    $isState = true;
-                }
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                    if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                        $isState = true;
+                    }
+                } 
             }
+
+            // if($slotEvent == 'freespin'){                
+            //     $isState = false;
+            //     if($stack['AwardSpinTimes'] == $stack['CurrentSpinTimes']){
+            //         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+            //         $isState = true;
+            //     } 
+            // }
             
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
