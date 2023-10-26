@@ -74,7 +74,7 @@ namespace VanguardLTE\Games\WonderlandCQ9
                             $result_val['EmulatorType'] = $emulatorType;
                             $result_val['GameExtraDataCount'] = 0;
                             $result_val['ExtraData'] = null;
-                            $result_val['ExtendFeatureByGame'] = [["name"=>"addWildCount","value"=>0]];
+                            $result_val['ExtendFeatureByGame'] = null;
                             $result_val['ExtendFeatureByGame2'] = null;
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
@@ -186,8 +186,7 @@ namespace VanguardLTE\Games\WonderlandCQ9
                                 }
                                 
                                 $result_val['AwardSpinTimes'] = $stack['AwardSpinTimes'];
-                                $result_val['Multiple'] = 0;
-                                $result_val['ExtendFeatureByGame'] = $stack['ExtendFeatureByGame'];
+                                $result_val['Multiple'] = 0;                                
                                 $result_val['GameExtraData'] = "";
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -330,7 +329,7 @@ namespace VanguardLTE\Games\WonderlandCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -519,6 +518,8 @@ namespace VanguardLTE\Games\WonderlandCQ9
             //$proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
             if(isset($result_val['ExtendFeatureByGame'])){
                 $proof['extend_feature_by_game']    = $result_val['ExtendFeatureByGame'];
+            }else{
+                $proof['extend_feature_by_game']    = [];
             }
             
             $proof['extend_feature_by_game2']   = [];

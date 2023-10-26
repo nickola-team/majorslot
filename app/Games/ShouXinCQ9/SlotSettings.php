@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\DetectiveDeeCQ9
+namespace VanguardLTE\Games\ShouXinCQ9
 {
     class SlotSettings
     {
@@ -446,7 +446,7 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
+                if( $_obf_bonus_systemmoney > 0 ) 
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
@@ -730,19 +730,24 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDetectiveDeeStack::where('id', 26172)->first();
-                //   return json_decode($stack->spin_stack, true);
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameShouXinStack::where('id', 1050)->first(); 
+                    // return json_decode($stack->spin_stack, true);      
             // }
-            if($winType == 'bonus'){
+            if($selId > -1){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win'){
-                $winAvaliableMoney = $this->GetBank('');
             }else{
-                $winAvaliableMoney = 0;
+                if($winType == 'bonus'){
+                    $winAvaliableMoney = $this->GetBank('bonus');
+                }else if($winType == 'win'){
+                    $winAvaliableMoney = $this->GetBank('');
+                }else{
+                    $winAvaliableMoney = 0;
+                }
             }
+           
             $limitOdd = 0;
             if($winType != 'none'){
                 $limitOdd = floor($winAvaliableMoney / $bet);
@@ -763,19 +768,22 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDetectiveDeeStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                if($selId > -1){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameShouXinStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                }else if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameShouXinStack::where('spin_type',2)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDetectiveDeeStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameShouXinStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+
+                $index = 0;// mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 21);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -792,7 +800,7 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
+                                //$stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {
@@ -809,7 +817,12 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
                 }
                 if(!isset($stacks) || count($stacks) == 0){
                     if($isLowBank == true){
-                        $existIds = [0];
+                        if($winType == 'bonus'){
+                            $winType = 'win';
+                            $winAvaliableMoney = $this->GetBank('');
+                        }else{
+                            $existIds = [0];
+                        }
                     }
                     $isLowBank = true;
                 }else{

@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMahjongFruitStack::where('id', 130284)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMahjongFruitStack::where('id', 5)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
