@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\WolfMoonCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\WolfMoonCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\WolfMoonCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -733,7 +737,7 @@ namespace VanguardLTE\Games\WolfMoonCQ9
         public function GetReelStrips($winType, $bet, $gameRound=1)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWolfMoonStack::where('id', 14760)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWolfMoonStack::where('id', 151207)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -770,9 +774,9 @@ namespace VanguardLTE\Games\WolfMoonCQ9
                 }
                 $index = 1;
                 if($gameRound == 0){
-                    $index = 0;// mt_rand(0, 120000);
+                    $index = mt_rand(0, 850000);
                 }else if($gameRound == 1){
-                    $index = 0;// mt_rand(0, 120000);
+                    $index = mt_rand(0, 850000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
@@ -829,7 +833,11 @@ namespace VanguardLTE\Games\WolfMoonCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

@@ -242,7 +242,7 @@ namespace VanguardLTE\Games\DetectiveDeeCQ9
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             
-            //$winType = 'win'; 
+            //$winType = 'bonus'; 
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){

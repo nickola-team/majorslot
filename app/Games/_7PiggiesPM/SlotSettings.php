@@ -322,7 +322,9 @@ namespace VanguardLTE\Games\_7PiggiesPM
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -335,7 +337,7 @@ namespace VanguardLTE\Games\_7PiggiesPM
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {
                         $normalbank = $game->get_gamebank('');
@@ -395,7 +397,9 @@ namespace VanguardLTE\Games\_7PiggiesPM
             }
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -802,7 +806,11 @@ namespace VanguardLTE\Games\_7PiggiesPM
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    	     if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 }
