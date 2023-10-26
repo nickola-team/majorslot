@@ -14,6 +14,7 @@
            <div class="cat-icon icon_casino"></div>
            <div class="cat-text">라이브카지노</div>
         </a>
+        @if (isset($logo) && ($logo != 'nyx'))
         <a href="javascript:void(0)" 
             @if (isset($mini) && $mini=='disabled')
             class="" onclick = "alert('점검중입니다');"
@@ -24,5 +25,6 @@
            <div class="cat-icon icon_mini"></div>
            <div class="cat-text">미니게임</div>
         </a>
+        @endif
     </div>
 </div>
