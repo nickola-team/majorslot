@@ -1358,5 +1358,15 @@ return [
         "SweetPop" => "Sweet POP",
         "Poseidon" => "포세이돈",
         "WolfDisco" => "늑대 디스코",
-        "BurningXiYou" => "Burning Xi-You"
+        "BurningXiYou" => "Burning Xi-You",
+        "TheCupids" => "The Cupids",
+        "RunningToro" => "RunningToro",
+        "WolfMoon" => "울프 문",
+        "WaterWorld" => "워터월드",
+        "SixToros" => "6 Toros",
+        "WingChun" => "윙춘",
+        "DetectiveDee" => "명탐정 디",
+        "GreatLion" => "그레이트 라이언",
+        "Aladdinslamp" => "Aladdin's lamp",
+        "MonkeyOfficeLegend" => "몽키 오피스 레전드"
 ];
