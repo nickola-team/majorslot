@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\WaterWorldCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\WaterWorldCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\WaterWorldCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -733,7 +737,7 @@ namespace VanguardLTE\Games\WaterWorldCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWaterWorldStack::where('id', 7269)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWaterWorldStack::where('id', 72035)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -771,7 +775,7 @@ namespace VanguardLTE\Games\WaterWorldCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -826,7 +830,11 @@ namespace VanguardLTE\Games\WaterWorldCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

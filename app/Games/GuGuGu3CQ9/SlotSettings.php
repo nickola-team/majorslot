@@ -554,7 +554,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        $this->happyhouruser->increment('over_bank', abs($diffMoney)) ;
                     }
                     else {
                     //------- *** -------//
@@ -616,7 +616,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                $this->happyhouruser->increment('current_bank', $sum) ;
                 $this->happyhouruser->save();
             }
             else

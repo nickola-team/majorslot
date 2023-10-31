@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -733,7 +737,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMahjongFruitStack::where('id', 130284)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameMahjongFruitStack::where('id', 5)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -826,7 +830,11 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -777,11 +781,11 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 0;// mt_rand(0, 48000);
                 if($gameRound == 1){
-                    $index =0;// mt_rand(0, 70000);
+                    $index = mt_rand(0, 60000);
                 }else if($gameRound == 2){
-                    $index =0;// mt_rand(0, 140000);
+                    $index = mt_rand(0, 120000);
                 }else if($gameRound == 3){
-                    $index =0;// mt_rand(0, 210000);
+                    $index = mt_rand(0, 190000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
@@ -843,7 +847,11 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

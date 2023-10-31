@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\SixTorosCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\SixTorosCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\SixTorosCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -733,7 +737,7 @@ namespace VanguardLTE\Games\SixTorosCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSixTorosStack::where('id', 572)->first();    //17660,195,1076,1336,1986,2113,2465
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameSixTorosStack::where('id', 93476)->first();    
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -771,7 +775,7 @@ namespace VanguardLTE\Games\SixTorosCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -826,7 +830,11 @@ namespace VanguardLTE\Games\SixTorosCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

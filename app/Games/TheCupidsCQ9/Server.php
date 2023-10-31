@@ -226,7 +226,7 @@ namespace VanguardLTE\Games\TheCupidsCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             $winType = 'bonus';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -309,7 +309,7 @@ namespace VanguardLTE\Games\TheCupidsCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
 
-            $result_val['Multiple'] = "1";
+            $result_val['Multiple'] = $stack['Multiple'];
             if($freespinNum > 0)
             {
                 $isTriggerFG = true;
@@ -322,11 +322,12 @@ namespace VanguardLTE\Games\TheCupidsCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                $result_val['Multiple'] = "'". $currentSpinTimes . "'";
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                    $isState = true;
-                }
+                    if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                        $isState = true;
+                    }
+                } 
             }
             
 

@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\DragonBallCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,7 +442,9 @@ namespace VanguardLTE\Games\DragonBallCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -734,7 +738,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('id', 98819)->first(); //59 :  Free,7971 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('id', 16)->first(); //59 :  Free,7971 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('id', 1049)->first();
@@ -777,27 +781,28 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
                 }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('spin_type',2)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('spin_type',2)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameFiveGodBeastsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $left_specialsymbol_count = 0;
-                $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
+                $left_specialsymbol_count=0;
+                $left_specialsymbol_count = 3 - $this->GetGameData($this->slotId . 'SymbolCount');
+                if($left_specialsymbol_count<0){
+                    $left_specialsymbol_count = 0;
+                }
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                $index = 1;
-                if($gameRound == 1){
-                    $index = mt_rand(0, 220000);
-                }else if($gameRound == 2){
-                    $index = mt_rand(0, 220000);
-                }else if($gameRound == 3){
-                    $index = mt_rand(0, 300000);
-                }else if($gameRound == 4){
-                    $index = mt_rand(0, 280000);
-                }else if($gameRound == 5){
-                    $index = mt_rand(0, 125000);
-                }
+                $index = 0;
+                // if($gameRound == 1){
+                //     $index = mt_rand(0, 220000);
+                // }else if($gameRound == 2){
+                //     $index = mt_rand(0, 220000);
+                // }else if($gameRound == 3){
+                //     $index = mt_rand(0, 300000);
+                // }else if($gameRound == 4){
+                //     $index = mt_rand(0, 280000);
+                // }
                 
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
@@ -859,7 +864,11 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

@@ -359,7 +359,9 @@ namespace VanguardLTE\Games\WingChunCQ9
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -377,7 +379,7 @@ namespace VanguardLTE\Games\WingChunCQ9
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     //------- Happy User -------//
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {                    
                     //------- *** -------//
@@ -440,17 +442,19 @@ namespace VanguardLTE\Games\WingChunCQ9
             //------- Happy User -------//
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                /*if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
-                }
+                }*/
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -732,7 +736,7 @@ namespace VanguardLTE\Games\WingChunCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWingChunStack::where('id', 68096)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWingChunStack::where('id', 1208)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -767,7 +771,7 @@ namespace VanguardLTE\Games\WingChunCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameWingChunStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 48000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -822,7 +826,11 @@ namespace VanguardLTE\Games\WingChunCQ9
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 

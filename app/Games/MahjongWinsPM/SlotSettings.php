@@ -326,7 +326,9 @@ namespace VanguardLTE\Games\MahjongWinsPM
             if($isFreeSpin == true){
                 if ($this->happyhouruser)
                 {
+                    if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
+                }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -339,7 +341,7 @@ namespace VanguardLTE\Games\MahjongWinsPM
                 if($slotState == 'bonus'){
                     $diffMoney = $this->GetBank($slotState) + $sum;
                     if ($this->happyhouruser){
-                        $this->happyhouruser->increment('over_bank', abs($diffMoney));
+                        //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {
                         $normalbank = $game->get_gamebank('');
@@ -399,7 +401,9 @@ namespace VanguardLTE\Games\MahjongWinsPM
             }
             if ($this->happyhouruser)
             {
-                $this->happyhouruser->increment('current_bank', $sum);
+                if($sum > 0){
+                    $this->happyhouruser->increment('current_bank', $sum);
+                }
                 $this->happyhouruser->save();
             }
             else
@@ -812,7 +816,11 @@ namespace VanguardLTE\Games\MahjongWinsPM
                 'freestack_id' => $stack->id,
                 'odd' => $stack->odd
             ]);
-            return json_decode($stack->spin_stack, true);
+    	     if($this->happyhouruser){
+                $sum = -1 * $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', $sum);
+            }
+	     return json_decode($stack->spin_stack, true);
         }
     }
 }
