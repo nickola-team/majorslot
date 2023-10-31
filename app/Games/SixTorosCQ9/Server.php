@@ -438,15 +438,15 @@ namespace VanguardLTE\Games\SixTorosCQ9
                 
             }
 
-            if($slotEvent != 'freespin' && $stack['WinType'] <2){
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                // if($slotEvent == 'respin' && ($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
+            // if($slotEvent != 'freespin' && $stack['WinType'] <2){
+            //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+            //     // if($slotEvent == 'respin' && ($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
 
-                // }else{
-                //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-                // }
+            //     // }else{
+            //     //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+            //     // }
                 
-            }
+            // }
             return $result_val;
         }
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
