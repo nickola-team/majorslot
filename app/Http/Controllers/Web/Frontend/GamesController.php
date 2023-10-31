@@ -79,6 +79,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             else
             {
                 $categories = \VanguardLTE\Category::where(['shop_id' => $shop_id, 'view' => 1,'parent' => 0,])->whereNotIn('href',$excat)->orderby('position', 'desc')->get();
+                // 씨큐게임인경우
+                $cq_categories = \VanguardLTE\Category::where('shop_id', $shop_id)->whereIn('original_id', [25, 35])->orderBy('original_id', 'asc')->get();
+                if(count($cq_categories) == 2){
+                    if($cq_categories[0]->original_id=25 && $cq_categories[0]->view=0 && $cq_categories[1]->original_id=35 && $cq_categories[1]->parent=25 && $cq_categories[0]->view=1){
+                        $categories[]=$cq_categories[1];
+                    }
+                }
             }
 
             $hotgames = [];
