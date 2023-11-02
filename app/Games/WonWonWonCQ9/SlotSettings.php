@@ -637,7 +637,7 @@ namespace VanguardLTE\Games\WonWonWonCQ9
                     $_obf_currentbank
                 ];
 
-                if( $_obf_currentbank < 0) 
+                if( $_obf_currentbank < $bet * 5) 
                 {
                     $return = [
                         'none', 
@@ -754,7 +754,7 @@ namespace VanguardLTE\Games\WonWonWonCQ9
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
-                    $winType = 'bonus';
+                    $winType = 'win';
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
@@ -774,11 +774,11 @@ namespace VanguardLTE\Games\WonWonWonCQ9
                 }
                 $index = 1;
                 if($gameRound == 0){
-                    $index = 0;// mt_rand(0, 120000);
+                    $index = mt_rand(0, 238000);
                 }else if($gameRound == 1){
-                    $index = 0;// mt_rand(0, 120000);
+                    $index = mt_rand(0, 238000);
                 }else if($gameRound == 2){
-                    $index = 0;// mt_rand(0, 120000);
+                    $index = mt_rand(0, 238000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){

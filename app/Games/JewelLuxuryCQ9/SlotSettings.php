@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameJewelLuxuryStack::where('id', 1904)->first(); //6039 :  Free,9472 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameJewelLuxuryStack::where('id', 144214)->first(); //6039 :  Free,9472 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameJewelLuxuryStack::where('id', 2560)->first();
@@ -781,11 +781,11 @@ namespace VanguardLTE\Games\JewelLuxuryCQ9
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 0;// mt_rand(0, 48000);
                 if($gameRound == 1){
-                    $index = mt_rand(0, 60000);
+                    $index = mt_rand(0, 58000);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 120000);
+                    $index = mt_rand(0, 118000);
                 }else if($gameRound == 3){
-                    $index = mt_rand(0, 190000);
+                    $index = mt_rand(0, 198000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
