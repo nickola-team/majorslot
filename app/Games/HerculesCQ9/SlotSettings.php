@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\HerculesCQ9
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHerculesStack::where('id', 68352)->first();   //74814,105418,108209
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameHerculesStack::where('id', 69889)->first();   //74814,105418,108209
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){

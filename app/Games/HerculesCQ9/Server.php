@@ -154,11 +154,11 @@ namespace VanguardLTE\Games\HerculesCQ9
 
                             $result_val = $this->generateResult($slotSettings, $result_val, $slotEvent['slotEvent'], $betline, $lines, $originalbet);
                             $result_val['EmulatorType'] = $emulatorType;
-                            if($packet_id == 33){
-                                if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
-                                }
-                            }
+                            // if($packet_id == 33){
+                            //     if(isset($result_val['IsTriggerFG']) && $result_val['IsTriggerFG']==true){
+                            //         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                            //     }
+                            // }
                             $slotSettings->SaveGameData();
                         }else if($packet_id == 32 || $packet_id == 41){
                             $result_val['ErrorCode'] = 0;
@@ -274,7 +274,7 @@ namespace VanguardLTE\Games\HerculesCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'bonus';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){
