@@ -1368,5 +1368,39 @@ return [
         "DetectiveDee" => "명탐정 디",
         "GreatLion" => "그레이트 라이언",
         "Aladdinslamp" => "Aladdin's lamp",
-        "MonkeyOfficeLegend" => "몽키 오피스 레전드"
+        "MonkeyOfficeLegend" => "몽키 오피스 레전드",
+        "JewelLuxury" => "Jewel Luxury",
+        "WukongPeaches" => "우공과 피치",
+        "WonWonWon" => "운수대통",
+        "EcstaticCircus" => "엑스타틱 서커스",
+        "JumpHigh2" => "점프 하이 2",
+        "FireChibi2" => "파이어 치비 2",
+        "GoldStealer" => "황금 도둑",
+        "FortuneTotem" => "Fortune Totem",
+        "RunningAnimals" => "러닝 애니몰",
+        "FaCaiFuWa" => "Fa Cai Fu Wa"
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
