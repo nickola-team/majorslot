@@ -69,7 +69,9 @@
 	@endif
 
 	@foreach ($noticelist as $ntc)
+	@if ($ntc->popup == 'popup')
 	@include('frontend.kdior.modals.notice', ['notice' => $ntc])
+	@endif
 	@endforeach
 </body>
 </html>
