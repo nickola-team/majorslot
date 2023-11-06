@@ -88,7 +88,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($data && $data['status'] == 1)
             {
-                $balance = $data['user']['balance'];
+                $balance = $data['user']['user_balance'];
             }
             return intval($balance);
         }
@@ -500,7 +500,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($data && $data['status'] == 1)
             {
-                $balance = $data['agent']['balance'];
+                $balance = $data['agent']['agent_balance'];
             }
             return intval($balance);
         }

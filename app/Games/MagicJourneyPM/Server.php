@@ -253,7 +253,9 @@ namespace VanguardLTE\Games\MagicJourneyPM
                 $winType = $_spinSettings[0];
                 $_winAvaliableMoney = $_spinSettings[1];
                 $allBet = $betline * $lines;
-                
+                if($winType == 'bonus'){
+                    $winType = 'win';
+                }
                 $freeStacks = []; 
                 $isGeneratedFreeStack = false;
                 if($slotEvent['slotEvent'] == 'respin'){
@@ -356,7 +358,7 @@ namespace VanguardLTE\Games\MagicJourneyPM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    $slotSettings->SetBank('', -1 * $totalWin);
                 }
                 $_obf_totalWin = $totalWin;
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
