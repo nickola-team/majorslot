@@ -368,6 +368,7 @@ namespace VanguardLTE\Games\SkyLanternsCQ9
             $proof['next_s_table']              = $result_val['NextSTable'];
             $proof['extend_feature_by_game']    = [];
             $proof['extend_feature_by_game2']   = [];
+            $proof['lock_position']         = [];
 
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {

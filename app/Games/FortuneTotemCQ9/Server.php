@@ -71,7 +71,7 @@ namespace VanguardLTE\Games\FortuneTotemCQ9
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
                             $result_val['PlayerOrderURL'] = config('app.cq9history') . '/platform/?gametoken=' . auth()->user()->api_token;
-                            $result_val['PromotionData'] = $slotSettings->getPromotionData();
+                            $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
                             $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
@@ -223,7 +223,7 @@ namespace VanguardLTE\Games\FortuneTotemCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'bonus';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){

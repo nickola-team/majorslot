@@ -1,6 +1,6 @@
-@extends('frontend.aladin.layouts.app')
+@extends('frontend.aladin.layouts.app', ['logo' => 'aladin', 'telegram' => ''])
 @section('page-title', $title)
 
 @section('content')
-@include('frontend.kdior.games.index')
+
 @stop
