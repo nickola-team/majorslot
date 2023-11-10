@@ -424,9 +424,8 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                 //$slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin));
             }
-            $result_val['Multiple'] = strval(1);
+            
             //$result_val['Multiple'] = 0;
-
             if($freespinNum > 0)
             {
                 $isTriggerFG = true;
@@ -437,7 +436,8 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                 }
                 $isState = false;
             }
-            if($slotEvent == 'freespin'){                
+            if($slotEvent == 'freespin'){   
+                //$result_val['Multiple'] = $stack['Multiple'];
                 $isState = false;
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
