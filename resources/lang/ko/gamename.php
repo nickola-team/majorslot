@@ -1378,29 +1378,18 @@ return [
         "GoldStealer" => "황금 도둑",
         "FortuneTotem" => "Fortune Totem",
         "RunningAnimals" => "러닝 애니몰",
-        "FaCaiFuWa" => "Fa Cai Fu Wa"
+        "FaCaiFuWa" => "Fa Cai Fu Wa",
+        "FireChibi" => "파이어 치비",
+        "HotPinatas" => "Hot Pinatas",
+        "FaCaiShen" => "재물신",
+        "FootballBaby" => "풋볼 베이비",
+        "RaveJump2M" => "레이브 점프 2 M",
+        "SixCandy" => "식스 캔디",
+        "FiveBoxing" => "5 Boxing",
+        "Meow" => "야옹",
+        "SkyLanterns" => "스카이 랜턴",
+        "MoveNJump" => "움직이고 점프하기",
+        "Mafia" => "마피아",
+        "JumpHigher" => "점프 하이어",
+        "JumpHigherMobile" => "점프 하이어 모바일"
 ];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\FireChibiCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFireCBStack::where('id', 17155)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFireCBStack::where('id', 13078)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
