@@ -1163,7 +1163,15 @@ return [
         "BigBassHalloween" => "빅 배스 할로윈",
         "RainbowReels" => "레인보우 릴스",
         "SweetBonanzaDice" => "스위트 보난자 다이스",
-
+        "_888Bonanza" => "888 보난자",
+        "DemonPots" => "데몬 팟스",
+        "TheMoneyMenMegaways" => "더 머니 맨 메가웨이즈",
+        "TwilightPrincess" => "트와이라이트 프린세스",
+        "GraceofEbisu" => "그레이스 오브 이비스",
+        "RujakBonanza" => "루작 보난자",
+        "SugarSupremePowerNudge" => "슈가 슈프림 파워넛지",
+        "VikingForge" => "바이킹 포지",
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
