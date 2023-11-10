@@ -71,7 +71,7 @@ namespace VanguardLTE\Games\FireChibiCQ9
                             $result_val['IsReelPayType'] = false;
                             $result_val['Cobrand'] = null;
                             $result_val['PlayerOrderURL'] = config('app.cq9history') . '/platform/?gametoken=' . auth()->user()->api_token;
-                            $result_val['PromotionData'] = $slotSettings->getPromotionData();
+                            $result_val['PromotionData'] = null;
                             $result_val['IsShowFreehand'] = false;
                             $result_val['IsAllowFreehand'] = false;
                             $result_val['FeedbackURL'] = '/feedback/?token=' . auth()->user()->api_token;
