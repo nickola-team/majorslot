@@ -1,0 +1,81 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 60px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"] {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="3"] {
+    align-self: flex-end;
+    z-index: 1
+}
+
+.Spin {
+    flex-direction: column
+}
+
+.TopProgress {
+    background-image: -webkit-image-set(url(./images/vs20sugarcoins/top.png) 1x, url(./images/vs20sugarcoins/top@2x.png) 2x);
+    background-position: 50%;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 45px;
+    margin-bottom: -4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.FreeSpin .TopProgress {
+    background-image: -webkit-image-set(url(./images/vs20sugarcoins/topFs.png) 1x, url(./images/vs20sugarcoins/topFs@2x.png) 2x)
+}
+
+.Coin {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 25px
+}
+
+.Coin .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: contain
+}
+
+.Coin--m .MoneyScatter__Label {
+    font-size: 14px;
+    color: red;
+    filter: unset
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
