@@ -788,17 +788,12 @@ namespace VanguardLTE\Games\WildWildRichesMegawaysPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10){
-                    $winType = 'bonus';
-                    if($fsmax > 0){
-                        $spintype = 1;
+                if($winType != 'bonus'){
+                    if($limitOdd > 1){
+                        $winType = 'win';
                     }else{
-                        $spintype = 2;
+                        $winType = 'none';
                     }
-                }else if($limitOdd > 1){
-                    $winType = 'win';
-                }else{
-                    $winType = 'none';
                 }
             }
             $isLowBank = false;

@@ -743,17 +743,12 @@ namespace VanguardLTE\Games\WildBoosterPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10 || $winType == 'bonus'){
-                    $winType = 'bonus';
-                    if($ind > -1){
-                        $spintype = 1;
+                if($winType != 'bonus'){
+                    if($limitOdd > 1){
+                        $winType = 'win';
                     }else{
-                        $spintype = 2;
+                        $winType = 'none';
                     }
-                }else if($limitOdd > 1){
-                    $winType = 'win';
-                }else{
-                    $winType = 'none';
                 }
             }
             $isLowBank = false;
