@@ -1,0 +1,255 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.FsSlot {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    transform: scale(.8);
+    width: 0
+}
+
+.FsSlot__Item {
+    display: flex
+}
+
+.FsSlot__Item .Hero {
+    height: 130px;
+    width: 100px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.FsSlot__Item .Hero .Image__Children {
+    margin: 90px auto 0;
+    width: 75px;
+    font-size: .79rem;
+    white-space: nowrap
+}
+
+.FsSlot__Item .Hero--lose .Image__Source {
+    filter: brightness(.6)
+}
+
+.FsSlot__Item-a,
+.FsSlot__Item-c {
+    flex-direction: row-reverse
+}
+
+.FsSlot__Item-a.Active .DisabledSlot .Image__Source,
+.FsSlot__Item-a.Active .ReelsSlot {
+    -webkit-box-shadow: 0 0 7px 5px #7bff00;
+    -moz-box-shadow: 0 0 7px 5px #7bff00;
+    box-shadow: 0 0 7px 5px #7bff00
+}
+
+.FsSlot__Item-b.Active .DisabledSlot .Image__Source,
+.FsSlot__Item-b.Active .ReelsSlot {
+    -webkit-box-shadow: 0 0 7px 5px red;
+    -moz-box-shadow: 0 0 7px 5px red;
+    box-shadow: 0 0 7px 5px red
+}
+
+.FsSlot__Item-c.Active .DisabledSlot .Image__Source,
+.FsSlot__Item-c.Active .ReelsSlot {
+    -webkit-box-shadow: 0 0 7px 5px #02f;
+    -moz-box-shadow: 0 0 7px 5px #02f;
+    box-shadow: 0 0 7px 5px #02f
+}
+
+.FsSlot__Item-d.Active .DisabledSlot .Image__Source,
+.FsSlot__Item-d.Active .ReelsSlot {
+    -webkit-box-shadow: 0 0 7px 5px #f0f;
+    -moz-box-shadow: 0 0 7px 5px #f0f;
+    box-shadow: 0 0 7px 5px #f0f
+}
+
+.FsSlot__Container .FsSlot__WinPositions {
+    margin-right: 100px
+}
+
+.FsSlot__Container:first-child .FsSlot__WinPositions,
+.FsSlot__Container:nth-child(3) .FsSlot__WinPositions {
+    margin-left: 100px;
+    margin-right: auto
+}
+
+.FsSlot .DisabledSlot {
+    min-width: 227px;
+    height: 137px;
+    margin: 5px 0
+}
+
+.PickOptions {
+    display: grid;
+    grid-template-areas: "a b c d" ".. r r .."
+}
+
+.PickOptions__Option:first-child {
+    grid-area: a
+}
+
+.PickOptions__Option:nth-child(2) {
+    grid-area: b
+}
+
+.PickOptions__Option:nth-child(3) {
+    grid-area: c
+}
+
+.PickOptions__Option:nth-child(4) {
+    grid-area: d
+}
+
+.PickOptions__Option:nth-child(5) {
+    grid-area: r
+}
+
+.PickOptions__Option-Image:not(.PickOptions__Option:last-child .PickOptions__Option-Image) {
+    height: 130px;
+    width: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end
+}
+
+.PickOptions__Option-Image:not(.PickOptions__Option:last-child .PickOptions__Option-Image) .Image__Source {
+    width: 100%;
+    height: 100%
+}
+
+.PickOptions__Option-Image:not(.PickOptions__Option:last-child .PickOptions__Option-Image) .Image__Children {
+    width: 80px;
+    height: 30px;
+    display: flex;
+    margin-bottom: 2px;
+    align-items: center;
+    justify-content: center
+}
+
+.PickOptions__Option-Image:not(.PickOptions__Option:last-child .PickOptions__Option-Image) .Image__Children .PickOptions__Option-Value {
+    transform: none;
+    position: static;
+    white-space: nowrap
+}
+
+.PickOptions__Option-Value {
+    bottom: 0;
+    top: auto;
+    line-height: normal;
+    font-size: .64rem
+}
+
+.PickOptions__Option:last-child .Image__Children {
+    width: 100%
+}
+
+.PickOptions__Option:last-child .Image__Children .PickOptions__Option-Value {
+    top: 50%;
+    bottom: auto;
+    font-size: .64rem !important
+}
+
+.PickOptions__Option:last-child .PickOptions__Option-Image {
+    height: 34px;
+    vertical-align: bottom
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}

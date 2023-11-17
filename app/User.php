@@ -127,6 +127,7 @@ namespace VanguardLTE
                 'WORLDPAY',
                 'OSSCOIN',
                 '경남가상계좌',
+                'VirtualAcc',
                 'MESSAGE'
             ],
             'reset_days' => [

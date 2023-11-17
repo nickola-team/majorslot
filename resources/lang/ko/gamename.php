@@ -1260,6 +1260,9 @@ return [
         "littlefarm" => "리틀 팜",
         "_3hotchillies" => "3 핫 칠리즈",
         "_777coins" => "777 코인즈",
+        "grabmoregold" => "그랩 모어 골드!",
+        "olafviking" => "올라프 바이킹",
+        "crystalscarabs" => "크리스탈 스캐럽스",
 
         // CQ9
         "Double Fly" => "더블 플라이",
