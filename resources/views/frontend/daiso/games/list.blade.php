@@ -1,6 +1,6 @@
-@extends('frontend.venus.layouts.app', ['logo' => 'daiso'])
+@extends('frontend.daiso.layouts.app')
 @section('page-title', $title)
 
 @section('content')
-@include('frontend.venus.games.list')
+@include('frontend.kdior.games.index')
 @stop

@@ -1171,6 +1171,9 @@ return [
         "RujakBonanza" => "루작 보난자",
         "SugarSupremePowerNudge" => "슈가 슈프림 파워넛지",
         "VikingForge" => "바이킹 포지",
+        "ChaseForGlory" => "체이스 포 글로리",
+        "JokersJewelDice" => "조커즈 주얼 다이스",
+        "TimberStacks" => "팀버 스택스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
