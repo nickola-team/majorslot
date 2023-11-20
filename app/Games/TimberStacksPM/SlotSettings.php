@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\ChaseForGloryPM
+namespace VanguardLTE\Games\TimberStacksPM
 {
     class SlotSettings
     {
@@ -73,21 +73,31 @@ namespace VanguardLTE\Games\ChaseForGloryPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,20,40,200,500,1000];
-            $this->Paytable[4] = [0,0,0,20,40,50,100];
-            $this->Paytable[5] = [0,0,0,6,10,20,50];
-            $this->Paytable[6] = [0,0,0,6,10,16,40];
-            $this->Paytable[7] = [0,0,0,4,8,12,30];
-            $this->Paytable[8] = [0,0,0,4,8,12,30];
-            $this->Paytable[9] = [0,0,0,4,8,12,30];
-            $this->Paytable[10] = [0,0,0,2,4,8,20];
-            $this->Paytable[11] = [0,0,0,2,4,8,20];
-            $this->Paytable[12] = [0,0,0,2,4,8,20];
-            $this->Paytable[13] = [0,0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[3] = [0,0,6,60,240,2400];
+            $this->Paytable[4] = [0,0,0,36,180,1200];
+            $this->Paytable[5] = [0,0,0,24,120,600];
+            $this->Paytable[6] = [0,0,0,24,120,600];
+            $this->Paytable[7] = [0,0,0,12,60,0];
+            $this->Paytable[8] = [0,0,0,6,30,120];
+            $this->Paytable[9] = [0,0,0,6,30,120];
+            $this->Paytable[10] = [0,0,0,6,30,120];
+            $this->Paytable[11] = [0,0,0,6,30,120];
+            $this->Paytable[12] = [0,0,0,6,30,120];
+            $this->Paytable[13] = [0,0,0,0,0,0];
+            $this->Paytable[14] = [0,0,0,0,0,0];
+            $this->Paytable[15] = [0,0,0,0,0,0];
+            $this->Paytable[16] = [0,0,0,0,0,0];
+            $this->Paytable[17] = [0,0,0,0,0,0];
+            $this->Paytable[18] = [0,0,0,0,0,0];
+            $this->Paytable[19] = [0,0,0,0,0,0];
+            $this->Paytable[20] = [0,0,0,0,0,0];
+            $this->Paytable[21] = [0,0,0,0,0,0];
+            $this->Paytable[22] = [0,0,0,0,0,0];
+            $this->Paytable[23] = [0,0,0,0,0,0];
+            $this->Paytable[24] = [0,0,0,0,0,0];
+            $this->Paytable[25] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -102,11 +112,11 @@ namespace VanguardLTE\Games\ChaseForGloryPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 10,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -699,19 +709,11 @@ namespace VanguardLTE\Games\ChaseForGloryPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        public function InitBonus($arr_freeSpins){
-            $length = count($arr_freeSpins) - 2;
-            return mt_rand(0, $length);
-        }
-        public function BonusWinChance($bonusIndex)
+        
+        public function GetPurMul($pur)
         {
-            $fsChance = [85, 87, 80, 83, 80, 83, 50]; // [6, 7, 8, 10, 12, 15, 18]
-            $percent = mt_rand(0, 100);
-            if($percent < $fsChance[$bonusIndex] * 0.7){
-                return true;
-            }else{
-                return false;
-            }
+            $purmuls = [100];
+            return $purmuls[$pur];
         }
         public function SetBet() 
         { 
@@ -727,15 +729,16 @@ namespace VanguardLTE\Games\ChaseForGloryPM
         } 
 
 
-        public function GetReelStrips($winType, $bet, $ind = -1)
+        public function GetReelStrips($winType, $bet, $pur = -1)
         {
-            // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameChaseForGloryStack::where('id', 45851)->first();
+            // if($winType == 'bonus'){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTimberStacksStack::where('id', 33371)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            if($ind >= 0){
+            $spintype = 0;
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win' || $winType == 'bonus'){
+            }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -746,12 +749,12 @@ namespace VanguardLTE\Games\ChaseForGloryPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($winType != 'bonus'){
-                    if($limitOdd > 1){
-                        $winType = 'win';
-                    }else{
-                        $winType = 'none';
-                    }
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
@@ -760,23 +763,19 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($ind >= 0){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameChaseForGloryStack::where([
-                        'pur_level' => $ind,
-                        'spin_type' => 1
-                    ])->whereNotIn('id', $existIds);
-                }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameChaseForGloryStack::where('spin_type', 2)->whereNotIn('id', $existIds);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTimberStacksStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameChaseForGloryStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTimberStacksStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 48000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
+                    $index = mt_rand(0, 50000);
                 }
                 if($isLowBank == true){
-                    if($ind >= 0){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                    if($winType == 'bonus'){
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -787,7 +786,7 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($ind >= 0){
+                        if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){
@@ -809,6 +808,9 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     if($isLowBank == true){
                         $existIds = [0];
                     }
