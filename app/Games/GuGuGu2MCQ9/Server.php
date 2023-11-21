@@ -41,6 +41,7 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', false);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -112,14 +113,23 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
                             if($packet_id == 42 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                                 $slotEvent['slotEvent'] = 'freespin';
                             }else{
-                                $slotEvent['slotEvent'] = 'bet';
+                                if($slotSettings->GetGameData($slotSettings->slotId . 'Respin') == true && $gameData->ReelPay>0){
+                                    $slotEvent['slotEvent'] = 'respin';
+                                    
+                                }else{
+                                    $slotEvent['slotEvent'] = 'bet';
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks  릴배치표 저장
+                                }
+                                
                                 $pur_level = -1;
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks  릴배치표 저장
+                                
                                 if($packet_id == 42){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                                }else if($slotEvent['slotEvent'] == 'respin'){
+
                                 }else{
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                                 }
@@ -351,14 +361,15 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
             // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
-            if($slotEvent == 'freespin'){
+            if($slotEvent == 'freespin' || $slotEvent == 'respin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'),$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                // $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'),$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -436,12 +447,20 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
             if(isset($stack['IsRespin'])){
                 if($stack['IsRespin'] == false){
                     $stack['ReelPay'][2] = 0;
+                    $stack['NextSTable'] = 0;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', false);
                 }else{
                     if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == -1){
                         $stack['ReelPay'][2] = $betline * $lines * 15.4;
+                        $stack['NextSTable'] = 1;
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
                     }else if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
                         $stack['ReelPay'][2] = $betline * $lines * 25.6;
+                        $stack['NextSTable'] = 2;
+                        //$slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 2);
                     }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Respin', true);
+                    
                 }
             } 
             $stack['Type'] = $result_val['Type'];
@@ -476,9 +495,16 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
                 }
                 $isState = false;
             }
+            if($slotEvent == "respin"){
+                if(($stack['IsRespin'] == true && $stack['IsTriggerFG'] == true)){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 12);
+                }
+            }
+
+
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && $stack['IsRespin'] ==false){
                     if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                         $isState = true;

@@ -733,7 +733,7 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
         {
             // if($winType == 'bonus'){
                 // if($gameRound == 1){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 13408)->first(); //6039 :  Free,9472 : symbol spin
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 20348)->first(); //6039 :  Free,9472 : symbol spin
                     // return json_decode($stack->spin_stack, true);                    
                 // }else if($gameRound == 2){
                 //     $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameFruityCarnivalStack::where('id', 2560)->first();
@@ -779,13 +779,13 @@ namespace VanguardLTE\Games\FruityCarnivalCQ9
                 $left_specialsymbol_count = 0;
                 $left_specialsymbol_count = 15 - $this->GetGameData($this->slotId . 'SymbolCount');
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
-                $index = 1;// mt_rand(0, 48000);
+                $index = 1;
                 if($gameRound == 1){
-                    $index = mt_rand(0, 70000);
+                    $index = mt_rand(0, 58000);
                 }else if($gameRound == 2){
-                    $index = mt_rand(0, 140000);
+                    $index = mt_rand(0, 118000);
                 }else if($gameRound == 3){
-                    $index = mt_rand(0, 210000);
+                    $index = mt_rand(0, 188000);
                 }
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){

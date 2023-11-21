@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\UproarinHeavenCQ9
+namespace VanguardLTE\Games\TreasurePirateCQ9
 {
     class SlotSettings
     {
@@ -450,7 +450,7 @@ namespace VanguardLTE\Games\UproarinHeavenCQ9
             else
             {
             //------- *** -------//
-                if( $_obf_bonus_systemmoney > 0 ) 
+                if( $_obf_bonus_systemmoney > 0 )         ///free game 없는 경우 이 부분 disable
                 {
                     $sum -= $_obf_bonus_systemmoney;
                     $game->set_gamebank($_obf_bonus_systemmoney, 'inc', 'bonus');
@@ -736,8 +736,8 @@ namespace VanguardLTE\Games\UproarinHeavenCQ9
 
         public function GetReelStrips($winType, $bet)
         {
-            // // // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameUproarinHeavenStack::where('id', 25771)->first();
+            // if($winType == 'bonus'){
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTreasurePirateStack::where('id', 85738)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -768,11 +768,11 @@ namespace VanguardLTE\Games\UproarinHeavenCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameUproarinHeavenStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameTreasurePirateStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameUproarinHeavenStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameTreasurePirateStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
@@ -796,7 +796,7 @@ namespace VanguardLTE\Games\UproarinHeavenCQ9
                                 if($miniOdd > 30){
                                     $miniOdd = 30;
                                 }
-                                //$stacks = $stacks->where('odd', '>=', $miniOdd);
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
                             }
                             if ($this->happyhouruser)
                             {

@@ -272,7 +272,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             $_winAvaliableMoney = $_spinSettings[1];
             $purValue = -1;
             $tempPurValue = -1;
-            $winType = 'bonus';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             
             if($slotEvent == 'bonus' || $slotEvent == 'respin'){
@@ -325,11 +325,11 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                     }else if($tempPurValue == 2){
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 3);
                     }else if($tempPurValue == 3){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 2);
                     }else if($tempPurValue == 4){
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 1);
                     }else if($tempPurValue == 5){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 2);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
                     }else if($tempPurValue == -1){
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
                     }
@@ -395,9 +395,9 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             }
             
 
-            $stack['ExtendFeatureByGame2'][3]['Value'] = 0;
-            $stack['ExtendFeatureByGame2'][4]['Value'] = 0;
-            $stack['ExtendFeatureByGame2'][5]['Value'] = 0;
+            $stack['ExtendFeatureByGame2'][3]['Value'] = '0';
+            $stack['ExtendFeatureByGame2'][4]['Value'] = '0';
+            $stack['ExtendFeatureByGame2'][5]['Value'] = '0';
             $stack['ExtendFeatureByGame2'][7]['Value'] = '0,0,0,0,0,0,0,0,0';
             $stack['ExtendFeatureByGame2'][8]['Value'] = '0,0,0,0,0,0,0,0,0';
             $stack['ExtendFeatureByGame2'][9]['Value'] = '0,0,0,0,0,0,0,0,0';
@@ -411,105 +411,105 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                     if($symbolsRow[$j] == 'B') {
                         if($purValue == 1){ //1 1 0
                             $purValue = 3;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,1,0];
                         }else if($purValue == 2){ //1 0 1
                             $purValue = 4;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,0,1];
                         }else if($purValue == 5){ //1 1 1
                             $purValue = 6;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,1,1];
                         }else{
                             $purValue = 0;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
                             $tempSpinArr = [1,0,0];
                         }                        
                     }else if($symbolsRow[$j] == 'B1'){
                         if($purValue == 0){ //1 1 0
                             $purValue = 3;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
     
                             $$tempSpinArr = [1,1,0];
                         }else if($purValue == 2){ //0 1 1
                             $purValue = 5;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [0,1,1];
                         }else if($purValue == 4){  //1 1 1
                             $purValue = 6;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,1,1];
                         }else{
                             $purValue = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
                             $tempSpinArr = [0,1,0];
                         }
                     }else if($symbolsRow[$j] == 'B2'){
                         if($purValue == 0){ //1 0 1
                             $purValue = 4;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,0,1];
                         }else if($purValue == 1){ //0 1 1
                             $purValue = 5;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
     
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                             $tempSpinArr = [0,1,1];
                         }else if($purValue == 3){  //1 1 1
                             $purValue = 6;
-                            $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
     
                             $tempSpinArr = [1,1,1];
                         }else{
                             $purValue = 2;
-                            $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                            $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                            $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                            $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                             $tempSpinArr = [0,0,1];
                         }
                     }
@@ -530,91 +530,91 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             if($realWinArr[0] == 1){
                 if($realWinArr[1] == 1 && $realWinArr[2] == 1){
                     $purValue = -1;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                     $realWinArr = [0,0,0];
                 }else if($realWinArr[1] == 1){
                     $purValue = 3;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
                 }else if($realWinArr[2] == 1){
                     $purValue = 4;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                 }else{
                     $purValue = 0;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
                 }
             }else if($realWinArr[1] == 1){
                 if($realWinArr[0] == 1 && $realWinArr[2] == 1){  //1 1 1
                     $purValue = -1;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
 
                     $realWinArr = [0,0,0];
                 }else if($realWinArr[2] == 1){ //0 1 1
                     $purValue = 5;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                 }else if($realWinArr[0] == 1){ //1 1 0
                     $purValue = 3;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
                 }else{
                     $purValue = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
                 }
             }else if($realWinArr[2] == 1){
                 if($realWinArr[0] == 1 && $realWinArr[1] == 1){  //1 1 1
                     $purValue = -1;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
 
                     $realWinArr = [0,0,0];
                 }else if($realWinArr[0] == 1){ //1 0 1
                     $purValue = 4;
-                    $stack['ExtendFeatureByGame2'][3]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][3]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][7]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                 }else if($realWinArr[1] == 1){ //0 1 1
                     $purValue = 5;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][4]['Value'] = 1;
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][4]['Value'] = '1';
 
-                    $stack['ExtendFeatureByGame2'][8]['Value'] = $tempStr;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                 }else{
                     $purValue = 2;
-                    $stack['ExtendFeatureByGame2'][5]['Value'] = 1;
-                    $stack['ExtendFeatureByGame2'][9]['Value'] = $tempStr;
+                    $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
+                    $stack['ExtendFeatureByGame2'][9]['Value'] = strval($tempStr);
                 }
             }else{
                 $purValue = -1;
@@ -748,11 +748,14 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             $proof['is_respin']                 = $result_val['IsRespin'];
             if(isset($result_val['FreeSpin'])){
                 $proof['fg_times']                  = $result_val['FreeSpin'];
+            }else{
+                $proof['fg_times']                  = 0;
             }
             $proof['player_bet_multiples']      = [$slotSettings->GetGameData($slotSettings->slotId . 'MiniBet')];
             $proof['fg_rounds']                 = floor($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'));
-            $proof['next_s_table']              = $result_val['NextSTable'];
-            $proof['extend_feature_by_game']    = [];
+            
+            //$proof['next_s_table']              = $result_val['NextSTable'];
+            //$proof['extend_feature_by_game']    = [];
             $proof['extend_feature_by_game2']   = [];
             foreach($result_val['ExtendFeatureByGame2'] as $item){
                 $newItem = [];
@@ -777,8 +780,9 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             }
             $symbolTxt = $symbolTxt . $tempValueArr[9];
             $proof['extend_feature_by_game2'][1]['value'] = ($symbolTxt);
-            $proof['l_v']                       = "1.0.13";
+            $proof['l_v']                       = "1.1.11";
             $proof['s_v']                       = "5.27.1.0";
+            $proof['lock_position']         = null;
 
             foreach( $result_val['udsOutputWinLine'] as $index => $outWinLine) 
             {
@@ -801,7 +805,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                 
                 $log['detail']['wager']['order_time']   = $currentTime;
                 $log['detail']['wager']['end_time']     = $currentTime;
-                $log['detail']['wager']['total_win']    = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $log['detail']['wager']['total_win']    = strval($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
 
                 if(isset($result_val['LockPos'])){
                     $proof['lock_position']         = $result_val['LockPos'];
@@ -879,13 +883,13 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                 $wager['start_time']            = $currentTime;
                 $wager['server_ip']             = '10.9.16.17';
                 $wager['client_ip']             = '10.9.16.17';
-                $wager['play_bet']              = $allBet * $this->demon * $betValue[0];
+                $wager['play_bet']              = strval($allBet * $this->demon * $betValue[0]);
                 $wager['play_denom']            = "100000";
                 //$wager['bet_multiple']          = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                 $wager['bet_multiple']          = '[1]';
                 $wager['rng']                   = $result_val['RngData'];
                 $wager['multiple']              = "0";
-                $wager['base_game_win']         = $result_val['TotalWin'] * $this->demon;
+                $wager['base_game_win']         = strval($result_val['TotalWin'] * $this->demon);
                 $wager['win_over_limit_lock']   = 0;
                 if($result_val['IsRespin'] == true){
                     $wager['game_type']             = 1;
@@ -896,7 +900,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                 $wager['win_type']              = $result_val['WinType'];
                 $wager['settle_type']           = 0;
                 $wager['wager_type']            = 0;
-                $wager['total_win']             = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                $wager['total_win']             = strval($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                 $wager['win_line_count']        = $result_val['WinLineCount'];
                 $wager['bet_tid']               =  'pro-bet-' . $result_val['GamePlaySerialNumber'];
                 $wager['win_tid']               =  'pro-win-' . $result_val['GamePlaySerialNumber'];
