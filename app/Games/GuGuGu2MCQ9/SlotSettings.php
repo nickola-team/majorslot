@@ -734,16 +734,16 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $selId = -1,$buyId = -1)
+        public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('id', 711)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('id', 61)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){
                 $winAvaliableMoney = $this->GetBank('bonus');
             }else{
-                if($winType == 'bonus'){
+                if($winType == 'bonus'){    
                     $winAvaliableMoney = $this->GetBank('bonus');
                 }else if($winType == 'win'){
                     $winAvaliableMoney = $this->GetBank('');
@@ -779,8 +779,8 @@ namespace VanguardLTE\Games\GuGuGu2MCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $stacks = $stacks->where('pur_level', $buyId);
-                $index = 0;// mt_rand(0, 38000);
+                //$stacks = $stacks->where('pur_level', $buyId);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

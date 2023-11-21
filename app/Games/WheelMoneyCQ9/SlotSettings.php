@@ -640,7 +640,7 @@ namespace VanguardLTE\Games\WheelMoneyCQ9
                     $_obf_currentbank
                 ];
 
-                if( $_obf_currentbank < 0) 
+                if( $_obf_currentbank < $bet * 5) 
                 {
                     $return = [
                         'none', 
@@ -740,7 +740,7 @@ namespace VanguardLTE\Games\WheelMoneyCQ9
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWheelMoneyStack::where('id', 417)->first();
+                //   $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameWheelMoneyStack::where('id', 55296)->first();
                 //   return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -775,7 +775,7 @@ namespace VanguardLTE\Games\WheelMoneyCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameWheelMoneyStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 98000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

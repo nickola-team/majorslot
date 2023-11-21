@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\GuGuGu2CQ9
         public function GetReelStrips($winType, $bet, $selId = -1,$buyId = -1)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('id', 711)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('id', 95510)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){
@@ -780,7 +780,7 @@ namespace VanguardLTE\Games\GuGuGu2CQ9
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGuGuGu2MStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
                 $stacks = $stacks->where('pur_level', $buyId);
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
