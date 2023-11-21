@@ -39,7 +39,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'winSpinArr', [0,0,0]);
 
                     $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'SymbolIndex', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 }else if($paramData['req'] == 2){
@@ -453,7 +453,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                             $stack['ExtendFeatureByGame2'][7]['Value'] = strval($tempStr);
                             $stack['ExtendFeatureByGame2'][8]['Value'] = strval($tempStr);
     
-                            $$tempSpinArr = [1,1,0];
+                            $tempSpinArr = [1,1,0];
                         }else if($purValue == 2){ //0 1 1
                             $purValue = 5;
                             $stack['ExtendFeatureByGame2'][5]['Value'] = '1';
