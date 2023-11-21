@@ -15,10 +15,10 @@
 
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <link href="/frontend/kdior/css/m/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/bolton/css/m/layout.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/daiso/css/m/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @else
 <link href="/frontend/kdior/css/common.css?v=202301301150" rel="stylesheet" type="text/css">
-<link href="/frontend/bolton/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
+<link href="/frontend/daiso/css/layout.css?v=202301301150" rel="stylesheet" type="text/css">
 @endif
 <link rel="stylesheet" href="/frontend/kdior/css/animations.css?v=202301301150"><!-- CSS animations1 -->
 <script language="javascript" src="/frontend/kdior/js/showid.js" type="text/javascript"></script>
@@ -44,14 +44,14 @@
 		<?php $logo = 'daiso'; ?>
 		@endif
 		@if( $detect->isMobile() || $detect->isTablet() ) 
-			@include('frontend.venus.layouts.partials.m.header')
+			@include('frontend.daiso.layouts.partials.m.header')
 			@include('frontend.daiso.layouts.partials.m.content')
 		@else
 			@include('frontend.venus.layouts.partials.header')
 			@include('frontend.daiso.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
-					@include('frontend.kdior.layouts.partials.category')
+					@include('frontend.daiso.layouts.partials.category')
 					@include('frontend.kdior.layouts.partials.board')
 				</div>
 			</div>

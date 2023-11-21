@@ -114,11 +114,7 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                             }else if($packet_id == 33 && $slotSettings->GetGameData($slotSettings->slotId . 'Respin') > 0){
                                 $slotEvent['slotEvent'] = 'respin';
                             }else{
-                                if($packet_id == 34){
-                                    $slotEvent['slotEvent'] = 'bet';
-                                }else{
-                                    
-                                }
+                                $slotEvent['slotEvent'] = 'bet';
                                 $pur_level = -1;
                                 if($gameData->IsExtraBet > 0){
                                     $pur_level = 0;

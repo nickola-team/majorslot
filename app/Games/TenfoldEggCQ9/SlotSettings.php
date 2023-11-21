@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTenfoldEggStack::where('id', 236)->first();
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTenfoldEggStack::where('id', 20598)->first();
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -773,7 +773,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameTenfoldEggStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
                 $stacks = $stacks->where('pur_level', $pur);
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);

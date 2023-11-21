@@ -1405,5 +1405,17 @@ return [
         "MoveNJump" => "움직이고 점프하기",
         "Mafia" => "마피아",
         "JumpHigher" => "점프 하이어",
-        "JumpHigherMobile" => "점프 하이어 모바일"
+        "JumpHigherMobile" => "점프 하이어 모바일",
+        "Hephaestus" => "헤파이토스",
+        "SnowQueen" => "스노우 퀸",
+        "WheelMoney" => "휠 머니",
+        "DetectiveDee2" => "Detective Dee 2",
+        "TreasurePirate" => "해적 보물",
+        "GuGuGu2" => "Gu Gu Gu 2",
+        "CrazyNuoZha" => "나타",
+        "TenfoldEgg" => "Tenfold Eggs",
+        "GuGuGu2M" => "Gu Gu Gu 2 M ",
+        "MahjongFruit" => "Mahjong Fruit",
+        "FruityCarnival" => "Fruity Carnival",
+        "UproarinHeaven" => "천국의 소란"
 ];

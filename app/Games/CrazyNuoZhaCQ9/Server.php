@@ -45,6 +45,7 @@ namespace VanguardLTE\Games\CrazyNuoZhaCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeSelectIndex', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'PlayerSelectIndex', -1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction', 0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -127,6 +128,7 @@ namespace VanguardLTE\Games\CrazyNuoZhaCQ9
                                 if($packet_id == 31){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
                                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',rand(0,2));
+                                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction', 0);
                                 }
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
@@ -349,9 +351,10 @@ namespace VanguardLTE\Games\CrazyNuoZhaCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'bonus';
+            //  $winType = 'bonus';
+            //  $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', 0);   
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
-            //$slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', 1);   
+            
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin' || $slotEvent == 'bonus'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
@@ -466,6 +469,7 @@ namespace VanguardLTE\Games\CrazyNuoZhaCQ9
                     }else{
                         $newRespin = false;
                         $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction', 1);
                     }
                 }else{
                     $newRespin = false;
@@ -508,11 +512,18 @@ namespace VanguardLTE\Games\CrazyNuoZhaCQ9
             }
             if($slotEvent == 'freespin' || $slotEvent == 'bonus'){                
                 $isState = false;
-                if($slotEvent == 'freespin'){
+                if($slotEvent == 'freespin'){                    
                     if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
-                        if($stack['IsRespin'] == false){
+                        // if($stack['IsRespin'] == false){
+                        //     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                        //     $isState = true;
+                        // }
+                        if($slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') == 0){
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                             $isState = true;
+                        }else if($slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') == 1){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 1);
+                            
                         }
                         if($packetID == 30){
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
