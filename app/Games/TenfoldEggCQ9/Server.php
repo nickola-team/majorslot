@@ -272,7 +272,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             $_winAvaliableMoney = $_spinSettings[1];
             $purValue = -1;
             $tempPurValue = -1;
-            $winType = 'bonus';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             
             if($slotEvent == 'bonus' || $slotEvent == 'respin'){
