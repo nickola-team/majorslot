@@ -332,6 +332,8 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
                     }else if($tempPurValue == -1){
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
+                    }else{
+                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
                     }
                 }
                 $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $originalbet) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'));
