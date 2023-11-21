@@ -272,8 +272,8 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
             $_winAvaliableMoney = $_spinSettings[1];
             $purValue = -1;
             $tempPurValue = -1;
-            //$winType = 'bonus';
-            // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
+            $winType = 'bonus';
+            $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             
             if($slotEvent == 'bonus' || $slotEvent == 'respin'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
@@ -285,10 +285,9 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                 }
                 $randValue = mt_rand(0,1000);
                 $tempPurValue = $slotSettings->GetGameData($slotSettings->slotId . 'SymbolIndex');
+                $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', -1);
                 if($winType != 'bonus'){
-                    if($randValue<900){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', -1);
-                    }else{                        
+                    if($randValue>900){            
                         if($tempPurValue == 0){
                             if($randValue<950){
                                 $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 1);
@@ -331,6 +330,8 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                     }else if($tempPurValue == 5){
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 0);
                     }else if($tempPurValue == -1){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
+                    }else{
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
                     }
                 }

@@ -1417,5 +1417,5 @@ return [
         "GuGuGu2M" => "Gu Gu Gu 2 M ",
         "MahjongFruit" => "Mahjong Fruit",
         "FruityCarnival" => "Fruity Carnival",
-        "UproarinHeaven" => "Uproar in Heaven"
+        "UproarinHeaven" => "천국의 소란"
 ];
