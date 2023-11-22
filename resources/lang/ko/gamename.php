@@ -1174,6 +1174,9 @@ return [
         "ChaseForGlory" => "체이스 포 글로리",
         "JokersJewelDice" => "조커즈 주얼 다이스",
         "TimberStacks" => "팀버 스택스",
+        "BigBassChristmasBash" => "빅 배스 크리스마스 배시",
+        "MahjongX" => "마종 X",
+        "NileFortune" => "나일 포춘",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
