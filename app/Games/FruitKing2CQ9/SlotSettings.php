@@ -754,7 +754,7 @@ namespace VanguardLTE\Games\FruitKing2CQ9
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
-                    $winType = 'bonus';
+                    $winType = 'win';
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
