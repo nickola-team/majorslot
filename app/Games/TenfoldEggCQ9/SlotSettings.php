@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
            $this->game->allBet = $this->GetGameData($this->slotId . 'RealBet') * $this->GetGameData($this->slotId . 'Lines'); 
         } 
 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet, $pur = -1,$tempPurValue = -1)
         {
             //if($winType == 'bonus'){
                 //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameTenfoldEggStack::where('id', 20598)->first();
@@ -755,6 +755,24 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
                     $winType = 'bonus';
+                    if($tempPurValue == 0){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 5);                    
+                    }else if($tempPurValue == 1){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 4);
+                    }else if($tempPurValue == 2){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 3);
+                    }else if($tempPurValue == 3){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 2);
+                    }else if($tempPurValue == 4){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 1);
+                    }else if($tempPurValue == 5){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 0);
+                    }else if($tempPurValue == -1){
+                        $this->SetGameData($this->slotId . 'SymbolCount', 6);
+                    }else{
+                        $this->SetGameData($this->slotId . 'SymbolCount', 6);
+                    }
+                    $pur= $this->GetGameData($this->slotId . 'SymbolCount');
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
