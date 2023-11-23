@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\PyramidKingPM
+namespace VanguardLTE\Games\TheDogHouseDiceShowPM
 {
     class SlotSettings
     {
@@ -73,19 +73,17 @@ namespace VanguardLTE\Games\PyramidKingPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,25,250,500];
-            $this->Paytable[3] = [0,0,0,25,250,500];
-            $this->Paytable[4] = [0,0,0,20,150,400];
-            $this->Paytable[5] = [0,0,0,15,100,300];
-            $this->Paytable[6] = [0,0,0,10,50,200];
-            $this->Paytable[7] = [0,0,0,10,20,50];
-            $this->Paytable[8] = [0,0,0,5,20,50];
-            $this->Paytable[9] = [0,0,0,5,20,50];
-            $this->Paytable[10] = [0,0,0,5,20,50];
+            $this->Paytable[1] = [0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,10,30,100,400];
+            $this->Paytable[3] = [0,0,3,10,40,100];
+            $this->Paytable[4] = [0,0,2,8,25,50];
+            $this->Paytable[5] = [0,0,2,7,20,30];
+            $this->Paytable[6] = [0,0,1,5,15,25];
+            $this->Paytable[7] = [0,0,0,3,10,15];
+            $this->Paytable[8] = [0,0,0,3,10,15];
+            $this->Paytable[9] = [0,0,0,2,8,13];
+            $this->Paytable[10] = [0,0,0,2,8,13];
             $this->Paytable[11] = [0,0,0,0,0,0];
-            $this->Paytable[12] = [0,0,0,0,0,0];
-            $this->Paytable[13] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -100,11 +98,11 @@ namespace VanguardLTE\Games\PyramidKingPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[8.00,16.00,24.00,32.00,40.00,80.00,120.00,160.00,200.00,300.00,400.00,600.00,1000.00,2000.00,3000.00,4000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 25,000,000.00
+            // $game->rezerv => 10,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -696,7 +694,7 @@ namespace VanguardLTE\Games\PyramidKingPM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [1000];
+            $purmuls = [100];
             return $purmuls[$pur];
         }
         public function SetBet() 
@@ -715,8 +713,8 @@ namespace VanguardLTE\Games\PyramidKingPM
 
         public function GetReelStrips($winType, $bet)
         {
-            // if($winType == 'win'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGamePyramidKingStack::where('id', 266)->first();
+            // if($winType == 'bonus'){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseStack::where('id', 20654)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -749,14 +747,14 @@ namespace VanguardLTE\Games\PyramidKingPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGamePyramidKingStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
-                $index = mt_rand(0, 28000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $index = mt_rand(0, 39000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 30);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
