@@ -1177,7 +1177,8 @@ return [
         "BigBassChristmasBash" => "빅 배스 크리스마스 배시",
         "MahjongX" => "마종 X",
         "NileFortune" => "나일 포춘",
-        
+        "TheDogHouseDiceShow" => "더 도그 하우스 다이스 쇼",
+        "SugarRushXmas" => "슈가 러시 크리스마스",
         //Booongo
         "tigerstone" => "타이거 스톤",
 
