@@ -637,7 +637,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                     $_obf_currentbank
                 ];
 
-                if( $_obf_currentbank < 0) 
+                if( $_obf_currentbank < $bet * 2) 
                 {
                     $return = [
                         'none', 
@@ -754,7 +754,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
-                    $winType = 'bonus';
+                    $winType = 'win';
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{

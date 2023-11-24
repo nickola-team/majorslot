@@ -753,12 +753,12 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10){
-                    $winType = 'bonus';
-                }else if($limitOdd > 1){
-                    $winType = 'win';
-                }else{
-                    $winType = 'none';
+                if($winType != 'bonus'){
+                    if($limitOdd > 1){
+                        $winType = 'win';
+                    }else{
+                        $winType = 'none';
+                    }
                 }
             }
             $isLowBank = false;
@@ -772,9 +772,9 @@ namespace VanguardLTE\Games\MahjongFruitCQ9
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameMahjongFruitStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                if($pur >= 0){
-                    $stacks = $stacks->where('pur_level', $pur);
-                }
+                // if($pur >= 0){
+                //     $stacks = $stacks->where('pur_level', $pur);
+                // }
                 $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);

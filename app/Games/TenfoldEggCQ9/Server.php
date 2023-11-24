@@ -335,7 +335,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
                     }
                 }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $originalbet) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $originalbet) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),$tempPurValue);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
