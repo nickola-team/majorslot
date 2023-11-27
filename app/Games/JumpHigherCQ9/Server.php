@@ -273,7 +273,11 @@ namespace VanguardLTE\Games\JumpHigherCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'bonus';
+            if($winType != 'none' && mt_rand(0, 100) < 40){
+                $winType = 'none';
+                $_winAvaliableMoney = 0;
+            }
+            // $winType = 'bonus'
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             $defaultScatterCount = 0;
             if($winType == 'bonus'){

@@ -1,4 +1,4 @@
-@extends('frontend.venus.layouts.app', ['logo' => 'daiso'])
+@extends('frontend.venus.layouts.app', ['logo' => 'yokjon'])
 @section('page-title', $title)
 
 @section('content')
