@@ -287,6 +287,10 @@ namespace VanguardLTE\Games\MafiaCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
+            if($winType != 'none' && mt_rand(0, 100) < 70){
+                $winType = 'none';
+                $_winAvaliableMoney = 0;
+            }
             // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank('bonus');
             $defaultScatterCount = 0;
