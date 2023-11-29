@@ -1432,7 +1432,7 @@ return [
         "DragonBall" => "드래곤 볼",
         "GoodFortune" => "굿 포춘",
         "MuayThai" => "무에타이",
-        "Chicago" => "시카고 2",
+        "Chicago2" => "시카고 2",
         "TheBeastWar" => "더 비스트 워"
 ];
 
