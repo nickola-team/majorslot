@@ -128,6 +128,7 @@ namespace VanguardLTE
                 'OSSCOIN',
                 '경남가상계좌',
                 'VirtualAcc',
+                '효원라이프',
                 'MESSAGE'
             ],
             'reset_days' => [

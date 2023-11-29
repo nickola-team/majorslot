@@ -1404,6 +1404,16 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == '효원라이프') //효원라이프
+            {
+                // $url = 'https://jun-200.com/sign-up-process-api?uid='.$master->account_no. '@'.$user->id.'&site='.$master->recommender.'&p='.($amount/10000).'&rec_name=' . $account;
+                $url = 'http://shop.hwlife.kr/direct/payInfo.do?key=cml2ZXI=';
+                return response()->json([
+                    'error' => false, 
+                    'msg' => '팝업창에서 입금계좌신청을 하세요',
+                    'url' => $url
+                ], 200);
+            }
             else if ($master->bank_name == 'MESSAGE') //계좌를 쪽지방식으로 알려주는 총본사
             {
                 $date_time = date('Y-m-d H:i:s', strtotime("-2 minutes"));
