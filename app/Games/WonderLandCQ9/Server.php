@@ -300,7 +300,7 @@ namespace VanguardLTE\Games\WonderlandCQ9
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
-                            $result_val['ID'] = 145;
+                            $result_val['ID'] = 142;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;

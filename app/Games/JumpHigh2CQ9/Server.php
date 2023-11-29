@@ -41,6 +41,7 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex', -1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeCountLevel', -1);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -116,6 +117,7 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeCountLevel',-1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks  릴배치표 저장
                                 if($packet_id == 42){
                                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -282,7 +284,7 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                     if($slotSettings->GetGameData($slotSettings->slotId . 'PackID') == 31 && $slotSettings->GetGameData($slotSettings->slotId . 'TriggerFree')>0){
                         //$slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 10);
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeIndex',0);
-                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds'),$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
+                        $tumbAndFreeStacks= $slotSettings->GetReelStrips('bet', ($betline /  $this->demon) * $lines,$slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex'));
                         $stack = $tumbAndFreeStacks[0];
                         $freespinNum = $stack['udcDataSet']['SelSpinTimes'][0];
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $freespinNum);
@@ -346,6 +348,17 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                 if($packetID == 31){
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 1);
                     $stack = $tumbAndFreeStacks[0];
+                    if($winType == 'bonus'){
+                        if(isset($stack['udsOutputWinLine'])){
+                            if($stack['udsOutputWinLine'][0]['SymbolCount'] == 5){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeCountLevel',0);
+                            }else if($stack['udsOutputWinLine'][0]['SymbolCount'] == 6){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeCountLevel',1);
+                            }else if($stack['udsOutputWinLine'][0]['SymbolCount'] == 7){
+                                $slotSettings->SetGameData($slotSettings->slotId . 'FreeCountLevel',2);
+                            }
+                        }
+                    }
                 }
             }
             if(isset($stack['PlayerBet'])){
@@ -378,6 +391,8 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
             if(isset($stack['IsTriggerFG']) && $stack['IsTriggerFG'] == true){
                 $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 1);
             }
+
+            
 
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;

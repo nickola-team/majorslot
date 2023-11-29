@@ -121,7 +121,7 @@ namespace VanguardLTE\Games\HotSpinCQ9
                             $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                             $roundstr = sprintf('%.4f', microtime(TRUE));
                             $roundstr = str_replace('.', '', $roundstr);
-                            $roundstr = '663' . substr($roundstr, 3, 7);
+                            $roundstr = '672' . substr($roundstr, 3, 7);
                             $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             
 
@@ -239,8 +239,9 @@ namespace VanguardLTE\Games\HotSpinCQ9
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet,$packetID){
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline /  $this->demon) * $lines, $lines);
-                $winType = $_spinSettings[0];
-                //$winType = 'win';
+            $winType = $_spinSettings[0];
+            //$winType = 'bonus';
+
             if($slotEvent == 'bonus'){
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
                 $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];

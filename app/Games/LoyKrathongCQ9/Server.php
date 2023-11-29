@@ -35,7 +35,7 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
-
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Multiple',1);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
 
@@ -286,7 +286,7 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             //$winType = 'win';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin' || $slotEvent == 'respin'){

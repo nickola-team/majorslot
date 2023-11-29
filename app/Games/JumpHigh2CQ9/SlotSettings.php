@@ -737,7 +737,7 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
         public function GetReelStrips($winType, $bet, $selId = -1)
         {
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameJumpHigh2Stack::where('id', 92416)->first(); 
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameJumpHigh2Stack::where('id', 2197)->first(); 
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){
@@ -767,13 +767,16 @@ namespace VanguardLTE\Games\JumpHigh2CQ9
                 }
             }
             $isLowBank = false;
+            $pur = -1;
+
             $existIds = \VanguardLTE\PPGameFreeStackLog::where([
                 'user_id' => $this->playerId,
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
+            $pur = $this->GetGameData($this->slotId . 'FreeCountLevel');
             while(true){
                 if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameJumpHigh2Stack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameJumpHigh2Stack::where(['spin_type' => 1,'pur_level' => $pur, 'free_count' => $selId])->whereNotIn('id', $existIds);
                 }else if($winType == 'bonus'){
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameJumpHigh2Stack::where('spin_type',2)->whereNotIn('id', $existIds);
                 }else{

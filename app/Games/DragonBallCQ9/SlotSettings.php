@@ -748,9 +748,9 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 //     return json_decode($stack->spin_stack, true);
                 //  }
             // }
-            if($selId > -1){
-                $winAvaliableMoney = $this->GetBank('bonus');
-            }else{
+            // if($selId > -1){
+            //     $winAvaliableMoney = $this->GetBank('bonus');
+            // }else{
                 if($winType == 'bonus'){
                     $winAvaliableMoney = $this->GetBank('bonus');
                 }else if($winType == 'win'){
@@ -758,7 +758,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 }else{
                     $winAvaliableMoney = 0;
                 }
-            }
+            //}
            
             $limitOdd = 0;
             if($winType != 'none'){
@@ -780,10 +780,11 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
-                }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('spin_type',2)->whereNotIn('id', $existIds);
+                // if($selId > -1){
+                //     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                // }else 
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('spin_type',1)->whereNotIn('id', $existIds);
                 }else{
                     $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameDragonBallStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
@@ -794,15 +795,15 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 }
                 $stacks = $stacks->where('symbol_count', '<=', $left_specialsymbol_count);
                 $index = 0;
-                // if($gameRound == 1){
-                //     $index = mt_rand(0, 220000);
-                // }else if($gameRound == 2){
-                //     $index = mt_rand(0, 220000);
-                // }else if($gameRound == 3){
-                //     $index = mt_rand(0, 300000);
-                // }else if($gameRound == 4){
-                //     $index = mt_rand(0, 280000);
-                // }
+                if($gameRound == 1){
+                    $index = mt_rand(0, 418000);
+                }else if($gameRound == 2){
+                    $index = mt_rand(0, 498000);
+                }else if($gameRound == 3){
+                    $index = mt_rand(0, 478000);
+                }else if($gameRound == 4){
+                    $index = mt_rand(0, 68000);
+                }
                 
                 $stacks = $stacks->where('pur_level', $gameRound);
                 if($winType == 'win'){
