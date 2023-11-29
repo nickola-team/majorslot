@@ -1421,5 +1421,48 @@ return [
         "GuGuGu2M" => "Gu Gu Gu 2 M ",
         "MahjongFruit" => "Mahjong Fruit",
         "FruityCarnival" => "Fruity Carnival",
-        "UproarinHeaven" => "천국의 소란"
+        "UproarinHeaven" => "천국의 소란",
+        "SoSweet" => "소 스위트",
+        "HotSpin" => "핫 스핀",
+        "Kronos" => "Kronos",
+        "FlyOut" => "플라이 아웃",
+        "LoyKrathong" => "Loy Krathong",
+        "WonderLand" => "이상한 나라",
+        "ShouXin" => "Shou-Xin",
+        "DragonBall" => "드래곤 볼",
+        "GoodFortune" => "굿 포춘",
+        "MuayThai" => "무에타이",
+        "Chicago" => "시카고 2",
+        "TheBeastWar" => "더 비스트 워"
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

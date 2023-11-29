@@ -124,7 +124,7 @@ namespace VanguardLTE\Games\KronosCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                                 $roundstr = sprintf('%.4f', microtime(TRUE));
                                 $roundstr = str_replace('.', '', $roundstr);
-                                $roundstr = '658' . substr($roundstr, 3, 9);
+                                $roundstr = '603' . substr($roundstr, 3, 9);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'GamePlaySerialNumber', $roundstr);
                             }
 
@@ -227,7 +227,7 @@ namespace VanguardLTE\Games\KronosCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-             $winType = 'bonus';
+            // $winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -272,8 +272,16 @@ namespace VanguardLTE\Games\KronosCQ9
             $awardSpinTimes = 0;
             $currentSpinTimes = 0;
             if($slotEvent == 'freespin'){
-                $awardSpinTimes = $stack['AwardSpinTimes'];    
-                if(isset($stack['CurrentSpinTime'])){
+                // if(isset($stack['AwardspinTimes']) && ($stack['AwardspinTimes'] == 8 || $stack['AwardspinTimes'] == 12)){
+                //     $awardSpinTimes = $stack['AwardspinTimes'];
+                // }
+                if(isset($stack['AwardSpinTimes'])){
+                    $awardSpinTimes = $stack['AwardSpinTimes'];        
+                }else{
+                    $awardSpinTimes = $stack['AwardSpinTimes'];    
+                }
+                
+                if(isset($stack['CurrentSpinTimes'])){
                     $currentSpinTimes = $stack['CurrentSpinTimes'];   
                 }
             }
@@ -322,10 +330,12 @@ namespace VanguardLTE\Games\KronosCQ9
             }
             if($slotEvent == 'freespin'){                
                 $isState = false;
-                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes && ($stack['RetriggerAddRound'] == 0 && $stack['RetriggerAddSpins'] == 0)){
-                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
-                    $isState = true;
-                }
+                if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
+                    if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
+                        $isState = true;
+                    }
+                } 
             }
             
 
