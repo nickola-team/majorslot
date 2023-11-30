@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\WonderlandCQ9
+namespace VanguardLTE\Games\WonderLandCQ9
 {
 
     use Dotenv\Loader\Value;
