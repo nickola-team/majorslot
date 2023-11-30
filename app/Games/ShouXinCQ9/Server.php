@@ -25,7 +25,7 @@ namespace VanguardLTE\Games\ShouXinCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 1;
+            $originalbet = 3;
 
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
@@ -301,7 +301,7 @@ namespace VanguardLTE\Games\ShouXinCQ9
                         while($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0){
                             $result_val = [];
                             $result_val['Type'] = 3;
-                            $result_val['ID'] = 145;
+                            $result_val['ID'] = 142;
                             $result_val['Version'] = 0;
                             $result_val['ErrorCode'] = 0;
                             $result_val['EmulatorType'] = 0;
@@ -603,7 +603,7 @@ namespace VanguardLTE\Games\ShouXinCQ9
                 $wager['order_time']            = $currentTime;
                 $wager['end_time']              = $currentTime;
                 $wager['user_id']               = $slotSettings->playerId;
-                $wager['game_id']               = 116;
+                $wager['game_id']               = 150;
                 $wager['platform']              = 'web';
                 $wager['currency']              = 'KRW';
                 $wager['start_time']            = $currentTime;

@@ -1,6 +1,9 @@
 <?php 
 namespace VanguardLTE\Games\LoyKrathongCQ9
 {
+
+    use Illuminate\Support\Facades\Log;
+
     class SlotSettings
     {
         public $playerId = null;
@@ -737,7 +740,7 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
         public function GetReelStrips($winType, $bet, $pur)
         {
             //if($winType == 'bonus'){
-                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLoyKrathongStack::where('id', 572)->first();    //17660,195,1076,1336,1986,2113,2465
+                //  $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameLoyKrathongStack::where('id', 1)->first();    //17660,195,1076,1336,1986,2113,2465
                 //  return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -775,14 +778,15 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
                 if($pur >= 0){
                     $stacks = $stacks->where('pur_level', $pur);
                 }
-                $index = 0;// mt_rand(0, 38000);
+                $index = mt_rand(0, 148000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
+                
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 21);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -807,7 +811,9 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
                             }
                             else
                             {
+                                Log::info('Limit Odd is:',[$limitOdd]);
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                                Log::info('Limit Odd is:',[$stacks]);
                             }
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();

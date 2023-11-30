@@ -262,7 +262,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            $winType = 'win';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
 
             if($slotEvent == 'freespin'){
@@ -349,6 +349,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 //$stack['ExtendFeatureByGame2'] = $result_val['ExtendFeatureByGame2'];
                 $stack['ExtendFeatureByGame2'][0]['Value']    = $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount');
                 $stack['ExtendFeatureByGame2'][1]['Value']    = 3;
+                
                 $stack['ExtendFeatureByGame2'][2]['Value']    = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds');
                 $stack['ExtendFeatureByGame2'][3]['Value']    = ($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1);
                 // $stack['ExtendFeatureByGame2'][] = [["Name"=>"AccumulateUpCount","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount')],["Name"=>"LevelUpCount","Value"=>3],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds') + 1)],["Name"=>"WildMultiplierReel2","Value"=>"0"],["Name"=>"WildMultiplierReel3","Value"=>"0"],["Name"=>"WildMultiplierReel4","Value"=>"0"]];
@@ -356,6 +357,7 @@ namespace VanguardLTE\Games\DragonBallCQ9
                 //$stack['ExtendFeatureByGame2'] = $result_val['ExtendFeatureByGame2'];
                 $stack['ExtendFeatureByGame2'][0]['Value']    = 0;
                 $stack['ExtendFeatureByGame2'][1]['Value']    = 3;
+                // $stack['NextSTable']   = 4;
                 $stack['ExtendFeatureByGame2'][2]['Value']    = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds');
                 $stack['ExtendFeatureByGame2'][3]['Value']    = ($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'));
                 // $stack['ExtendFeatureByGame2'] = [["Name"=>"AccumulateUpCount","Value"=>0],["Name"=>"LevelUpCount","Value"=>3],["Name"=>"CurrentLevel","Value"=>$slotSettings->GetGameData($slotSettings->slotId . 'GameRounds')],["Name"=>"NextLevel","Value"=>($slotSettings->GetGameData($slotSettings->slotId . 'GameRounds'))],["Name"=>"WildMultiplierReel2","Value"=>"0"],["Name"=>"WildMultiplierReel3","Value"=>"0"],["Name"=>"WildMultiplierReel4","Value"=>"0"]];
@@ -364,8 +366,8 @@ namespace VanguardLTE\Games\DragonBallCQ9
             }
             $stack['NextSTable'] = 0;
             if($slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount') == 3 && $slotSettings->GetGameData($slotSettings->slotId. 'GameRounds') != 4){   
-                
-                $stack['NextSTable'] = 1;
+                $stack['NextSTable']   = $slotSettings->GetGameData($slotSettings->slotId . 'GameRounds');
+                // $stack['NextSTable'] = 1;
                 //$stack['SpecialAward'] = 1;
                 $slotSettings->SetGameData($slotSettings->slotId . 'NextRoundAction', 1);
             }
