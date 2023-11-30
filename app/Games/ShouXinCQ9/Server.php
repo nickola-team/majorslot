@@ -25,7 +25,7 @@ namespace VanguardLTE\Games\ShouXinCQ9
             // $paramData = trim(file_get_contents('php://input'));
             $paramData = json_decode(str_replace($find, "", trim(file_get_contents('php://input'))), true);
             $paramData = $paramData['gameData'];
-            $originalbet = 1;
+            $originalbet = 3;
 
             $slotSettings->SetBet();  
             if(isset($paramData['req'])){
