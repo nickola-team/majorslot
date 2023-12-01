@@ -157,6 +157,8 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                             }
                         }
                         $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($arr_g));
+                    }else{
+                        $strOtherResponse = $strOtherResponse . '&g={fg_a:{def_s:"8,15,13,7,10,7,12,6,15,15,9,11,14,14,14",def_sa:"6,11,12,13,6",def_sb:"13,15,12,11,7",reel_set:"4",sh:"3",st:"rect",sw:"5"},fg_b:{def_s:"6,14,9,13,14,7,10,12,13,8,8,13,14,12,12",def_sa:"14,8,7,13,13",def_sb:"12,11,7,14,15",reel_set:"6",sh:"3",st:"rect",sw:"5"},fg_c:{def_s:"13,6,9,15,7,15,7,13,8,12,12,8,15,13,14",def_sa:"13,14,7,13,10",def_sb:"14,11,9,6,11",reel_set:"8",sh:"3",st:"rect",sw:"5"},fg_d:{def_s:"10,14,11,11,7,7,13,13,13,14,8,15,12,14,13",def_sa:"8,11,15,15,9",def_sb:"6,14,14,12,15",reel_set:"10",sh:"3",st:"rect",sw:"5"}}';
                     }
                     if($bw > 0){
                         $strOtherResponse = $strOtherResponse . '&bw=' . $bw;
