@@ -92,10 +92,17 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             if ($user->hasRole('manager'))
             {
-                $shopUser = \VanguardLTE\ShopUser::where(['user_id' => $user->referral->id, 'shop_id' => $user->shop->id])->first();
-                if ($shopUser)
+                $referral = $user->referral;
+                $parent_referral = $parent;
+                while ($referral && !$referral->isInOutPartner())
                 {
-                    $shopUser->update(['user_id' => $parent->id]);
+                    $shopUser = \VanguardLTE\ShopUser::where(['user_id' => $referral->id, 'shop_id' => $user->shop->id])->first();
+                    if ($shopUser)
+                    {
+                        $shopUser->update(['user_id' => $parent_referral->id]);
+                    }
+                    $referral = $referral->referral;
+                    $parent_referral = $parent_referral->referral;
                 }
                 $user->shop->update(['user_id' => $parent->id]);
             }
