@@ -3,29 +3,29 @@
         <div class="top1_box">
             <div class="gnb_left">
                 <ul>
-                    <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/gnb3.png?v=202301301150"></a></li>                           
+                    <li><a href="#" class="casino_3_open"><span class="login_btn1">슬롯게임</span></li>                           
                     <li><a href="#" 
                     @if (isset($live) && $live=='disabled')
                     onclick="alert('점검중입니다');"
                     @else
                     class="casino_1_open"
                     @endif
-                    ><img src="/frontend/kdior/images/gnb1.png?v=202301301150"></a></li>
+                    ><span class="login_btn1">라이브카지노</span></a></li>
                     @if ($logo != 'dorosi')
-                    <li><a href="#" 
+                    {{--<li><a href="#" 
                     @if (isset($hotel) && $hotel=='disabled')
                     onclick="alert('점검중입니다');"
                     @else
                     class="casino_2_open"
                     @endif
-                    ><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>
+                    ><img src="/frontend/kdior/images/gnb4.png?v=202301301150"></a></li>--}}
                     <li><a href="#" 
                     @if (isset($mini) && $mini=='disabled')
                     onclick="alert('점검중입니다');"
                     @else
                     class="casino_4_open"
                     @endif
-                    ><img src="/frontend/kdior/images/gnb5.png?v=202301301150"></a></li>
+                    ><span class="login_btn1">미니게임</span></a></li>
                     @endif
                 </ul>
             </div>
@@ -34,13 +34,13 @@
                 <ul>
                     @auth()
                         <li><span class="font11" style="color:#fb0000;"><img src='/frontend/kdior/img/lv1.png' align='absmiddle' width='35'>&nbsp;{{auth()->user()->username}}</span>&nbsp;&nbsp;&nbsp;</li>                    
-                        <li>&nbsp;캐쉬 <span class="font11">{{number_format(auth()->user()->balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
-                        <li>&nbsp;보너스 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
+                        <li>&nbsp;보유머니 <span class="font11">{{number_format(auth()->user()->balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
+                        <li>&nbsp;포인트 <span class="font11">{{number_format(auth()->user()->deal_balance)}}</span>&nbsp;&nbsp;&nbsp;</li>
 
                         <li><a href="/logout"><span class="login_btn2" style="min-width: 60px;">로그아웃</span></a></li>                                    
                     @else
-                    <li><a href="#" class="etc_pop2_open"><span class="login_btn1">로그인</span></a></li> 
-                    <li><a href="#" class="etc_pop3_open"><span class="login_btn2">회원가입</span></a></li>						
+                    <li><a href="#" class="etc_pop2_open"><span class="login_btn1">LOGIN</span></a></li> 
+                    <li><a href="#" class="etc_pop3_open"><span class="login_btn2">JOIN</span></a></li>						
                     @endif
                 </ul>
             </div> 
