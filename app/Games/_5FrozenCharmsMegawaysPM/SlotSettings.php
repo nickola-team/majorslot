@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_5LionsMegawaysPM
+namespace VanguardLTE\Games\_5FrozenCharmsMegawaysPM
 {
     class SlotSettings
     {

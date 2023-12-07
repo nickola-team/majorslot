@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_5LionsMegawaysPM
+namespace VanguardLTE\Games\goldnuggetsbng
 {
     class SlotSettings
     {
@@ -73,21 +73,6 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,20,40,80,500];
-            $this->Paytable[4] = [0,0,0,15,25,50,100];
-            $this->Paytable[5] = [0,0,0,10,15,30,100];
-            $this->Paytable[6] = [0,0,0,6,10,25,50];
-            $this->Paytable[7] = [0,0,0,6,10,20,50];
-            $this->Paytable[8] = [0,0,0,4,6,10,25];
-            $this->Paytable[9] = [0,0,0,4,6,10,25];
-            $this->Paytable[10] = [0,0,0,2,4,8,20];
-            $this->Paytable[11] = [0,0,0,2,4,8,20];
-            $this->Paytable[12] = [0,0,0,2,4,8,20];
-            $this->Paytable[13] = [0,0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -102,11 +87,11 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 10,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -230,11 +215,8 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             foreach( $history as $log ) 
             {
                 $jsonLog = json_decode($log->str);
-                if( $jsonLog->responseEvent != 'gambleResult' ) 
-                {
-                    $this->lastEvent = $log->str;
-                    break;
-                }
+                $this->lastEvent = $jsonLog;
+                break;
             }
             if( isset($jsonLog) ) 
             {
@@ -322,10 +304,6 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     $this->happyhouruser->save();
                     return $game;
                 }
-                $_allBets = $sum / $this->GetPercent() * 100;
-                $normal_sum = $_allBets * 10 / 100;
-                $game->set_gamebank($normal_sum, 'inc', '');
-                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -338,14 +316,14 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                         //$this->happyhouruser->increment('over_bank', abs($diffMoney));
                     }
                     else {
-                        $normalbank = $game->get_gamebank('');
-                        if ($normalbank + $diffMoney < 0)
-                        {
+                        // $normalbank = $game->get_gamebank('');
+                        // if ($normalbank + $diffMoney < 0)
+                        // {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
-                        }
-                        $game->set_gamebank($diffMoney, 'inc', '');
+                        // }
+                        // $game->set_gamebank($diffMoney, 'inc', '');
                     }
-                    $sum = $sum - $diffMoney;
+                    // $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
@@ -360,7 +338,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $currentpercent = $this->GetPercent();
-                $bonus_percent = $currentpercent / 3;
+                $bonus_percent = 10;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 /*if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -373,7 +351,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                 }
                 else if( $count_balance > 0 ) 
                 {*/
-                    $bonus_systemmoney = $_allBets / 100 * $bonus_percent;
+                    $bonus_systemmoney = $_allBets / 100 * $currentpercent;
                 //}
                 for( $i = 0; $i < count($this->jpgs); $i++ ) 
                 {
@@ -471,9 +449,9 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             {
                 $slotstate = $this->slotId . '';
             }
-            else if( $slotState == 'slotGamble' ) 
+            else if( $slotState == 'respin' ) 
             {
-                $slotstate = $this->slotId . ' DG';
+                $slotstate = $this->slotId . ' doRespin';
             }
             $game = $this->game;
             $game->increment('stat_in', $bet * $this->CurrentDenom);
@@ -516,72 +494,24 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                 ]);
             }
         }
-        public function saveGameLog($strLog, $roundID){
-            \VanguardLTE\PPGameLog::create([
-                'game_id' => $this->slotDBId, 
-                'user_id' => $this->playerId, 
-                'str' => $strLog, 
-                'shop_id' => $this->shop_id,
-                'roundid' => $roundID
-            ]);
+        public function SaveBNGLogReport($model){
+            \VanguardLTE\BNGGameLog::create($model);
         }
-        public function GetFreeStack($betLine)
-        {
-            $winAvaliableMoney = $this->GetBank('bonus');
-            $limitOdd = 35;
-            if ($this->happyhouruser)
-            {
-                $limitOdd = floor($winAvaliableMoney / $betLine);
-            }
-            else
-            {
-                $limitOdd = floor($winAvaliableMoney / $betLine / 3);
-                if($limitOdd < 35){
-                    $limitOdd = 35;
-                }else if($limitOdd > 100){
-                    $limitOdd = 100;
-                }
-            }
-            $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
-                $this->game->original_id, 
-                $limitOdd,
-                $this->playerId
-            ])->get();
-            if(count($freeStacks) > 0){
-                $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];
-            }else{
-                \VanguardLTE\PPGameFreeStackLog::where([
-                    'user_id' => $this->playerId,
-                    'game_id' => $this->game->original_id
-                    ])->where('odd', '<=', $limitOdd)->delete();
-                $freeStacks = \VanguardLTE\PPGameFreeStack::whereRaw('game_id=? and odd <=? and id not in(select freestack_id from w_ppgame_freestack_log where user_id=?) ORDER BY odd DESC LIMIT 20', [
-                        $this->game->original_id, 
-                        $limitOdd,
-                        $this->playerId
-                    ])->get();
-                    if (count($freeStacks) > 0) {
-                        $freeStack = $freeStacks[rand(0, count($freeStacks) - 1)];    
-                    }else{
-                        $freeStack = null;
-                    }
-            }
-            if($freeStack){
-                \VanguardLTE\PPGameFreeStackLog::create([
-                    'game_id' => $this->game->original_id, 
-                    'user_id' => $this->playerId, 
-                    'freestack_id' => $freeStack->id, 
-                    'odd' => $freeStack->odd, 
-                    'free_spin_count' => $freeStack->free_spin_count
-                ]);
-                return json_decode($freeStack->free_spin_stack, true);
-            }else{
-                return [];
-            }
-        }
-        public function GetSpinSettings($garantType = 'doSpin', $bet, $lines, $isdoublechance = 0)
+        public function GetSpinSettings($garantType = 'bet', $bet, $lines, $isdoublechance = 0)
         {
             $linecount = 10;
-            if( $garantType != 'doSpin' ) 
+            if(isset($this->game->divBanks)){
+                if(isset($this->game->divBanks[0]) && $bet <= $this->game->divBanks[0]){
+                    $linecount = 1;
+                }else if(isset($this->game->divBanks[1]) && $bet <= $this->game->divBanks[1]){
+                    $linecount = 5;
+                }else if(isset($this->game->divBanks[2]) && $bet <= $this->game->divBanks[2]){
+                    $linecount = 7;
+                }else if(isset($this->game->divBanks[3]) && $bet <= $this->game->divBanks[3]){
+                    $linecount = 9;
+                }
+            }
+            if( $garantType != 'bet' ) 
             {
                 $granttype = '_bonus';
             }
@@ -598,7 +528,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $winline_count = $game->{'winline' . $granttype . $linecount};
             $grantwin_count++;
             if($isdoublechance == 1){
-                $grantbonus_count++;
+                $grantbonus_count+=2;
             }else{
                 $grantbonus_count++;
             }
@@ -640,7 +570,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
+                if( $currentbank < (10 * $bet)) 
                 {
                     $return = [
                         'none', 
@@ -655,7 +585,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     'win', 
                     $currentbank
                 ];
-                if( $currentbank < $bet / 2) 
+                if( $currentbank < 0) 
                 {
                     $return = [
                         'none', 
@@ -677,10 +607,10 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             }
             return $return;
         }
-        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'doSpin')
+        public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
             $linecount = 10;
-            if( $garantType != 'doSpin' ) 
+            if( $garantType != 'bet' ) 
             {
                 $granttype = '_bonus';
             }
@@ -702,7 +632,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
         
         public function GetPurMul($pur)
         {
-            $purmuls = [2000];
+            $purmuls = [100];
             return $purmuls[$pur];
         }
         public function SetBet() 
@@ -719,16 +649,17 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
         } 
 
 
-        public function GetReelStrips($winType, $pur, $bet, $ind = -1)
+        public function GetReelStrips($winType, $bet)
         {
+            // if($winType == 'bonus'){
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameGoldNuggestsStack::where('id', 1191)->first();
+                // return json_decode($stack->spin_stack, true);
+            // }
             $spintype = 0;
-            if($winType == 'bonus' && $ind > -1){
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
-            }else if($winType == 'win' || $winType == 'bonus'){
-                if($winType == 'bonus'){
-                    $spintype = 2;
-                }
+            }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -739,29 +670,31 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($winType != 'bonus'){
-                    if($limitOdd > 1){
-                        $winType = 'win';
-                    }else{
-                        $winType = 'none';
-                    }   
+                if($limitOdd > 5){
+                    $winType = 'bonus';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
-            $existIds = \VanguardLTE\PPGameFreeStackLog::where([
-                'user_id' => $this->playerId,
-                'game_id' => $this->game->original_id
-                ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
-                $index = mt_rand(0, 70000);
+                if($winType == 'bonus'){
+                    $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
+                    if($currentHill[0] >= 12){
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameGoldNuggestsStack::where('spin_type', 2);
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGameGoldNuggestsStack::where('spin_type','>', 0);
+                    }
+                }else{
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameGoldNuggestsStack::where('spin_type', 0);
+                }
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                }else if($winType == 'bonus' && $ind > -1){
-                    $stacks = $stacks->where('pur_level', $ind);
+                    $index = mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus' && $ind > -1){
+                    if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
@@ -773,14 +706,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus' && $ind > -1){
-                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
-                                $miniOdd = $limitOdd / mt_rand(2,4);
-                                if($miniOdd > 30){
-                                    $miniOdd = 30;
-                                }
-                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
-                            }
+                        if($winType == 'bonus'){
                             if ($this->happyhouruser)
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
@@ -795,26 +721,17 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     $isLowBank = true;
                 }else{
                     break;
                 }
             }
             $stack = $stacks[rand(0, count($stacks) - 1)];
-            \VanguardLTE\PPGameFreeStackLog::create([
-                'game_id' => $this->game->original_id, 
-                'user_id' => $this->playerId, 
-                'freestack_id' => $stack->id,
-                'odd' => $stack->odd
-            ]);
-    	     if($this->happyhouruser){
+            if($this->happyhouruser){
                 $sum = -1 * $stack->odd * $bet;
                 $this->happyhouruser->increment('current_bank', $sum);
             }
-	     return json_decode($stack->spin_stack, true);
+	        return json_decode($stack->spin_stack, true);
         }
     }
 }
