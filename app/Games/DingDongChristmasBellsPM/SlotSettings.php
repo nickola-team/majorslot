@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_5LionsMegawaysPM
+namespace VanguardLTE\Games\DingDongChristmasBellsPM
 {
     class SlotSettings
     {
@@ -75,13 +75,13 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $this->numFloat = 0;
             $this->Paytable[1] = [0,0,0,0,0,0,0];
             $this->Paytable[2] = [0,0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,0,20,40,80,500];
-            $this->Paytable[4] = [0,0,0,15,25,50,100];
-            $this->Paytable[5] = [0,0,0,10,15,30,100];
-            $this->Paytable[6] = [0,0,0,6,10,25,50];
-            $this->Paytable[7] = [0,0,0,6,10,20,50];
-            $this->Paytable[8] = [0,0,0,4,6,10,25];
-            $this->Paytable[9] = [0,0,0,4,6,10,25];
+            $this->Paytable[3] = [0,0,20,40,200,500,1000];
+            $this->Paytable[4] = [0,0,0,20,40,50,100];
+            $this->Paytable[5] = [0,0,0,6,10,20,50];
+            $this->Paytable[6] = [0,0,0,6,10,16,40];
+            $this->Paytable[7] = [0,0,0,4,8,12,30];
+            $this->Paytable[8] = [0,0,0,4,8,12,30];
+            $this->Paytable[9] = [0,0,0,4,8,12,30];
             $this->Paytable[10] = [0,0,0,2,4,8,20];
             $this->Paytable[11] = [0,0,0,2,4,8,20];
             $this->Paytable[12] = [0,0,0,2,4,8,20];
@@ -102,11 +102,11 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,2000.00,3000.00,4000.00,5000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
-            // $game->rezerv => 500,000.00
+            // $game->rezerv => 8,000,000.00
             $this->slotDBId = $game->id;
             $this->slotCurrency = $user->shop->currency;
             // session table 
@@ -699,12 +699,6 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             $number = rand(0, count($win) - 1);
             return $win[$number];
         }
-        
-        public function GetPurMul($pur)
-        {
-            $purmuls = [2000];
-            return $purmuls[$pur];
-        }
         public function SetBet() 
         { 
            if($this->GetGameData($this->slotId . 'Bet') == null) 
@@ -719,16 +713,15 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
         } 
 
 
-        public function GetReelStrips($winType, $pur, $bet, $ind = -1)
+        public function GetReelStrips($winType, $bet, $pur=-1)
         {
-            $spintype = 0;
-            if($winType == 'bonus' && $ind > -1){
+            // if($fsmax > 0){
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameDingDongChristmasBellsStack::where('id', 24559)->first();
+                // return json_decode($stack->spin_stack, true);
+            // }
+            if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-                $spintype = 1;
-            }else if($winType == 'win' || $winType == 'bonus'){
-                if($winType == 'bonus'){
-                    $spintype = 2;
-                }
+            }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -739,12 +732,12 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($winType != 'bonus'){
-                    if($limitOdd > 1){
-                        $winType = 'win';
-                    }else{
-                        $winType = 'none';
-                    }   
+                if($limitOdd > 10){
+                    $winType = 'bonus';
+                }else if($limitOdd > 1){
+                    $winType = 'win';
+                }else{
+                    $winType = 'none';
                 }
             }
             $isLowBank = false;
@@ -753,15 +746,17 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                $stacks = \VanguardLTE\PPGameStackModel\PPGame5LionsMegawaysStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
-                $index = mt_rand(0, 70000);
+                if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameDingDongChristmasBellsStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                }else{
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameDingDongChristmasBellsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                }
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                }else if($winType == 'bonus' && $ind > -1){
-                    $stacks = $stacks->where('pur_level', $ind);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus' && $ind > -1){
+                    if($winType == 'bonus'){
                         $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
@@ -773,7 +768,7 @@ namespace VanguardLTE\Games\_5LionsMegawaysPM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus' && $ind > -1){
+                        if($winType == 'bonus'){
                             if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
                                 $miniOdd = $limitOdd / mt_rand(2,4);
                                 if($miniOdd > 30){
