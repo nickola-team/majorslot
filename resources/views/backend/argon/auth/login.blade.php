@@ -1,7 +1,7 @@
 @extends('backend.argon.layouts.app', ['class' => 'bg-white'])
 @section('page-title',  '로그인' )
 @push('css')
-<link type="text/css" href="{{ asset('back/argon') }}/css/login.css?v=1.0.0" rel="stylesheet">
+<link type="text/css" href="{{ asset('back/argon') }}/css/login.css?v=2.0.0" rel="stylesheet">
 @endpush
 @section('content')
     <section class="h-100">     
