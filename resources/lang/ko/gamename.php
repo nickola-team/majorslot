@@ -1179,6 +1179,8 @@ return [
         "NileFortune" => "나일 포춘",
         "TheDogHouseDiceShow" => "더 도그 하우스 다이스 쇼",
         "SugarRushXmas" => "슈가 러시 크리스마스",
+        "_5FrozenCharmsMegaways" => "5 프로즌 참 메가웨이즈",
+        "DingDongChristmasBells" => "딩 동 크리스마스 벨",
         //Booongo
         "tigerstone" => "타이거 스톤",
 
