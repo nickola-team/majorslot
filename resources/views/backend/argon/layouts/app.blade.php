@@ -74,8 +74,11 @@
             </form>
             @include('backend.argon.layouts.navbars.sidebar')
         @endauth
-        
+        @auth()
         <div class="main-content">
+        @else
+        <div class="main-content h-100">
+        @endauth
             @include('backend.argon.layouts.navbars.navbar')
             @auth()
                 @include('backend.argon.layouts.headers.auth')
@@ -124,8 +127,10 @@
             </div>
             @endif
         </div>
-
+        @auth()
         @include('backend.argon.layouts.footers.guest')
+        @endauth
+        
 
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>

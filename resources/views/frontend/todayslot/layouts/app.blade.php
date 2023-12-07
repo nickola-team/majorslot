@@ -76,7 +76,9 @@
     <?php $logo = 'todayslot'; ?>
 @endif
 @foreach ($noticelist as $ntc)
+@if ($ntc->popup == 'popup')
 @include('frontend.todayslot.modals.notice', ['notice' => $ntc])
+@endif
 @endforeach
 
 @if( $detect->isMobile() || $detect->isTablet() )

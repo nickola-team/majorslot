@@ -80,7 +80,7 @@ li {
 
 input {
     outline: none;
-    border: none
+    border-radius: 5px;
 }
 
 textarea {
@@ -209,7 +209,7 @@ iframe {
     background-position: center;
     position: relative;
     z-index: 1;
-    background-image: url('/back/argon/img/theme/bg-argon.png')
+    background-image: url('/back/argon/img/theme/bg-worldsl.png')
 }
 
 .login100-more::before {
@@ -225,21 +225,33 @@ iframe {
 }
 
 .login100-form {
-    width: 50%;
+    width: 100%;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
     flex-wrap: wrap;
-    padding: 303px 65px 100px;
 }
-
+.video_bg {
+    background-color: #000;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.video_bg video {
+    height: 100%;
+    object-position: bottom;
+    width: 100%;
+}
 .login100-form-title {
     font-family: Poppins-Regular;
-    font-size: 20px;
-    color: #555;
-    line-height: 1.2;
+    font-size: 30px;
+    color: #000;
+    line-height: 1.25;
+    font-weight:800;
     text-transform: uppercase;
     letter-spacing: 2px;
     text-align: center;
@@ -281,6 +293,7 @@ iframe {
     font-family: Poppins-Regular;
     font-size: 14px;
     color: #666;
+    border: 1px solid #666;
     line-height: 1.2;
     padding: 0 25px
 }
@@ -297,7 +310,7 @@ input.input100 {
     top: -1px;
     left: -1px;
     pointer-events: none;
-    border: 1px solid #00ad5f;
+    border: 3px solid #1135d4;
     visibility: hidden;
     opacity: 0;
     -webkit-transition: all .4s;
@@ -344,7 +357,7 @@ input.input100 {
     width: 100%;
     height: 50px;
     border-radius: 3px;
-    background: #212529;
+    background: #1135d4;
     font-family: Montserrat-Bold;
     font-size: 14px;
     color: #fff;
@@ -358,7 +371,7 @@ input.input100 {
 }
 
 .login100-form-btn:hover {
-    background: #333
+    background: #113500
 }
 
 @media(max-width:992px) {
@@ -401,7 +414,8 @@ input.input100 {
 }
 
 .validate-input {
-    position: relative
+    position: relative;
+    width:100%
 }
 
 .alert-validate::before {
