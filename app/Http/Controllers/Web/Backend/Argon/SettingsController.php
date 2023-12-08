@@ -15,7 +15,11 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         {
             $availablePartners = auth()->user()->hierarchyPartners();
             $availablePartners[] = auth()->user()->id;
-            $websites = \VanguardLTE\WebSite::whereIn('adminid', $availablePartners)->get();
+            if(auth()->user()->hasRole(['admin'])){
+                $websites = \VanguardLTE\WebSite::get();
+            }else{
+                $websites = \VanguardLTE\WebSite::whereIn('adminid', $availablePartners)->get();
+            }
             return view('backend.argon.setting.list', compact('websites'));
         }
         public function status_update(\Illuminate\Http\Request $request)
