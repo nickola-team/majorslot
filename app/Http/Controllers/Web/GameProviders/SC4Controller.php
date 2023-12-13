@@ -490,6 +490,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     // $time = date('Y-m-d H:i:s',strtotime($round['CreatedAt'] . ' +9 hours'));
 
                     $sc4user = \VanguardLTE\SC4User::where('sc4user_id', $round['user_code'])->first();
+                    if(!isset($sc4user)){
+                        continue;
+                    }
                     $userid = $sc4user->user_id;
                     $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                     $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
