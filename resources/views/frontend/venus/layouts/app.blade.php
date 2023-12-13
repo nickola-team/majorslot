@@ -51,7 +51,7 @@
 			@include('frontend.bolton.layouts.partials.banner')
 			<div class="main_contents_wrap">
 				<div class="main_contents_box">
-					@include('frontend.kdior.layouts.partials.category')
+					@include('frontend.venus.layouts.partials.category')
 					@include('frontend.kdior.layouts.partials.board')
 				</div>
 			</div>

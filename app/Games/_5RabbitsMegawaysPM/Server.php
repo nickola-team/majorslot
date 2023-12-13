@@ -103,7 +103,7 @@ namespace VanguardLTE\Games\_5RabbitsMegawaysPM
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
                 $strOtherResponse = '';
-                if($slotSettings->GetGameData($slotSettings->slotId . 'FSOption') == 1){
+                if($slotSettings->GetGameData($slotSettings->slotId . 'FSOption') == 10){
                     $strOtherResponse = '&fs_opt_mask=fs,m,ts,rm&fs_opt=25,1,2,2;3;5~20,1,2,3;5;8~15,1,2,5;8;10~13,1,2,8;10;15~10,1,2,10;15;30~6,1,2,15;30;40~-1,-1,2,-1';
                     $spinType = 'fso';
                 }else if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') <= $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
@@ -457,7 +457,7 @@ namespace VanguardLTE\Games\_5RabbitsMegawaysPM
                     if($scatterCount >= 3 && $isNewTumb == false){
                         $isState = false;
                         $spinType = 'fso';
-                        $slotSettings->SetGameData($slotSettings->slotId . 'FSOption', 1);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FSOption', 10);
                         $strOtherResponse = $strOtherResponse . '&fs_opt_mask=fs,m,ts,rm&fs_opt=' . $fs_opt . '&psym=1~' . $scatterWin . '~' . implode(',', $scatterPoses);
                         // $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fsres=0.00&fs=1&psym=1~' . $scatterWin . '~' . implode(',', $scatterPoses);
                         // $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $stack);

@@ -35,13 +35,14 @@
 								</tr>
 								</tr>	
 								@if($logo != 'dorosi')
+									{{--
 									<td width="10%" align="center"><a href="#" 
 									@if (isset($hotel) && $hotel=='disabled')
 									onclick="alert('점검중입니다');"
 									@else
 									class="casino_2_open"
 									@endif
-									><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></td>
+									><img src="/frontend/kdior/images/m_main_game2.png?v=202302021619" width="100%"></a></td>--}}
 									<td width="10%" align="center"><a href="#" 
 									@if (isset($mini) && $mini=='disabled')
 									onclick="alert('점검중입니다');"

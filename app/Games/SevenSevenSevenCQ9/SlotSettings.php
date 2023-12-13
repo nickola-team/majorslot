@@ -637,7 +637,7 @@ namespace VanguardLTE\Games\SevenSevenSevenCQ9
                     $_obf_currentbank
                 ];
 
-                if( $_obf_currentbank < $bet * 2) 
+                if( $_obf_currentbank < $bet * 3) 
                 {
                     $return = [
                         'none', 
