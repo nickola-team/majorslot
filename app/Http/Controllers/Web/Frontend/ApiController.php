@@ -598,6 +598,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
                 {
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
+                    if($ct->provider == 'sc4'){
+                        return response()->json(['error' => false, 'res' => [
+                            'href_sc4' => $res
+                        ]]);
+                    }
                 }
                 else
                 {

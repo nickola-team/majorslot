@@ -710,10 +710,9 @@ namespace VanguardLTE\Games\aztecfire2bng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameAztecFire2Stack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 28000);
+                $index = mt_rand(0, 42000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 108000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
