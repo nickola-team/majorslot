@@ -283,7 +283,11 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet,$packetID){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline) * $lines, $lines);
+            $allBet = ($betline / $this->demon) * $lines;
+            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
+                $allBet = $allBet * 35;
+            }
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $allBet, $lines);
                 $winType = $_spinSettings[0];
                 //$winType = 'bonus';
             if($slotEvent == 'bonus'){
@@ -295,7 +299,7 @@ namespace VanguardLTE\Games\MonsterHunterCQ9
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $winType = 'bonus';
                 }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $allBet, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
