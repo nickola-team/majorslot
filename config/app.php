@@ -310,6 +310,13 @@ return [
     'gold_api' => env('GOLD_API', ''),
     'gold_op' => env('GOLD_OP', ''),
     'gold_key' => env('GOLD_KEY', ''),
+    
+    /*
+    SC4CASINO Auth key
+    */
+    'sc4_api' => env('SC4_API', ''),
+    'sc4_key' => env('SC4_KEY', ''),
+    /*
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
