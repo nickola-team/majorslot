@@ -225,7 +225,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline) * $lines * 2, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
              //$winType = 'win';
@@ -237,7 +237,7 @@ namespace VanguardLTE\Games\FireQueen2CQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline) * $lines * 2);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
