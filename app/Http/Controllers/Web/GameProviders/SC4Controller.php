@@ -91,7 +91,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserCode($href, $user, $prefix=self::SC4_PROVIDER) {
             $url = config('app.sc4_api') . '/v4/user/create';
             $token = config('app.sc4_key');
-
+            if($token == ''){
+                return null;
+            }
             $alreadyUser= \VanguardLTE\SC4User::where([
                 'user_id' => $user->id
             ])->first();
@@ -384,6 +386,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function gamerounds($lastid, $limit=2000)
         {
             $token = config('app.sc4_key');
+            if($token == ''){
+                return null;
+            }
             $params = [
                 'last_id' => $lastid,
                 'limit' => $limit,
