@@ -267,7 +267,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
             $betValue = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $lines);
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline * $this->demon) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             $purValue = -1;
@@ -335,7 +335,7 @@ namespace VanguardLTE\Games\TenfoldEggCQ9
                         $slotSettings->SetGameData($slotSettings->slotId . 'SymbolCount', 6);
                     }
                 }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $originalbet) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),$tempPurValue);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline * $this->demon) * $lines * $slotSettings->GetGameData($slotSettings->slotId . 'MiniBet') * $betValue[0], $slotSettings->GetGameData($slotSettings->slotId . 'SymbolCount'),$tempPurValue);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
