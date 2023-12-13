@@ -1263,7 +1263,6 @@ return [
         "tigergems" => "타이거 잼스",
         "forestspirit" => "포레스트 스피리트",
         "ladyfortune" => "레이디 포츈",
-        "ladyfortune" => "레이디 포츈",
         "greenchilli2" => "그린 칠리 2",
         "blackwolf2" => "블랙 울프 2",
         "littlefarm" => "리틀 팜",
@@ -1272,6 +1271,8 @@ return [
         "grabmoregold" => "그랩 모어 골드!",
         "olafviking" => "올라프 바이킹",
         "crystalscarabs" => "크리스탈 스캐럽스",
+        "goldnuggets" => "골드 너겟츠",
+        "aztecfire2" => "아즈텍 파이어 2",
 
         // CQ9
         "Double Fly" => "더블 플라이",
