@@ -100,7 +100,7 @@ namespace VanguardLTE\Games\FishinReelsPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $str_mo = '';

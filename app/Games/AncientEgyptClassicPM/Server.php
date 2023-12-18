@@ -105,7 +105,7 @@ namespace VanguardLTE\Games\AncientEgyptClassicPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '100.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

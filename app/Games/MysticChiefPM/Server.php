@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\MysticChiefPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;

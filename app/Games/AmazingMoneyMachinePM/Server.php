@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\AmazingMoneyMachinePM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
