@@ -122,7 +122,7 @@ namespace VanguardLTE\Games\WheelMoneyCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 }
                                 
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $this->demon);
                                 
                                 $slotSettings->SetBet();        
                                 if(isset($slotEvent['slotEvent'])){

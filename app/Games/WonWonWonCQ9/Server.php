@@ -115,7 +115,7 @@ namespace VanguardLTE\Games\WonWonWonCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $gameData->MiniBet * $this->demon);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
 
                                 $slotSettings->SetBet();    
