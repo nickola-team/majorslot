@@ -120,7 +120,7 @@ namespace VanguardLTE\Games\_7PiggiesPM
                 }
                 else
                 {
-                    $bet = '250.00';
+                    $bet = '150.00';
                 }
                 $currentReelSet = 0;
                 $fsmul = 1;

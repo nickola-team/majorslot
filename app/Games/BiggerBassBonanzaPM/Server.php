@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\BiggerBassBonanzaPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '75';
                 }
                 $spinType = 's';
                 $arr_g = null;

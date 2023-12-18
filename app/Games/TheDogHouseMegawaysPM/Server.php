@@ -100,7 +100,7 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

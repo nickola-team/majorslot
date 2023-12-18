@@ -103,7 +103,7 @@ namespace VanguardLTE\Games\CurseoftheWerewolfMegawaysPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;
