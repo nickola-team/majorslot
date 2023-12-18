@@ -108,7 +108,7 @@ namespace VanguardLTE\Games\YumYumPowerwaysPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $spinType = 's';
                 $wmv = 0;

@@ -97,7 +97,7 @@ namespace VanguardLTE\Games\LuckyGraceCharmPM
                 }
                 else
                 {
-                    $bet = '200.00';
+                    $bet = '100.00';
                 }
                 $spinType = 's';
                 if(isset($stack)){

@@ -95,7 +95,7 @@ namespace VanguardLTE\Games\DragonKingdomEyesofFirePM
                 }
                 else
                 {
-                    $bet = '400.00';
+                    $bet = '200.00';
                 }
                 $spinType = 's';
                 

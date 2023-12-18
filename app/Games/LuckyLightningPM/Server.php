@@ -99,7 +99,7 @@ namespace VanguardLTE\Games\LuckyLightningPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '40.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';
