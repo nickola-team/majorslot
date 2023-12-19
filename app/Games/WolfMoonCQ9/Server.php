@@ -117,7 +117,7 @@ namespace VanguardLTE\Games\WolfMoonCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines * $gameData->MiniBet);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
 
                                 $slotSettings->SetBet();    
                                 $slotSettings->SetBalance(-1 * ($betline * $this->demon * $lines * $gameData->MiniBet), $slotEvent['slotEvent']);

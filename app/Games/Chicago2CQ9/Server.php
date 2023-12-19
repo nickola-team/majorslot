@@ -121,7 +121,7 @@ namespace VanguardLTE\Games\Chicago2CQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline / $this->demon);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 10);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;
                                 
