@@ -637,7 +637,7 @@ namespace VanguardLTE\Games\GodOfChessCQ9
                     $_obf_currentbank
                 ];
 
-                if( $_obf_currentbank < 0) 
+                if( $_obf_currentbank < $bet) 
                 {
                     $return = [
                         'none', 

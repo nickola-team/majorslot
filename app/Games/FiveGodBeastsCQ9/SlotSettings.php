@@ -766,12 +766,12 @@ namespace VanguardLTE\Games\FiveGodBeastsCQ9
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($limitOdd > 10){
-                    $winType = 'bonus';
-                }else if($limitOdd > 1){
-                    $winType = 'win';
-                }else{
-                    $winType = 'none';
+                if($winType != 'bonus' && $selId<0){
+                    if($limitOdd > 1){
+                        $winType = 'win';
+                    }else{
+                        $winType = 'none';
+                    }
                 }
             }
             $isLowBank = false;

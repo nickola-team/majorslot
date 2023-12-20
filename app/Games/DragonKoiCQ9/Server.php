@@ -118,7 +118,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline / $this->demon);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 50);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;

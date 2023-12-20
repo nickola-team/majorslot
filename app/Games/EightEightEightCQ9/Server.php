@@ -120,7 +120,7 @@ namespace VanguardLTE\Games\EightEightEightCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'TriggerFree', 0);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 1);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;
