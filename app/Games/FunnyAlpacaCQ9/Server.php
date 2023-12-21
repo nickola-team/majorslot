@@ -115,7 +115,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * 2);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
                                 $slotSettings->SetBalance(-1 * ($betline * $lines * 2), $slotEvent['slotEvent']);
@@ -228,7 +228,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * 2, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             //$winType = 'win';
@@ -240,7 +240,7 @@ namespace VanguardLTE\Games\FunnyAlpacaCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * 2);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );

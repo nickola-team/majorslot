@@ -118,7 +118,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', $pur_level);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline / $this->demon);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 50);
                                 $slotSettings->SetBet();
                                 $allBet = ($betline /  $this->demon) * $lines;
@@ -234,7 +234,11 @@ namespace VanguardLTE\Games\DragonKoiCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, ($betline / $this->demon) * $lines, $lines);
+            $allBet = ($betline /  $this->demon) * $lines;
+            if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') == 0){
+                $allBet = $allBet * 80;
+            }
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $allBet, $lines);
                 $winType = $_spinSettings[0];
                 //$winType = 'win';
             if($slotEvent == 'freespin'){
@@ -246,7 +250,7 @@ namespace VanguardLTE\Games\DragonKoiCQ9
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $winType = 'bonus';
                 }
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, ($betline / $this->demon) * $lines, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $allBet, $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'));
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );

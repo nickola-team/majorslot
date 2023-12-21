@@ -114,11 +114,11 @@ namespace VanguardLTE\Games\SnowQueenCQ9
                                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', 1);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'PlayBet', $gameData->PlayBet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $originalbet);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
-                                $slotSettings->SetBalance(-1 * ($betline * $lines * 2), $slotEvent['slotEvent']);
-                                $_sum = ($betline * $lines * 2) / 100 * $slotSettings->GetPercent();
+                                $slotSettings->SetBalance(-1 * ($betline * $lines * $originalbet), $slotEvent['slotEvent']);
+                                $_sum = ($betline * $lines * $originalbet) / 100 * $slotSettings->GetPercent();
                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'InitBalance', $slotSettings->GetBalance());
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
@@ -221,7 +221,7 @@ namespace VanguardLTE\Games\SnowQueenCQ9
             return $result;
         }
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $originalbet){
-            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * 2, $lines);
+            $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines * $originalbet, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             // $winType = 'bonus';
@@ -233,7 +233,7 @@ namespace VanguardLTE\Games\SnowQueenCQ9
                 $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                 
             }else{
-                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * 2);
+                $tumbAndFreeStacks= $slotSettings->GetReelStrips($winType, $betline * $lines * $originalbet);
                 if($tumbAndFreeStacks == null){
                     $response = 'unlogged';
                     exit( $response );
@@ -340,7 +340,7 @@ namespace VanguardLTE\Games\SnowQueenCQ9
 
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines);
             if($isState == true){
-                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline) * $lines * 2, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
+                $slotSettings->SaveLogReport(json_encode($gamelog), ($betline) * $lines * $originalbet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent, $slotSettings->GetGameData($slotSettings->slotId . 'GamePlaySerialNumber'), $isState);
             }
             
 

@@ -117,7 +117,7 @@ namespace VanguardLTE\Games\AcrobaticsCQ9
                                     $slotSettings->SetGameData($slotSettings->slotId . 'MiniBet', $gameData->MiniBet);
                                 }
                                 
-                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline);
+                                $slotSettings->SetGameData($slotSettings->slotId . 'RealBet', $betline * $this->demon);
                                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $lines);
                                 $slotSettings->SetBet();    
                                 $slotSettings->SetBalance(-1 * (($betline * $this->demon) * $lines), $slotEvent['slotEvent']);

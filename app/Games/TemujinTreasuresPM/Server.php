@@ -102,7 +102,7 @@ namespace VanguardLTE\Games\TemujinTreasuresPM
                 }
                 else
                 {
-                    $bet = '50.00';
+                    $bet = '25.00';
                 }
                 $spinType = 's';
                 $str_mo = '';

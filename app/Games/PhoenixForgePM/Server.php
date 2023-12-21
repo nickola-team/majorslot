@@ -96,7 +96,7 @@ namespace VanguardLTE\Games\PhoenixForgePM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));

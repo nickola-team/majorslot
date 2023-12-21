@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\FruitRainbowPM
                 }
                 else
                 {
-                    $bet = '50.00';
+                    $bet = '25.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;

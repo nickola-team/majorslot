@@ -99,7 +99,7 @@ namespace VanguardLTE\Games\PyramidBonanzaPM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '50.00';
                 }
                 $spinType = 's';
                 $arr_g = null;
