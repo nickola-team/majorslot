@@ -1181,6 +1181,12 @@ return [
         "SugarRushXmas" => "슈가 러시 크리스마스",
         "_5FrozenCharmsMegaways" => "5 프로즌 참 메가웨이즈",
         "DingDongChristmasBells" => "딩 동 크리스마스 벨",
+        "CandyJarClusters" => "캔디 자 클러스터",
+        "FireStampede" => "파이어 스탬피드",
+        "SeaFantasy" => "씨 판타지",
+        "GatesofOlympus1000" => "게이츠 오브 올림푸스 1000",
+        "TheWildGang" => "더 와일드 갱",
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
