@@ -1,0 +1,206 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 51px
+}
+
+.LinesSlot .ReelsSlot__Item {
+    border: unset
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.SlotWrap__Field {
+    border-color: transparent;
+    width: 334px;
+    height: 270px;
+    overflow: hidden;
+    position: relative
+}
+
+.SlotWrap__Field:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysstampede/frameBg.png) 1x, url(./images/vswaysstampede/frameBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.WinLines-Group .SlotWrap__Field:before {
+    display: none
+}
+
+.SlotWrap__Field:after {
+    background-image: -webkit-image-set(url(./images/vswaysstampede/frame.png) 1x, url(./images/vswaysstampede/frame@2x.png) 2x)
+}
+
+.Fs .SlotWrap__Field:before,
+.SlotWrap__Field:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Fs .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vswaysstampede/frameFsBg.png) 1x, url(./images/vswaysstampede/frameFsBg@2x.png) 2x)
+}
+
+.WinLines-Group .Fs .SlotWrap__Field:before {
+    display: none
+}
+
+.Fs .SlotWrap__Field:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysstampede/frameFs.png) 1x, url(./images/vswaysstampede/frameFs@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.ReelsSlot {
+    position: relative;
+    box-sizing: border-box;
+    padding: 9px 10px
+}
+
+.ReelsSlot__Reel {
+    height: auto;
+    background-color: unset
+}
+
+.ReelsSlot__Reel:last-child {
+    margin-left: 6px
+}
+
+.ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    border-color: transparent
+}
+
+.ReelsSlot__ItemImg {
+    position: relative
+}
+
+.Footer-direction {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.MoneyScatter__Label {
+    position: relative;
+    line-height: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.MoneyScatter .Text {
+    width: var(--slot-item-width);
+    white-space: nowrap
+}
+
+.MoneyScatter .Value {
+    font-size: .79rem
+}
+
+.MoneyScatter--14 .MoneyScatter__Money {
+    display: none
+}
+
+.Mark {
+    display: contents
+}
+
+.Mark:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysstampede/mark.png) 1x, url(./images/vswaysstampede/mark@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Mark--1:before,
+.Mark--2:before {
+    background-image: unset
+}
+
+.Mark--1 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vswaysstampede/spin/1_1.png) 1x, url(./images/vswaysstampede/spin/1_1@2x.png) 2x)
+}
+
+.Respin:not(.Respin--last) .Mark:before {
+    display: none
+}
+
+.Respin:not(.Respin--last) .Mark--1 .ReelsSlot__ItemImg {
+    content: normal
+}
+
+.Respin:not(.Respin--last) .MoneyScatter--14 {
+    z-index: 2
+}
+
+.Respin:not(.Respin--last) .MoneyScatter--14 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vswaysstampede/spin/14_1.png) 1x, url(./images/vswaysstampede/spin/14_1@2x.png) 2x)
+}
+
+.Respin:not(.Respin--last) .MoneyScatter--14 .MoneyScatter__LabelWrap {
+    justify-content: flex-start
+}
+
+.Respin:not(.Respin--last) .MoneyScatter--14 .MoneyScatter__Money {
+    display: initial;
+    font-size: 14px
+}
+
+.WinLines-Group .ReelsSlot__Item {
+    opacity: .2
+}
+
+.WinLines-Group .ReelsSlot__Item--win {
+    opacity: 1
+}
+
+.WinLines-Block--marks .Wild {
+    display: none
+}
+
+.WinLines-Block .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Block--regular .Animation__MultiCrossFadeItem {
+    display: none
+}
+
+.WinLines-Block--regular .Animation__MultiCrossFadeItem:last-child {
+    display: initial
+}

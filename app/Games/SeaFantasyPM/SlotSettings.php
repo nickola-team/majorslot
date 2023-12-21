@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\CandyJarClustersPM
+namespace VanguardLTE\Games\SeaFantasyPM
 {
     class SlotSettings
     {
@@ -73,31 +73,16 @@ namespace VanguardLTE\Games\CandyJarClustersPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
-            $this->Paytable[3] = [0,0,6,60,240,2400];
-            $this->Paytable[4] = [0,0,0,36,180,1200];
-            $this->Paytable[5] = [0,0,0,24,120,600];
-            $this->Paytable[6] = [0,0,0,24,120,600];
-            $this->Paytable[7] = [0,0,0,12,60,0];
-            $this->Paytable[8] = [0,0,0,6,30,120];
-            $this->Paytable[9] = [0,0,0,6,30,120];
-            $this->Paytable[10] = [0,0,0,6,30,120];
-            $this->Paytable[11] = [0,0,0,6,30,120];
-            $this->Paytable[12] = [0,0,0,6,30,120];
-            $this->Paytable[13] = [0,0,0,0,0,0];
-            $this->Paytable[14] = [0,0,0,0,0,0];
-            $this->Paytable[15] = [0,0,0,0,0,0];
-            $this->Paytable[16] = [0,0,0,0,0,0];
-            $this->Paytable[17] = [0,0,0,0,0,0];
-            $this->Paytable[18] = [0,0,0,0,0,0];
-            $this->Paytable[19] = [0,0,0,0,0,0];
-            $this->Paytable[20] = [0,0,0,0,0,0];
-            $this->Paytable[21] = [0,0,0,0,0,0];
-            $this->Paytable[22] = [0,0,0,0,0,0];
-            $this->Paytable[23] = [0,0,0,0,0,0];
-            $this->Paytable[24] = [0,0,0,0,0,0];
-            $this->Paytable[25] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0];
+            $this->Paytable[3] = [0,0,0,100,1000,5000];
+            $this->Paytable[4] = [0,0,0,50,200,500];
+            $this->Paytable[5] = [0,0,0,50,200,500];
+            $this->Paytable[6] = [0,0,0,20,50,200];
+            $this->Paytable[7] = [0,0,0,20,50,200];
+            $this->Paytable[8] = [0,0,0,20,50,200];
+            $this->Paytable[9] = [0,0,5,20,50,200];
+            $this->Paytable[10] = [0,0,0,0,0,0];
             $this->slotBonusType = 0;
             $this->slotScatterType = 0;
             $this->splitScreen = false;
@@ -112,7 +97,7 @@ namespace VanguardLTE\Games\CandyJarClustersPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
+            $this->Bet = explode(',', $game->bet); //[40.00,80.00,120.00,160.00,200.00,400.00,600.00,800.00,1000.00,1500.00,2000.00,3000.00,5000.00,10000.00,15000.00,20000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -332,10 +317,6 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                     $this->happyhouruser->save();
                     return $game;
                 }
-                $_allBets = $sum / $this->GetPercent() * 100;
-                $normal_sum = $_allBets * 10 / 100;
-                $game->set_gamebank($normal_sum, 'inc', '');
-                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -412,11 +393,11 @@ namespace VanguardLTE\Games\CandyJarClustersPM
             }
             else
             {
-                if( $bonus_systemmoney > 0 ) 
-                {
-                    $sum -= $bonus_systemmoney;
-                    $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
-                }
+                // if( $bonus_systemmoney > 0 ) 
+                // {
+                //     $sum -= $bonus_systemmoney;
+                //     $game->set_gamebank($bonus_systemmoney, 'inc', 'bonus');
+                // }
                 $game->set_gamebank($sum, 'inc', $slotState);
                 $game->save();
             }
@@ -729,16 +710,14 @@ namespace VanguardLTE\Games\CandyJarClustersPM
         } 
 
 
-        public function GetReelStrips($winType, $bet, $pur = -1)
+        public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('id', 136)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameSeaFantasyStack::where('id', 22624)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
-            if($winType == 'bonus'){
-                $winAvaliableMoney = $this->GetBank('bonus');
-            }else if($winType == 'win'){
+            if($winType == 'win' || $winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
                 $winAvaliableMoney = 0;
@@ -750,7 +729,7 @@ namespace VanguardLTE\Games\CandyJarClustersPM
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
                 if($limitOdd > 10){
-                    $winType = 'bonus';
+                    $winType = 'win';
                 }else if($limitOdd > 1){
                     $winType = 'win';
                 }else{
@@ -763,20 +742,12 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                 'game_id' => $this->game->original_id
                 ])->pluck('freestack_id');
             while(true){
-                if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('spin_type', 1)->whereNotIn('id', $existIds);
-                }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('spin_type', 0)->whereNotIn('id', $existIds);
-                }
-                $index = mt_rand(0, 43000);
+                $stacks = \VanguardLTE\PPGameStackModel\PPGameSeaFantasyStack::where('spin_type', $spintype)->whereNotIn('id', $existIds);
+                $index =  mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
-                    if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
-                    }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
@@ -786,31 +757,17 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
                         $this->game->save();
                     }else{
-                        if($winType == 'bonus'){
-                            if($this->GetGameData($this->slotId . 'BuyFreeSpin') >= 0){
-                                $miniOdd = $limitOdd / mt_rand(2,4);
-                                if($miniOdd > 30){
-                                    $miniOdd = 30;
-                                }
-                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
-                            }
-                            if ($this->happyhouruser)
-                            {
-                                $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
-                            }
-                            else
-                            {
-                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
-                            }
-                        }else{
+                        if ($this->happyhouruser)
+                        {
+                            $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
+                        }
+                        else
+                        {
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                         }
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     if($isLowBank == true){
                         $existIds = [0];
                     }

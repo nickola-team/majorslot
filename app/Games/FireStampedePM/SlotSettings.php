@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\CandyJarClustersPM
+namespace VanguardLTE\Games\FireStampedePM
 {
     class SlotSettings
     {
@@ -732,7 +732,7 @@ namespace VanguardLTE\Games\CandyJarClustersPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('id', 136)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameFireStampedeStack::where('id', 25115)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -764,14 +764,17 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFireStampedeStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    if($pur >= 0){
+                        $stacks = $stacks->where('pur_level', $pur);
+                    }
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyJarClusterStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFireStampedeStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 43000);
+                $index = mt_rand(0, 42000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 85000);
+                    // $index = mt_rand(0, 50000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
@@ -808,9 +811,6 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
-                    if($isLowBank == true){
-                        $existIds = [0];
-                    }
                     if($isLowBank == true){
                         $existIds = [0];
                     }
