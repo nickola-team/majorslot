@@ -811,9 +811,7 @@ namespace VanguardLTE\Games\LoyKrathongCQ9
                             }
                             else
                             {
-                                Log::info('Limit Odd is:',[$limitOdd]);
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
-                                Log::info('Limit Odd is:',[$stacks]);
                             }
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
