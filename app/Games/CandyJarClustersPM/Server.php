@@ -236,9 +236,17 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                     if($str_accv != ''){
                         $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=' . $str_acci . '&accv=' . $str_accv;
                     }
+                    $str_apaw = '';
                     if($apv > 0){
-                        $apaw = $apv * $bet;
-                        $strOtherResponse = $strOtherResponse . '&apaw=' . $apaw . '&apv=' . $apv;
+                        $arr_apvs = explode(',', $apv);
+                        $arr_apaw = [];
+                        for($k = 0; $k < count($arr_apvs); $k++){
+                            $apaw = $arr_apvs[$k] * $bet;
+                            $totalWin = $totalWin + $apaw;
+                            $arr_apaw[] = $apaw;
+                        }
+                        $str_apaw = implode(',', $arr_apaw);
+                        $strOtherResponse = $strOtherResponse . '&apaw=' . $str_apaw . '&apv=' . $apv;
                     }
                     if($strWinLine != ''){
                         $arr_lines = explode('&', $strWinLine);
@@ -569,10 +577,16 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                     }
                     $str_accv = implode(';', $arr_accv);
                 }
-                $apaw = 0;
+                $str_apaw = '';
                 if($apv > 0){
-                    $apaw = $apv * $betline;
-                    $totalWin = $totalWin + $apaw;
+                    $arr_apvs = explode(',', $apv);
+                    $arr_apaw = [];
+                    for($k = 0; $k < count($arr_apvs); $k++){
+                        $apaw = $arr_apvs[$k] * $betline;
+                        $totalWin = $totalWin + $apaw;
+                        $arr_apaw[] = $apaw;
+                    }
+                    $str_apaw = implode(',', $arr_apaw);
                 }
 
                 $spinType = 's';
@@ -717,7 +731,7 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                     $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=' . $str_acci . '&accv=' . $str_accv;
                 }
                 if($apv > 0){
-                    $strOtherResponse = $strOtherResponse . '&apaw=' . $apaw . '&apv=' . $apv;
+                    $strOtherResponse = $strOtherResponse . '&apaw=' . $str_apaw . '&apv=' . $apv;
                 }
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
