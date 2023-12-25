@@ -242,7 +242,6 @@ namespace VanguardLTE\Games\CandyJarClustersPM
                         $arr_apaw = [];
                         for($k = 0; $k < count($arr_apvs); $k++){
                             $apaw = $arr_apvs[$k] * $bet;
-                            $totalWin = $totalWin + $apaw;
                             $arr_apaw[] = $apaw;
                         }
                         $str_apaw = implode(',', $arr_apaw);
