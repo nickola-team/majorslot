@@ -126,25 +126,53 @@
         <div class="card">
             <div class="card-body">
                 <table class="table card-table table-vcenter table-border" style="table-layout: fixed;">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th class="text-white">항목</th>
-                            <th class="text-white">값</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if ($res)
-                        @if(View::exists('backend.argon.player.gamedetail.' . $res['type']))
-                            @include('backend.argon.player.gamedetail.' . $res['type'])
-                        @else
-                            @include('backend.argon.player.gamedetail.General')
-                        @endif
-                        @else
+                    @if($res)
+                        @if($res['type'] == 'BTISports')
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th class="text-white">경기시간</th>
+                                    <th class="text-white">종목</th>
+                                    <th class="text-white">리그</th>
+                                    <th class="text-white">타입1</th>
+                                    <th class="text-white">타입2</th>
+                                    <th class="text-white">경기</th>
+                                    <th class="text-white">odd</th>
+                                    <th class="text-white">배팅</th>
+                                    <th class="text-white">경기결과</th>
+                                    <th class="text-white">배팅결과</th>
+                                </tr>                            
+                            </thead>
+                            @if(View::exists('backend.argon.player.gamedetail.' . $res['type']))
+                                @include('backend.argon.player.gamedetail.' . $res['type'])
+                            @endif 
+                        @else 
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th class="text-white">항목</th>
+                                    <th class="text-white">값</th>
+                                </tr>
+                            </thead>
+                            <tbody>                        
+                                @if(View::exists('backend.argon.player.gamedetail.' . $res['type']))
+                                    @include('backend.argon.player.gamedetail.' . $res['type'])
+                                @else
+                                    @include('backend.argon.player.gamedetail.General')
+                                @endif
+                            </tbody>
+                        @endif    
+                    @else
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th class="text-white">항목</th>
+                                <th class="text-white">값</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <tr>
                                 <td colspan='2'>상세보기를 지원하지 않는 게임입니다.</td>
                             </tr>
-                        @endif
-                    </tbody>
+                        </tbody>
+                    @endif                                 
                 </table>
             </div>
         </div>
