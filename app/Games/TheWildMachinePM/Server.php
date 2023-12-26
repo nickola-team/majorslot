@@ -699,6 +699,10 @@ namespace VanguardLTE\Games\TheWildMachinePM
                     $ind = $slotEvent['ind'];
                 }
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                if($slotSettings->GetGameData($slotSettings->slotId . 'Bgt') == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 if($slotSettings->GetGameData($slotSettings->slotId . 'Bgt') == 30){
                     $freeStacks = $slotSettings->GetReelStrips('bonus', $betline * $lines, $ind);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', $freeStacks);

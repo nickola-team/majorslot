@@ -512,6 +512,10 @@ namespace VanguardLTE\Games\TheDogHouseMegawaysPM
                 $lines = 20;
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $scatterCount = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterCount');
+                if($scatterCount == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $Balance = $slotSettings->GetBalance();
                 $stack = $slotSettings->GetReelStrips('bonus', $betline * $lines, $ind, $scatterCount);
                 if($stack == null){

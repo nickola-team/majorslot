@@ -597,6 +597,10 @@ namespace VanguardLTE\Games\LegendofHeroesMegawaysPM
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt != 35){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $level = $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                 $status = $slotSettings->GetGameData($slotSettings->slotId . 'Status');
                 $freeSpins = [10,14,18,22];

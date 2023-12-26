@@ -610,6 +610,10 @@ namespace VanguardLTE\Games\MammothGoldMegawaysPM
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $old_g = $slotSettings->GetGameData($slotSettings->slotId . 'G');
                 $level = $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                 $bonusIndex = $slotSettings->GetGameData($slotSettings->slotId . 'BonusIndex');

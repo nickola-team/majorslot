@@ -316,6 +316,12 @@ return [
     */
     'sc4_api' => env('SC4_API', ''),
     'sc4_key' => env('SC4_KEY', ''),
+
+    /*
+    SPORTS Auth key
+    */
+    'bti_api' => env('BTI_API', ''),
+    'bti_key' => env('BTI_KEY', ''),
     /*
     /*
     |--------------------------------------------------------------------------
