@@ -15,12 +15,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = \VanguardLTE\User::where(['api_token'=> $authToken])->first();
             if (!isset($user))
             {
-                return response([
+                return response(BTIController::toText([
                     'error_code' => -1,
                     'error_message' => 'Generic Error'
-                ])->header('Content-Type', 'text/plain');
+                ]))->header('Content-Type', 'text/plain');
             }
-            return response([
+            return response(BTIController::toText([
                 'error_code' => 0,
                 'error_message' => 'No Error',
                 'cust_id' => $user->id,
@@ -29,7 +29,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'city' => 'City',
                 'country' => 'KR',
                 'currency_code' => 'KRW'
-            ])->header('Content-Type', 'text/plain');
+            ]))->header('Content-Type', 'text/plain');
         }
 
         public function reserve(\Illuminate\Http\Request $request){
@@ -1097,6 +1097,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             return $result;
+        }
+        public static function toText($obj) {
+            $response = '';
+            foreach ($obj as $key => $value) {
+                if ($value !== null) {
+                    $response = "{$response}\r\n{$key}={$value}";
+                }
+            }
+            return trim($response, "\r\n");
         }
     }
 }
