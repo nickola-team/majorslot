@@ -40,9 +40,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $xmlObject = simplexml_load_string($request->getContent());            
             $json = json_encode($xmlObject);
             $array = json_decode($json,true); 
-            $custId = $array['@attributes']['cust_id'];
-            $reserveId = $array['@attributes']['reserve_id'];
-            $amount = $array['@attributes']['amount'];
+            $custId = $request->customer_id;// $array['@attributes']['cust_id'];
+            $reserveId = $request->reserve_id;// $array['@attributes']['reserve_id'];
+            $amount = $request->amount;// $array['@attributes']['amount'];
             if(count($array['Bet'])>1){  //system: off, riskfreebet: on
                 if(isset($array['Bet'][0])){
                     $betTypeId = $array['Bet'][0]['@attributes']['BetTypeID'];
@@ -184,9 +184,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $xmlObject = simplexml_load_string($request->getContent());            
             $json = json_encode($xmlObject);
             $array = json_decode($json,true); 
-            $custId = $array['@attributes']['cust_id'];
-            $reserveId = $array['@attributes']['reserve_id'];
-            $amount = $array['@attributes']['amount'];
+            $custId = $request->customer_id;//$array['@attributes']['cust_id'];
+            $reserveId = $request->reserve_id;//$array['@attributes']['reserve_id'];
+            $amount = $request->amount;//$array['@attributes']['amount'];
             $reqId = $request->req_id;
 
             if(count($array['Bet'])>1){
