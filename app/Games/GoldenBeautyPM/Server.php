@@ -713,6 +713,10 @@ namespace VanguardLTE\Games\GoldenBeautyPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeSpinType', $ind);
                 }
                 $scatterCount = $slotSettings->GetGameData($slotSettings->slotId . 'SpinType');
+                if($scatterCount == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $isState = false;
                 $reelStrip = $slotSettings->GetReelStrips('bonus', $betline * $lines, $scatterCount , $ind);
                 $stack = $reelStrip[1];

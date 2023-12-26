@@ -1634,3 +1634,20 @@ Route::group(['prefix' => '/api/pbgame',], function () {
     Route::post('/placebet', 'GameParsers\PowerBall\PowerBallController@placeBet');
     Route::post('/results', 'GameParsers\PowerBall\PowerBallController@results');
 });
+
+
+
+//for BTi
+Route::group(['prefix' => 'spbt1'],function(){
+    Route::get('ValidateToken','GameProviders\BTIController@ValidateToken');
+    Route::post('reserve','GameProviders\BTIController@reserve');
+    Route::get('cancelreserve','GameProviders\BTIController@cancelreserve');
+    Route::post('debitreserve','GameProviders\BTIController@debitreserve');
+    Route::get('commitreserve','GameProviders\BTIController@commitreserve');
+    Route::post('debitcustomer','GameProviders\BTIController@debitcustomer');
+    Route::post('creditcustomer','GameProviders\BTIController@creditcustomer');
+    //for rendering
+    Route::get('/golobby', 'GameProviders\BTIController@embedGACgame');
+});
+
+Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
