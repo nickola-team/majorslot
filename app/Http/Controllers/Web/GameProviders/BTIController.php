@@ -40,7 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $xmlObject = simplexml_load_string($request->getContent());            
             $json = json_encode($xmlObject);
             $array = json_decode($json,true); 
-            $custId = $request->customer_id;// $array['@attributes']['cust_id'];
+            $custId = $request->cust_id;// $array['@attributes']['cust_id'];
             $reserveId = $request->reserve_id;// $array['@attributes']['reserve_id'];
             $amount = $request->amount;// $array['@attributes']['amount'];
             if(count($array['Bet'])>1){  //system: off, riskfreebet: on
@@ -121,8 +121,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \DB::beginTransaction();
 
             $agentId = $request->agent_id;// isset($data['agent_id'])?$data['agent_id']:0;
-            $customerId = $request->customer_id;//isset($data['customer_id'])?$data['customer_id']:0;
-            $custId = $request->cust_id;//isset($data['cust_id'])?$data['cust_id']:0;
+            $customerId = $request->cust_id;//isset($data['customer_id'])?$data['customer_id']:0;
+            $custId = $request->customer_id;//isset($data['cust_id'])?$data['cust_id']:0;
             $reserveId = $request->reserve_id;//isset($data['reserve_id'])?$data['reserve_id']:0;
 
             $user = \VanguardLTE\User::where(['id'=> $customerId])->first();
@@ -184,7 +184,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $xmlObject = simplexml_load_string($request->getContent());            
             $json = json_encode($xmlObject);
             $array = json_decode($json,true); 
-            $custId = $request->customer_id;//$array['@attributes']['cust_id'];
+            $custId = $request->cust_id;//$array['@attributes']['cust_id'];
             $reserveId = $request->reserve_id;//$array['@attributes']['reserve_id'];
             $amount = $request->amount;//$array['@attributes']['amount'];
             $reqId = $request->req_id;
@@ -300,8 +300,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $agentId = $request->agent_id;// isset($data['agent_id'])?$data['agent_id']:0;
-            $customerId = $request->customer_id;//isset($data['customer_id'])?$data['customer_id']:0;
-            $custId = $request->cust_id;//isset($data['cust_id'])?$data['cust_id']:0;
+            $customerId = $request->cust_id;//isset($data['customer_id'])?$data['customer_id']:0;
+            $custId = $request->customer_id;//isset($data['cust_id'])?$data['cust_id']:0;
             $reserveId = $request->reserve_id;//isset($data['reserve_id'])?$data['reserve_id']:0;
             $purchaseId = $request->purchase_id;//isset($data['purchase_id'])?$data['purchase_id']:0;
 
@@ -313,7 +313,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if(!isset($debitbased_Record)){
                 
 
-                $record_1 = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID Not Exist','amount' => 0,'balance' => '0','agent_id'=> $agentId,'customer_id'=>$customerId,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>'0', 'status' => -1,'bet_type_id'=>'0','bet_type_name'=>'0']);
+                $record_1 = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID Not Exist','amount' => 0,'balance' => '0','user_id' => $customerId,'reserve_id' => $reserveId,'req_id'=>'0', 'status' => -1,'bet_type_id'=>'0','bet_type_name'=>'0']);
                 
                 \DB::commit();
                 return response(BTIController::toText([
@@ -385,8 +385,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $agentId = $request->agent_id;//isset($data['agent_id'])?$data['agent_id']:0;
-            $customerId = $request->cust_id;//isset($data['customer_id'])?$data['customer_id']:0;
-            $custId = $request->customer_id;//isset($data['cust_id'])?$data['cust_id']:0;
+            $customerId = $request->customer_id;//isset($data['customer_id'])?$data['customer_id']:0;
+            $custId = $request->cust_id;//isset($data['cust_id'])?$data['cust_id']:0;
             $reqId = $request->req_id;//isset($data['req_id'])?$data['req_id']:0;
             $purchaseId = $request->purchase_id;//isset($data['purchase_id'])?$data['purchase_id']:0;
             
@@ -411,7 +411,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'reserve_id'=>$reserveId])->first();
             if(!$debitCustomerRecord || $debitCustomerRecord == null){
                 $debitedBalance = $user->balance + $amount;
-                $debitCustomerRecord = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No error','amount' => $amount,'balance' => $debitedBalance,'agent_id'=> $agentId,'customer_id'=>$customerId,'user_id' => $custId,'reserve_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'],'req_id'=>$reqId, 'data'=>json_encode($array),'status' => 5,'bet_type_id' => $betTypeId,'bet_type_name' => $betTypeName]);
+                $debitCustomerRecord = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No error','amount' => $amount,'balance' => $debitedBalance,'user_id' => $custId,'reserve_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'],'req_id'=>$reqId, 'data'=>json_encode($array),'status' => 5,'bet_type_id' => $betTypeId,'bet_type_name' => $betTypeName]);
                 
                 $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_credit','roundid'=>$purchaseId])->first();
                 // $prevStatRecords = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId])->first();
@@ -474,8 +474,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \DB::beginTransaction();
             $data = json_decode($request->getContent(), true);
             $agentId = $request->agent_id;//isset($data['agent_id'])?$data['agent_id']:0;
-            $customerId = $request->cust_id;//isset($data['customer_id'])?$data['customer_id']:0;
-            $custId = $request->customer_id;//isset($data['cust_id'])?$data['cust_id']:0;
+            $customerId = $request->customer_id;//isset($data['customer_id'])?$data['customer_id']:0;
+            $custId = $request->cust_id;//isset($data['cust_id'])?$data['cust_id']:0;
             $reqId = $request->req_id;//isset($data['req_id'])?$data['req_id']:0;
             $purchaseId = $request->purchase_id;//isset($data['purchase_id'])?$data['purchase_id']:0;
             $amount = $request->amount;//isset($data['amount'])?$data['amount']:0;
