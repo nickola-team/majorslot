@@ -887,13 +887,15 @@ namespace VanguardLTE
                 'slot' => 'deal_percent',
                 'table' => 'table_deal_percent',
                 'pbsingle' => 'pball_single_percent',
-                'pbcomb' => 'pball_comb_percent'
+                'pbcomb' => 'pball_comb_percent',
+                'sports' => 'table_deal_percent'
             ];
             $ggr_field = [
                 'slot' => 'ggr_percent',
                 'table' => 'table_ggr_percent',
                 'pbsingle' => 'table_ggr_percent',
-                'pbcomb' => 'table_ggr_percent'
+                'pbcomb' => 'table_ggr_percent',
+                'sports' => 'table_ggr_percent'
             ];
 
             $shop = $this->shop;
