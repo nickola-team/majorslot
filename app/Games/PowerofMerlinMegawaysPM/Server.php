@@ -593,6 +593,10 @@ namespace VanguardLTE\Games\PowerofMerlinMegawaysPM
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $level = $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                 $arr_g = $slotSettings->GetGameData($slotSettings->slotId . 'G');
                 $arr_trails = explode(';', $slotSettings->GetGameData($slotSettings->slotId . 'Trail'));

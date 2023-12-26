@@ -306,6 +306,7 @@ namespace VanguardLTE\Games\VampiresvsWolvesPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Ind', -1);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusState', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
@@ -500,6 +501,7 @@ namespace VanguardLTE\Games\VampiresvsWolvesPM
                 if($bw == 1 && $end == 0){
                     $isState = false;
                     $spinType = 'b';
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 1);
                     $strOtherResponse = $strOtherResponse .'&rw=0.00&wp=0&coef='. ($betline * $lines);                   
                 }
                 if($bw == 1){
@@ -583,7 +585,10 @@ namespace VanguardLTE\Games\VampiresvsWolvesPM
                 $scatter = 1;
                 $wild = 2;
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
-                
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BonusCheck') == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $ind = -1;
                 if(isset($slotEvent['ind'])){
                     $ind = $slotEvent['ind'];
@@ -661,6 +666,7 @@ namespace VanguardLTE\Games\VampiresvsWolvesPM
                 if($str_fstype != ''){
                     $strOtherResponse = $strOtherResponse . '&fstype=' . $str_fstype;
                 }
+                $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 0);
                 $response = 'balance='. $Balance .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType . $strOtherResponse .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 //------------ ReplayLog ---------------

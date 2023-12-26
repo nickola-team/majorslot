@@ -569,6 +569,11 @@ namespace VanguardLTE\Games\FishinReelsPM
                 $lines = 10;
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt != 30){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $ind = -1;
                 if(isset($slotEvent['ind'])){
                     $ind = $slotEvent['ind'];
