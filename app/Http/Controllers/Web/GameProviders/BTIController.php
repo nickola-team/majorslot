@@ -337,13 +337,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sameRecord = false;         
             foreach($debitbased_Record as $debitRecord){
                 $transData = json_decode($debitRecord->data,true);
-                    if($transData['Bet']['@attributes']['PurchaseBetID'] == $purchaseId){
+                    //if($transData['Bet']['@attributes']['PurchaseBetID'] == $purchaseId){
                         $debitamount += $debitRecord->amount;
                         $betTypeID = $debitRecord->bet_type_id;
                         $betTypeName = $debitRecord->bet_type_name;
                         $betDate = $transData['Bet']['@attributes']['CreationDate'];
                         $betReqId = $debitRecord->req_id;
-                    }  
+                    //}  
             }
 
             $userbalance = ($reserveBalance + $reserveamount) - $debitamount;
@@ -355,7 +355,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             \VanguardLTE\StatGame::create([
                 'user_id' => $user->id, 
                 'balance' => $user->balance, 
-                'bet' => $reserveamount, 
+                'bet' => $debitamount, 
                 'win' => 0,
                 'game' =>  'sports', 
                 'type' => 'sports',
