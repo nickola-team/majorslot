@@ -543,6 +543,10 @@ namespace VanguardLTE\Games\YumYumPowerwaysPM
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $level = $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                 $status = $slotSettings->GetGameData($slotSettings->slotId . 'Status');
                 $freeSpins = [4,6,8,10,12];

@@ -309,6 +309,7 @@ namespace VanguardLTE\Games\CashChipsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'G', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
@@ -486,6 +487,7 @@ namespace VanguardLTE\Games\CashChipsPM
                 if($bw == 1){
                     $spinType = 'b';
                     $isState = false;
+                    $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 1);
                     $strOtherResponse = $strOtherResponse . '&bw=' . $bw;
                 }
                 if($arr_g != null){
@@ -546,7 +548,10 @@ namespace VanguardLTE\Games\CashChipsPM
                 $lines = 20;
                 $ind = $slotEvent['ind'];
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
-
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BonusCheck') == 0){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $tumbAndFreeStacks = $slotSettings->GetReelStrips('bonus', $betline * $lines, $ind);
 
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
@@ -629,6 +634,7 @@ namespace VanguardLTE\Games\CashChipsPM
                     $strOtherResponse = $strOtherResponse . '&fsmul=1&fsmax='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin=0.00&fsres=0.00&fs=1';
                     $spinType = 's';
                 }
+                $slotSettings->SetGameData($slotSettings->slotId . 'BonusCheck', 0);
                 $response = 'tw='. $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') .'&balance='.$Balance . $strOtherResponse .'&index='.$slotEvent['index'].'&balance_cash='.$Balance.'&balance_bonus=0.00&na='. $spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sh=3&sw=5&st=rect&sver=5&counter='. ((int)$slotEvent['counter'] + 1);
 
                 

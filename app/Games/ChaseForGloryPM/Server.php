@@ -594,6 +594,10 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                 $lastReel = $lastEvent->serverResponse->LastReel; 
                 $Balance =  $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');                
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
+                if($bgt != 69){
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $ind = 4;
                 if(isset($slotEvent['ind'])){
                     $ind = $slotEvent['ind'];
@@ -650,7 +654,7 @@ namespace VanguardLTE\Games\ChaseForGloryPM
                 if($str_accv != ''){
                     $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0&accv=' . $str_accv;
                 }
-
+                $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
                 $response = 'balance='. $Balance . $strOtherResponse .'&index='.$slotEvent['index'].'&balance_cash='. $Balance .'&balance_bonus=0.00&na='. $spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sver=5&g='. preg_replace('/"(\w+)":/i', '\1:', json_encode($arr_g)) .'&counter='. ((int)$slotEvent['counter'] + 1);
 
                 //------------ ReplayLog ---------------
