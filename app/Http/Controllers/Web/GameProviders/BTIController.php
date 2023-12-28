@@ -565,7 +565,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                         }
                         
-                    } 
+                    } else{
+                        $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                        if(isset($creditRecords)){
+                            foreach($creditRecords as $creditRecord){
+                                $tempWinMoney += $creditRecord->amount;
+                            }                                                                
+                        }
+                        $winmoney = $tempWinMoney;
+                    }
                 }else{
                     if( $array['Purchases']['Purchase']['@attributes']['CurrentStatus'] = 'Closed' && $betlinesNumber == $settledNumber){
                         
@@ -588,33 +596,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $winmoney = 0;
                         }
                         
-                        // if($actionType == 'Risk Free Bet'){
-                        //     $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'roundid'=>$purchaseId])->first();
-                        //     $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        //     $tempWinMoney = 0;
-                        //     if(isset($creditRecords)){
-                        //         foreach($creditRecords as $creditRecord){
-                        //             $tempWinMoney += $creditRecord->amount;
-                        //         }                                                                
-                        //     }
-
-                        //     $winmoney = $amount;
-                        //     $user->balance = $user->balance + $amount;
-                        //     $user->save();
-
-                        //     $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $tempWinMoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
-                        //     //$winmoney = 0;
-                        // }else{
-                        //     $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        //     if(isset($creditRecords)){
-                        //         foreach($creditRecords as $creditRecord){
-                        //             $tempWinMoney += $creditRecord->amount;
-                        //         }                                                                
-                        //     }
-                        //     $winmoney = $tempWinMoney;
-                        //     $betfinish = true;
-                        // }
-                        
+                    }else{
+                        $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                        if(isset($creditRecords)){
+                            foreach($creditRecords as $creditRecord){
+                                $tempWinMoney += $creditRecord->amount;
+                            }                                                                
+                        }
+                        $winmoney = $tempWinMoney;
                     }
                 }
 
