@@ -414,12 +414,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $debitedBalance = 0;
 
 
-            
+            $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>4])->first();            
 
-            $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'purchase_id'=>$purchaseId])->first();
+            $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'purchase_id'=>$purchaseId])->first();            
+            if($record){
+                $betTypeId = intval($record->bet_type_id);
+                $betTypeName = $record->bet_type_name;
+            }else{
+                $betTypeId = 0;
+                $betTypeName = '';
+            }
+
             if(!$debitCustomerRecord || $debitCustomerRecord == null){
-                $betTypeId = $debitCustomerRecord->bet_type_id;
-                $betTypeName = $debitCustomerRecord->bet_type_name;
                 $debitedBalance = $user->balance + $amount;
                 $debitCustomerRecord = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No error','amount' => $amount,'balance' => $debitedBalance,'user_id' => $custId,'reserve_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'],'req_id'=>$reqId, 'data'=>json_encode($array),'status' => 5,'bet_type_id' => $betTypeId,'bet_type_name' => $betTypeName,'purchase_id' => $purchaseId]);
                 
@@ -503,15 +509,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $debitedBalance = 0;
             $sendTrxId = 0;
 
+            $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>4])->first();            
+
             $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'purchase_id'=>$purchaseId])->first();            
+            if($record){
+                $betTypeId = intval($record->bet_type_id);
+                $betTypeName = $record->bet_type_name;
+            }else{
+                $betTypeId = 0;
+                $betTypeName = '';
+            }
             
            
 
             $winmoney = 0;
 
             if(!$debitCustomerRecord || $debitCustomerRecord == null){
-                $betTypeId = intval($debitCustomerRecord->bet_type_id);
-                $betTypeName = $debitCustomerRecord->bet_type_name;
+                
 
                 $betfinish = false;
                 $winmoney = $amount;
