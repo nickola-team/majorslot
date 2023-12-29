@@ -59,7 +59,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user = \VanguardLTE\User::where(['id'=> $custId])->first();
             //No User
-            if (!isset($user))
+            if (!isset($user) || !is_numeric($custId))
             {
                 $record = \VanguardLTE\BTiTransaction::create(['error_code' => -2,'error_message' => 'Invalid Customer','amount' => $amount,'balance' => 0.00,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName]);
 
@@ -105,12 +105,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => $balance
                 ]))->header('Content-Type', 'text/plain');
             }else{
+                $sameRequest = false;
+                $records = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId])->get();
+                foreach($records as $recordx){
+                    if($recordx->status == 2){
+                        $sameRequest = true;
+                    }
+                }
+                $balance = 0;
+                if($sameRequest){
+                    $user->balance = $user->balance - $amount;
+                    $user->save();
+                    $balance = $user->balance;
+                }else{
+                    $balance = $record->balance;
+                }
+
                 //$this->getgamedetail();   //test
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $record->id,
-                    'balance' => $record->balance
+                    'balance' => $balance
                 ]))->header('Content-Type', 'text/plain');
             }
         }
@@ -138,45 +154,59 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_message' => 'ReserveID not exists ',
                     'balance' => $user->balance
                 ]))->header('Content-Type', 'text/plain');
+            }else{
+                $sameRequest = false;
+                $records = \VanguardLTE\BTiTransaction::where(['user_id' => $customerId,'reserve_id'=>$reserveId])->get();
+                foreach($records as $recordx){
+                    if($recordx->status == 2){
+                        $sameRequest = true;
+                    }
+                }
+                if($sameRequest){
+                    \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => 0,'balance' => $user->balance,'user_id' => $customerId,'reserve_id' => $reserveId,'data' => '','status' => 2]);
+                
+                    \DB::commit();
+                    return response(BTIController::toText([
+                        'error_code' => 0,
+                        'error_message' => 'No Error',
+                        'balance' => $user->balance
+                    ]))->header('Content-Type', 'text/plain');
+                }else{
+                    if($record->status == 1){   //Debitted Reserve
+                        \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already Debitted Reserve','amount' => $record->amount,'balance' => ($record->balance + $record->amount),'user_id' => $customerId,'reserve_id' => $reserveId,'data'=>$record->data,'status' => 2,'bet_type_id'=>$record->bet_type_id,'bet_type_name'=>$record->bet_type_name]);
+        
+                        $user->balance = $user->balance + $record->amount;
+                        $user->save();
+                        \DB::commit();
+                        return response(BTIController::toText([
+                            'error_code' => 0,
+                            'error_message' => 'Already Debitted Reserve',
+                            'balance' => $user->balance
+                        ]))->header('Content-Type', 'text/plain');
+                    }else{  //cancel reserve action : status == 0
+                        
+                        $reserveBalance = $record->amount + $user->balance;
+                        
+                        \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $record->amount,'balance' => $reserveBalance,'user_id' => $customerId,'reserve_id' => $reserveId,'data'=>$record->data,'status' => 2,'bet_type_id'=>$record->bet_type_id,'bet_type_name'=>$record->bet_type_name]);
+        
+                        $user->balance = $reserveBalance;
+                        $user->save();
+        
+                        \DB::commit();
+                        return response(BTIController::toText([
+                            'error_code' => 0,
+                            'error_message' => 'No Error',
+                            'balance' => $reserveBalance
+                        ]))->header('Content-Type', 'text/plain');
+                        
+                    }
+                }
+
+                
             }
 
-            if($record->status == 1){   //Debitted Reserve
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already Debitted Reserve','amount' => $record->amount,'balance' => ($record->balance + $record->amount),'user_id' => $customerId,'reserve_id' => $reserveId,'data'=>$record->data,'status' => 2,'bet_type_id'=>$record->bet_type_id,'bet_type_name'=>$record->bet_type_name]);
+            
 
-                $user->balance = $user->balance + $record->amount;
-                $user->save();
-                \DB::commit();
-                return response(BTIController::toText([
-                    'error_code' => 0,
-                    'error_message' => 'Already Debitted Reserve',
-                    'balance' => $user->balance
-                ]))->header('Content-Type', 'text/plain');
-            }else{  //cancel reserve action : status == 0
-                
-                $reserveBalance = $record->amount + $user->balance;
-                
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $record->amount,'balance' => $reserveBalance,'user_id' => $customerId,'reserve_id' => $reserveId,'data'=>$record->data,'status' => 2,'bet_type_id'=>$record->bet_type_id,'bet_type_name'=>$record->bet_type_name]);
-
-                $user->balance = $reserveBalance;
-                $user->save();
-
-                \DB::commit();
-                return response(BTIController::toText([
-                    'error_code' => 0,
-                    'error_message' => 'No Error',
-                    'balance' => $reserveBalance
-                ]))->header('Content-Type', 'text/plain');
-                
-            }
-
-            // \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $record->amount,'balance' => $user->balance,'user_id' => $customerId,'reserve_id' => $reserveId,'data'=>$record->data,'status' => 2,'bet_type_id'=>$record->bet_type_id,'bet_type_name'=>$record->bet_type_name]);
-
-            // \DB::commit();
-            // return response()->json([
-            //     'error_code' => 0,
-            //     'error_message' => 'No Error',
-            //     'balance' => $user->balance
-            // ]);
         }
 
         public function debitreserve(\Illuminate\Http\Request $request){
@@ -205,7 +235,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $user = \VanguardLTE\User::where(['id'=> $custId])->first();
 
-            $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId])->first();
+            $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId])->get();
 
             if(!$record){
                 $record_1 = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID Not Exist','amount' => 0,'balance' => $user->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
@@ -217,84 +247,91 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => $user->balance
                 ]))->header('Content-Type', 'text/plain');
             }
-
-            if($record->status == 2){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already cancelled reserve','amount' => $record->amount,'balance' => $record->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 2,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+            $canceledreserve = false;
+            $commitedreserve = false;
+            foreach($record as $recordx){
+                if($recordx->status == 2){
+                    $canceledreserve = true;
+                }else if($recordx->status == 4){
+                    $commitedreserve = true;
+                }
+            }
+            $reserveRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>0])->first();
+            if($canceledreserve){
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already cancelled reserve','amount' => $reserveRecord->amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 2,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
 
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'Already cancelled reserve',
-                    'trx_id' => $record->id,
-                    'balance' => $record->balance
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
                 ]))->header('Content-Type', 'text/plain');
-            }else if($record->status == 4){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $record->amount,'balance' => $record->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+            }else if($commitedreserve){
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $reserveRecord->amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
 
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'Already committed reserve',
-                    'trx_id' => $record->id,
-                    'balance' => $record->balance
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
                 ]))->header('Content-Type', 'text/plain');
             }
 
-            $transData = json_decode($record->data,true);
+            $sameRequest = false;
+            $debitRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1])->get();
 
-            if($record->reserve_id == $reserveId){
-                if(isset($record->req_id) && $record->req_id == $reqId){
-                    \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $record->balance + $record->amount,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => 3,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+            
 
-                    return response(BTIController::toText([
-                        'error_code' => 0,
-                        'error_message' => 'No Error',
-                        'trx_id' => $record->id,
-                        'balance' => $record->balance
-                    ]))->header('Content-Type', 'text/plain');
-                }else{
-                    if($record->status == 3){
-                        $recBalance = $user->balance - $record->amount;
-                    }else{
-                        $recBalance = $user->balance;
-                    }
-                    
-                    \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $recBalance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => 1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
-
-                    return response(BTIController::toText([
-                        'error_code' => 0,
-                        'error_message' => 'No Error',
-                        'trx_id' => $record->id,
-                        'balance' => $record->balance
-                    ]))->header('Content-Type', 'text/plain');
+            foreach($debitRecords as $debitRecord){
+                if($debitRecord->req_id == $reqId){
+                    $sameRequest = true;
+                    break;
                 }
-            }
+            }            
 
-            if($amount > $record->amount){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Total DebitReserve amount larger than Reserve amount','amount' => $amount,'balance' => $record->balance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
 
-                return response(BTIController::toText([
-                    'error_code' => 0,
-                    'error_message' => 'Total DebitReserve amount larger than Reserve amount',
-                    'trx_id' => $record->id,
-                    'balance' => $record->balance
-                ]))->header('Content-Type', 'text/plain');
-            }else if($amount < $record->amount){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $record->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 1,'bet_type_id'=>($betTypeId),'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+            if($sameRequest){
 
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'No Error',
-                    'trx_id' => $record->id,
-                    'balance' => $record->balance
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
+                ]))->header('Content-Type', 'text/plain');
+            }else{
+                $recBalance = $user->balance;
+                
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $recBalance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => 1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+
+                return response(BTIController::toText([
+                    'error_code' => 0,
+                    'error_message' => 'No Error',
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
+                ]))->header('Content-Type', 'text/plain');
+            }
+            
+
+            if($amount > $reserveRecord->amount){
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Total DebitReserve amount larger than Reserve amount','amount' => $amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+
+                return response(BTIController::toText([
+                    'error_code' => 0,
+                    'error_message' => 'Total DebitReserve amount larger than Reserve amount',
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
+                ]))->header('Content-Type', 'text/plain');
+            }else if($amount < $reserveRecord->amount){
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 1,'bet_type_id'=>($betTypeId),'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+
+                return response(BTIController::toText([
+                    'error_code' => 0,
+                    'error_message' => 'No Error',
+                    'trx_id' => $reserveRecord->id,
+                    'balance' => $reserveRecord->balance
                 ]))->header('Content-Type', 'text/plain');
             }
 
-            \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $record->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 1,'bet_type_id'=>($betTypeId),'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
-            return response(BTIController::toText([
-                'error_code' => 0,
-                'error_message' => 'No Error',
-                'trx_id' => $record->id,
-                'balance' => $record->balance
-            ]))->header('Content-Type', 'text/plain');
         }
 
         public function commitreserve(\Illuminate\Http\Request $request){
