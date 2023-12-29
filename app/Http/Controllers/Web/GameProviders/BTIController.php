@@ -439,7 +439,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 
                 if(isset($prevStatRecord)){
                     $winmoney = $prevStatRecord->win + $amount;
-                    $user->balance = $prevStatRecord->balance + $amount;
+                    $user->balance = $user->balance + $amount;
                     $debitedBalance = $user->balance;
                     $user->save();
                     $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','roundid'=>$purchaseId,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);    
@@ -449,7 +449,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $statRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_debit','roundid'=>$purchaseId])->first();
                     if(isset($statRecord)){
                         $winmoney = $statRecord->win + $amount;
-                        $user->balance = $statRecord->balance + $amount;
+                        $user->balance = $user->balance + $amount;
                         $debitedBalance = $user->balance;
                         $user->save();
                         $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]); 
