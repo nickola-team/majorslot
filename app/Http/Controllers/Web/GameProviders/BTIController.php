@@ -299,6 +299,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => $reserveRecord->balance
                 ]))->header('Content-Type', 'text/plain');
             }else{
+                if($amount > $reserveRecord->amount){
+                    \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Total DebitReserve amount larger than Reserve amount','amount' => $amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+    
+                    return response(BTIController::toText([
+                        'error_code' => 0,
+                        'error_message' => 'Total DebitReserve amount larger than Reserve amount',
+                        'trx_id' => $reserveRecord->id,
+                        'balance' => $reserveRecord->balance
+                    ]))->header('Content-Type', 'text/plain');
+                }
                 $recBalance = $user->balance;
                 
                 \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $recBalance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => 1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
@@ -312,25 +322,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             
 
-            if($amount > $reserveRecord->amount){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Total DebitReserve amount larger than Reserve amount','amount' => $amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
-
-                return response(BTIController::toText([
-                    'error_code' => 0,
-                    'error_message' => 'Total DebitReserve amount larger than Reserve amount',
-                    'trx_id' => $reserveRecord->id,
-                    'balance' => $reserveRecord->balance
-                ]))->header('Content-Type', 'text/plain');
-            }else if($amount < $reserveRecord->amount){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'No Error','amount' => $amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 1,'bet_type_id'=>($betTypeId),'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
-
-                return response(BTIController::toText([
-                    'error_code' => 0,
-                    'error_message' => 'No Error',
-                    'trx_id' => $reserveRecord->id,
-                    'balance' => $reserveRecord->balance
-                ]))->header('Content-Type', 'text/plain');
-            }
+            
 
         }
 
