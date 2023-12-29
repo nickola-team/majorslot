@@ -469,7 +469,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $user->balance = $debitedBalance;
                         $user->save();
                         $debitCustomerRecord->update(['balance'=>$user->balance]) ;    
-                        
+
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => $user->balance, 
@@ -486,7 +486,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'category_id' => 61,
                             'game_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'] . '_debit',
                             'roundid' =>  $purchaseId,
-                            'date_time' => $debitCustomerRecord->date_time
+                            'date_time' => $array['Purchases']['Purchase']['@attributes']['CreationDateUTC']
                         ]);
                     }                                         
                 }
