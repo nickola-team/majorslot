@@ -27,7 +27,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'error_code' => 0,
                 'error_message' => 'No Error',
                 'cust_id' => $user->id,
-                'balance' => $user->balance,
+                'balance' => sprintf('%0.2f',$user->balance),
                 'cust_login' => $user->username,
                 'city' => 'City',
                 'country' => 'KR',
@@ -79,7 +79,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => -4,
                     'error_message' => 'Insufficient Amount',
                     'trx_id' => $record->id,
-                    'balance' => $userBalance
+                    'balance' => sprintf('%0.2f',$userBalance)
                 ]))->header('Content-Type', 'text/plain');
             }
 
@@ -102,7 +102,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $record_1->id,
-                    'balance' => $balance
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 $sameRequest = false;
@@ -126,7 +126,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $record->id,
-                    'balance' => $balance
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }
         }
@@ -152,7 +152,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID not exists ',
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 $sameRequest = false;
@@ -169,7 +169,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return response(BTIController::toText([
                         'error_code' => 0,
                         'error_message' => 'No Error',
-                        'balance' => $user->balance
+                        'balance' => sprintf('%0.2f',$user->balance)
                     ]))->header('Content-Type', 'text/plain');
                 }else{
                     if($record->status == 1){   //Debitted Reserve
@@ -181,7 +181,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return response(BTIController::toText([
                             'error_code' => 0,
                             'error_message' => 'Already Debitted Reserve',
-                            'balance' => $user->balance
+                            'balance' => sprintf('%0.2f',$user->balance)
                         ]))->header('Content-Type', 'text/plain');
                     }else{  //cancel reserve action : status == 0
                         
@@ -196,7 +196,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return response(BTIController::toText([
                             'error_code' => 0,
                             'error_message' => 'No Error',
-                            'balance' => $reserveBalance
+                            'balance' => sprintf('%0.2f',$reserveBalance)
                         ]))->header('Content-Type', 'text/plain');
                         
                     }
@@ -244,7 +244,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
                     'trx_id' => $record_1->id,
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             $canceledreserve = false;
@@ -264,7 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'Already cancelled reserve',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else if($commitedreserve){
                 \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $reserveRecord->amount,'balance' => $user->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
@@ -273,7 +273,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'Already committed reserve',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
 
@@ -296,7 +296,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => $reserveRecord->balance
+                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 if($amount > $reserveRecord->amount && ($amount - $reserveRecord->amount >= 0.02)){
@@ -307,7 +307,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'error_code' => 0,
                         'error_message' => 'Total DebitReserve amount larger than Reserve amount',
                         'trx_id' => $reserveRecord->id,
-                        'balance' => $user->balance
+                        'balance' => sprintf('%0.2f',$reserveRecord->balance)
                     ]))->header('Content-Type', 'text/plain');
                 }
                 $recBalance = $user->balance;
@@ -318,7 +318,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             
@@ -351,7 +351,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exists',
                     'trx_id' => $record_1->id,
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
 
@@ -362,7 +362,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exists',
-                    'balance' => $user->balance
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 $reserveamount = $reserveBased_Record->amount;
@@ -397,7 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'error_message' => 'Total DebitReserve amount larger than 
                             Reserve amount',
                             'trx_id' => $record_1->id,
-                            'balance' => $user->balance
+                            'balance' => sprintf('%0.2f',$user->balance)
                         ]))->header('Content-Type', 'text/plain');
                     }
                 }
@@ -431,7 +431,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No error',
                     'trx_id' => $record_1->id,
-                    'balance' => $userbalance
+                    'balance' => sprintf('%0.2f',$userbalance)
                 ]))->header('Content-Type', 'text/plain');
             }
             
@@ -548,7 +548,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'error_code' => 0,
                 'error_message' => 'No error',
                 'trx_id' => $debitCustomerRecord->id,
-                'balance' => $debitedBalance
+                'balance' => sprintf('%0.2f',$debitedBalance)
             ]))->header('Content-Type', 'text/plain');
         }
 
@@ -823,21 +823,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $debitedBalance = $user->balance;
                 $sendTrxId = $debitCustomerRecord->id;
             }
-
-            
+            $sendBalance = sprintf('%0.2f', $debitedBalance);
             \DB::commit();
             return response(BTIController::toText([
                 'error_code' => 0,
                 'error_message' => 'No error',
                 'trx_id' => $sendTrxId,
-                'balance' => $debitedBalance
+                'balance' => sprintf('%0.2f',$sendBalance)
             ]))->header('Content-Type', 'text/plain');
         }
 
         public function sendSession(\Illuminate\Http\Request $request){
 
             $data = json_decode($request->getContent(), true);
-            $userToken = isset($data['token'])?$data['token']:'';
+            //$userToken = isset($data['token'])?$data['token']:'';
+            $userToken = $request->token;
 
             $userRecord = \VanguardLTE\User::where(['api_token' => $userToken])->first();
             $status = 'success';
@@ -846,9 +846,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $status = 'error';
             }
             $balance = $userRecord->balance;
+            $sendBalance = sprintf('%0.2f', $balance);
             return response()->json([
                 'status' => $status,
-                'balance' => $balance
+                'balance' => sprintf('%0.2f',$sendBalance)
             ]);
         }
 
