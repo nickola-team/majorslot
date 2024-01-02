@@ -299,7 +299,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => $reserveRecord->balance
                 ]))->header('Content-Type', 'text/plain');
             }else{
-                if($amount > $reserveRecord->amount && ($amount - $reserveRecord->amount > 0.01)){
+                if($amount > $reserveRecord->amount && ($amount - $reserveRecord->amount >= 0.02)){
 
                     \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Total DebitReserve amount larger than Reserve amount','amount' => $amount,'balance' => $user->balance,'user_id' => $custId,'reserve_id' => $reserveId,'req_id'=>$reqId,'data' => json_encode($array),'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
     
@@ -635,13 +635,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     \DB::commit();
                                     $winmoney = 0;
                                 }else{
-                                    $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                                    if(isset($creditRecords)){
-                                        foreach($creditRecords as $creditRecord){
-                                            $tempWinMoney += $creditRecord->amount;
-                                        }                                                                
-                                    }
-                                    $winmoney = $tempWinMoney;
+                                    // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                                    // if(isset($creditRecords)){
+                                    //     foreach($creditRecords as $creditRecord){
+                                    //         $tempWinMoney += $creditRecord->amount;
+                                    //     }                                                                
+                                    // }
+                                    $winmoney = $amount;
                                 }
                                 
                             }
@@ -668,7 +668,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $winmoney = 0;
                                     }else{
                                         $betfinish = true;
-                                        $winmoney = 0;
+                                        $winmoney = $amount;
                                     }
                                 }
                                 
@@ -698,14 +698,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         if(isset($creditRecords)){
                                             foreach($creditRecords as $creditRecord){
                                                 if(strpos($creditRecord,'Combo Bonus')== false){
-                                                    $tempWinMoney += $creditRecord->amount;
+                                                   // $tempWinMoney += $creditRecord->amount;
                                                 }else{
                                                     $comboCase = true;
-                                                    $comboMoney += $creditRecord->amount;
+                                                    //$comboMoney += $creditRecord->amount;
                                                 }                                    
                                             }
                                         }
-                                        $winmoney = $tempWinMoney;
+                                        $winmoney = $amount;
                                         $betfinish = true;
                                     }
                                 }
@@ -715,13 +715,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         
                     } else{
-                        $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        if(isset($creditRecords)){
-                            foreach($creditRecords as $creditRecord){
-                                $tempWinMoney += $creditRecord->amount;
-                            }                                                                
-                        }
-                        $winmoney = $tempWinMoney;
+                        // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                        // if(isset($creditRecords)){
+                        //     foreach($creditRecords as $creditRecord){
+                        //         $tempWinMoney += $creditRecord->amount;
+                        //     }                                                                
+                        // }
+                        $winmoney = $amount;
                     }
                 }else{
                     if( $array['Purchases']['Purchase']['@attributes']['CurrentStatus'] = 'Closed' && $betlinesNumber == $settledNumber){
@@ -738,17 +738,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 \DB::commit();
                                 $winmoney = 0;
                             }else{     
-                                $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                                if(isset($creditRecords)){
-                                    foreach($creditRecords as $creditRecord){
-                                        $tempWinMoney += $creditRecord->amount;
-                                    }      
-                                    $winmoney = $tempWinMoney;                                                           
-                                }else{
-                                    $winmoney = $amount;
-                                }
+                                // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                                // if(isset($creditRecords)){
+                                //     foreach($creditRecords as $creditRecord){
+                                //         $tempWinMoney += $creditRecord->amount;
+                                //     }      
+                                //     $winmoney = $tempWinMoney;                                                           
+                                // }else{
+                                //     $winmoney = $amount;
+                                // }
                                                           
-                                
+                                $winmoney = $amount;
                                 $betfinish = true;
                             }
                             
@@ -773,13 +773,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         
                     }else{
-                        $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        if(isset($creditRecords)){
-                            foreach($creditRecords as $creditRecord){
-                                $tempWinMoney += $creditRecord->amount;
-                            }                                                                
-                        }
-                        $winmoney = $tempWinMoney;
+                        // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
+                        // if(isset($creditRecords)){
+                        //     foreach($creditRecords as $creditRecord){
+                        //         $tempWinMoney += $creditRecord->amount;
+                        //     }                                                                
+                        // }
+                        $winmoney = $amount;
                     }
                 }
 
