@@ -846,14 +846,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $status = 'success';
             $balance = 0;
             if(!$userRecord || $userRecord == null){
-                $status = 'error';
+                $status = 'failure';
+                return response()->json([
+                    'status' => $status,
+                    'balance' => sprintf('%0.2f',0)
+                ])->headers('Access-Control-Allow-Origin','*');
             }
             $balance = $userRecord->balance;
             $sendBalance = sprintf('%0.2f', $balance);
             return response()->json([
                 'status' => $status,
                 'balance' => sprintf('%0.2f',$sendBalance)
-            ]);
+            ])->headers('Access-Control-Allow-Origin','*');
         }
 
 
