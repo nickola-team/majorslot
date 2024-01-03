@@ -850,14 +850,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([
                     'status' => $status,
                     'balance' => sprintf('%0.2f',0)
-                ])->headers('Access-Control-Allow-Origin','*');
+                ])->header('Access-Control-Allow-Origin','*');
             }
             $balance = $userRecord->balance;
             $sendBalance = sprintf('%0.2f', $balance);
             return response()->json([
                 'status' => $status,
                 'balance' => sprintf('%0.2f',$sendBalance)
-            ])->headers('Access-Control-Allow-Origin','*');
+            ])->header('Access-Control-Allow-Origin','*');
         }
 
 
