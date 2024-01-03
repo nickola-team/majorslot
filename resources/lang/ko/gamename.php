@@ -1186,6 +1186,8 @@ return [
         "SeaFantasy" => "씨 판타지",
         "GatesofOlympus1000" => "게이츠 오브 올림푸스 1000",
         "TheWildGang" => "더 와일드 갱",
+        "FloatingDragonNYFUltraMegawaysHS" => "플로팅 드래곤 메가웨이즈",
+        "JuicyFruitsMultihold" => "주시 후르츠 멀티홀드",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
