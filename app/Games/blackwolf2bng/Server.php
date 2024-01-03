@@ -439,6 +439,9 @@ namespace VanguardLTE\Games\blackwolf2bng
                             if(isset($stack[$spin_type]['total_win'])){
                                 $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
                             }
+                            if(isset($stack[$spin_type]['boost_win'])){
+                                $stack[$spin_type]['boost_win'] = str_replace(',', '', $stack[$spin_type]['boost_win']) * $betline * $DENOMINATOR;
+                            }
                             if(isset($stack[$spin_type]['total_win_state'])){
                                 $stack[$spin_type]['total_win_state'] = str_replace(',', '', $stack[$spin_type]['total_win_state']) * $betline * $DENOMINATOR;
                             }

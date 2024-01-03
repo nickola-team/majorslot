@@ -211,39 +211,48 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     for($k = 0; $k < 3; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
-                            if($stack[$spin_type] != ''){
-                                $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
-                                $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
-                                if(isset($stack[$spin_type]['last_bet'])){
-                                    $stack[$spin_type]['last_bet'] = $betline * $DENOMINATOR;
+                            $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
+                            $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
+                            if(isset($stack[$spin_type]['last_bet'])){
+                                $stack[$spin_type]['last_bet'] = $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['round_win'])){
+                                $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['total_win'])){
+                                $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['total_win_state'])){
+                                $stack[$spin_type]['total_win_state'] = str_replace(',', '', $stack[$spin_type]['total_win_state']) * $betline * $DENOMINATOR;
+                            }   
+                            $stack[$spin_type]['bac'] = $currentHill;
+                            // if(isset($stack[$spin_type]['bs']) && count($stack[$spin_type]['bs']) > 0){
+                            //     foreach( $stack[$spin_type]['bs'] as $index => $value ){
+                            //         if(isset($value['value']) && $value['value'] > 0){
+                            //             if(isset($stack[$spin_type]['bs_v']) && isset($stack[$spin_type]['bs_v'][$index]))
+                            //             $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
+                            //             $stack[$spin_type]['bs'][$index] = $value;
+                            //         }
+                            //     }
+                            // }
+                            if(isset($stack[$spin_type]['last_bs']) && count($stack[$spin_type]['last_bs']) > 0){
+                                foreach( $stack[$spin_type]['last_bs'] as $index => $value ){
+                                    if(isset($value['value']) && $value['value'] > 0){
+                                        $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
+                                        $stack[$spin_type]['last_bs'][$index] = $value;
+                                    }
                                 }
-                                if(isset($stack[$spin_type]['round_win'])){
-                                    $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['total_win'])){
-                                    $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['total_win_state'])){
-                                    $stack[$spin_type]['total_win_state'] = str_replace(',', '', $stack[$spin_type]['total_win_state']) * $betline * $DENOMINATOR;
-                                }   
-                                $stack[$spin_type]['bac'] = $currentHill;
-                                // if(isset($stack[$spin_type]['bs']) && count($stack[$spin_type]['bs']) > 0){
-                                //     foreach( $stack[$spin_type]['bs'] as $index => $value ){
-                                //         if(isset($value['value']) && $value['value'] > 0){
-                                //             if(isset($stack[$spin_type]['bs_v']) && isset($stack[$spin_type]['bs_v'][$index]))
-                                //             $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
-                                //             $stack[$spin_type]['bs'][$index] = $value;
-                                //         }
-                                //     }
-                                // }
-                                if(isset($stack[$spin_type]['last_bs']) && count($stack[$spin_type]['last_bs']) > 0){
-                                    foreach( $stack[$spin_type]['last_bs'] as $index => $value ){
-                                        if(isset($value['value']) && $value['value'] > 0){
-                                            $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
-                                            $stack[$spin_type]['last_bs'][$index] = $value;
+                            }
+                            if(isset($stack[$spin_type]['last_bs_v'])){
+                                for($i = 0; $i < count($stack[$spin_type]['last_bs_v']); $i++){
+                                    for($j = 0; $j < 3; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['last_bs_v'][$i][$j]))){
+                                            $stack[$spin_type]['last_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['last_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                         }
                                     }
                                 }
+                            }
+                            if($spin_type == 'spins'){
                                 $arr_bs = [];
                                 if(isset($stack[$spin_type]['bs_v'])){
                                     for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
@@ -261,12 +270,12 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                                                 if($stack[$spin_type]['bs_v'][$i][$j] != ''){
                                                     $arr_jackpot = ['mini', 'minor', 'major', 'grand'];
                                                     $arr_jackpot_multi = [15, 30, 100, 1000];
-                                                    for($k = 0; $k < 4; $k++){
-                                                        if($stack[$spin_type]['bs_v'][$i][$j] == $arr_jackpot[$k]){
+                                                    for($kk = 0; $kk < 4; $kk++){
+                                                        if($stack[$spin_type]['bs_v'][$i][$j] == $arr_jackpot[$kk]){
                                                             $arr_bs[]= [
                                                                 'position' => $j,
                                                                 'reel' => $i,
-                                                                'value' => $arr_jackpot_multi[$k] * $betline * $LINES * $DENOMINATOR
+                                                                'value' => $arr_jackpot_multi[$kk] * $betline * $LINES * $DENOMINATOR
                                                             ];
                                                         }
                                                     }
@@ -276,11 +285,20 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                                     }
                                 }
                                 $stack[$spin_type]['bs'] = $arr_bs;
-                                if(isset($stack[$spin_type]['last_bs_v'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['last_bs_v']); $i++){
+                            }else{                                      
+                                if(isset($stack[$spin_type]['bs']) && count($stack[$spin_type]['bs']) > 0){
+                                    foreach( $stack[$spin_type]['bs'] as $index => $value ){
+                                        if(isset($value['value']) && $value['value'] > 0){
+                                            $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
+                                            $stack[$spin_type]['bs'][$index] = $value;
+                                        }
+                                    }
+                                }
+                                if(isset($stack[$spin_type]['bs_v'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
                                         for($j = 0; $j < 3; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['last_bs_v'][$i][$j]))){
-                                                $stack[$spin_type]['last_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['last_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
+                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
+                                                $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                             }
                                         }
                                     }
@@ -720,6 +738,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         
                         if($slotEvent['slotEvent'] == 'respin'){
                             $rounds_left = $stack['bonus']['rounds_left'];
+                            if($rounds_left == 0 && isset($stack['bonus']['rounds_left_2'])){
+                                $rounds_left = $stack['bonus']['rounds_left_2'];
+                            }
                         }else{
                             $rounds_left = $stack['freespins']['rounds_left'];
                         }
@@ -755,10 +776,6 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             $isState = false;
                         }
                     }
-                    $allBet = $betline * $LINES;
-                    if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
-                        $allBet = $allBet * 100;
-                    }}
                     if($isState == true && ($slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin')){
                         if($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') > 0){
                             $slotSettings->SetGameData($slotSettings->slotId . 'LastWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
@@ -766,8 +783,12 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         }
                     }
                 }
+                $allBet = $betline * $LINES;
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
+                    $allBet = $allBet * 70;
+                }}
                 $objRes['context']['last_action'] = $action['name'];
-                $slotSettings->SaveLogReport(json_encode($objRes), $betline * $LINES, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
+                $slotSettings->SaveLogReport(json_encode($objRes), $allBet, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 if($action['name'] == 'spin' || $action['name'] == 'buy_spin' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                     if($action['name'] == 'spin'){
                         $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES, $totalWin, $objRes, $slotSettings);
