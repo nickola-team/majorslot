@@ -280,11 +280,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sameRequest = false;
             $debitRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1])->get();
 
-            
+            $sameBalance = 0;
+            $sameId = 0;
 
             foreach($debitRecords as $debitRecord){
                 if($debitRecord->req_id == $reqId){
                     $sameRequest = true;
+                    $sameBalance = $debitRecord->balance;
+                    $sameId = $debitRecord->id;
                     break;
                 }
             }            
@@ -295,8 +298,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'No Error',
-                    'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
+                    'trx_id' => $sameId,
+                    'balance' => sprintf('%0.2f',$sameBalance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 if($amount > $reserveRecord->amount && ($amount - $reserveRecord->amount >= 0.02)){
