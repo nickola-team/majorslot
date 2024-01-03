@@ -321,7 +321,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             
