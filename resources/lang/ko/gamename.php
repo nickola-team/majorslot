@@ -1188,6 +1188,8 @@ return [
         "TheWildGang" => "더 와일드 갱",
         "FloatingDragonNYFUltraMegawaysHS" => "플로팅 드래곤 메가웨이즈",
         "JuicyFruitsMultihold" => "주시 후르츠 멀티홀드",
+        "YearofTheDragon" => "이어 오브 더 드래곤 킹",
+        "HappyFortune" => "해피 포츈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

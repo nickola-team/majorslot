@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\YearofTheDragonPM
+namespace VanguardLTE\Games\HappyFortunePM
 {
     class SlotSettings
     {
@@ -112,7 +112,7 @@ namespace VanguardLTE\Games\YearofTheDragonPM
             $this->hideButtons = [];
             $this->jpgs = [];
             $this->Line = [1];
-            $this->Bet = explode(',', $game->bet); //[20.00,40.00,60.00,80.00,100.00,200.00,300.00,400.00,500.00,750.00,1000.00,1500.00,2500.00,5000.00,7500.00,10000.00]; 
+            $this->Bet = explode(',', $game->bet); //[10.00,20.00,30.00,40.00,50.00,100.00,150.00,200.00,250.00,375.00,500.00,750.00,1250.00,2500.00,3750.00,5000.00]; 
             $this->Balance = $user->balance;
             $this->Bank = $game->get_gamebank();
             $this->Percent = $this->shop->percent;
@@ -732,12 +732,13 @@ namespace VanguardLTE\Games\YearofTheDragonPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameYearofTheDragonStack::where('id', 2854)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('id', 1329)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
+                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -764,33 +765,29 @@ namespace VanguardLTE\Games\YearofTheDragonPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameYearofTheDragonStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('spin_type','>', 0)->whereNotIn('id', $existIds);
+                }else{
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameSantasGreatGiftsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                }
+                $index = mt_rand(0, 45000);
+                if($winType == 'win'){
+                    $stacks = $stacks->where('odd', '>', 0);
+                    // $index = mt_rand(0, 80000);
+                }
+                if($winType == 'bonus'){
                     if($pur >= 0){
                         $stacks = $stacks->where('pur_level', $pur);
                     }else{
-                        $stacks = $stacks->where('pur_level', '<=', 0);
+                        $stacks = $stacks->where('pur_level','<=', 0);
                     }
-                }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameYearofTheDragonStack::where('spin_type', 0)->whereNotIn('id', $existIds);
-                }
-                $index = mt_rand(0, 28000);
-                if($winType == 'win'){
-                    $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur == 3){
-                            $stacks = $stacks->where('odd', '<=', 45);        
-                        }else if($pur == 2){
-                            $stacks = $stacks->where('odd', '<=', 25);    
-                        }else{
-                            $stacks = $stacks->where('odd', '<=', 15);    
-                        }
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
-                    if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
+                    if($limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_special_winbonus = 0;
                         $win = explode(',', $this->game->game_win->special_winbonus);
