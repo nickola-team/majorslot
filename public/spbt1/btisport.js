@@ -31,8 +31,9 @@
                 document.cookie = cname + "= ; path=/; expires = Thu, 01 Jan 1970 00:00:00 GMT";
             }
         }
-
-        var getRefreshUrl ='https://dev.major9999.com/api/js/refresh';  //must be https and return format is {"status":"success","balance":"100.00"} or {"status":"failure","balance":"0"} 
+        
+        var serverUrl = '{{ env(bti_api) }}';
+        var getRefreshUrl = serverUrl + '/api/js/refresh';  //must be https and return format is {"status":"success","balance":"100.00"} or {"status":"failure","balance":"0"} 
         var strUrlToken = getUrlVars("operatorToken");
         var strCookieToken = SportsCookie.getCookie("operatorToken");
         var strStoken = sessionStorage.getItem("operatorToken");
