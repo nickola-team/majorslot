@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'shop_id' => $parent->shop_id, 
                 'role_id' => 1
             ])->count();
-            $max_users = 300;
+            $max_users = 500;
 
             if( $max_users <= $count) 
             {
