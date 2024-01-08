@@ -12,7 +12,11 @@ namespace VanguardLTE\Http\Middleware
         {
             if( $this->auth->check() ) 
             {
-                return redirect('/');
+                if($request->is(config('app.slug') . '*')){
+                    return redirect()->to(argon_route('argon.dashboard'));
+                }else{
+                    return redirect('/');
+                }
             }
             return $next($request);
         }

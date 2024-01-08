@@ -37,7 +37,9 @@ namespace VanguardLTE\Http\Middleware
                 {
                     if( $request->is(config('app.slug') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
                     {
-                        return redirect()->to('/');
+                        \Auth::logout();
+                        return redirect()->to(argon_route('argon.dashboard'));
+                        // return redirect()->to('/');
                     }
                     if( !$request->is(config('app.slug') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
                     {
@@ -48,7 +50,9 @@ namespace VanguardLTE\Http\Middleware
                 {
                     if( $request->is(config('app.admurl') . '*') && !$this->auth->user()->hasPermission('access.admin.panel') ) 
                     {
-                        return redirect()->to('/');
+                        // return redirect()->to('/');
+                        \Auth::logout();
+                        return redirect()->to(argon_route('argon.dashboard'));
                     }
                     if( !$request->is(config('app.admurl') . '*') && $this->auth->user()->hasPermission('access.admin.panel') ) 
                     {
