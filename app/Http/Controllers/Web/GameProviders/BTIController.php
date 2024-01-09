@@ -382,7 +382,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $debitamount += $debitRecord->amount;
                             $betTypeID = $debitRecord->bet_type_id;
                             $betTypeName = $debitRecord->bet_type_name;
-                            $betDate = $transData['Bet']['@attributes']['EventDate'];
+                            if(isset($transData['Bet']['Lines'])){
+                                $betDate = $transData['Bet']['Lines'][0]['@attributes']['EventDate'];
+                            }else{
+                                $betDate = $transData['Bet']['@attributes']['EventDate'];
+                            }
+                            
                             $betReqId = $debitRecord->req_id;
                         //}  
                 }
