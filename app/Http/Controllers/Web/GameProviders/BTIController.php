@@ -611,6 +611,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if(isset($array['Purchases']['Purchase']['Selections']['Selection']['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'])){
                     $actionType = $array['Purchases']['Purchase']['Selections']['Selection']['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'];
                 }
+                $dateTime = '';
+                if(isset($array['Purchase']['Selections']['Selection'][0])){
+                    $dateTime = $array['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
+                }else{
+                    $dateTime = $array['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
+                }
                 
                 $tempWinMoney = 0;
                 $comboCase = false;
@@ -624,7 +630,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $amount;
                                 $user->save();
     
-                               $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                               $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'date_time'=>$dateTime]);
                                \DB::commit();
                                 $winmoney = 0;
                             }else{
@@ -634,16 +640,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
         
-                                    $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                    $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                     \DB::commit();
                                     $winmoney = 0;
                                 }else{
-                                    // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                                    // if(isset($creditRecords)){
-                                    //     foreach($creditRecords as $creditRecord){
-                                    //         $tempWinMoney += $creditRecord->amount;
-                                    //     }                                                                
-                                    // }
                                     $winmoney = $amount;
                                 }
                                 
@@ -656,7 +656,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
 
-                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                     \DB::commit();
                                     $winmoney = 0;
                                 }else{
@@ -666,7 +666,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->balance = $user->balance + $amount;
                                         $user->save();
                                         
-                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                         \DB::commit();
                                         $winmoney = 0;
                                     }else{
@@ -682,7 +682,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
 
-                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                     \DB::commit();
                                     $winmoney = 0;
                                 }else{
@@ -693,7 +693,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->balance = $user->balance + $amount;
                                         $user->save();
                                         
-                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                         \DB::commit();
                                         $winmoney = 0;
                                     }else{
@@ -701,10 +701,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         if(isset($creditRecords)){
                                             foreach($creditRecords as $creditRecord){
                                                 if(strpos($creditRecord,'Combo Bonus')== false){
-                                                   // $tempWinMoney += $creditRecord->amount;
                                                 }else{
                                                     $comboCase = true;
-                                                    //$comboMoney += $creditRecord->amount;
                                                 }                                    
                                             }
                                         }
@@ -718,12 +716,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         
                     } else{
-                        // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        // if(isset($creditRecords)){
-                        //     foreach($creditRecords as $creditRecord){
-                        //         $tempWinMoney += $creditRecord->amount;
-                        //     }                                                                
-                        // }
                         $winmoney = $amount;
                     }
                 }else{
@@ -737,19 +729,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                 \DB::commit();
                                 $winmoney = 0;
                             }else{     
-                                // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                                // if(isset($creditRecords)){
-                                //     foreach($creditRecords as $creditRecord){
-                                //         $tempWinMoney += $creditRecord->amount;
-                                //     }      
-                                //     $winmoney = $tempWinMoney;                                                           
-                                // }else{
-                                //     $winmoney = $amount;
-                                // }
                                                           
                                 $winmoney = $amount;
                                 $betfinish = true;
@@ -761,14 +744,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                 $winmoney = 0;
                                 \DB::commit();
                             }else{
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                 $winmoney = 0;
                                 \DB::commit();
                             }
@@ -776,12 +759,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         
                     }else{
-                        // $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
-                        // if(isset($creditRecords)){
-                        //     foreach($creditRecords as $creditRecord){
-                        //         $tempWinMoney += $creditRecord->amount;
-                        //     }                                                                
-                        // }
                         $winmoney = $amount;
                     }
                 }
@@ -818,7 +795,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'category_id' => 61,
                         'game_id' => $reserveId . '_credit',
                         'roundid' =>  $purchaseId,
-                        'date_time' => $array['Purchases']['Purchase']['@attributes']['CreationDateUTC']
+                        'date_time' => $dateTime
                     ]);
                     //$prevStatRecord->update(['balance'=>$user->balance,'bet'=>$record->amount,'win' => $winmoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
                 }                
@@ -837,7 +814,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         public function sendSession(\Illuminate\Http\Request $request){
-
+            if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
+            {
+                $status = 'failure';
+                return response()->json([
+                    'status' => $status,
+                    'balance' => sprintf('%0.2f',0)
+                ])->header('Access-Control-Allow-Origin','*');
+            }
+            if( !\Illuminate\Support\Facades\Auth::check() ) 
+            {
+                $status = 'failure';
+                return response()->json([
+                    'status' => $status,
+                    'balance' => sprintf('%0.2f',0)
+                ])->header('Access-Control-Allow-Origin','*');
+            }
             $data = json_decode($request->getContent(), true);
             //$userToken = isset($data['token'])?$data['token']:'';
             $userToken = $request->token;
