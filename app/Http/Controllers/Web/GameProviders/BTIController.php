@@ -382,7 +382,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $debitamount += $debitRecord->amount;
                             $betTypeID = $debitRecord->bet_type_id;
                             $betTypeName = $debitRecord->bet_type_name;
-                            $betDate = $transData['Bet']['@attributes']['CreationDate'];
+                            $betDate = $transData['Bet']['@attributes']['EventDate'];
                             $betReqId = $debitRecord->req_id;
                         //}  
                 }
@@ -519,7 +519,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $user->balance = $debitedBalance;
                         $user->save();
                         $debitCustomerRecord->update(['balance'=>$user->balance]) ;    
-
+                        $dateTime = '';
+                        if(isset($array['Purchases']['Purchase']['Selections']['Selection'][0])){
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
+                        }else{
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
+                        }
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => $user->balance, 
@@ -536,7 +541,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'category_id' => 61,
                             'game_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'] . '_debit',
                             'roundid' =>  $purchaseId,
-                            'date_time' => $array['Purchases']['Purchase']['@attributes']['CreationDateUTC']
+                            'date_time' => $dateTime
                         ]);
                     }                                         
                 }
@@ -612,10 +617,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $actionType = $array['Purchases']['Purchase']['Selections']['Selection']['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'];
                 }
                 $dateTime = '';
-                if(isset($array['Purchase']['Selections']['Selection'][0])){
-                    $dateTime = $array['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
+                if(isset($array['Purchases']['Purchase']['Selections']['Selection'][0])){
+                    $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
                 }else{
-                    $dateTime = $array['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
+                    $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
                 }
                 
                 $tempWinMoney = 0;
