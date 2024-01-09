@@ -824,22 +824,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         public function sendSession(\Illuminate\Http\Request $request){
-            if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
-            {
-                $status = 'failure';
-                return response()->json([
-                    'status' => $status,
-                    'balance' => sprintf('%0.2f',0)
-                ])->header('Access-Control-Allow-Origin','*');
-            }
-            if( !\Illuminate\Support\Facades\Auth::check() ) 
-            {
-                $status = 'failure';
-                return response()->json([
-                    'status' => $status,
-                    'balance' => sprintf('%0.2f',0)
-                ])->header('Access-Control-Allow-Origin','*');
-            }
+            // if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
+            // {
+            //     $status = 'failure';
+            //     return response()->json([
+            //         'status' => $status,
+            //         'balance' => sprintf('%0.2f',0)
+            //     ])->header('Access-Control-Allow-Origin','*');
+            // }
+            // if( !\Illuminate\Support\Facades\Auth::check() ) 
+            // {
+            //     $status = 'failure';
+            //     return response()->json([
+            //         'status' => $status,
+            //         'balance' => sprintf('%0.2f',0)
+            //     ])->header('Access-Control-Allow-Origin','*');
+            // }
             $data = json_decode($request->getContent(), true);
             //$userToken = isset($data['token'])?$data['token']:'';
             $userToken = $request->token;
