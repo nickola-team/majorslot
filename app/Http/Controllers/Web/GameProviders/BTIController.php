@@ -752,7 +752,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $debitWinMoney += $debitRecord->amount;
                                     }
                                 }           
-                                $winmoney = $winmoney + $amount + $debitWinMoney;
+                                $winmoney = $winmoney + $debitWinMoney;
                                 $betfinish = true;
                             }
                             
