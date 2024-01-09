@@ -636,7 +636,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->save();
     
                                $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'date_time'=>$dateTime]);
-                               \DB::commit();
+                               
                                 $winmoney = 0;
                             }else{
                                 $statRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_debit','roundid'=>$purchaseId])->first();
@@ -646,7 +646,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->save();
         
                                     $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                    \DB::commit();
+                                    
                                     $winmoney = 0;
                                 }else{
                                     $winmoney = $amount;
@@ -662,7 +662,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->save();
 
                                     $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                    \DB::commit();
+                                    
                                     $winmoney = 0;
                                 }else{
                                     $statRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_debit','roundid'=>$purchaseId])->first();
@@ -672,7 +672,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->save();
                                         
                                         $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                        \DB::commit();
+                                        
                                         $winmoney = 0;
                                     }else{
                                         $betfinish = true;
@@ -688,7 +688,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->save();
 
                                     $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                    \DB::commit();
+                                    
                                     $winmoney = 0;
                                 }else{
                                     $statRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_debit','roundid'=>$purchaseId])->first();
@@ -699,7 +699,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->save();
                                         
                                         $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                        \DB::commit();
+                                        
                                         $winmoney = 0;
                                     }else{
                                         $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>6])->get();
@@ -735,7 +735,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
                                 $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
-                                \DB::commit();
+                                
                                 $winmoney = 0;
                             }else{     
                                 $transactionRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>6])->get(); 
@@ -764,14 +764,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->save();
                                 $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                 $winmoney = 0;
-                                \DB::commit();
+                                
                             }else{
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
                                 $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
                                 $winmoney = 0;
-                                \DB::commit();
+                                
                             }
                             
                         }
@@ -785,8 +785,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->balance = $debitedBalance;
                 $user->save();
                 $debitCustomerRecord->update(['balance'=>$debitedBalance]);
-
-                if($betfinish == true){
+                
+                if($betfinish == true && $winmoney > 0){   //winMoney가 0이 아닌경우에만 stat_game에 저장(win/lost에서 win이 0으로 들어오는 경우)
                     //$prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId])->first();
 
                     $user->balance = $debitedBalance;
