@@ -782,7 +782,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                         
                     }else{
-                        $winmoney = 0;
+                        $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_credit','roundid'=>$purchaseId])->first();
+                        $statRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_debit','roundid'=>$purchaseId])->first();
+                        if(isset($prevStatRecord)){
+                            $winmoney = $amount;
+                            $user->balance = $user->balance + $winmoney;
+                            $user->save();
+                            if($amount != 0){
+                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);    
+                            }                                                        
+                            $winmoney = 0;
+                        }else{
+                            if(isset($statRecord)){
+                                $winmoney = $amount;
+                                $user->balance = $user->balance + $winmoney;
+                                $user->save();
+                                if($amount != 0){
+                                    $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);    
+                                }    
+                                $winmoney = 0;
+                            }else{
+                                $winmoney = 0;
+                            }
+                        }
+                        
                     }
                 }
 
@@ -799,24 +822,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($comboCase == true){
                         $winmoney = $winmoney + $comboMoney;
                     }
-                    \VanguardLTE\StatGame::create([
-                        'user_id' => $user->id, 
-                        'balance' => $user->balance, 
-                        'bet' => 0, 
-                        'win' => $winmoney,
-                        'game' =>  'sports', 
-                        'type' => 'sports',
-                        'percent' => 0, 
-                        'percent_jps' => 0, 
-                        'percent_jpg' => 0, 
-                        'profit' => 0, 
-                        'denomination' => 0, 
-                        'shop_id' => $user->shop_id,
-                        'category_id' => 61,
-                        'game_id' => $reserveId . '_credit',
-                        'roundid' =>  $purchaseId,
-                        'date_time' => $dateTime
-                    ]);
+                    if($winmoney != 0){
+                        \VanguardLTE\StatGame::create([
+                            'user_id' => $user->id, 
+                            'balance' => $user->balance, 
+                            'bet' => 0, 
+                            'win' => $winmoney,
+                            'game' =>  'sports', 
+                            'type' => 'sports',
+                            'percent' => 0, 
+                            'percent_jps' => 0, 
+                            'percent_jpg' => 0, 
+                            'profit' => 0, 
+                            'denomination' => 0, 
+                            'shop_id' => $user->shop_id,
+                            'category_id' => 61,
+                            'game_id' => $reserveId . '_credit',
+                            'roundid' =>  $purchaseId,
+                            'date_time' => $dateTime
+                        ]);
+                    }
+                    
                     //$prevStatRecord->update(['balance'=>$user->balance,'bet'=>$record->amount,'win' => $winmoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
                 }                
             }else{
@@ -1166,17 +1192,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
             }
+            $fulltimeScore = '';
+            if($tempArry['CurrentResult'] == 'null' || $tempArry['CurrentResult'] == ''){
+                $fulltimeScore = '';
+            }else{
+                $fulltimeScore = $tempArry['CurrentResult'];
+            }
             
             $result = [
                 'date' => $tempArry['CreationDate'],
                 'odd'  => $tempArry['OddsDec'],
                 'yourbet' => $tempArry['YourBet'],
-                'score'  => $tempArry['Score'],
+                'market'  => $tempArry['EventTypeName'],
                 'branchname' => $tempArry['BranchName'],
                 'leaguename' => $tempArry['LeagueName'],
                 'game'  => $tempArry['HomeTeam'] . ' vs ' . $tempArry['AwayTeam'],
-                'bettype' => $betType,
-                'bettypename' => $statString, 
+                'fulltimescore' => $fulltimeScore,
                 'stat'   =>  '대기'               
             ];
             return $result;
@@ -1199,13 +1230,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 '대기',
                 '적중',
                 '미적중',
-                'Half Won',
-                'Half Lost',
+                '하프 승',
+                '하프 패',
                 '취소',
                 '캐시아웃',
                 '무승부'
             ];
-
+            $fulltimeScore = '';
+            if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
+                $fulltimeScore = '';
+            }else{
+                $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+            }
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
                     $betType = '싱글';
@@ -1253,15 +1289,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
                         'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                         'yourbet' => $tempArry['@attributes']['YourBet'],
-                        'score'  => $tempArry['@attributes']['Score'],
+                        'market'  => $tempArry['@attributes']['EventTypeName'],
                         'branchname' => $tempArry['@attributes']['BranchName'],
                         'leaguename' => $tempArry['@attributes']['LeagueName'],
                         'game'  => $tempArry['@attributes']['HomeTeam'] . ' vs ' . $tempArry['@attributes']['AwayTeam'],
-                        'bettype' => $betType,
-                        'bettypename' => $statString,
+                        'fulltimescore' => $fulltimeScore,
                         'stat'  => $tempStat
                     ];
-                    
                 }
                 return $result;
                 
@@ -1307,23 +1341,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+                
                 $result = [
                     'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
-                    'score'  => $tempArry['@attributes']['Score'],
+                    'market'  => $tempArry['@attributes']['EventTypeName'],
                     'branchname' => $tempArry['@attributes']['BranchName'],
                     'leaguename' => $tempArry['@attributes']['LeagueName'],
                     'game'  => $tempArry['@attributes']['HomeTeam'] . ' vs ' . $tempArry['@attributes']['AwayTeam'],
-                    'bettype' => $betType,
-                    'bettypename' => $statString,
+                    'fulltimescore' => $fulltimeScore,
                     'stat'  => $tempStat
                 ];
                 return $result;
             }
-            
-
-            
         }
 
         public static function getDebitInfo($tempArry,$bet_string,$bettype_string){
@@ -1348,6 +1379,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 '캐시아웃',
                 '무승부'
             ];
+            
+            $fulltimeScore = '';
+            if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
+                $fulltimeScore = '';
+            }else{
+                $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+            }
+            
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
                     $betType = '싱글';
@@ -1396,12 +1435,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
-                    'score'  => $tempArry['@attributes']['Score'],
+                    'market'  => $tempArry['@attributes']['EventTypeName'],
                     'branchname' => $tempArry['@attributes']['BranchName'],
                     'leaguename' => $tempArry['@attributes']['LeagueName'],
                     'game'  => $tempArry['@attributes']['HomeTeam'] . ' vs ' . $tempArry['@attributes']['AwayTeam'],
-                    'bettype' => $betType,
-                    'bettypename' => $statString, 
+                    'fulltimescore' => $fulltimeScore,
                     'stat'   => $tempStat
                 ];
             }else{
@@ -1449,12 +1487,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
-                    'score'  => $tempArry['@attributes']['Score'],
+                    'market'  => $tempArry['@attributes']['EventTypeName'],
                     'branchname' => $tempArry['@attributes']['BranchName'],
                     'leaguename' => $tempArry['@attributes']['LeagueName'],
                     'game'  => $tempArry['@attributes']['HomeTeam'] . ' vs ' . $tempArry['@attributes']['AwayTeam'],
-                    'bettype' => $betType,
-                    'bettypename' => $statString, 
+                    'fulltimescore' => $fulltimeScore,
                     'stat'   => $tempStat
                 ];
             }
