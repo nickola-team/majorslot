@@ -1023,12 +1023,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $array = json_decode($btiRecord->data,true);
                             $reqId = $btiRecord->req_id;
                             $responseData[1][$count] = $array;
-                            $gainMoney += $btiRecord->win;
+                            $gainMoney += $btiRecord->amount;
                         }else if($btiRecord->status == 6){
                             $array = json_decode($btiRecord->data,true);
                             $reqId = $btiRecord->req_id;
                             $responseData[2][$count] = $array;
-                            $gainMoney += $btiRecord->win;
+                            $gainMoney += $btiRecord->amount;
                         }
                         $count++;
                     }

@@ -53,9 +53,9 @@
                         <td >
                             
                             @if($res1['stat'] == '적중')
-                            <span class="text-red">{{$res1['stat']}}</span>
-                            @elseif($res1['stat'] == '미적중')
                             <span class="text-green">{{$res1['stat']}}</span>
+                            @elseif($res1['stat'] == '미적중')
+                            <span class="text-red">{{$res1['stat']}}</span>
                             @else
                             <span class="text-black">{{$res1['stat']}}</span>
                             @endif
