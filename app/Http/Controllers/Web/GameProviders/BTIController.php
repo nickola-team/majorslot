@@ -1182,6 +1182,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getCreditInfo($tempArry,$bet_string,$bettype_string){
             $betType = '';
             $statString = '';
+            $statArray = [
+                'Opened',
+                'Won',
+                'Lost',
+                'Half Won',
+                'Half Lost',
+                'Canceled',
+                'Cashout',
+                'Draw'
+            ];
+            $statArray_string = [
+                '대기',
+                '적중',
+                '미적중',
+                'Half Won',
+                'Half Lost',
+                '취소',
+                '캐시아웃',
+                '무승부'
+            ];
+
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
                     $betType = '싱글';
@@ -1194,11 +1215,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $result = [];
                 for($i = 0;$i<count($tempArry['Changes']['Change']['Bets']['Bet']);$i++){
                     if(isset($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'])){
-                        $tempStat = $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] . ')';
-                        //break;
+                        if($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] == 'Combo Bonus'){
+                            $tempStat = '콤보 보너스';
+                        }else if($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] == 'Partial Cash Out'){
+                            $tempStat = 'Partial Cash Out';
+                        }else{
+                            $tempStat = '';
+                        }
                     }else{
-
-                        $tempStat = $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['@attributes']['NewStatus'] . ')';
+                        $unnormal = false;
+                        for($j=0;$j<count($statArray);$j++){
+                            if($tempArry['Changes']['Change']['@attributes']['NewStatus'] == $statArray[$j]){
+                                $tempStat = $statArray_string[$j];
+                            }else{
+                                $unnormal = true;
+                            }
+                        }
+                        if($unnormal == true && $tempStat == ''){
+                            $tempStat = '';
+                        }
                     }
                     if(strpos($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['BetType'],'System')){                            
                         $statString = '시스템' . explode(' ',$tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['BetType'])[1];
@@ -1237,10 +1272,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $tempStat = '';
                 if(isset($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'])){
-                    $tempStat = $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] . ')';
+                    if($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] == 'Combo Bonus'){
+                        $tempStat = '콤보 보너스';
+                    }else if($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] == 'Partial Cash Out'){
+                        $tempStat = 'Partial Cash Out';
+                    }else{
+                        $tempStat = '';
+                    }
                 }else{
-                    $tempStat = $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['@attributes']['NewStatus'] . ')';
+                    $unnormal = false;
+                    for($j=0;$j<count($statArray);$j++){
+                        if($tempArry['Changes']['Change']['@attributes']['NewStatus'] == $statArray[$j]){
+                            $tempStat = $statArray_string[$j];
+                        }else{
+                            $unnormal = true;
+                        }
+                    }
+                    if($unnormal == true && $tempStat == ''){
+                        $tempStat = '';
+                    }
                 }
+                
                 if(strpos($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'],'System')){                            
                     $statString = '시스템' . explode(' ',$tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'])[1];
                 }else if(strpos($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'],'folds')){
@@ -1273,6 +1325,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getDebitInfo($tempArry,$bet_string,$bettype_string){
             $betType = '';
+            $statArray = [
+                'Opened',
+                'Won',
+                'Lost',
+                'Half Won',
+                'Half Lost',
+                'Canceled',
+                'Cashout',
+                'Draw'
+            ];
+            $statArray_string = [
+                '대기',
+                '적중',
+                '미적중',
+                'Half Won',
+                'Half Lost',
+                '취소',
+                '캐시아웃',
+                '무승부'
+            ];
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
                     $betType = '싱글';
@@ -1285,11 +1357,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $tempStat = '';
                 for($i = 0;$i<count($tempArry['Changes']['Change']['Bets']['Bet']);$i++){
                     if(isset($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'])){
-                        $tempStat = $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] . ')';
-                        break;
+                        if($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] == 'Combo Bonus'){
+                            $tempStat = '콤보 보너스';
+                        }else if($tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['ActionType'] == 'Partial Cash Out'){
+                            $tempStat = 'Partial Cash Out';
+                        }else{
+                            $tempStat = '';
+                        }
                     }else{
-                        
-                        $tempStat = $tempArry['Changes']['Change']['Bets']['Bet'][$i]['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['@attributes']['NewStatus'] . ')';
+                        $unnormal = false;
+                        for($j=0;$j<count($statArray);$j++){
+                            if($tempArry['Changes']['Change']['@attributes']['NewStatus'] == $statArray[$j]){
+                                $tempStat = $statArray_string[$j];
+                            }else{
+                                $unnormal = true;
+                            }
+                        }
+                        if($unnormal == true && $tempStat == ''){
+                            $tempStat = '';
+                        }
                     }
                 }
                 if(strpos($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'],'System')){                            
@@ -1325,10 +1411,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $tempStat = '';
                 if(isset($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'])){
-                    $tempStat = $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] . ')';
+                    if($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] == 'Combo Bonus'){
+                        $tempStat = '콤보 보너스';
+                    }else if($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'] == 'Partial Cash Out'){
+                        $tempStat = 'Partial Cash Out';
+                    }else{
+                        $tempStat = '';
+                    }
                 }else{
-                    
-                    $tempStat = $tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['Amount'] . '(' . $tempArry['Changes']['Change']['@attributes']['NewStatus'] . ')';
+                    $unnormal = false;
+                    for($j=0;$j<count($statArray);$j++){
+                        if($tempArry['Changes']['Change']['@attributes']['NewStatus'] == $statArray[$j]){
+                            $tempStat = $statArray_string[$j];
+                        }else{
+                            $unnormal = true;
+                        }
+                    }
+                    if($unnormal == true && $tempStat == ''){
+                        $tempStat = '';
+                    }
                 }
                 if(strpos($tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'],'System')){                            
                     $statString = '시스템' . explode(' ',$tempArry['Changes']['Change']['Bets']['Bet']['@attributes']['BetType'])[1];
