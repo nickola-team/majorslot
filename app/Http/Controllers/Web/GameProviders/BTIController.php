@@ -980,6 +980,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $stat = [];
             $result = [];
             $bets = [];
+            $betInfo = [];
             if(!isset($responseData[1]) && !isset($responseData[2])){
                 //array_push($stat,'대기');
                 $tempArry = [];
@@ -1086,9 +1087,57 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
             }
-            
+            $commitRecord = \VanguardLTE\BTiTransaction::where(['user_id'=>$user->id,'reserve_id'=>$reserveId,'status'=>4])->first();
+            $pur_id = $commitRecord->purchase_id;
+            $bettype_temp = '';
+            $statString = '';
+            $betTypeName = '';
+            $tempBetArray = [];
+            if(count($responseData[0][0]['Bet'])>1){
+                if(isset($responseData[0][0]['Bet'][0]))
+                {
+                    $tempBetArray = $responseData[0][0]['Bet'][0]['@attributes'];
+                }else{
+                    $tempBetArray = $responseData[0][0]['Bet']['@attributes'];
+                }
+            }else{
+                $tempBetArray = $responseData[0][0]['Bet']['@attributes'];
+            }
+            if($tempBetArray['BetTypeID'] == 1){
+                $betTypeName = '싱글';
+            }else if($tempBetArray['BetTypeID'] == 2){
+                $betTypeName = '콤보 배팅';
+            }else if($tempBetArray['BetTypeID'] == 3){
+                $betTypeName = '시스템 배팅';
+            }
+            if($tempBetArray['BetTypeID'] == "1" ){
+                $bettype_temp = '싱글 배팅';
+            }else{
+                if(strpos($tempBetArray['BetTypeName'],'System')){                            
+                    $statString = '시스템' . explode(' ',$tempBetArray['BetTypeName'])[1];
+                }else if(strpos($tempBetArray['BetTypeName'],'folds')){
+                    $statString = explode(' ',$tempBetArray['BetTypeName'])[0] . '폴드';
+                }else{
+                    for($j=0;$j<count($bettype_string);$j++){
+                        if($bettype_string[$j] == $tempBetArray['BetTypeName']){
+                            $statString = $bet_string[$j];
+                        }
+                    }
+                }
+                $bettype_temp = $betTypeName . ' ' . $statString;
+            }
+            $betInfo = [
+                'pur_id' =>$pur_id,
+                'date' => $tempBetArray['CreationDate'],
+                'bet_type' => $bettype_temp,
+                'bet_money' => $tempBetArray['RealAmount'],
+                'award_money' => $tempBetArray['Gain'],
+                'odd' => $tempBetArray['OddsDec']
+            ];
+
             return [
                 'type' => $gametype,
+                'betinfo' => $betInfo,
                 'result' => $result
             ];
 
@@ -1125,7 +1174,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'game'  => $tempArry['HomeTeam'] . ' vs ' . $tempArry['AwayTeam'],
                 'bettype' => $betType,
                 'bettypename' => $statString, 
-                'stat'   =>  '대기'
+                'stat'   =>  '대기'               
             ];
             return $result;
         }
