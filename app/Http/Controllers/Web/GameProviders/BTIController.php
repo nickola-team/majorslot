@@ -835,9 +835,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $user->save();
                 $debitCustomerRecord->update(['balance'=>$debitedBalance]);
                 
-                if($betfinish == true && $winmoney > 0){   //winMoney가 0이 아닌경우에만 stat_game에 저장(win/lost에서 win이 0으로 들어오는 경우)
+                if($betfinish == true){   //winMoney가 0이 아닌경우에만 stat_game에 저장(win/lost에서 win이 0으로 들어오는 경우)
                     //$prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId])->first();
-
+                    
                     $user->balance = $debitedBalance;
                     $user->save();
                     if($comboCase == true){
@@ -862,7 +862,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'roundid' =>  $purchaseId,
                             'date_time' => $betDate
                         ]);
+                    }else{
+                        $commitRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId . '_commit','roundid'=>$purchaseId])->first();
+                        $commitRecord->update(['balance'=>$user->balance,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]); 
                     }
+                    
+                    
                     
                     //$prevStatRecord->update(['balance'=>$user->balance,'bet'=>$record->amount,'win' => $winmoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
                 }                
