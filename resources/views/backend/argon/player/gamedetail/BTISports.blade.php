@@ -25,7 +25,8 @@
     <td>{{$res['betinfo']['odd']}}</td>
 </tr>
 <tr>
-    <td colspan='2'>
+    <td colspan='2'style="
+    overflow: auto;" >
         <table style="overflow: auto; margin:auto;text-wrap: nowrap;" >
             <thead class="bg-primary text-white">
                 <th class="text-white">스포츠</th>
@@ -41,15 +42,14 @@
             <tbody>
                 @foreach($res['result'] as $res1)
                     <tr>
-                        
                         <td >{{$res1['branchname']}}</td>
                         <td >{{$res1['leaguename']}}</td>
                         <td >{{$res1['date']}}</td>
                         <td >{{$res1['game']}}</td>
-                        <td >{{$res1['yourbet']}}</td>
+                        <td >{{$res1['market']}}</td>
                         <td >{{$res1['yourbet']}}</td>
                         <td >{{$res1['odd']}}</td>
-                        <td >{{$res1['stat']}}</td>
+                        <td >{{$res1['fulltimescore']}}</td>
                         <td >{{$res1['stat']}}</td>
                     </tr>
                 @endforeach

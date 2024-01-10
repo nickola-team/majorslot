@@ -1,8 +1,12 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
+
+    use Carbon\Carbon;
+    use DateTimeZone;
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Facades\Log;
+    use DateTime;
     class BTIController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function ValidateToken(\Illuminate\Http\Request $request){
@@ -387,7 +391,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }else{
                                 $betDate = $transData['Bet']['@attributes']['EventDate'];
                             }
-                            
+                            $newDateTime = new DateTime($betDate,new DateTimeZone('UTC'));
+                            $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                            $betDate = $newDateTime->format('Y-m-d H:i:s');
                             $betReqId = $debitRecord->req_id;
                         //}  
                 }
@@ -497,7 +503,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $user->balance = $user->balance + $amount;
                     $debitedBalance = $user->balance;
                     $user->save();
-                    $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','roundid'=>$purchaseId,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);    
+
+                    $newDateTime = new DateTime($array['Purchases']['Purchase']['@attributes']['CreationDateUTC'],new DateTimeZone('UTC'));
+                    $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                    $dateTime = $newDateTime->format('Y-m-d H:i:s');
+
+                    $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','roundid'=>$purchaseId,'date_time'=>$dateTime]);    
                     $debitCustomerRecord->update(['balance'=>$user->balance]) ;             
                 }else{
                     
@@ -507,7 +518,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $user->balance = $user->balance + $amount;
                         $debitedBalance = $user->balance;
                         $user->save();
-                        $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]); 
+
+                        $newDateTime = new DateTime($array['Purchases']['Purchase']['@attributes']['CreationDateUTC'],new DateTimeZone('UTC'));
+                        $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                        $dateTime = $newDateTime->format('Y-m-d H:i:s');
+
+                        $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','date_time'=>$dateTime]); 
                         $debitCustomerRecord->update(['balance'=>$user->balance]) ;
                     }else{
                         $tempWinMoney = 0;
@@ -530,6 +546,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }else{
                             $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
                         }
+                        $betDate = '';
+                        $newDateTime = new DateTime($dateTime,new DateTimeZone('UTC'));
+                        $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                        $betDate = $newDateTime->format('Y-m-d H:i:s');
+
                         \VanguardLTE\StatGame::create([
                             'user_id' => $user->id, 
                             'balance' => $user->balance, 
@@ -546,7 +567,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'category_id' => 61,
                             'game_id' => $array['Purchases']['Purchase']['@attributes']['ReserveID'] . '_debit',
                             'roundid' =>  $purchaseId,
-                            'date_time' => $dateTime
+                            'date_time' => $betDate
                         ]);
                     }                                         
                 }
@@ -627,7 +648,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }else{
                     $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
                 }
-                
+
+                $betDate = '';
+                $newDateTime = new DateTime($dateTime,new DateTimeZone('UTC'));
+                $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                $betDate = $newDateTime->format('Y-m-d H:i:s');
+
                 $tempWinMoney = 0;
                 $comboCase = false;
                 $comboMoney = 0;
@@ -640,7 +666,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $amount;
                                 $user->save();
     
-                               $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'date_time'=>$dateTime]);
+                               $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'date_time'=>$betDate]);
                                
                                 $winmoney = 0;
                             }else{
@@ -650,7 +676,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
         
-                                    $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                    $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                     
                                     $winmoney = 0;
                                 }else{
@@ -666,7 +692,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
 
-                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                     
                                     $winmoney = 0;
                                 }else{
@@ -676,7 +702,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->balance = $user->balance + $amount;
                                         $user->save();
                                         
-                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                         
                                         $winmoney = 0;
                                     }else{
@@ -692,7 +718,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                     $user->balance = $user->balance + $amount;
                                     $user->save();
 
-                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                     
                                     $winmoney = 0;
                                 }else{
@@ -703,7 +729,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $user->balance = $user->balance + $amount;
                                         $user->save();
                                         
-                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                        $statRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                         
                                         $winmoney = 0;
                                     }else{
@@ -739,7 +765,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                 
                                 $winmoney = 0;
                             }else{     
@@ -767,14 +793,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                 $winmoney = 0;
                                 
                             }else{
                                 $winmoney = $amount;
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
-                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);
+                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);
                                 $winmoney = 0;
                                 
                             }
@@ -789,7 +815,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $user->balance = $user->balance + $winmoney;
                             $user->save();
                             if($amount != 0){
-                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);    
+                                $prevStatRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);    
                             }                                                        
                             $winmoney = 0;
                         }else{
@@ -798,7 +824,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
                                 if($amount != 0){
-                                    $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$dateTime]);    
+                                    $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $statRecord->win + $amount,'game_id'=>$reserveId . '_credit','date_time'=>$betDate]);    
                                 }    
                                 $winmoney = 0;
                             }else{
@@ -839,7 +865,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'category_id' => 61,
                             'game_id' => $reserveId . '_credit',
                             'roundid' =>  $purchaseId,
-                            'date_time' => $dateTime
+                            'date_time' => $betDate
                         ]);
                     }
                     
@@ -990,19 +1016,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $responseData = [];
             $count=0;
+            $reqId = '';
             foreach($btiRecords as $btiRecord){
                 if($btiRecord->status > 3){
-                    if($btiRecord->status == 4){
-                        $array = json_decode($btiRecord->data,true);
-                        $responseData[0][$count] = $array;
-                    }else if($btiRecord->status == 5){
-                        $array = json_decode($btiRecord->data,true);
-                        $responseData[1][$count] = $array;
-                    }else if($btiRecord->status == 6){
-                        $array = json_decode($btiRecord->data,true);
-                        $responseData[2][$count] = $array;
+                    if($reqId != $btiRecord->req_id){
+                        if($btiRecord->status == 4){
+                            $array = json_decode($btiRecord->data,true);
+                            $reqId = $btiRecord->req_id;
+                            $responseData[0][$count] = $array;
+                        }else if($btiRecord->status == 5){
+                            $array = json_decode($btiRecord->data,true);
+                            $reqId = $btiRecord->req_id;
+                            $responseData[1][$count] = $array;
+                            
+                        }else if($btiRecord->status == 6){
+                            $array = json_decode($btiRecord->data,true);
+                            $reqId = $btiRecord->req_id;
+                            $responseData[2][$count] = $array;
+                        }
+                        $count++;
                     }
-                    $count++;
                 }
             }
             $stat = [];
@@ -1154,10 +1187,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $bettype_temp = $betTypeName . ' ' . $statString;
             }
+            $betDate = '';
+            $newDateTime = new DateTime($tempBetArray['CreationDate'],new DateTimeZone('UTC'));
+            $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+            $betDate = $newDateTime->format('Y-m-d H:i:s');
             
             $betInfo = [
                 'pur_id' =>$pur_id,
-                'date' => $tempBetArray['CreationDate'],
+                'date' => $betDate,
                 'bet_type' => $bettype_temp,
                 'bet_money' => $tempBetArray['RealAmount'],
                 'award_money' => $gainMoney,
@@ -1198,9 +1235,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }else{
                 $fulltimeScore = $tempArry['CurrentResult'];
             }
+            $betDate = '';
+            $newDateTime = new DateTime($tempArry['CreationDate'],new DateTimeZone('UTC'));
+            $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+            $betDate = $newDateTime->format('Y-m-d H:i:s');
             
             $result = [
-                'date' => $tempArry['CreationDate'],
+                'date' => $betDate,
                 'odd'  => $tempArry['OddsDec'],
                 'yourbet' => $tempArry['YourBet'],
                 'market'  => $tempArry['EventTypeName'],
@@ -1285,8 +1326,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             }
                         }
                     }
+
+                    $betDate = '';
+                    $newDateTime = new DateTime($tempArry['Changes']['Change']['@attributes']['DateUTC'],new DateTimeZone('UTC'));
+                    $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                    $betDate = $newDateTime->format('Y-m-d H:i:s');
+
                     $result[$i] = [
-                        'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
+                        'date' => $betDate,
                         'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                         'yourbet' => $tempArry['@attributes']['YourBet'],
                         'market'  => $tempArry['@attributes']['EventTypeName'],
@@ -1341,9 +1388,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+
+                $betDate = '';
+                $newDateTime = new DateTime($tempArry['Changes']['Change']['@attributes']['DateUTC'],new DateTimeZone('UTC'));
+                $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                $betDate = $newDateTime->format('Y-m-d H:i:s');
                 
                 $result = [
-                    'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
+                    'date' => $betDate,
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
                     'market'  => $tempArry['@attributes']['EventTypeName'],
@@ -1431,8 +1483,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+
+                $betDate = '';
+                $newDateTime = new DateTime($tempArry['Changes']['Change']['@attributes']['DateUTC'],new DateTimeZone('UTC'));
+                $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                $betDate = $newDateTime->format('Y-m-d H:i:s');
+
                 $result = [
-                    'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
+                    'date' => $betDate,
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
                     'market'  => $tempArry['@attributes']['EventTypeName'],
@@ -1483,8 +1541,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }
+
+                $betDate = '';
+                $newDateTime = new DateTime($tempArry['Changes']['Change']['@attributes']['DateUTC'],new DateTimeZone('UTC'));
+                $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
+                $betDate = $newDateTime->format('Y-m-d H:i:s');
+
                 $result = [
-                    'date' => $tempArry['Changes']['Change']['@attributes']['DateUTC'],
+                    'date' => $betDate,
                     'odd'  => $tempArry['@attributes']['OddsInUserStyle'],
                     'yourbet' => $tempArry['@attributes']['YourBet'],
                     'market'  => $tempArry['@attributes']['EventTypeName'],
