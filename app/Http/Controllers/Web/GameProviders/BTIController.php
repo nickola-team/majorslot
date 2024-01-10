@@ -1248,7 +1248,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'branchname' => $tempArry['BranchName'],
                 'leaguename' => $tempArry['LeagueName'],
                 'game'  => $tempArry['HomeTeam'] . ' vs ' . $tempArry['AwayTeam'],
-                'fulltimescore' => $fulltimeScore,
+                'fulltimescore' => '',
                 'stat'   =>  '대기'               
             ];
             return $result;
