@@ -50,7 +50,16 @@
                         <td >{{$res1['yourbet']}}</td>
                         <td >{{$res1['odd']}}</td>
                         <td >{{$res1['fulltimescore']}}</td>
-                        <td >{{$res1['stat']}}</td>
+                        <td >
+                            
+                            @if($res1['stat'] == '적중')
+                            <span class="text-red">{{$res1['stat']}}</span>
+                            @elseif($res1['stat'] == '미적중')
+                            <span class="text-green">{{$res1['stat']}}</span>
+                            @else
+                            <span class="text-black">{{$res1['stat']}}</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
