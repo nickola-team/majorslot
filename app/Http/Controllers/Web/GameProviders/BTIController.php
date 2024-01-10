@@ -387,9 +387,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $betTypeID = $debitRecord->bet_type_id;
                             $betTypeName = $debitRecord->bet_type_name;
                             if(isset($transData['Bet']['Lines'])){
-                                $betDate = $transData['Bet']['Lines'][0]['@attributes']['EventDate'];
+                                $betDate = $transData['Bet']['Lines'][0]['@attributes']['CreationDate'];
                             }else{
-                                $betDate = $transData['Bet']['@attributes']['EventDate'];
+                                $betDate = $transData['Bet']['@attributes']['CreationDate'];
                             }
                             $newDateTime = new DateTime($betDate,new DateTimeZone('UTC'));
                             $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
@@ -542,9 +542,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $debitCustomerRecord->update(['balance'=>$user->balance]) ;    
                         $dateTime = '';
                         if(isset($array['Purchases']['Purchase']['Selections']['Selection'][0])){
-                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['CreationDateUTC'];
                         }else{
-                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['CreationDateUTC'];
                         }
                         $betDate = '';
                         $newDateTime = new DateTime($dateTime,new DateTimeZone('UTC'));
@@ -643,12 +643,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $actionType = $array['Purchases']['Purchase']['Selections']['Selection']['Changes']['Change']['Bets']['Bet']['@attributes']['ActionType'];
                 }
                 $dateTime = '';
-                if(isset($array['Purchases']['Purchase']['Selections']['Selection'][0])){
-                    $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
-                }else{
-                    $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
-                }
-
+                $dateTime = $array['Purchases']['Purchase']['@attributes']['CreationDateUTC'];
                 $betDate = '';
                 $newDateTime = new DateTime($dateTime,new DateTimeZone('UTC'));
                 $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
@@ -1004,7 +999,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $reserveId = explode('_',$stat->game_id)[0];;
             $reqId = $stat->roundid;
             $user = $stat->user;
-            $gainMoney = $stat-> win;
+            $gainMoney = 0;
             
             if (!$user)
             {
@@ -1028,11 +1023,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             $array = json_decode($btiRecord->data,true);
                             $reqId = $btiRecord->req_id;
                             $responseData[1][$count] = $array;
-                            
+                            $gainMoney += $btiRecord->win;
                         }else if($btiRecord->status == 6){
                             $array = json_decode($btiRecord->data,true);
                             $reqId = $btiRecord->req_id;
                             $responseData[2][$count] = $array;
+                            $gainMoney += $btiRecord->win;
                         }
                         $count++;
                     }
