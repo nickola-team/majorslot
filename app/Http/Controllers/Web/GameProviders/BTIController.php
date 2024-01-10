@@ -952,6 +952,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $reserveId = explode('_',$stat->game_id)[0];;
             $reqId = $stat->roundid;
             $user = $stat->user;
+            $gainMoney = $stat-> win;
+            
             if (!$user)
             {
                 return null;
@@ -1126,12 +1128,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $bettype_temp = $betTypeName . ' ' . $statString;
             }
+            
             $betInfo = [
                 'pur_id' =>$pur_id,
                 'date' => $tempBetArray['CreationDate'],
                 'bet_type' => $bettype_temp,
                 'bet_money' => $tempBetArray['RealAmount'],
-                'award_money' => $tempBetArray['Gain'],
+                'award_money' => $gainMoney,
                 'odd' => $tempBetArray['OddsDec']
             ];
 
