@@ -1268,11 +1268,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 '무승부'
             ];
             $fulltimeScore = '';
-            if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
-                $fulltimeScore = '';
-            }else{
-                $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+            if(isset($tempArry['@attributes']['CurrentResult'])){
+                if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
+                    $fulltimeScore = '';
+                }else{
+                    $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+                }
             }
+            
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
                     $betType = '싱글';
@@ -1423,11 +1426,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
             
             $fulltimeScore = '';
-            if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
-                $fulltimeScore = '';
-            }else{
-                $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+            if(isset($tempArry['@attributes']['CurrentResult'])){
+                if($tempArry['@attributes']['CurrentResult'] == 'null' || $tempArry['@attributes']['CurrentResult'] == ''){
+                    $fulltimeScore = '';
+                }else{
+                    $fulltimeScore = $tempArry['@attributes']['CurrentResult'];
+                }
             }
+            
             
             if(isset($tempArry['Changes']['Change']['Bets']['Bet'][0])){
                 if($tempArry['Changes']['Change']['Bets']['Bet'][0]['@attributes']['BetTypeID'] == 1){
