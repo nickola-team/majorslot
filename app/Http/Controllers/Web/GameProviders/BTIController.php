@@ -1229,12 +1229,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
             }
-            $fulltimeScore = '';
-            if($tempArry['CurrentResult'] == 'null' || $tempArry['CurrentResult'] == ''){
-                $fulltimeScore = '';
-            }else{
-                $fulltimeScore = $tempArry['CurrentResult'];
-            }
             $betDate = '';
             $newDateTime = new DateTime($tempArry['CreationDate'],new DateTimeZone('UTC'));
             $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
