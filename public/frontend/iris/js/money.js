@@ -30,9 +30,10 @@ function moneyMove(){
 
 
 $(document).ready(function(){
-    setInterval(function(){
-        ugml();
-     },30000);
+    // setInterval(function(){
+    //     ugml();
+    //  },30000);
+     ugml();
 });
 
 
