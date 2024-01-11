@@ -33,7 +33,8 @@
         </div>
     </div>
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->
-    <div class="game-buttons ng-scope mini" onclick=
+    {{--
+        <div class="game-buttons ng-scope mini" onclick=
         @auth 
             {{$isMini = false}} 
             @foreach($categories AS $index=>$category)
@@ -57,6 +58,16 @@
         @endif>
         <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">미니게임</span>
+        </div>
+    --}}
+    <div class="game-buttons ng-scope sports" onclick=
+                @auth
+                  "startGameByProvider('bti', '')"
+                  @else
+                    "navClick('login-popup')"
+                  @endif>
+        <div class="title-container">
+            <span ng-bind="mainButton.title" class="ng-binding">스포츠</span>
         </div>
     </div>
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->

@@ -19,7 +19,8 @@
     <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
     <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 슬롯게임에서 잭팟을 도전하세요.</span>
 </div>
-
+{{--
+    
 <div class="game-buttons click-disable ng-scope mini" onclick=
 @auth
     @php
@@ -47,8 +48,16 @@
 "navClick('login-popup')"
 @endif
 >
-    <span ng-bind="mainButton.title" class="ng-binding">미니게임</span>
+<span ng-bind="mainButton.title" class="ng-binding">미니게임</span>
     <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 미니게임에서 행운에 도전하세요.</span>
+--}}
+<div class="game-buttons click-disable ng-scope sports" onclick=@auth
+                  "startGameByProvider('bti', '')"
+                  @else
+                    "navClick('login-popup')"
+                  @endif>
+    <span ng-bind="mainButton.title" class="ng-binding">스포츠</span>
+    <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 스포츠게임에서 행운에 도전하세요.</span>
 </div>
 
 <div class="game-buttons click-disable ng-scope comming">
