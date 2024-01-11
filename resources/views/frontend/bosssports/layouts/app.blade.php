@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="/frontend/boss/V/slick-theme.css" charset="utf-8" >
     <link rel="stylesheet" href="/frontend/boss/V/slick.css" charset="utf-8" >
     <link rel="stylesheet" href="/frontend/boss/V/banner-slider.css">
-    <link rel="stylesheet" href="/frontend/boss/V/main1.css">
+    <link rel="stylesheet" href="/frontend/boss/V/main1.css?version=1">
     <link rel="stylesheet" href="/frontend/boss/V/coupon.css">
     <link rel="stylesheet" href="/frontend/boss/V/transaction.css">
     <link rel="stylesheet" href="/frontend/boss/V/quick-links.css">
@@ -79,7 +79,7 @@
     $detect = new \Detection\MobileDetect();
   ?>
 @if( $detect->isMobile() || $detect->isTablet() ) 
-  <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css">
+  <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css?version=1">
 @endif
   <body class="ng-scope bg-main">
     <div class="wrapper">
