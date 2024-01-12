@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\CastleofFirePM
+namespace VanguardLTE\Games\GoodLuckGoodFortunePM
 {
     class SlotSettings
     {
@@ -716,7 +716,7 @@ namespace VanguardLTE\Games\CastleofFirePM
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCastleofFireStack::where('id', 17672)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameGoodLuckGoodFortuneStack::where('id', 17672)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -747,19 +747,19 @@ namespace VanguardLTE\Games\CastleofFirePM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCastleofFireStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoodLuckGoodFortuneStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                     
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCastleofFireStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameGoodLuckGoodFortuneStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 28000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 75000);
+                    // $index = mt_rand(0, 28000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
