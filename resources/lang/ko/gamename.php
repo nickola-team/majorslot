@@ -1190,6 +1190,8 @@ return [
         "JuicyFruitsMultihold" => "주시 후르츠 멀티홀드",
         "YearofTheDragon" => "이어 오브 더 드래곤 킹",
         "HappyFortune" => "해피 포츈",
+        "CastleofFire" => "캐슬 오브 파이어",
+        "GoodLuckGoodFortune" => "굿 럭 & 굿 포츈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
