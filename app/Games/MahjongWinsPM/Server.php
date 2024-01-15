@@ -47,7 +47,7 @@ namespace VanguardLTE\Games\MahjongWinsPM
                 exit( $response );
             }
 
-            $original_bet = 10;
+            $original_bet = 0.1;
             if( $slotEvent['slotEvent'] == 'doInit' ) 
             { 
                 $lastEvent = $slotSettings->GetHistory();
@@ -352,6 +352,8 @@ namespace VanguardLTE\Games\MahjongWinsPM
                     $fsmax = $stack['fsmax'];
                     $str_trail = $stack['trail'];
                     $strWinLine = $stack['wlc_v'];
+                    $strReelSa = $stack['sa'];
+                    $strReelSb = $stack['sb'];
                     if($stack['g'] != ''){
                         $arr_g = $stack['g'];
                     }
@@ -379,6 +381,8 @@ namespace VanguardLTE\Games\MahjongWinsPM
                     $fsmax = $stack[0]['fsmax'];
                     $str_trail = $stack[0]['trail'];
                     $strWinLine = $stack[0]['wlc_v'];
+                    $strReelSa = $stack[0]['sa'];
+                    $strReelSb = $stack[0]['sb'];
                     if($stack[0]['g'] != ''){
                         $arr_g = $stack[0]['g'];
                     }
@@ -412,14 +416,14 @@ namespace VanguardLTE\Games\MahjongWinsPM
                 }else if($fsmore > 0 && $slotEvent['slotEvent'] == 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $fsmore);
                 }
-                $reelA = [];
-                $reelB = [];
-                for($i = 0; $i < 5; $i++){
-                    $reelA[$i] = mt_rand(4, 8);
-                    $reelB[$i] = mt_rand(4, 8);
-                }
-                $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
-                $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
+                // $reelA = [];
+                // $reelB = [];
+                // for($i = 0; $i < 5; $i++){
+                //     $reelA[$i] = mt_rand(4, 8);
+                //     $reelB[$i] = mt_rand(4, 8);
+                // }
+                // $strReelSa = implode(',', $reelA); // '7,4,6,10,10';
+                // $strReelSb = implode(',', $reelB); // '3,8,4,7,10';
                 $strLastReel = implode(',', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
