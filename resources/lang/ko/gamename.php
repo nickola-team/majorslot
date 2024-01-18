@@ -1192,6 +1192,8 @@ return [
         "HappyFortune" => "해피 포츈",
         "CastleofFire" => "캐슬 오브 파이어",
         "GoodLuckGoodFortune" => "굿 럭 & 굿 포츈",
+        "FortuneDragon" => "포춘 드래곤",
+        "TheBigDawgs" => "더 빅 도그즈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
