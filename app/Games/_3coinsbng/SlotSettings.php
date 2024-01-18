@@ -322,8 +322,8 @@ namespace VanguardLTE\Games\_3coinsbng
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
+                        $sum = $sum - $diffMoney;
                     }
-                    $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
@@ -371,11 +371,9 @@ namespace VanguardLTE\Games\_3coinsbng
             {
                 $this->toGameBanks = $sum;
             }
-            if ($this->happyhouruser)
+            if ($this->happyhouruser && $sum > 0)
             {
-                if($sum > 0){
-                    $this->happyhouruser->increment('current_bank', $sum);
-                }
+                $this->happyhouruser->increment('current_bank', $sum);
                 $this->happyhouruser->save();
             }
             else
@@ -725,8 +723,16 @@ namespace VanguardLTE\Games\_3coinsbng
             }
             $stack = $stacks[rand(0, count($stacks) - 1)];
             if($this->happyhouruser){
-                $sum = -1 * $stack->odd * $bet;
-                $this->happyhouruser->increment('current_bank', $sum);
+                $sum = $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', -1 * $sum);
+                $game = $this->game;
+                if( $winType == 'bonus' ) 
+                {
+                    $game->set_gamebank($sum, 'inc', 'bonus');
+                }else{
+                    $game->set_gamebank($sum, 'inc', '');
+                }                
+                $game->save();
             }
 	        return json_decode($stack->spin_stack, true);
         }
