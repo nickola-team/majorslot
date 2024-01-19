@@ -563,7 +563,7 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                         {
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
-                        $game->set_gamebank($diffMoney, 'inc', '');
+                        $game->set_gamebank($diffMoney, 'inc', ''); 
                      }
                     $sum = $sum - $diffMoney;
                 }else{

@@ -557,8 +557,8 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
+                        $sum = $sum - $diffMoney;
                     }
-                    $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0) {
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
