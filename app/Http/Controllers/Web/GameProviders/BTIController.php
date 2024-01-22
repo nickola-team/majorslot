@@ -9,6 +9,35 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     use DateTime;
     class BTIController extends \VanguardLTE\Http\Controllers\Controller
     {
+        public static function getGameObj($uuid)
+        {
+            $gamelist = BTIController::getgamelist();
+            if ($gamelist)
+            {
+                foreach($gamelist as $game)
+                {
+                    if ($game['gamecode'] == $uuid)
+                    {
+                        return $game;
+                        break;
+                    }
+                }
+            }
+        }
+        public static function getgamelist($href='')
+        {
+            return [[
+                'provider' => 'bti',
+                'gamecode' => 'bti-sports',
+                'enname' => 'sports',
+                'name' => '스포츠',
+                'title' => '스포츠',
+                'type' => 'sports',
+                'href' => 'bti-sports',
+                'view' => 1,
+                'icon' => '/frontend/Default/ico/bti/sports.jpg',
+                ]];            
+        }
         public function ValidateToken(\Illuminate\Http\Request $request){
             // $data = json_decode($request->getContent(), true);
             // $authToken = isset($data['auth_token'])?$data['auth_token']:0;
@@ -946,7 +975,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                $url = '/spbt1/golobby' . $gamecode;
+                $url = '/spbt1/golobby?code=' . $gamecode;
             }
             if ($url)
             {
