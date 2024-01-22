@@ -74,7 +74,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'deal_percent',
                 'table_deal_percent',
                 'pball_single_percent',
-                'pball_comb_percent'
+                'pball_comb_percent',
+                'sports_deal_percent'
             ];
             foreach ($check_deals as $dealtype)
             {
@@ -172,7 +173,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'ggr_percent',
                 'table_ggr_percent',
                 'pball_single_percent',
-                'pball_comb_percent'
+                'pball_comb_percent',
+                'sports_deal_percent'
             ];
             foreach ($check_deals as $dealtype)
             {
@@ -579,8 +581,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'table_deal_percent',
                 'pball_single_percent',
                 'pball_comb_percent',
-                'pball_single_percent',
-                'pball_comb_percent'
+                'sports_deal_percent'
             ];
             foreach ($check_deals as $dealtype)
             {

@@ -44,6 +44,7 @@ namespace VanguardLTE
             'session',//used as nosql data for comaster
             'pball_single_percent', 
             'pball_comb_percent',
+            'sports_deal_percent',
             'deal_balance', 
             'deal_percent',
             'table_deal_percent',
@@ -888,7 +889,7 @@ namespace VanguardLTE
                 'table' => 'table_deal_percent',
                 'pbsingle' => 'pball_single_percent',
                 'pbcomb' => 'pball_comb_percent',
-                'sports' => 'table_deal_percent'
+                'sports' => 'sports_deal_percent'
             ];
             $ggr_field = [
                 'slot' => 'ggr_percent',

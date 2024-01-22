@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\TheBigDawgsPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheBigDawgsStack::where('id', 25758)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheBigDawgsStack::where('id', 18742)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -762,19 +762,14 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTheBigDawgsStack::where('spin_type', 1)->whereNotIn('id', $existIds);
-                    if($pur >= 0){
-                        $stacks = $stacks->where('pur_level', $pur);
-                    }else{
-                        $stacks = $stacks->where('pur_level', '<=', 0);
-                    }
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameTheBigDawgsStack::where(['spin_type'=>1, 'pur_level'=>$pur])->whereNotIn('id', $existIds);
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameTheBigDawgsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 48000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 85000);
+                    $index = mt_rand(0, 55000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
