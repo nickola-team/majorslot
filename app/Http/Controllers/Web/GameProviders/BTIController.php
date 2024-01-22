@@ -35,7 +35,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'type' => 'sports',
                 'href' => 'bti-sports',
                 'view' => 1,
-                'icon' => '/frontend/Default/ico/bti/sports.jpg',
+                'icon' => '/frontend/Default/ico/bti_sports.jpg',
                 ]];            
         }
         public function ValidateToken(\Illuminate\Http\Request $request){
