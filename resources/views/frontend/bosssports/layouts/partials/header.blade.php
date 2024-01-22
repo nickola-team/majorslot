@@ -134,11 +134,27 @@
                     <p class="ng-binding" style="font-size: 10px;">MINI GAME</p>
                   </li>
                   <li onclick=
-                  @auth
-                  "startGameByProvider('bti', '')"
-                  @else
-                    "navClick('login-popup')"
-                  @endif
+                    @auth
+                      {{$isSports = false}}
+                      @foreach($categories AS $index=>$category)
+                          @if ($category->type =='sports')
+                              @if ($category->status == 0)
+                                  "swal('점검중입니다');"
+                              @elseif ($category->view == 0)
+                                  "swal('지원하지 않는 게임입니다.');"
+                              @else
+                                  "startGameByProvider('bti', 'sports')"
+                              @endif 
+                                  {{$isSports = true}} 
+                                  @break
+                          @endif
+                      @endforeach
+                      @if(!$isSports)
+                          "swal('지원하지 않는 게임입니다.');"
+                      @endif
+                      @else
+                        "navClick('login-popup')"
+                      @endif
                    class="ng-scope">
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
