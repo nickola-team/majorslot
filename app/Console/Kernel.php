@@ -1822,7 +1822,8 @@ namespace VanguardLTE\Console
                             'deal_percent',
                             'table_deal_percent',
                             'pball_single_percent',
-                            'pball_comb_percent'
+                            'pball_comb_percent',
+                            'sports_deal_percent'
                         ];
                         $data['shop_id'] = $shop->id;
                         $data['role_id'] = $role->id;

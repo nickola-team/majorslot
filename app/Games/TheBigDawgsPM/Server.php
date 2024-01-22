@@ -68,6 +68,8 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
                 $slotSettings->SetGameData($slotSettings->slotId . 'RegularSpinCount', 0);
+                $slotSettings->SetGameData($slotSettings->slotId . 'FscWinTotal', []);
+                $slotSettings->SetGameData($slotSettings->slotId . 'FscTotal', []);
                 $slotSettings->SetGameData($slotSettings->slotId . 'IsBonusBank', 0);
                 $strOtherResponse = '';
                 $currentReelSet = 0;
@@ -88,6 +90,12 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', $lastEvent->serverResponse->BonusMpl);
                     $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastEvent->serverResponse->LastReel);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $lastEvent->serverResponse->RoundID);
+                    if(isset($lastEvent->serverResponse->FscWinTotal)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FscWinTotal', explode(',', $lastEvent->serverResponse->FscWinTotal));
+                    }
+                    if(isset($lastEvent->serverResponse->FscTotal)){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FscTotal', explode(',', $lastEvent->serverResponse->FscTotal));
+                    }
                     if (isset($lastEvent->serverResponse->ReplayGameLogs)){
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', json_decode(json_encode($lastEvent->serverResponse->ReplayGameLogs), true)); //ReplayLog
                     }
@@ -239,7 +247,13 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                     {
                         if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') == 0) 
                         {
-                            $strOtherResponse = $strOtherResponse . '&fs_total='.($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 1).'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&w=0';
+                            $fscWinTotal = $slotSettings->GetGameData($slotSettings->slotId . 'FscWinTotal');
+                            $fscTotal = $slotSettings->GetGameData($slotSettings->slotId . 'FscTotal');
+                            $fscMuls = [];
+                            for($k = 0; $k < count($fscWinTotal); $k++){
+                                $fscMuls[] = 1;
+                            }
+                            $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData(($slotSettings->slotId . 'CurrentFreeGame') - 1).'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsc_win_total=' . implode(',', $fscWinTotal) . '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsc_res_total=' . implode(',', $fscWinTotal).'&fsc_mul_total='. implode(',', $fscMuls) .'&fsc_total=' . implode(',', $fscTotal);
                         }
                         else
                         {
@@ -382,6 +396,8 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FscWinTotal', []);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FscTotal', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
@@ -578,12 +594,28 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
                     $spinType = 's';
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
-                    $isEnd = false;
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $str_rs_p == '') 
                     {
-                        $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsc_win_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsc_res_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin').'&fsc_mul_total=1&fsc_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
-                        $spinType = 'c';
-                        $isEnd = true;
+                        $fscWinTotal = $slotSettings->GetGameData($slotSettings->slotId . 'FscWinTotal');
+                        $fscTotal = $slotSettings->GetGameData($slotSettings->slotId . 'FscTotal');
+                        array_push($fscWinTotal, $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin'));
+                        array_push($fscTotal, $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames'));
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FscWinTotal', $fscWinTotal);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FscTotal', $fscTotal);
+                        $fscMuls = [];
+                        for($k = 0; $k < count($fscWinTotal); $k++){
+                            $fscMuls[] = 1;
+                        }
+                        $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsc_win_total=' . implode(',', $fscWinTotal) . '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsc_res_total=' . implode(',', $fscWinTotal).'&fsc_mul_total='. implode(',', $fscMuls) .'&fsc_total=' . implode(',', $fscTotal);
+                        if($str_fsdss != ''){
+                            $spinType = 's';
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $fsmax);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 1);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
+                        }else{
+                            $spinType = 'c';
+                        }
                     }
                     else
                     {
@@ -715,7 +747,7 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', $replayLog);
                 //------------ *** ---------------
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
-                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin'). ',"IsBonusBank":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsBonusBank') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RespinWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks'))  . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
+                    $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin'). ',"IsBonusBank":' . $slotSettings->GetGameData($slotSettings->slotId . 'IsBonusBank') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"RespinWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'RespinWin') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"FscWinTotal":"' . implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'FscWinTotal')) . '","FscTotal":"' . implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'FscTotal')) . '","TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks'))  . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $allBet = $betline * $lines;
                 if(($slotEvent['slotEvent'] == 'freespin' || ($str_rs_p == '' && $str_rs_t != '')) && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $allBet = $allBet * $purMuls[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
