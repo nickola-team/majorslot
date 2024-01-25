@@ -172,7 +172,7 @@ namespace VanguardLTE\Games\FireStampedePM
                         $strOtherResponse = $strOtherResponse . '&mo=' . $str_mo . '&mo_t=' . $str_mo_t;
                     }
                     if($apv > 0){
-                        $strOtherResponse = $strOtherResponse . '&apaw=' . $apaw . '&apt=ma&apv=' . $apv;
+                        $strOtherResponse = $strOtherResponse . '&apaw=' . ($apv * $bet) . '&apt=ma&apv=' . $apv;
                     }
                     if($mo_tv > 0){
                         $mo_tw = $mo_tv * $bet;
