@@ -56,12 +56,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_message' => 'Generic Error'
                 ]))->header('Content-Type', 'text/plain');
             }
+            $username = 'BTI' . sprintf("%04d",$user->id);
             return response(BTIController::toText([
                 'error_code' => 0,
                 'error_message' => 'No Error',
                 'cust_id' => $user->id,
                 'balance' => sprintf('%0.2f',$user->balance),
-                'cust_login' => $user->username,
+                'cust_login' => $username,
                 'city' => 'City',
                 'country' => 'KR',
                 'currency_code' => 'KRW'
@@ -179,7 +180,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = \VanguardLTE\BTiTransaction::where(['user_id' => $customerId,'reserve_id'=>$reserveId])->first();  //status:-1 : error, status:0 : reserve, status:1 : debit, status:2 : cancel,status:4 : commited reserve, 5: debit customer, 6: credit customer
 
             if(!isset($record) || !isset($user)){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID not exists ','amount' => 0,'balance' => 0,'user_id' => $customerId,'reserve_id' => $reserveId,'data' => '','status' => -1]);
                 
                 \DB::commit();
                 return response(BTIController::toText([
