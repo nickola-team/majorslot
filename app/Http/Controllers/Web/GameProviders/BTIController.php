@@ -56,12 +56,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_message' => 'Generic Error'
                 ]))->header('Content-Type', 'text/plain');
             }
+            $username = 'BTI' . sprintf("%04d",$user->id);
             return response(BTIController::toText([
                 'error_code' => 0,
                 'error_message' => 'No Error',
                 'cust_id' => $user->id,
                 'balance' => sprintf('%0.2f',$user->balance),
-                'cust_login' => $user->username,
+                'cust_login' => $username,
                 'city' => 'City',
                 'country' => 'KR',
                 'currency_code' => 'KRW'
