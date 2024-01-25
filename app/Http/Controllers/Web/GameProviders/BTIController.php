@@ -182,10 +182,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if(!isset($record) || !isset($user)){
                 
                 \DB::commit();
+                $balance = 0;
+                if(!isset($record)){
+                    $balance = $user->balance;
+                }
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID not exists ',
-                    'balance' => sprintf('%0.2f',0)
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }else{
                 $sameRequest = false;
@@ -270,14 +274,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId])->get();
 
-            if(!$record || !$user){
+            if(count($record) == 0 || !isset($user)){
                 $record_1 = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID Not Exist','amount' => 0,'balance' => 0,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => -1,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
-
+                $balance = 0;
+                if(!isset($record)){
+                    $balance = $user->balance;
+                }
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
                     'trx_id' => $record_1->id,
-                    'balance' => sprintf('%0.2f',0)
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             $canceledreserve = false;
@@ -378,7 +385,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             
             if(!isset($debitbased_Record) || !isset($user)){
-                
+                $balance = 0;
+                if(!isset($debitbased_Record)){
+                    $balance = $user->balance;
+                }
 
                 $record_1 = \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'ReserveID Not Exist','amount' => 0,'balance' => '0','user_id' => $customerId,'reserve_id' => $reserveId,'req_id'=>'0', 'status' => -1,'bet_type_id'=>'0','bet_type_name'=>'0']);
                 
@@ -387,7 +397,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exists',
                     'trx_id' => $record_1->id,
-                    'balance' => sprintf('%0.2f',0)
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }
 
@@ -579,9 +589,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $debitCustomerRecord->update(['balance'=>$user->balance]) ;    
                         $dateTime = '';
                         if(isset($array['Purchases']['Purchase']['Selections']['Selection'][0])){
-                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['CreationDateUTC'];
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection'][0]['@attributes']['EventDateUTC'];
                         }else{
-                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['CreationDateUTC'];
+                            $dateTime = $array['Purchases']['Purchase']['Selections']['Selection']['@attributes']['EventDateUTC'];
                         }
                         $betDate = '';
                         $newDateTime = new DateTime($dateTime,new DateTimeZone('UTC'));
