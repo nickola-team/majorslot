@@ -298,7 +298,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $reserveRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>0])->first();
             if($canceledreserve){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already cancelled reserve','amount' => $reserveRecord->amount,'balance' => $user->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 2,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already cancelled reserve','amount' => $reserveRecord->amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 2,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
 
                 return response(BTIController::toText([
                     'error_code' => 0,
@@ -307,13 +307,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else if($commitedreserve){
-                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $reserveRecord->amount,'balance' => $user->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
+                \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $reserveRecord->amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
 
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'Already committed reserve',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
 
@@ -361,7 +361,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             
