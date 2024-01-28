@@ -73,8 +73,8 @@ namespace VanguardLTE\Games\WildWalkerPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0];
             $this->Paytable[3] = [0,0,0,30,150,500,1500,4500,10000];
             $this->Paytable[4] = [0,0,0,25,100,400,1200,3000,7000];
             $this->Paytable[5] = [0,0,0,20,75,300,900,2000,5000];
