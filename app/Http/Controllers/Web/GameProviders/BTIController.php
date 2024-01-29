@@ -326,8 +326,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             foreach($debitRecords as $debitRecord){
                 if($debitRecord->req_id == $reqId){
                     $sameRequest = true;
-                    $sameBalance = $debitRecord->balance;
-                    $sameId = $debitRecord->id;
+                    $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
+                    $sameBalance = $sameDebitRecord->balance;
+                    $sameId = $sameDebitRecord->id;
                     break;
                 }
             }            
@@ -518,11 +519,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $record = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>4])->first();   
             if(!isset($record) || !isset($user)){
                 \DB::commit();
+                $balance = 0;
+                if(!isset($record)){
+                    $balance = $user->balance;
+                }
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
                     'trx_id' => 0,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }         
 
@@ -667,11 +672,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if(!isset($record) || !isset($user)){
                 \DB::commit();
+                $balance = 0;
+                if(!isset($record)){
+                    $balance = $user->balance;
+                }
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
                     'trx_id' => 0,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$balance)
                 ]))->header('Content-Type', 'text/plain');
             }  
             $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'purchase_id'=>$purchaseId])->first();            
