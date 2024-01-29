@@ -134,7 +134,7 @@ namespace VanguardLTE
             }
 
             $shop_id = $user->shop_id;
-            $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id ='. $shop_id .' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
+            $query = 'SELECT game, game_id, category_id, SUM(bet) as totalbet, SUM(win) as totalwin, COUNT(*) as betcount FROM w_stat_game WHERE shop_id ='. $shop_id .' AND status=1 AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
             $stat_games = \DB::select($query);
             
             $query = 'SELECT game, game_id, category_id, SUM(bet) as totaldealbet, SUM(win) as totaldealwin, SUM(deal_profit) as total_deal, SUM(mileage) as total_mileage, SUM(ggr_profit) as total_ggr, SUM(ggr_mileage) as total_ggr_mileage FROM w_deal_log WHERE type="shop" AND shop_id =' . $shop_id . ' AND date_time <="'.$to .'" AND date_time>="'. $from. '" GROUP BY game_id, category_id';
