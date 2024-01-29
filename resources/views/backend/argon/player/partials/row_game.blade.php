@@ -63,9 +63,9 @@
 <td>{{ $stat->date_time }}</td>
 <td>
     @if ($stat->status==1)
-    <span class="text-success">적중</span>
+    <span class="text-success">완료</span>
     @else
-    <span class="text-warning">미적중</span>
+    <span class="text-warning">대기</span>
     @endif
 </td>
 <td>
