@@ -62,5 +62,12 @@
 <td>{{number_format($stat->win,0)}}</td>
 <td>{{ $stat->date_time }}</td>
 <td>
+    @if ($stat->status==1)
+    <span class="text-success">적중</span>
+    @else
+    <span class="text-warning">미적중</span>
+    @endif
+</td>
+<td>
 <a href="{{argon_route('argon.player.gamedetail', ['statid' => $stat->id])}}" onclick="window.open(this.href,'newwindow','width=1000,height=800'); return false;"><button class="btn btn-success btn-sm">상세보기</button></a>
 </td>

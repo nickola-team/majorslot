@@ -70,7 +70,7 @@ namespace VanguardLTE\Console
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
-                \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
+                \VanguardLTE\StatGame::where('date_time', '<', $start_date)->where('status', 1)->delete();
 
                 
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));

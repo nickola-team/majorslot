@@ -187,6 +187,7 @@
                 <th scope="col">배팅금</th>
                 <th scope="col">당첨금</th>
                 <th scope="col">배팅시간</th>
+                <th scope="col">배팅상태</th>
                 <th scope="col">배팅상세</th>
                 </tr>
             </thead>
