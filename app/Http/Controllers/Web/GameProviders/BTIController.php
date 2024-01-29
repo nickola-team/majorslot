@@ -284,7 +284,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
                     'trx_id' => $record_1->id,
-                    'balance' => sprintf('%0.2f',$balance)
+                    'balance' => sprintf('%0.2f',$record_1->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             $canceledreserve = false;
@@ -304,7 +304,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'Already cancelled reserve',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
                 ]))->header('Content-Type', 'text/plain');
             }else if($commitedreserve){
                 \VanguardLTE\BTiTransaction::create(['error_code' => 0,'error_message' => 'Already committed reserve','amount' => $reserveRecord->amount,'balance' => $reserveRecord->balance,'user_id' => $custId,'reserve_id' => $reserveId,'data' => json_encode($array),'req_id'=>$reqId,'status' => 4,'bet_type_id'=>$betTypeId,'bet_type_name'=>$betTypeName,'purchase_id'=>$purchaseId]);
@@ -361,7 +361,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_code' => 0,
                     'error_message' => 'No Error',
                     'trx_id' => $reserveRecord->id,
-                    'balance' => sprintf('%0.2f',$user->balance)
+                    'balance' => sprintf('%0.2f',$reserveRecord->balance)
                 ]))->header('Content-Type', 'text/plain');
             }
             
@@ -521,7 +521,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
-                    'balance' => 0
+                    'trx_id' => 0,
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }         
 
@@ -669,7 +670,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response(BTIController::toText([
                     'error_code' => 0,
                     'error_message' => 'ReserveID Not Exist',
-                    'balance' => 0
+                    'trx_id' => 0,
+                    'balance' => sprintf('%0.2f',$user->balance)
                 ]))->header('Content-Type', 'text/plain');
             }  
             $debitCustomerRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'req_id'=>$reqId,'purchase_id'=>$purchaseId])->first();            
