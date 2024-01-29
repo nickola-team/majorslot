@@ -1,7 +1,0 @@
-
-
-.sc-inner {max-width: 1600px; margin:0px auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;}
-.slot-btn {width:auto; height:auto; display:inline-block; position:relative; z-index: 0; transition: 0.3s; perspective:900px; border-radius:1px; overflow:hidden; margin: 0 5px 10px 5px;}
-.slot-btn .inner {width:100%; height:100%; float:left; transition:0.3s; cursor:pointer;background:black;}
-.slot-btn.before-hover .inner {transform: rotateY(70deg) scale(0.9);opacity: 0.4; rotate(-360deg);-moz-transform: rotate(-360deg);-o-transform: rotate(-360deg);transform: rotate(-360deg);}
-.slot-btn.after-hover .inner {transform: rotateY(-70deg) scale(0.9);opacity: 0.4; rotate(-360deg);-moz-transform: rotate(-360deg);-o-transform: rotate(-360deg);transform: rotate(-360deg);}
