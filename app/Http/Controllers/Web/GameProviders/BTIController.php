@@ -322,16 +322,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $sameBalance = 0;
             $sameId = 0;
-
-            foreach($debitRecords as $debitRecord){
-                if($debitRecord->req_id == $reqId){
-                    $sameRequest = true;
-                    $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
-                    $sameBalance = $sameDebitRecord->balance;
-                    $sameId = $sameDebitRecord->id;
-                    break;
-                }
-            }            
+            $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
+            if(isset($sameDebitRecord)){
+                $sameRequest = true;
+                $sameBalance = $sameDebitRecord->balance;
+                $sameId = $sameDebitRecord->id;
+            }
+            // foreach($debitRecords as $debitRecord){
+            //     if($debitRecord->req_id == $reqId){
+            //         $sameRequest = true;
+            //         $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
+            //         $sameBalance = $sameDebitRecord->balance;
+            //         $sameId = $sameDebitRecord->id;
+            //         break;
+            //     }
+            // }            
 
 
             if($sameRequest){
@@ -580,7 +585,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     //     $statRecord->update(['balance'=>$user->balance,'bet'=>0,'win' => $winmoney,'type'=>'sports','game_id'=>$reserveId . '_debit','date_time'=>$dateTime]); 
                     //     $debitCustomerRecord->update(['balance'=>$user->balance]) ;
                     // }else{
-                        $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId,'status'=>1])->first();
+                        $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId,'status'=>0])->first();
                         $tempWinMoney = 0;
                         $creditRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>6])->get();
                         if(isset($creditRecords)){
