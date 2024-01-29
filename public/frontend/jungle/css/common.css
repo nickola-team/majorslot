@@ -1,0 +1,251 @@
+/*--ysk--------------------------------------------------------------------------------*
+
+	ysk 2016ë…„01ì›”
+
+-----------------------------------------------------------------------------------ysk-*/
+
+@charset "utf-8";
+/*-------------------------------------------------------------------------------------*
+ *  ê¸°ë³¸ìŠ¤íƒ€ì¼ì‹œíŠ¸  ( ê·¸ëˆ„ë³´ë“œ ì…‹íŒ…í›„ ê°€ë³€ì ìŠ¤íƒ€ì¼ì€ ì£¼ì„ì²˜ë¦¬ í•´ì•¼í•¨ )                 *
+ *-------------------------------------------------------------------------------------*/
+
+a {
+    color: #ffffff;
+    text-decoration: none
+}
+
+body {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic, êµ´ë¦¼, ë‹ìŒ, Dotum, Arial, Helvetica, sans-serif;
+    min-width: 1480px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    background: #000000
+}
+
+td {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic, êµ´ë¦¼, ë‹ìŒ, Dotum, Arial, Helvetica, sans-serif;
+}
+
+div {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic, êµ´ë¦¼, ë‹ìŒ, Dotum, Arial, Helvetica, sans-serif;
+}
+
+select {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic, êµ´ë¦¼, ë‹ìŒ, Dotum, Arial, Helvetica, sans-serif;
+}
+
+textarea {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0 0 0 0;
+    font-family: nanumgothic, êµ´ë¦¼, ë‹ìŒ, Dotum, Arial, Helvetica, sans-serif;
+}
+
+/*-------------------------------------------------------------------------------------*
+ *  ê³ ì •ì ìŠ¤íƒ€ì¼                                                                       *
+ *-------------------------------------------------------------------------------------*/
+
+A,
+area {
+    blr: expression(this.onFocus=this.blur())
+}
+
+:focus {
+    -moz-outline-style: none;
+}
+
+form {
+    margin: 0;
+}
+
+img {
+    border: none;
+}
+
+ul,
+ol,
+li,
+dl,
+dd,
+dt {
+    margin: 0;
+    list-style: none;
+}
+
+html,
+body,
+div,
+span,
+object,
+iframe,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+swf,
+javascript,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+td,
+menu,
+nav,
+section {
+    margin: 0;
+    padding: 0
+}
+
+img,
+fieldset,
+iframe {
+    border: 0 none
+}
+
+img {
+    /* max-width:100%; */
+    vertical-align: middle
+}
+
+textarea {
+    resize: none
+}
+
+input,
+select,
+textarea,
+button {
+    font-size: 100%;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%
+}
+
+address,
+strong,
+caption,
+cite,
+code,
+dfn,
+em,
+var {
+    font-style: normal;
+    font-weight: normal
+}
+
+blockquote,
+q {
+    quotes: none
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: "";
+    content: none
+}
+
+/* base - IE8~7 */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block
+}
+
+/* base - input */
+
+input[type="text"],
+input[type="password"],
+input[type="submit"],
+input[type="search"],
+input[type="image"],
+textarea {
+    -webkit-appearance: none;
+}
+
+input:checked[type="checkbox"] {
+    background-color: #666;
+    -webkit-appearance: checkbox
+}
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="file"] {
+    -webkit-appearance: button;
+    border-radius: 0
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none
+}

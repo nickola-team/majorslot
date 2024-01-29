@@ -1,0 +1,87 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: flex;
+    flex-direction: column
+}
+
+.Spin .TopBells {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end
+}
+
+.Spin .TopBells .Bell {
+    opacity: .8;
+    margin-bottom: -5px;
+    transform: scale(.9)
+}
+
+.Spin .TopBells .Bell--7.Bell--active {
+    content: -webkit-image-set(url(./images/vs10ddcbells/bells/7_active.png) 1x, url(./images/vs10ddcbells/bells/7_active@2x.png) 2x)
+}
+
+.Spin .TopBells .Bell--8.Bell--active {
+    content: -webkit-image-set(url(./images/vs10ddcbells/bells/8_active.png) 1x, url(./images/vs10ddcbells/bells/8_active@2x.png) 2x)
+}
+
+.Spin .TopBells .Bell--9.Bell--active {
+    content: -webkit-image-set(url(./images/vs10ddcbells/bells/9_active.png) 1x, url(./images/vs10ddcbells/bells/9_active@2x.png) 2x)
+}
+
+.Spin .TopBells .Bell--10.Bell--active {
+    content: -webkit-image-set(url(./images/vs10ddcbells/bells/10_active.png) 1x, url(./images/vs10ddcbells/bells/10_active@2x.png) 2x)
+}
+
+.Spin .TopBells .Bell--11.Bell--active {
+    content: -webkit-image-set(url(./images/vs10ddcbells/bells/11_active.png) 1x, url(./images/vs10ddcbells/bells/11_active@2x.png) 2x)
+}
+
+.Spin .TopBells .Bell--active {
+    opacity: 1;
+    transform: none;
+    margin-bottom: 0
+}
+
+.WinLines-Group .Animation__CrossFadeItem {
+    animation: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:nth-child(n) {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:first-child {
+    display: none
+}
