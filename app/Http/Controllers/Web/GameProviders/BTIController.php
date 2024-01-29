@@ -322,21 +322,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $sameBalance = 0;
             $sameId = 0;
-            $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
-            if(isset($sameDebitRecord)){
-                $sameRequest = true;
-                $sameBalance = $sameDebitRecord->balance;
-                $sameId = $sameDebitRecord->id;
-            }
-            // foreach($debitRecords as $debitRecord){
-            //     if($debitRecord->req_id == $reqId){
-            //         $sameRequest = true;
-            //         $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
-            //         $sameBalance = $sameDebitRecord->balance;
-            //         $sameId = $sameDebitRecord->id;
-            //         break;
-            //     }
-            // }            
+            //$sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>1,'req_id'=>$reqId])->first();
+            // if(isset($sameDebitRecord)){
+            //     $sameRequest = true;
+            //     $sameBalance = $sameDebitRecord->balance;
+            //     $sameId = $sameDebitRecord->id;
+            // }
+            foreach($debitRecords as $debitRecord){
+                if($debitRecord->req_id == $reqId){
+                    $sameRequest = true;
+                    $sameDebitRecord = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'status'=>0])->first();
+                    $sameBalance = $sameDebitRecord->balance;
+                    $sameId = $sameDebitRecord->id;
+                    break;
+                }
+            }            
 
 
             if($sameRequest){
