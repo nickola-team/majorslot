@@ -845,6 +845,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                         $winmoney += $transactionRecord->amount;
                                     }
                                 }   
+                                $winmoney = $winmoney - $amount;
                                 $debitRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>5])->get();      
                                 $debitWinMoney = 0;
                                 if(isset($debitRecords)){
