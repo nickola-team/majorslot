@@ -1,0 +1,68 @@
+:root {
+    --slot-item-height: 46px;
+    --slot-item-width: 54px
+}
+
+.SlotWrap__Field {
+    border: none
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto;
+    background: none
+}
+
+.LinesSlot .ReelsSlot__Item {
+    background: #20272b;
+    flex: unset;
+    height: var(--slot-item-height);
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__Item--win {
+    background: #525d65
+}
+
+.LinesSlot .ReelsSlot__Item--hidden {
+    display: block;
+    background: transparent
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none;
+    position: relative
+}
+
+.fsOption .PickOptions__Option {
+    flex: 1;
+    padding: 5px;
+    font-size: .64rem;
+    line-height: normal;
+    width: 65px
+}
+
+.fsOption .PickOptions__Option-Value {
+    top: 10px
+}
+
+.fsOption .PickOptions__Option-Title {
+    font-size: .64rem
+}
+
+.fsOption .PickOptions__Option--fso_0,
+.fsOption .PickOptions__Option--fso_1,
+.fsOption .PickOptions__Option--fso_2 {
+    order: 1
+}
+
+.fsOption .PickOptions__Option--fso_6 {
+    order: 2
+}
+
+.fsOption .PickOptions__Option--fso_3,
+.fsOption .PickOptions__Option--fso_4,
+.fsOption .PickOptions__Option--fso_5 {
+    order: 3
+}

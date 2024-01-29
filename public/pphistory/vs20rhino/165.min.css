@@ -1,0 +1,10 @@
+:root {
+    --slot-item-height: 44px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}

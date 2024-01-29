@@ -1,0 +1,38 @@
+<?php
+
+return [
+    'WINPowerBall' => 'Win Powerball',
+    'EOSPowerBall3' => 'EOS 3 phút Powerball',
+    'EOSPowerBall5' => 'EOS 5 phút Powerball',
+    'LastBetHistory' => 'chi tiết gần đây',
+    'EmptyHistory' => 'Không có chi tiết gì cả',
+    'Round' => 'lần',
+    'Powerball' => 'Powerball',
+    'Normalball' => 'Normalball',
+    'Combball' => 'Combball',
+    'Odd' => 'O',
+    'Even' => 'E',
+    'Under' => 'Ud',
+    'Over' => 'Ov',
+    'Power' => 'P',
+    'P' => 'P',
+    'Normal' => 'N',
+    'Comb' => 'C',
+
+    'Id' => 'tên gọi',
+    'Balance' => 'số tiền',
+    'Selectgame' => 'Chọn',
+    'Winamount' => 'trúng',
+    'Rate' => 'nhân',
+    'Betbalance' => 'số tiền',
+    'Roundum' => 'lần',
+    'Wait' => 'chờ đợi',
+    'Lose' => 'trận',
+    'Win' => 'Thắng',
+    'Endbet' => 'kết thúc',
+    'Invalidbetbalance' => 'Hãy nhập số tiền vào',
+    'Betaccepted' => 'Đã được tiếp nhận',
+    'Beterror' => 'sai lầm',
+    'Init' => 'sự khởi tạo lại',
+    'Betting' => 'Đặt cược'
+];

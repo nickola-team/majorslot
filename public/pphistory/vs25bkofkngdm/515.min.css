@@ -1,0 +1,22 @@
+:root {
+    --slot-item-width: 50px;
+    --slot-item-height: 46px
+}
+
+.LinesSlot .ReelsSlot {
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    object-fit: none;
+    height: calc(100% - 1px);
+    width: calc(100% - 1px)
+}
+
+.vs25bkofkngdm .MoneyScatter__Label {
+    background-color: transparent
+}
+
+.vs25bkofkngdm .MoneyScatter.ReelsSlot__Item {
+    border: none
+}

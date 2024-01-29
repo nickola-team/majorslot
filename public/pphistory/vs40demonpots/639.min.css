@@ -1,0 +1,224 @@
+:root {
+    --slot-item-height: 52px;
+    --slot-item-width: 60px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--position-7:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs40demonpots/frame.png) 1x, url(./images/vs40demonpots/frame@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: -3px;
+    bottom: -3px;
+    left: -3px;
+    right: -3px;
+    background-size: 100% 100%;
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 2;
+    margin-bottom: 14px
+}
+
+.Coin--opened .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs40demonpots/coinOpened.png) 1x, url(./images/vs40demonpots/coinOpened@2x.png) 2x)
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "..   pots" "side spin"
+}
+
+.Spin .Pots {
+    grid-area: pots
+}
+
+.Spin .Side {
+    grid-area: side
+}
+
+.Spin .LinesSlot {
+    grid-area: spin
+}
+
+.Pots {
+    display: flex;
+    font-size: .64rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    line-height: normal;
+    justify-content: space-between
+}
+
+.Pots .Pot {
+    background-image: -webkit-image-set(url(./images/vs40demonpots/pot.png) 1x, url(./images/vs40demonpots/pot@2x.png) 2x);
+    background-size: 100% 100%;
+    width: 50px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: .2
+}
+
+.Pots .Pot:nth-child(3) {
+    order: 1
+}
+
+.Pots .Pot:first-child {
+    order: 2
+}
+
+.Pots .Pot:nth-child(2) {
+    order: 3
+}
+
+.Pots .Pot:nth-child(4) {
+    order: 4
+}
+
+.Pots .Pot--selected {
+    opacity: 1
+}
+
+.Pots .Pot__Title {
+    filter: drop-shadow(2px 2px 2px black)
+}
+
+.Side {
+    font-size: .64rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    line-height: normal;
+    margin: 5px;
+    flex-direction: column;
+    position: relative
+}
+
+.Side,
+.Side__Block {
+    display: flex;
+    width: 63px
+}
+
+.Side__Block {
+    background-image: -webkit-image-set(url(./images/vs40demonpots/sideBg.png) 1x, url(./images/vs40demonpots/sideBg@2x.png) 2x);
+    height: 35px;
+    justify-content: center;
+    align-items: center;
+    position: absolute
+}
+
+.Side__Block--multiplier {
+    top: 0
+}
+
+.Side__Block--fs {
+    top: 40px
+}
+
+.Side__Block--respins {
+    top: 80px
+}
+
+.Colossal {
+    width: calc(var(--slot-item-width)*2 - 2px);
+    height: calc(var(--slot-item-height)*3 - 2px);
+    position: absolute;
+    top: 0;
+    z-index: 1
+}
+
+.Colossal--1:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs40demonpots/colossal1.png) 1x, url(./images/vs40demonpots/colossal1@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    background-size: 100% 100%
+}
+
+.Colossal--2 {
+    left: 0
+}
+
+.Colossal--2:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs40demonpots/colossal2.png) 1x, url(./images/vs40demonpots/colossal2@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    background-size: 100% 100%
+}
+
+.WithColossal {
+    display: contents
+}
+
+.WinLines-Group .WithColossal,
+.WithoutColossal {
+    display: none
+}
+
+.WinLines-Group .WithoutColossal {
+    display: inherit
+}
+
+.WinLines-Group .Animation__CrossFadeItem {
+    animation: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:nth-child(n) {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:first-child {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

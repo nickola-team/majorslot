@@ -1,0 +1,28 @@
+:root {
+    --slot-item-height: 44px;
+    --slot-item-width: 54px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.SubTitle__Tumbling {
+    margin-left: 5px
+}
+
+.WinLines-Block .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter {
+    z-index: 1
+}
+
+.MoneyScatter__Label {
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    background-color: unset
+}

@@ -1,0 +1,38 @@
+<?php
+
+return [
+    'WINPowerBall' => 'Win 파워볼',
+    'EOSPowerBall3' => 'EOS 3분파워볼',
+    'EOSPowerBall5' => 'EOS 5분파워볼',
+    'LastBetHistory' => '최근 베팅내역',
+    'EmptyHistory' => '베팅내역이 없습니다.',
+    'Round' => '회',
+    'Powerball' => '파워볼',
+    'Normalball' => '일반볼',
+    'Combball' => '조합볼',
+    'Odd' => '홀',
+    'Even' => '짝',
+    'Under' => '언',
+    'Over' => '오',
+    'Power' => '파워',
+    'P' => '파',
+    'Normal' => '일반',
+    'Comb' => '조합',
+
+    'Id' => '아이디',
+    'Balance' => '보유머니',
+    'Selectgame' => '선택경기',
+    'Winamount' => '적중예상',
+    'Rate' => '총배당률',
+    'Betbalance' => '베팅금액',
+    'Roundum' => '회차',
+    'Wait' => '대기중',
+    'Lose' => '낙첨',
+    'Win' => '당첨',
+    'Endbet' => '베팅 마감',
+    'Invalidbetbalance' => '베팅금액을 입력하세요',
+    'Betaccepted' => '베팅이 접수되었습니다',
+    'Beterror' => '베팅오류',
+    'Init' => '초기화',
+    'Betting' => '베팅하기'
+];

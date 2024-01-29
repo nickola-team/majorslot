@@ -1,0 +1,272 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.BonusWin {
+    color: #fff
+}
+
+.RainbowRoad {
+    position: relative;
+    display: flex
+}
+
+.RainbowRoad .Animation.Animation__CrossFadeItem.Animation__CrossFadeItem--1 {
+    z-index: 2
+}
+
+.RainbowRoad__BigMoney {
+    position: absolute;
+    z-index: 2;
+    left: 45%
+}
+
+.RainbowRoad__BigMoney .BigMoney__Win {
+    background: rgba(0, 0, 0, .25);
+    font-size: 2em;
+    position: absolute;
+    left: 15px;
+    width: 140px;
+    top: 70px;
+    text-align: center;
+    line-height: 2em
+}
+
+.RainbowRoad__SlotWrapper {
+    position: absolute;
+    z-index: 2;
+    left: 50%
+}
+
+.RainbowRoad__SlotWrapper .RainbowRoad__SlotItem {
+    position: relative
+}
+
+.RainbowRoad__SlotWrapper .RainbowRoad__SlotItem .MiniSlots__Items {
+    position: absolute;
+    top: 50px;
+    left: 12px
+}
+
+.RainbowRoad__Road {
+    position: relative;
+    width: 280px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between
+}
+
+.RainbowRoad__RoadRow {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2;
+    position: inherit
+}
+
+.RainbowRoad__RoadRow:nth-child(3) {
+    padding: 0 55px 0 20px
+}
+
+.RainbowRoad__RoadRow:nth-child(2) {
+    flex-direction: row-reverse;
+    padding: 0 5px 0 25px
+}
+
+.RainbowRoad__RoadRow:nth-child(2) .RainbowRoad__RoadItem:first-child {
+    margin-bottom: -20px
+}
+
+.RainbowRoad__RoadRow:nth-child(2) .RainbowRoad__RoadItem:last-child {
+    margin-top: -15px
+}
+
+.RainbowRoad__RoadRow:first-child {
+    padding: 0 5px 0 10px
+}
+
+.RainbowRoad__RoadRow:first-child .RainbowRoad__RoadItem:last-child {
+    margin-top: -15px
+}
+
+.RainbowRoad__RoadRow .RainbowRoad__RoadItem {
+    padding: 3px
+}
+
+.RainbowRoad__RoadRow .RainbowRoad__RoadItem--win {
+    font-size: 3em
+}
+
+.RainbowRoad__RoadBg {
+    object-fit: none;
+    top: 50%;
+    left: 0;
+    z-index: 1;
+    transform: translateY(-50%);
+    position: absolute;
+    opacity: .5
+}
+
+.RainbowRoad .MiniSlots__Items {
+    margin: auto
+}
+
+.RainbowRoad__CurrentProgress {
+    margin: auto;
+    font-size: 2em
+}
+
+.RainbowRoad__Item {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    padding: 10px;
+    background-color: #20272b
+}
+
+.RainbowRoad__ItemTitle {
+    margin-bottom: 20px
+}
+
+.RainbowRoad__Reel {
+    position: relative
+}
+
+.RainbowRoad__ReelItem {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    padding-left: 5px
+}
+
+.RainbowRoad__ReelItemImage {
+    margin-left: auto;
+    margin-right: auto;
+    transform: rotateY(15deg)
+}
+
+.RainbowRoad__Row {
+    display: flex;
+    width: 230px;
+    z-index: 2;
+    height: 40px;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    justify-content: space-around;
+    box-sizing: border-box
+}
+
+.RainbowRoad__Row:nth-child(2) {
+    padding-right: 60px
+}
+
+.RainbowRoad__Row:nth-child(3) {
+    width: 255px;
+    margin-left: -20px
+}
+
+.RainbowRoad__Row:nth-child(3) .RainbowRoad__Item:first-child {
+    transform: translateY(-10px)
+}
+
+.RainbowRoad__Row:nth-child(3) .RainbowRoad__Item:last-child {
+    transform: translateY(10px)
+}
+
+.RainbowRoad__Row:nth-child(4) .RainbowRoad__Item:last-child {
+    transform: translateY(-10px)
+}
+
+.RainbowRoad__Row .RainbowRoad__Item {
+    box-sizing: border-box;
+    line-height: 40px
+}
+
+.MoneyScatter__LabelWrap {
+    width: 50px
+}
