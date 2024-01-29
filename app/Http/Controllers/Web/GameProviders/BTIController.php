@@ -873,7 +873,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
                                 $prevStatRecord->update(['balance'=>$user->balance,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId,'date_time'=>$betDate]);
-                                //$winmoney = 0;
+                                $winmoney = 0;
                                 
                             //}
                             
