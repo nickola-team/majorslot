@@ -841,12 +841,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             //     $winmoney = 0;
                             // }else{     
                                 $transactionRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>6])->get(); 
-                                $winmoney = 0;  
-                                if(isset($transactionRecords)){
-                                    foreach($transactionRecords as $transactionRecord){
-                                        $winmoney += $transactionRecord->amount;
-                                    }
-                                }   
+                                // $winmoney = 0;  
+                                // if(isset($transactionRecords)){
+                                //     foreach($transactionRecords as $transactionRecord){
+                                //         $winmoney += $transactionRecord->amount;
+                                //     }
+                                // }  
+                                $winmoney = $amount; 
                                 $debitRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'purchase_id'=>$purchaseId,'status'=>5])->get();      
                                 $debitWinMoney = 0;
                                 if(isset($debitRecords)){
@@ -872,7 +873,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                                 $user->balance = $user->balance + $winmoney;
                                 $user->save();
                                 $prevStatRecord->update(['balance'=>$user->balance,'win' => $prevStatRecord->win + $amount,'game_id'=>$reserveId,'date_time'=>$betDate]);
-                                $winmoney = 0;
+                                //$winmoney = 0;
                                 
                             //}
                             
