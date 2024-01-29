@@ -1309,7 +1309,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             $betDate = '';
-            $newDateTime = new DateTime($tempArry['CreationDate'],new DateTimeZone('UTC'));
+            $newDateTime = new DateTime($tempArry['EventDate'],new DateTimeZone('UTC'));
             $newDateTime->setTimezone(new DateTimeZone('Asia/Seoul'));
             $betDate = $newDateTime->format('Y-m-d H:i:s');
             
