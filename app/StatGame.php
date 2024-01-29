@@ -23,6 +23,7 @@ namespace VanguardLTE
             'category_id',
             'game_id',
             'roundid',
+            'status'
         ];
         public $timestamps = false;
         public static function boot()
