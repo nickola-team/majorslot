@@ -929,35 +929,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if($betfinish == true){   //winMoney가 0이 아닌경우에만 stat_game에 저장(win/lost에서 win이 0으로 들어오는 경우)
                     $prevStatRecord = \VanguardLTE\StatGame::where(['user_id' => $custId,'game_id'=>$reserveId,'roundid'=>$purchaseId])->first();
                     
-                    $user->balance = $debitedBalance;
-                    $user->save();
+                    // $user->balance = $debitedBalance;
+                    // $user->save();
+                    $transactionRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'purchase_id'=>$purchaseId,'status'=>6])->get(); 
+                    $winmoney = 0;  
+                    if(isset($transactionRecords)){
+                        foreach($transactionRecords as $transactionRecord){
+                            $winmoney += $transactionRecord->amount;
+                        }
+                    }  
+                    $debitRecords = \VanguardLTE\BTiTransaction::where(['user_id' => $custId,'reserve_id'=>$reserveId,'purchase_id'=>$purchaseId,'status'=>5])->get();      
+                    $debitWinMoney = 0;
+                    if(isset($debitRecords)){
+                        foreach($debitRecords as $debitRecord){
+                            $debitWinMoney += $debitRecord->amount;
+                        }
+                    }           
+                    $winmoney = $winmoney + $debitWinMoney;
+                    
                     if($comboCase == true){
                         $winmoney = $winmoney + $comboMoney;
                     }
-                    //if($winmoney != 0){
-                        $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId,'date_time'=>$betDate,'status' => 1]);
-                        // \VanguardLTE\StatGame::create([
-                        //     'user_id' => $user->id, 
-                        //     'balance' => $user->balance, 
-                        //     'bet' => 0, 
-                        //     'win' => $winmoney,
-                        //     'game' =>  'sports', 
-                        //     'type' => 'sports',
-                        //     'percent' => 0, 
-                        //     'percent_jps' => 0, 
-                        //     'percent_jpg' => 0, 
-                        //     'profit' => 0, 
-                        //     'denomination' => 0, 
-                        //     'shop_id' => $user->shop_id,
-                        //     'category_id' => 61,
-                        //     'game_id' => $reserveId . '_credit',
-                        //     'roundid' =>  $purchaseId,
-                        //     'date_time' => $betDate,
-                        //     'status' => 1
-                        // ]);
-                    //}
-                    
-                    //$prevStatRecord->update(['balance'=>$user->balance,'bet'=>$record->amount,'win' => $winmoney,'date_time'=>$array['Purchases']['Purchase']['@attributes']['CreationDateUTC']]);
+                    $prevStatRecord->update(['balance'=>$user->balance,'win' => $winmoney,'game_id'=>$reserveId,'date_time'=>$betDate,'status' => 1]);
                 }                
             }else{
                 $debitedBalance = $user->balance;
