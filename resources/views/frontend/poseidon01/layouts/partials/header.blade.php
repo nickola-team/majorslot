@@ -1,7 +1,7 @@
 <div id="header_wrap">
     <div class="top_wrap">
         <div class="top1_box">
-            <div class="gnb_left">
+            <div class="gnb_left" style="margin-left : -200px;">
                 <ul>
                     <li><a href="#" class="casino_3_open"><img src="/frontend/kdior/images/gnb3.png?v=202301301150"></a></li>                           
                     <li><a href="#" 
@@ -25,6 +25,33 @@
                     class="casino_4_open"
                     @endif
                     ><img src="/frontend/kdior/images/gnb5.png?v=202301301150"></a></li>
+                    <li><a href="#" 
+                        @auth
+                        {{$isSports = false}}
+                        @foreach($categories AS $index=>$category)
+                            @if ($category->type =='sports')
+                                @if ($category->status == 0)
+                                    onclick="alert('점검중입니다');"
+                                @elseif ($category->view == 0)
+                                    onclick="alert('지원하지 않는 게임입니다.');"
+                                @else
+                                    onclick="startGameByProvider('bti', 'sports')"
+                                @endif 
+                                    {{$isSports = true}} 
+                                    @break
+                            @endif
+                        @endforeach
+                        @if(!$isSports)
+                            onclick="alert('지원하지 않는 게임입니다.');"
+                        @endif
+                        @else
+                            class="etc_pop2_open"
+                        @endif
+                        class="ng-scope">
+                        <p ng-show="$index == 1" class="ng-hide">
+                        <i class="fa fa-mobile"></i>
+                        </p>
+                        <img src="/frontend/kdior/images/gnb6.png?v=202301301150"></a>
                     
                 </ul>
             </div>

@@ -334,6 +334,7 @@ namespace VanguardLTE\Games\MoneyTreeCQ9
                 }else{
                     $newRespin = false;
                     $slotSettings->SetGameData($slotSettings->slotId . 'Respin', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 }
             }
             $stack['Type'] = $result_val['Type'];
@@ -373,12 +374,12 @@ namespace VanguardLTE\Games\MoneyTreeCQ9
             if($slotEvent == 'freespin'){                
                 $isState = false;
                 if($awardSpinTimes > 0 && $awardSpinTimes == $currentSpinTimes){
-                    if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){
+                    if(($stack['AwardRound'] == $stack['CurrentRound']) && ($stack['RetriggerAddSpins'] == 0)){ //unused in this game
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                         $isState = true;
                     }
                 } 
-            }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){
+            }else if($slotEvent == 'respin' && $slotSettings->GetGameData($slotSettings->slotId . 'FreeAction') > 0){ //unused in this game
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeAction',0);
                 $slotEvent = 'freespin';

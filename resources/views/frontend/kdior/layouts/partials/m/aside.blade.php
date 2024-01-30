@@ -33,6 +33,7 @@
 								><img src="/frontend/kdior/images/m_main_game1.png?v=202302021619" width="100%"></a></a></td>
 								</tr>
 								<tr>
+								@if (!isset($logo) || $logo != 'dorosi')
 								<td width="10%" align="center"><a href="#" 
 								@if (isset($hotel) && $hotel=='disabled')
 								onclick="alert('점검중입니다');"
@@ -47,6 +48,30 @@
 								class="casino_4_open"
 								@endif
 								><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></td>
+								@endif  
+								<td width="10%" align="center"><a href="#" 
+								@auth
+								{{$isSports = false}}
+								@foreach($categories AS $index=>$category)
+									@if ($category->type =='sports')
+										@if ($category->status == 0)
+											onclick="alert('점검중입니다');"
+										@elseif ($category->view == 0)
+											onclick="alert('지원하지 않는 게임입니다.');"
+										@else
+											onclick="startGameByProvider('bti', 'sports')"
+										@endif 
+											{{$isSports = true}} 
+											@break
+									@endif
+								@endforeach
+								@if(!$isSports)
+									onclick="alert('지원하지 않는 게임입니다.');"
+								@endif
+								@else
+								
+								@endif
+								><img src="/frontend/kdior/images/m_main_game5.png?v=202302021619" width="100%"></a></td>
 							</tr>                                
 						</tbody></table>                 	
 					</div>                                    

@@ -52,6 +52,27 @@
                 class="casino_4_open"
             @endif
             ><img src="/frontend/kdior/images/m_main_game4.png?v=202302021619" width="100%"></a></li>
+            <li><a href="#"
+            @auth
+            {{$isSports = false}}
+            @foreach($categories AS $index=>$category)
+                @if ($category->type =='sports')
+                    @if ($category->status == 0)
+                        onclick="alert('점검중입니다');"
+                    @elseif ($category->view == 0)
+                        onclick="alert('지원하지 않는 게임입니다.');"
+                    @else
+                        onclick="startGameByProvider('bti', 'sports')"
+                    @endif 
+                        {{$isSports = true}} 
+                        @break
+                @endif
+            @endforeach
+            @if(!$isSports)
+                onclick="alert('지원하지 않는 게임입니다.');"
+            @endif
+            @else
+            @endif><img src="/frontend/kdior/images/m_main_game5.png?v=202302021619" width="100%"></a></li>   
         </ul>
     </div>       
 </div><!-- header_wrap -->

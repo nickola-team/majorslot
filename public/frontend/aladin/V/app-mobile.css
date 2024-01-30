@@ -2357,6 +2357,9 @@ fieldset label span {
 .game-buttons.others{
   background: url("/frontend/aladin/V/slot.png") top center / 100% no-repeat;
 }
+.game-buttons.sports{
+  background: url("/frontend/aladin/V/sports.png") top center / 100% no-repeat;
+}
 
 .game-buttons.poker{
   background: url("/frontend/boss/V/mobile-IDN-button.jpg") top center / 100% no-repeat;

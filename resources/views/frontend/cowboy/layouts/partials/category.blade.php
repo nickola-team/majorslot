@@ -19,6 +19,31 @@
     <!-- <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
     <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 슬롯게임에서 잭팟을 도전하세요.</span> -->
 </div>
+<div class="game-buttons click-disable ng-scope sports" onclick=
+                    @auth
+                      {{$isSports = false}}
+                      @foreach($categories AS $index=>$category)
+                          @if ($category->type =='sports')
+                              @if ($category->status == 0)
+                                  "swal('점검중입니다');"
+                              @elseif ($category->view == 0)
+                                  "swal('지원하지 않는 게임입니다.');"
+                              @else
+                                  "startGameByProvider('bti', 'sports')"
+                              @endif 
+                                  {{$isSports = true}} 
+                                  @break
+                          @endif
+                      @endforeach
+                      @if(!$isSports)
+                          "swal('지원하지 않는 게임입니다.');"
+                      @endif
+                    @else
+                    "navClick('login-popup')"
+                    @endif>
+    <span ng-bind="mainButton.title" class="ng-binding">스포츠</span>
+    <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 스포츠게임에서 행운에 도전하세요.</span>
+</div>
 
 <div class="game-buttons click-disable ng-scope slot" style="width: 100%;cursor: default;">
     <div class="odometer-container clearfix ng-scope">

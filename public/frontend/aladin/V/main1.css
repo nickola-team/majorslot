@@ -42,6 +42,10 @@
   background: url("/frontend/aladin/V/slot.png?ver=1.01") no-repeat;
 }
 
+.main-page .content .game-buttons.sports{
+    background: url("/frontend/aladin/V/sports.png?ver=1.01") no-repeat;
+  }
+
 .main-page .content .game-buttons.poker{
   background: url("/frontend/boss/V/idn-button.jpg") no-repeat;
 }

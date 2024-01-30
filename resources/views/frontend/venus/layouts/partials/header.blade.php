@@ -27,6 +27,29 @@
                     @endif
                     ><span class="login_btn1">미니게임</span></a></li>
                     @endif
+                    <li><a href="#" 
+                    @auth
+                        {{$isSports = false}}
+                        @foreach($categories AS $index=>$category)
+                            @if ($category->type =='sports')
+                                @if ($category->status == 0)
+                                    onclick="alert('점검중입니다');"
+                                @elseif ($category->view == 0)
+                                    onclick="alert('지원하지 않는 게임입니다.');"
+                                @else
+                                    onclick="startGameByProvider('bti', 'sports')"
+                                @endif 
+                                    {{$isSports = true}} 
+                                    @break
+                            @endif
+                        @endforeach
+                        @if(!$isSports)
+                            onclick="alert('지원하지 않는 게임입니다.');"
+                        @endif
+                        @else
+                            class="etc_pop2_open"
+                        @endif
+                    ><span class="login_btn1">스포츠</span></a></li>
                 </ul>
             </div>
             <div class="logo" style="margin-left:-130px;"><a href="/"><img src="/frontend/venus/{{$logo}}.png?v=202302162217" class="bounce" width="260px"></a></div>

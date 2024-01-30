@@ -133,6 +133,35 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">미니게임</p>
                     <p class="ng-binding" style="font-size: 10px;">MINI GAME</p>
                   </li>
+                  <li onclick=
+                  @auth
+                    {{$isSports = false}}
+                    @foreach($categories AS $index=>$category)
+                      @if ($category->type =='sports')
+                        @if ($category->view == 0)
+                            "swal('지원하지 않는 게임입니다.');"
+                        @elseif ($category->status == 0)
+                            "swal('점검중입니다');"
+                        @else
+                            "startGameByProvider('bti', 'sports');"
+                        @endif
+                        {{$isSports = true}}
+                        @break
+                      @endif
+                    @endforeach
+                    @if(!$isSports)
+                      "swal('지원하지 않는 게임입니다.');"
+                    @endif
+                  @else
+                    "navClick('login-popup')"
+                  @endif
+                   class="ng-scope">
+                    <p ng-show="$index == 1" class="ng-hide">
+                      <i class="fa fa-mobile"></i>
+                    </p>
+                    <p class="ng-binding" style="margin-bottom: 0px;">스포츠</p>
+                    <p class="ng-binding" style="font-size: 10px;">SPORTS</p>
+                  </li>
                 </ul>
               </div>
               <div class="links">

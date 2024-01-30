@@ -58,8 +58,8 @@
 /*-------------------------------------------------------------------------------------*
  *  Main                                                                               *
  *-------------------------------------------------------------------------------------*/
-.main_game_wrap {float:left; width:100%; height:350px; background:url("../images/main_game_bg5e1f.jpg?v=2") }
-.main_game_box {margin:0px auto; width:1780px;}
+.main_game_wrap {overflow: auto; float:left; width:100%; height:350px; background:url("../images/main_game_bg5e1f.jpg?v=2") }
+.main_game_box {margin:0px auto; width: 2360px;}
 .main_game {float:left; margin:50px 0 0 0;}
 .main_game ul li {float:left; margin:0 20px 0 20px;}
 

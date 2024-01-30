@@ -361,7 +361,12 @@
             @if ($category->status == 0)
             <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('점검중입니다.');">
             @else
-            <a href="javascript:void(0);" class="slot-btn" onclick="if (unreadmsg>0) {alert_error('쪽지를 확인하세요');} else { getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0);}">
+              @if ($category->type =='sports')
+              <a href="javascript:void(0);" class="slot-btn" onclick="if (unreadmsg>0) {alert_error('쪽지를 확인하세요');} else { startGameByProvider('bti', 'sports');}">
+              @else
+              <a href="javascript:void(0);" class="slot-btn" onclick="if (unreadmsg>0) {alert_error('쪽지를 확인하세요');} else { getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0);}">
+              @endif
+            
             @endif
           @else
           <a href="javascript:void(0);" class="slot-btn"  onclick="alert_error('로그인이 필요합니다');">

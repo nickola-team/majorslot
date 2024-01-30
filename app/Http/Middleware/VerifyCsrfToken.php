@@ -5,7 +5,8 @@ namespace VanguardLTE\Http\Middleware
     {
         protected $except = [
             '/game/*/server', 
-            '/coinpayment/ipn'
+            '/coinpayment/ipn',
+            '/booongo/*'
         ];
         public function handle($request, \Closure $next)
         {
