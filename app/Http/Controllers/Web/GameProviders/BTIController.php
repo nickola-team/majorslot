@@ -967,22 +967,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         public function sendSession(\Illuminate\Http\Request $request){
-            // if( \Illuminate\Support\Facades\Auth::check() && !\Illuminate\Support\Facades\Auth::user()->hasRole('user') ) 
-            // {
-            //     $status = 'failure';
-            //     return response()->json([
-            //         'status' => $status,
-            //         'balance' => sprintf('%0.2f',0)
-            //     ])->header('Access-Control-Allow-Origin','*');
-            // }
-            // if( !\Illuminate\Support\Facades\Auth::check() ) 
-            // {
-            //     $status = 'failure';
-            //     return response()->json([
-            //         'status' => $status,
-            //         'balance' => sprintf('%0.2f',0)
-            //     ])->header('Access-Control-Allow-Origin','*');
-            // }
             $data = json_decode($request->getContent(), true);
             //$userToken = isset($data['token'])?$data['token']:'';
             $userToken = $request->token;
@@ -1126,26 +1110,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betInfo = [];
             //if(!isset($responseData[1]) && !isset($responseData[2])){
                 //array_push($stat,'대기');
-                $tempArry = [];
-                if(count($responseData[0][0]['Bet'])>1){
-                    if(isset($responseData[0][0]['Bet'][0]))
-                    {
-                        for($i = 0;$i<count($responseData[0][0]['Bet']);$i++){
-                            $tempArry = $responseData[0][0]['Bet'][$i]['@attributes'];
-                            $result[$i] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
-                        }
-                    }else if(isset($responseData[0][0]['Bet']['Lines'])){
-                        for($i = 0;$i<count($responseData[0][0]['Bet']['Lines']);$i++){
-                            $tempArry = $responseData[0][0]['Bet']['Lines'][$i]['@attributes'];
-                            $result[$i] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
-                        }
-                    }
-                    
-                    
-                }else{
-                    $tempArry = $responseData[0][0]['Bet']['@attributes'];
-                    $result[0] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
-                }
+                
                 
             //}else 
             if(isset($responseData[2])){
@@ -1237,6 +1202,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                 }
             }
+
+            $tempArry = [];
+            if(count($responseData[0][0]['Bet'])>1){
+                if(isset($responseData[0][0]['Bet'][0]))
+                {
+                    for($i = 0;$i<count($responseData[0][0]['Bet']);$i++){
+                        $tempArry = $responseData[0][0]['Bet'][$i]['@attributes'];
+                        $result[$i] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
+                    }
+                }else if(isset($responseData[0][0]['Bet']['Lines'])){
+                    for($i = 0;$i<count($responseData[0][0]['Bet']['Lines']);$i++){
+                        $tempArry = $responseData[0][0]['Bet']['Lines'][$i]['@attributes'];
+                        $result[$i] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
+                    }
+                }
+                
+                
+            }else{
+                $tempArry = $responseData[0][0]['Bet']['@attributes'];
+                $result[0] = BTIController::getCommitInfo($tempArry,$bettype_string,$bet_string);
+            }
+            
             $commitRecord = \VanguardLTE\BTiTransaction::where(['user_id'=>$user->id,'reserve_id'=>$reserveId,'status'=>4])->first();
             $pur_id = $commitRecord->purchase_id;
             $bettype_temp = '';
