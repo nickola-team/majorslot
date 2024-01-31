@@ -996,7 +996,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             if ($detect->isiOS() || $detect->isiPadOS())
             {
-                $url = BTIController::makegamelink();
+                // $url = BTIController::makegamelink();
+                $url = '/spbt1/golobby?code=' . $gamecode;
             }
             else
             {
