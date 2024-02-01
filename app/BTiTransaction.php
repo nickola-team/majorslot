@@ -17,7 +17,8 @@ namespace VanguardLTE
             'status',
             'bet_type_id',
             'bet_type_name',
-            'purchase_id'
+            'purchase_id',
+            'stats'
         ];
         public $timestamps = false;
         public static function boot()
