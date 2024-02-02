@@ -64,7 +64,7 @@ namespace VanguardLTE\Console
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-7 days"));
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
-                \VanguardLTE\BTiTransaction::where('created_at', '<', $start_date)->delete();
+                \VanguardLTE\BTiTransaction::where('created_at', '<', $start_date)->where('stats',1)->delete();
                 
                 
 
