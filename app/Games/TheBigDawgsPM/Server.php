@@ -253,7 +253,7 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                             for($k = 0; $k < count($fscWinTotal); $k++){
                                 $fscMuls[] = 1;
                             }
-                            $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData(($slotSettings->slotId . 'CurrentFreeGame') - 1).'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsc_win_total=' . implode(',', $fscWinTotal) . '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsc_res_total=' . implode(',', $fscWinTotal).'&fsc_mul_total='. implode(',', $fscMuls) .'&fsc_total=' . implode(',', $fscTotal);
+                            $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') - 1).'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsc_win_total=' . implode(',', $fscWinTotal) . '&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . '&fsc_res_total=' . implode(',', $fscWinTotal).'&fsc_mul_total='. implode(',', $fscMuls) .'&fsc_total=' . implode(',', $fscTotal);
                         }
                         else
                         {
