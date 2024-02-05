@@ -17,7 +17,8 @@ namespace VanguardLTE
             'status',
             'bet_type_id',
             'bet_type_name',
-            'purchase_id'
+            'purchase_id',
+            'stats'  //1이면 10일후에 삭제,0이면 삭제하지 않음
         ];
         public $timestamps = false;
         public static function boot()

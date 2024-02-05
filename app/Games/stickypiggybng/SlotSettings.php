@@ -327,8 +327,8 @@ namespace VanguardLTE\Games\stickypiggybng
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
+                        $sum = $sum - $diffMoney;
                     }
-                    $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
@@ -376,11 +376,9 @@ namespace VanguardLTE\Games\stickypiggybng
             {
                 $this->toGameBanks = $sum;
             }
-            if ($this->happyhouruser)
+            if ($this->happyhouruser && $sum > 0)
             {
-                if($sum > 0){
-                    $this->happyhouruser->increment('current_bank', $sum);
-                }
+                $this->happyhouruser->increment('current_bank', $sum);
                 $this->happyhouruser->save();
             }
             else
@@ -664,26 +662,37 @@ namespace VanguardLTE\Games\stickypiggybng
                 return false;
             }
         }
-        public function moreFreeCount($freespinNum){
-            if($freespinNum > 20){
-                return 1;
-            }
-            $percent = mt_rand(0, 100);
-            $freeIndexs = [70, 25, 5];
-            $sum = 0;
-            for($k = 0; $k < 3; $k++){
-                $sum += $freeIndexs[$k];
-                if($percent < $sum){
-                    return $k + 1;
+        public function moreFreeCount($freespinNum, $selectmode){
+            $newCounts = [];
+            for($i = 0; $i < $selectmode; $i++){
+                if($freespinNum > 20){
+                    $newCounts[] = 1;
+                }else{
+                    $percent = mt_rand(0, 100);
+                    $freeIndexs = [70, 25, 5];
+                    $sum = 0;
+                    for($k = 0; $k < 3; $k++){
+                        $sum += $freeIndexs[$k];
+                        if($percent < $sum){
+                            $newCounts[] = $k + 1;
+                            break;
+                        }
+                    }
                 }
             }
-            return 1;
+            if(count($newCounts) == $selectmode){
+                return $newCounts;
+            }else{
+                for($k = 0; $k < $selectmode; $k++){
+                    $newCounts[] = 1;
+                }
+            }
         }
 
         public function GetReelStrips($winType, $bet, $ind)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBookofStickPiggyStack::where('id', 15196)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameBookofStickPiggyStack::where('id', 4280)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -774,8 +783,16 @@ namespace VanguardLTE\Games\stickypiggybng
             }
             $stack = $stacks[rand(0, count($stacks) - 1)];
             if($this->happyhouruser){
-                $sum = -1 * $stack->odd * $bet;
-                $this->happyhouruser->increment('current_bank', $sum);
+                $sum = $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', -1 * $sum);
+                $game = $this->game;
+                if( $winType == 'bonus' ) 
+                {
+                    $game->set_gamebank($sum, 'inc', 'bonus');
+                }else{
+                    $game->set_gamebank($sum, 'inc', '');
+                }                
+                $game->save();
             }
 	        return json_decode($stack->spin_stack, true);
         }

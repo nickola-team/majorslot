@@ -227,7 +227,12 @@ function stopDrag() {
 			@foreach($categories AS $index=>$category)
 				@if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false))
 					@if ($category->status == 1)
-					<a href="javascript:void(0);" class="slot-btn" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
+						@if($category->type == 'sports')
+							<a href="javascript:void(0);" class="slot-btn" onclick="startGameByProvider('bti', 'sports')">
+						@else
+						<a href="javascript:void(0);" class="slot-btn" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
+						@endif
+					
 					@else
 					<a href="javascript:void(0);" class="slot-btn" onclick="alert('점검중입니다')">
 					@endif

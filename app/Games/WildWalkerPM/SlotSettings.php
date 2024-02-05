@@ -73,8 +73,8 @@ namespace VanguardLTE\Games\WildWalkerPM
             $this->CurrentDenom = $this->game->denomination;
             $this->scaleMode = 0;
             $this->numFloat = 0;
-            $this->Paytable[1] = [0,0,0,0,0,0];
-            $this->Paytable[2] = [0,0,0,0,0,0];
+            $this->Paytable[1] = [0,0,0,0,0,0,0];
+            $this->Paytable[2] = [0,0,0,0,0,0,0];
             $this->Paytable[3] = [0,0,0,30,150,500,1500,4500,10000];
             $this->Paytable[4] = [0,0,0,25,100,400,1200,3000,7000];
             $this->Paytable[5] = [0,0,0,20,75,300,900,2000,5000];
@@ -338,8 +338,8 @@ namespace VanguardLTE\Games\WildWalkerPM
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
+                        $sum = $sum - $diffMoney;
                     }
-                    $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
@@ -387,11 +387,9 @@ namespace VanguardLTE\Games\WildWalkerPM
             {
                 $this->toGameBanks = $sum;
             }
-            if ($this->happyhouruser)
+            if ($this->happyhouruser && $sum > 0)
             {
-                if($sum > 0){
-                    $this->happyhouruser->increment('current_bank', $sum);
-                }
+                $this->happyhouruser->increment('current_bank', $sum);
                 $this->happyhouruser->save();
             }
             else
@@ -801,8 +799,16 @@ namespace VanguardLTE\Games\WildWalkerPM
                 'odd' => $stack->odd
             ]);
     	     if($this->happyhouruser){
-                $sum = -1 * $stack->odd * $bet;
-                $this->happyhouruser->increment('current_bank', $sum);
+                $sum = $stack->odd * $bet;
+                $this->happyhouruser->increment('current_bank', -1 * $sum);
+                $game = $this->game;
+                if( $winType == 'bonus' ) 
+                {
+                    $game->set_gamebank($sum, 'inc', 'bonus');
+                }else{
+                    $game->set_gamebank($sum, 'inc', '');
+                }                
+                $game->save();
             }
 	     return json_decode($stack->spin_stack, true);
         }

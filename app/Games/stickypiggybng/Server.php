@@ -321,28 +321,38 @@ namespace VanguardLTE\Games\stickypiggybng
                         $context['last_action'] = 'freespin_gamble';
                     }else{
                         $percent = 90;
+                        if(isset($context['freespins']['gamble']['free_cells']) && count($context['freespins']['gamble']['free_cells']) < $select_mode){
+                            return '';
+                        }
                         if(isset($context['freespins']) && isset($context['freespins']['gamble']) && isset($context['freespins']['gamble']['variants']) && count($context['freespins']['gamble']['variants']) > 0){
-                            $percent = $context['freespins']['gamble']['variants'][1] * 100;
+                            $percent = $context['freespins']['gamble']['variants'][$select_mode] * 100;
                         }
                         $winChance = $slotSettings->IsWinChance($percent, $freespinNum);
                         if($winChance == true){
-                            $freemore = $slotSettings->moreFreeCount($freespinNum);
                             $gameble = $context['freespins']['gamble'];
+                            
+                            $freemores = $slotSettings->moreFreeCount($freespinNum, $select_mode);
+                            $freemore = 0;
+                            for($k = 0; $k < $select_mode; $k++){
+                                $freemore += $freemores[$k];
+                                $gameble['picks'][$gameble['free_cells'][$k][0]][$gameble['free_cells'][$k][1]] = $freemores[$k];
+                            }
                             $freespinNum += $freemore;
                             $gameble['freespins'] = $freespinNum;
                             $gameble['history'] = [
                                 'freespins_added' => $freemore,
                                 'result' => 'win',
-                                'selected_mode' => 1,
+                                'selected_mode' => $select_mode,
                                 'variants' => $gameble['variants']
                             ];
-                            $gameble['picks'][$gameble['free_cells'][0][0]][$gameble['free_cells'][0][1]] = $freemore;
-                            array_splice($gameble['free_cells'], 0, 1); // 첫번째 배열요소 삭제하고 키를 다시 색인
+                            array_splice($gameble['free_cells'], 0, $select_mode); // 첫번째 배열요소 삭제하고 키를 다시 색인
                             foreach($gameble['variants'] as $key => $val){
                                 $gameble['variants'][$key] = $val + $val * 0.025;
                             }
                             if(count($gameble['free_cells']) < 3){
-                                unset($gameble['variants'][count($gameble['free_cells']) + 1]);
+                                for($k = 0; $k < $select_mode; $k++ ){
+                                    unset($gameble['variants'][count($gameble['variants'])]);
+                                }
                             }
                             if(count($gameble['free_cells']) == 0){
                                 unset($gameble['free_cells']); //배열요소를 삭제한후 키를 다시 색인하지 않음

@@ -876,6 +876,10 @@ p {margin: 0;}
 	background-image: url(/frontend/iris/theme/sp/images/game/ico_mini_off.png);
 	margin-left: 20px;
 }
+.category-main .category-center a .icon_sports{
+	background-image: url(/frontend/iris/theme/sp/images/game/ico_sports_off.png);
+	margin-left: 20px;
+}
 .category-main .category-center a:hover{
 
 }
@@ -894,6 +898,10 @@ p {margin: 0;}
 
 .category-main .category-center a.active .icon_mini{
 	background-image: url(/frontend/iris/theme/sp/images/game/ico_mini_on.png);
+}
+
+.category-main .category-center a.active .icon_sports{
+	background-image: url(/frontend/iris/theme/sp/images/game/ico_sports_on.png);
 }
 
 @media(max-width:1200px){

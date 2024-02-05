@@ -66,11 +66,12 @@ namespace VanguardLTE\Console
                 \VanguardLTE\GameLog::where('time', '<', $start_date)->delete();
                 
                 
+                
 
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
-                \VanguardLTE\StatGame::where('date_time', '<', $start_date)->delete();
-
+                \VanguardLTE\StatGame::where('date_time', '<', $start_date)->where('status', 1)->delete();
+                \VanguardLTE\BTiTransaction::where('created_at', '<', $start_date)->where('stats',1)->delete();
                 
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
@@ -1822,7 +1823,8 @@ namespace VanguardLTE\Console
                             'deal_percent',
                             'table_deal_percent',
                             'pball_single_percent',
-                            'pball_comb_percent'
+                            'pball_comb_percent',
+                            'sports_deal_percent'
                         ];
                         $data['shop_id'] = $shop->id;
                         $data['role_id'] = $role->id;

@@ -302,12 +302,19 @@
                                             </li>
                                             
                                             @else
-                                            <li>
-                                                <a href="#" onclick="goMSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
-                                                        <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}" width = "100%" onerror="this.src='/frontend/thezone/img/slot/coming_soon.png';">
-                                                </a>
-                                            </li>
-                                            
+                                            @if($category->type =='sports')
+                                                <li>
+                                                    <a href="#" onclick="startGameByProvider('bti', 'sports')">
+                                                            <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}" width = "100%" onerror="this.src='/frontend/thezone/img/slot/coming_soon.png';">
+                                                    </a>
+                                                </li>
+                                                @else
+                                                <li>
+                                                    <a href="#" onclick="goMSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
+                                                            <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}" width = "100%" onerror="this.src='/frontend/thezone/img/slot/coming_soon.png';">
+                                                    </a>
+                                                </li>
+                                                @endif
                                             @endif
                                         @endif
                                     @endforeach
@@ -337,11 +344,19 @@
                                                 </div>
                                             </a>
                                             @else
-                                            <a href="#" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)" class=" slot-btn">
-                                                <div class="inner">
-                                                    <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}">
-                                                </div>
-                                            </a>
+                                                @if($category->type =='sports')
+                                                <a href="#" onclick="startGameByProvider('bti', 'sports')" class=" slot-btn">
+                                                    <div class="inner">
+                                                        <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}">
+                                                    </div>
+                                                </a>
+                                                @else
+                                                <a href="#" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)" class=" slot-btn">
+                                                    <div class="inner">
+                                                        <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}">
+                                                    </div>
+                                                </a>
+                                                @endif
                                             @endif
                                         @endif
                                     @endforeach

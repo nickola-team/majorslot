@@ -335,10 +335,30 @@
                             <li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subSlot');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/pelican/tutu/images/main_game2.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game2.png" class="mouseover1" style="display: none;width:550px;"></a></li>
 							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);" onclick="tabActionPop('','subPowerball');" class="casino_1_open" data-popup-ordinal="0" id="open_64663418"><img src="/frontend/pelican/tutu/images/main_game3.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game3.png" class="mouseover1" style="display: none;width:550px;"></a></li>
 
+							<li><a href="#" onmouseover="show_over(this);" onmouseout="show_out(this);"
+							{{$isSports = false}} 
+							@foreach($categories AS $index=>$category)
+								@if ($category->type =='sports')
+									@if ($category->status == 0)
+										onclick="javascript:swal('점검중입니다');"
+									@elseif ($category->view == 0)
+										onclick="javascript:swal('지원하지 않는 게임입니다.');"
+									@else
+										onclick="startGameByProvider('bti', 'sports')"
+									@endif 
+										{{$isSports = true}} 
+										@break
+								@endif
+							@endforeach
+							@if(!$isSports)
+								onclick="alert('지원하지 않는 게임입니다.');"
+							@endif><img src="/frontend/pelican/tutu/images/main_game4.png" style="display: inline;width:550px;"><img src="/frontend/pelican/tutu/images/main_game4.png" class="mouseover1" style="display: none;width:550px;"></a></li>
+
 							@else
 							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game1.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game1.png" class="mouseover1" style="display:none;width:550px;"></a></li>
 							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game2.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game2.png" class="mouseover1" style="display:none;width:550px;"></a></li>                
 							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game3.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game3.png" class="mouseover1" style="display:none;width:550px;"></a></li> 
+							<li><a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('로그인 하여 주세요.');return false;"><img src="/frontend/pelican/tutu/images/main_game4.png" style="width:550px;"><img src="/frontend/pelican/tutu/images/main_game4.png" class="mouseover1" style="display:none;width:550px;"></a></li> 
 							@endif
 						</ul>
 					</div>
@@ -360,8 +380,12 @@
 								&& $category->title != "Skywind" )
 								<li>
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
-										@if ($category->status == 1)
-										<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+										@if($category->status == 1)
+											@if($category->type == 'sports')
+											<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider('bti', 'sports');">
+											@else
+											<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="getSlotGames('{{ $category->trans?$category->trans->trans_title:$category->title }}', '{{ $category->href }}', 0)">
+											@endif
 										@else
 										<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다');return false;">
 										@endif

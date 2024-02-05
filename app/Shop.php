@@ -29,6 +29,7 @@ namespace VanguardLTE
             'table_miss_deal',
             'pball_single_percent', 
             'pball_comb_percent',
+            'sports_deal_percent'
         ];
         public static $values = [
             'currency' => [
