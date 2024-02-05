@@ -1194,6 +1194,12 @@ return [
         "GoodLuckGoodFortune" => "굿 럭 & 굿 포츈",
         "FortuneDragon" => "포춘 드래곤",
         "TheBigDawgs" => "더 빅 도그즈",
+        "MahjongWinsBonus" => "마종 윈즈 보너스",
+        "BladeFangs" => "블래이드 & 팽즈",
+        "LokisRiches" => "로키스 리치스",
+        "BlazingWildsMegaways" => "블레이징 와일드 메가웨이즈",
+        "FortuneAce" => "포츈 에이스",
+        "TreesofTreasure" => "트리즈 오프 트레저",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

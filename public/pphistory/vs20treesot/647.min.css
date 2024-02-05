@@ -1,0 +1,34 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    align-items: center;
+    flex-direction: row
+}
+
+.Spin .RespinsLeft {
+    width: 45px;
+    height: 62px;
+    margin-right: 5px
+}
+
+.Spin .RespinsLeft__Title {
+    width: 40px;
+    line-height: normal
+}
