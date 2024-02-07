@@ -503,11 +503,12 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines, $totalbet, $respinReelNo);
             if($isEnd == true){
                 if($slotEvent != 'freespin'){
-                    if($respinReelNo == 0 || $totalWin > 0){
-                        $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings);
-                    }else{                        
-                        $result_val['ReelPay'] = $slotSettings->GetGameData($slotSettings->slotId . 'ReelPaies');
-                    }
+                    // if($respinReelNo == 0 || $totalWin > 0){
+                    //     $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings);
+                    // }else{                        
+                    //     $result_val['ReelPay'] = $slotSettings->GetGameData($slotSettings->slotId . 'ReelPaies');
+                    // }
+                    $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings);
                 }
                 $slotSettings->SaveLogReport(json_encode($gamelog), $totalbet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin'), $slotEvent, $result_val['GamePlaySerialNumber']);
             }
@@ -521,8 +522,20 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
         }
         public function getReelPay($reels, $betline, $slotSettings){
             $wild = 'W';
+            $scatter = 'F';
             $symbolId = [1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16];
             $reelWins = [1, 1, 1, 1, 1];
+            $scatterCount = 0;
+            $scatterReel = [0,0,0,0,0];
+            for($k = 0; $k < 5; $k++){
+                for($j = 0; $j < 3; $j++){
+                    if($reels['reel' . ($k + 1)][$j] == 'F'){
+                        $scatterReel[$k] = 1;
+                        $scatterCount++;
+                        break;
+                    }
+                }
+            }
             for($k = 0; $k < 5; $k++){
                 $totalWin = 0;
                 for($j = 0; $j < 11; $j++){
@@ -556,6 +569,38 @@ namespace VanguardLTE\Games\GuGuGu3CQ9
                 }
                 if($totalWin > 0){
                     $reelWins[$k] = floor($totalWin / 3) - mt_rand(0, 3);
+                }
+                if($scatterReel[$k] == 0){
+                    $twoScatters = false;
+                    if($k<4){
+                        if($k != 0){
+                            if($scatterReel[$k-1] == 1 && $scatterReel[$k+1] == 1){
+                                $twoScatters = true;
+                            }
+                        }
+                        if($k < 3){
+                            if($scatterReel[$k+1] ==1 && $scatterReel[$k+2] == 1){
+                                $twoScatters = true;
+                            }
+                        }
+                        if($k > 1){
+                            if($scatterReel[$k-1] == 1 && $scatterReel[$k-2] == 1){
+                                $twoScatters = true;
+                            }
+                        }
+                        
+                    }else{
+                        if($scatterReel[$k-1] == 1 && $scatterReel[$k-2] == 1){
+                            $twoScatters = true;
+                        }
+                    }                    
+                    if($scatterCount == 2){
+                        if($twoScatters){
+                            $reelWins[$k] += floor($betline * 158);
+                        }else{
+                            $reelWins[$k] += floor($betline * 79);                     
+                        }
+                    }
                 }
             }
             return $reelWins;
