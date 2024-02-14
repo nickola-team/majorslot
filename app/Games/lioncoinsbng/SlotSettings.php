@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\sunofegypt4bng
+namespace VanguardLTE\Games\lioncoinsbng
 {
     class SlotSettings
     {
@@ -322,8 +322,8 @@ namespace VanguardLTE\Games\sunofegypt4bng
                             $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
                         }
                         $game->set_gamebank($diffMoney, 'inc', '');
+                        $sum = $sum - $diffMoney;
                     }
-                    $sum = $sum - $diffMoney;
                 }else{
                     if ($sum < 0){
                         $this->InternalError('Bank_   ' . $sum . '  CurrentBank_ ' . $this->GetBank($slotState) . ' CurrentState_ ' . $slotState);
@@ -650,7 +650,7 @@ namespace VanguardLTE\Games\sunofegypt4bng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('id', 857)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLionCoinsStack::where('id', 61501)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -679,18 +679,18 @@ namespace VanguardLTE\Games\sunofegypt4bng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('spin_type','>', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLionCoinsStack::where('spin_type','>', 0);
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLionCoinsStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 58000);
+                $index = mt_rand(0, 88000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 78000);
+                    $index = mt_rand(0, 78000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 25);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
