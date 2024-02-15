@@ -230,6 +230,24 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                         }
                                     }
                                 }
+                                if(isset($stack[$spin_type]['bs_v_2'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
+                                        for($j = 0; $j < 3; $j++){
+                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
+                                                $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
+                                            }
+                                        }
+                                    }
+                                }
+                                if(isset($stack[$spin_type]['boost_bs_v'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['boost_bs_v']); $i++){
+                                        for($j = 0; $j < 3; $j++){
+                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['boost_bs_v'][$i][$j]))){
+                                                $stack[$spin_type]['boost_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['boost_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
+                                            }
+                                        }
+                                    }
+                                }
                                 if(isset($stack[$spin_type]['new_bs']) && count($stack[$spin_type]['new_bs']) > 0){
                                     foreach( $stack[$spin_type]['new_bs'] as $index => $value ){
                                         if(isset($value['value']) && $value['value'] > 0){
@@ -446,6 +464,24 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                     for($j = 0; $j < 3; $j++){
                                         if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
                                             $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
+                                        }
+                                    }
+                                }
+                            }
+                            if(isset($stack[$spin_type]['bs_v_2'])){
+                                for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
+                                    for($j = 0; $j < 3; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
+                                            $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
+                                        }
+                                    }
+                                }
+                            }
+                            if(isset($stack[$spin_type]['boost_bs_v'])){
+                                for($i = 0; $i < count($stack[$spin_type]['boost_bs_v']); $i++){
+                                    for($j = 0; $j < 3; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['boost_bs_v'][$i][$j]))){
+                                            $stack[$spin_type]['boost_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['boost_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                         }
                                     }
                                 }
