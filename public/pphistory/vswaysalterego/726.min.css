@@ -1,0 +1,118 @@
+:root {
+    --slot-item-height: 43px;
+    --slot-item-width: 50px
+}
+
+.LinesSlot .ReelsSlot {
+    align-items: flex-end
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: max-content;
+    flex-direction: column-reverse
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    flex-grow: 0
+}
+
+.LinesSlot .ReelsSlot__Item--3 {
+    display: none
+}
+
+.LinesSlot .ReelsSlot__Item--4,
+.LinesSlot .ReelsSlot__Item--6 {
+    align-items: flex-end
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="6"] {
+    z-index: 1
+}
+
+.LinesSlot--fs .ReelsSlot__ItemImg[alt="1"] {
+    content: -webkit-image-set(url(./images/vswaysalterego/spin/1_1.png) 1x, url(./images/vswaysalterego/spin/1_1@2x.png) 2x)
+}
+
+.LinesSlot--fs .ReelsSlot__ItemImg[alt="4"] {
+    content: -webkit-image-set(url(./images/vswaysalterego/spin/4_1.png) 1x, url(./images/vswaysalterego/spin/4_1@2x.png) 2x)
+}
+
+.SlotWrap__Field {
+    border: unset
+}
+
+.ReelsSlot__Reel {
+    box-shadow: 0 0 0 1px #4c4c4c
+}
+
+.RespinsLeft {
+    position: relative;
+    width: 80px;
+    height: 40px;
+    margin-right: 10px;
+    margin-top: 50px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    white-space: nowrap;
+    background-image: -webkit-image-set(url(./images/vswaysalterego/fsLeft.png) 1x, url(./images/vswaysalterego/fsLeft@2x.png) 2x);
+    font-size: .79rem
+}
+
+.RespinsLeft__Title {
+    width: 70px
+}
+
+.Footer-direction {
+    display: none
+}
+
+.AnimatedSlot {
+    position: relative
+}
+
+.AnimatedSlot .Animation__MultiCrossFadeV2>:first-child {
+    position: absolute;
+    align-items: flex-end
+}
+
+.AnimatedSlot .Animation__MultiCrossFadeV2>:nth-child(2) {
+    position: relative;
+    align-items: flex-end
+}
+
+.WinLines-Group .Animation__CrossFadeItem {
+    animation: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:nth-child(n) {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:first-child {
+    display: none
+}

@@ -1200,6 +1200,11 @@ return [
         "BlazingWildsMegaways" => "블레이징 와일드 메가웨이즈",
         "FortuneAce" => "포츈 에이스",
         "TreesofTreasure" => "트리즈 오프 트레저",
+        "TheAlterEqo" => "디 알터 이고",
+        "BigBassFloatsmyBoat" => "빅 배스 플로트 마이 보트",
+        "BaliDragon" => "발리 드래곤",
+        "PompeiiMegareelsMegaways" => "폼페이 메가릴즈 메가웨이즈",
+        "WheelOGold" => "휠 오골드",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
