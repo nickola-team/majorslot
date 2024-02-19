@@ -161,7 +161,7 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                             //     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin'));
                             // }
                             if($packet_id == 41){
-                                $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
+                                // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance() - $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                                 $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
                                 $result_val['PlayerBet'] = $betline;
                                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
@@ -238,8 +238,10 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                             $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                             $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
                             $result_val['PlayerBet'] = $betline;
-                            $result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            //$result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
+                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
+                            //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $result_val['TotalWinAmt']);
                             $result_val['NextModule'] = 20;
                         }else if($packet_id == 43){
                             $betline = $slotSettings->GetGameData($slotSettings->slotId . 'PlayBet');
@@ -252,7 +254,8 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                             }
                             
 
-                            $result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            //$result_val['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            $result_val['TotalWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin');
                             $result_val['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
                             $result_val['NextModule'] = $stack['NextModule'];
                             $result_val['GameExtraData'] = "";
@@ -292,6 +295,7 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 3);
                         if(isset($stack['TotalWinAmt'])){
                             $stack['TotalWinAmt'] = $stack['TotalWinAmt'] / $originalbet * $betline;
+                            $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $stack['TotalWinAmt']);
                         }
                         if(isset($stack['ScatterPayFromBaseGame'])){
                             $stack['ScatterPayFromBaseGame'] = $stack['ScatterPayFromBaseGame'] / $originalbet * $betline;
@@ -346,7 +350,7 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
-            // $winType = 'bonus';
+            //$winType = 'bonus';
             // $_winAvaliableMoney = $slotSettings->GetBank($slotEvent);
             if($slotSettings->GetGameData($slotSettings->slotId . 'FreeIndex') > -1 || $slotSettings->GetGameData($slotSettings->slotId . 'PurLevel') > -1){
                 $winType = 'bonus';
@@ -388,7 +392,8 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                 $totalWin = $stack['TotalWin'];
             }
             if(isset($stack['AccumlateWinAmt']) && $stack['AccumlateWinAmt'] > 0){
-                $stack['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
+                //$stack['AccumlateWinAmt'] = $stack['AccumlateWinAmt'] / $originalbet * $betline;
+                $stack['AccumlateWinAmt'] = $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + ($totalWin);
             }
             if(isset($stack['AccumlateJPAmt']) && $stack['AccumlateJPAmt'] > 0){
                 $stack['AccumlateJPAmt'] = $stack['AccumlateJPAmt'] / $originalbet * $betline;
@@ -484,9 +489,9 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
             }
             
 
-            if($slotEvent != 'freespin' && $freespinNum > 0){
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
-            }
+            // if($slotEvent != 'freespin' && $freespinNum > 0){
+            //     $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
+            // }
             return $result_val;
         }
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines){
@@ -636,7 +641,6 @@ namespace VanguardLTE\Games\TheBeastWarCQ9
                     $wager['rng']                   = $result_val['RngData'];
                 }
                 
-                $wager['multiple']              = $result_val['Multiple'];
                 if(isset($result_val['TotalWin'])){
                     $wager['base_game_win']         = $result_val['TotalWin'];
                 }

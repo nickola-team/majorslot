@@ -1,0 +1,105 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: ".. .. respins multBase .." "multiplier slot slot slot progress" "multiplier slot slot slot wheel"
+}
+
+.Spin .LinesSlot {
+    grid-area: slot
+}
+
+.Spin .MultiplierBase {
+    align-items: center;
+    width: 43px;
+    height: 25px;
+    grid-area: multBase;
+    margin: 0 0 4px 5px
+}
+
+.Spin .MultiplierBase,
+.Spin .TopRespins {
+    display: flex;
+    justify-content: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .TopRespins {
+    align-items: flex-end;
+    grid-area: respins
+}
+
+.Spin .TopRespins__Item {
+    width: 43px;
+    height: 20px
+}
+
+.Spin .Wheel {
+    width: 103px;
+    height: 160px;
+    grid-area: wheel;
+    margin-left: 10px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .Wheel .Image__Children {
+    margin-right: 15px
+}
+
+.Spin .Multiplier {
+    width: 77px;
+    height: 60px;
+    display: flex;
+    margin-right: 5px;
+    margin-top: 5px;
+    align-items: center;
+    justify-content: center;
+    grid-area: multiplier;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .Progress {
+    width: 65px;
+    height: 38px;
+    align-self: flex-start;
+    margin-left: 10px;
+    grid-area: progress
+}
+
+.Spin .Progress .Image__Children {
+    width: 100%
+}
+
+.Spin .ProgressContent {
+    display: flex;
+    align-items: center;
+    padding-right: 2px;
+    justify-content: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .ProgressContent__Img {
+    height: 20px;
+    margin-right: 3px
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
