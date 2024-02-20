@@ -895,7 +895,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink()
         {
             $user = auth()->user();
-            Log::error('BTI : getBetHistoryByGameId request failed.');
             $token = $user->remember_token;
             $url = config('app.bti_api') . '/?operatorToken='. $token;
             return $url;
