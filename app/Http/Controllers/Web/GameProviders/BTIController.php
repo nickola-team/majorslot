@@ -840,7 +840,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //$userToken = isset($data['token'])?$data['token']:'';
             $userToken = $request->token;
 
-            $userRecord = \VanguardLTE\User::where(['api_token' => $userToken])->first();
+            $userRecord = \VanguardLTE\User::where(['remember_token' => $userToken])->first();
             $status = 'success';
             $balance = 0;
             if(!$userRecord || $userRecord == null){

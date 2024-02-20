@@ -358,7 +358,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $user->update([
-                'remember_token' => $user->api_token
+                'remember_token' => $user->generateCode(36)
             ]);
 
             if ($provider == 'null')
