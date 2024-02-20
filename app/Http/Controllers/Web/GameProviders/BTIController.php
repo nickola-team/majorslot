@@ -48,7 +48,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'error_message' => 'Generic Error'
                 ]))->header('Content-Type', 'text/plain');
             }
-            $user = \VanguardLTE\User::where(['api_token'=> $authToken])->first();
+            $user = \VanguardLTE\User::where(['remember_token'=> $authToken])->first();
             if (!isset($user))
             {
                 return response(BTIController::toText([
