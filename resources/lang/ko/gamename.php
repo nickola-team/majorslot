@@ -1301,6 +1301,7 @@ return [
         "sunofegypt4" => "선 오브 이집트 4",
         "_3egyptchests" => "3 이집트 체스트",
         "lioncoins" => "라이온 코인즈",
+        "_3cloverpots" => "3 클로버 팟스",
 
         // CQ9
         "Double Fly" => "더블 플라이",
