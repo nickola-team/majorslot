@@ -895,7 +895,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink()
         {
             $user = auth()->user();
-            $token = $user->remember_token;
+            $token = $user->api_token;
             $url = config('app.bti_api') . '/?operatorToken='. $token;
             return $url;
         }

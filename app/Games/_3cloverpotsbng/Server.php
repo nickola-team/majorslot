@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_3egyptchestsbng
+namespace VanguardLTE\Games\_3cloverpotsbng
 {
     class Server
     {
@@ -83,26 +83,25 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     'context' => [
                         'actions' => ['spin'],
                         'current' => 'spins',
-                        'last_action' => 'init',
                         'last_args' => [
                         ],
-                        'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
+                        //'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                         //'math_version' => 'a',
                         'round_finished' => true,
                         'spins' => [
-                            'bac' => [
-                                '1' => [0, 0],
-                                '2' => [0, 0],
-                                '3' => [0, 0]
-                            ],
                             'bet_per_line' => $bets[9],
-                            'board' => [[2,2,1],[3,6,6],[9,9,9],[2,8,8],[5,2,2]],
-                            'bs_count' => 0,
-                            'bs_v' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                            'bs_values' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                            'lines' => 10,
+                            'board' => [[3,11,3],[13,15,7],[9,9,12],[13,15,7],[9,11,7]],
+                            'bs' => [0,0,0,12,0,0,0,0,0,5,0,0,0,0,0],
+                            'bs_jackpots' => [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+                            'bs_last_bet' => [0,0,0,6000000,0,0,0,0,0,2500000,0,0,0,0,0],
+                            'collector_levels' => [0,0,0],
+                            'collector_values' => [0,0,0],
+                            'current_config' => [0,0,0],
+                            'extra_miss_animation_counter' => -1,
+                            'lines' => 25,
                             'round_bet' => $bets[9] * $LINES,
                             'round_win' => 0,
+                            'src_suffix' => 'bg_',
                             'total_win' => 0,
                         ],
                         'version' => 2
@@ -116,7 +115,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     ],
                     'request_id' => $slotEvent['request_id'],
                     'session_id' => '7e3c4b4b87614074b61607b08805c1bc',
-                    'settings' => json_decode('{"bet_factor": [20], "bets": ['. implode(',', $bets) .'], "big_win":[20,30,50,100],"bonus_symbols":[1,2,3,5,8,10,"mini","minor","major"],"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"jackpots":{"grand":5000,"major":100,"mini":15,"minor":30},"lines":[10],"multiplier_values":[1,2,3,4,5,10],"paylines":[[1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],[1,2,2,2,1],[1,0,0,0,1],[2,2,1,0,0],[0,0,1,2,2],[2,1,1,1,0]],"paytable":{"1":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"2":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"3":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"4":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"5":[{"multiplier":20,"occurrences":3,"type":"lb"},{"multiplier":50,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"6":[{"multiplier":20,"occurrences":3,"type":"lb"},{"multiplier":50,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"7":[{"multiplier":20,"occurrences":3,"type":"lb"},{"multiplier":50,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"8":[{"multiplier":25,"occurrences":3,"type":"lb"},{"multiplier":75,"occurrences":4,"type":"lb"},{"multiplier":250,"occurrences":5,"type":"lb"}],"9":[{"multiplier":30,"occurrences":3,"type":"lb"},{"multiplier":100,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}]},"reelsamples":{"spins":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12,14],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_1":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_2":[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],"spins_3":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_4":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12]],"spins_5":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_6":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12]],"spins_7":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_8":[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],"spins_9":[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8]]},"respins_granted":3,"rows":3,"small_win":5,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_wild","type":"wild"},{"id":10,"name":"el_bonus_progress_1","type":"scat"},{"id":11,"name":"el_bonus_progress_2","type":"scat"},{"id":12,"name":"el_bonus_progress_3","type":"scat"},{"id":13,"name":"el_bonus","type":"scat"},{"id":14,"name":"el_boost","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8],"symbols_scat":[10,11,12,13,14],"symbols_wild":[9]}'),
+                    'settings' => json_decode('{"bet_factor": [20], "bets": ['. implode(',', $bets) .'], "big_win":[15,30,50,100],"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"jackpot_values":[15,50,150,5000],"lines":[25],"paylines":[[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],[1,0,0,0,1],[1,2,2,2,1],[0,0,1,2,2],[2,2,1,0,0],[1,2,1,0,1],[1,0,1,2,1],[0,1,1,1,0],[2,1,1,1,2],[0,1,0,1,0],[2,1,2,1,2],[1,1,0,1,1],[1,1,2,1,1],[0,0,2,0,0],[2,2,0,2,2],[0,2,2,2,0],[2,0,0,0,2],[1,2,0,2,1],[1,0,2,0,1],[0,2,0,2,0],[2,0,2,0,2],[1,1,1,1,1]],"paytable":{"1":[{"multiplier":4,"occurrences":3,"type":"lb"},{"multiplier":8,"occurrences":4,"type":"lb"},{"multiplier":40,"occurrences":5,"type":"lb"}],"2":[{"multiplier":4,"occurrences":3,"type":"lb"},{"multiplier":8,"occurrences":4,"type":"lb"},{"multiplier":40,"occurrences":5,"type":"lb"}],"3":[{"multiplier":4,"occurrences":3,"type":"lb"},{"multiplier":8,"occurrences":4,"type":"lb"},{"multiplier":40,"occurrences":5,"type":"lb"}],"4":[{"multiplier":4,"occurrences":3,"type":"lb"},{"multiplier":8,"occurrences":4,"type":"lb"},{"multiplier":40,"occurrences":5,"type":"lb"}],"5":[{"multiplier":6,"occurrences":3,"type":"lb"},{"multiplier":24,"occurrences":4,"type":"lb"},{"multiplier":120,"occurrences":5,"type":"lb"}],"6":[{"multiplier":8,"occurrences":3,"type":"lb"},{"multiplier":32,"occurrences":4,"type":"lb"},{"multiplier":160,"occurrences":5,"type":"lb"}],"7":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"8":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":60,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}],"9":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":60,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}],"15":[{"freespins":8,"multiplier":2,"occurrences":3,"trigger":"freespins","type":"tb"}]},"reelsamples":{"bg_0":[[1,2,3,4,5,6,7,8,9,13,14],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14]],"bg_1":[[1,2,3,4,5,6,7,8,9,13,14],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14]],"fg":[[1,2,3,4,5,6,7,8,9,13,14],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14,15],[1,2,3,4,5,6,7,8,9,13,14]],"fg_guaranteed_win_spin":[[1,2,3,4,5,6,7],[1,2,3,4,5,6,7,15],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7,15],[1,2,3,4,5,6,7]],"fg_last_spin":[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9,15],[1,2,3,4,5,6,7,8,9,15],[1,2,3,4,5,6,7,8,9,15],[1,2,3,4,5,6,7,8,9]]},"rows":3,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_09","type":"wild"},{"id":10,"name":"el_bonus","type":"bonus"},{"id":11,"name":"el_bonus","type":"bonus"},{"id":12,"name":"el_bonus","type":"bonus"},{"id":13,"name":"el_bonus","type":"bonus"},{"id":14,"name":"el_14","type":"hidden"},{"id":15,"name":"el_scatter","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8],"symbols_scat":[15],"symbols_wild":[9]}'),
                     'status' => [
                         'code' => 'OK'
                     ],
@@ -170,7 +169,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                 }else if($action['name'] == 'freespin_init' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop'){
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[9];
                     $slotEvent['slotEvent'] = 'freespin';
-                }else if($action['name'] == 'bonus_init' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
+                }else if($action['name'] == 'bonus_init' || $action['name'] == 'bonus_pick' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[9];
                     $slotEvent['slotEvent'] = 'respin';
                 }else{
@@ -183,7 +182,8 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                 $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
                 $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
-                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? [[0, 0],[0, 0],[0, 0]];
+                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? [0, 0, 0];
+                $hillLevel = $slotSettings->GetGameData($slotSettings->slotId . 'HillLevel') ?? [0, 0, 0];
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
@@ -202,12 +202,8 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                             if($stack[$spin_type] != ''){
                                 $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
                                 $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
-                                //$stack[$spin_type]['bac'] = $currentHill;
-                                $stack[$spin_type]['bac'] = [
-                                    '1' => $currentHill[0],
-                                '2' => $currentHill[1],
-                                '3' => $currentHill[2],
-                                ];
+                                $stack[$spin_type]['collector_values'] = $currentHill;
+                                $stack[$spin_type]['collector_levels'] = $hillLevel;
                                 if(isset($stack[$spin_type]['round_win'])){
                                     $totalWin = $stack[$spin_type]['round_win'] * $betline;
                                     $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
@@ -230,15 +226,22 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                         }
                                     }
                                 }
-                                if(isset($stack[$spin_type]['bs_v_2'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
-                                        for($j = 0; $j < 3; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
-                                                $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
+                                if(isset($stack[$spin_type]['bs_last_bet'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bs_last_bet']); $i++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_last_bet'][$i]))){
+                                            $stack[$spin_type]['bs_last_bet'][$i] = str_replace(',', '', $stack[$spin_type]['bs_last_bet'][$i]) * $betline * $DENOMINATOR;
                                         }
                                     }
                                 }
+
+                                if(isset($stack[$spin_type]['bs_origin_last_bet'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bs_origin_last_bet']); $i++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_origin_last_bet'][$i]))){
+                                            $stack[$spin_type]['bs_origin_last_bet'][$i] = str_replace(',', '', $stack[$spin_type]['bs_origin_last_bet'][$i]) * $betline * $DENOMINATOR;
+                                        }
+                                    }
+                                }
+
                                 if(isset($stack[$spin_type]['boost_bs_v'])){
                                     for($i = 0; $i < count($stack[$spin_type]['boost_bs_v']); $i++){
                                         for($j = 0; $j < 3; $j++){
@@ -263,6 +266,13 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                             $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
                                             $stack[$spin_type]['new_bs'][$index] = $value;
                                         }
+                                    }
+                                }
+
+                                if(isset($stack[$spin_type]['bonus_collection_events'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bonus_collection_events']);$i++){
+                                        $stack[$spin_type]['bonus_collection_events'][$i]['new_value_by_bet'] = str_replace(',', '', $stack[$spin_type]['bonus_collection_events'][$i]['new_value_by_bet']) * $betline * $DENOMINATOR;
+                                        $stack[$spin_type]['bonus_collection_events'][$i]['old_value_by_bet'] = str_replace(',', '', $stack[$spin_type]['bonus_collection_events'][$i]['old_value_by_bet']) * $betline * $DENOMINATOR;
                                     }
                                 }
                             }
@@ -319,7 +329,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                         $objRes['context']['actions'] = ['spin'];
                         $objRes['context']['current'] = 'spins';
                     }else if($action['name'] == 'bonus_init'){
-                        $objRes['context']['actions'] = ['respin'];
+                        $objRes['context']['actions'] = ['bonus_pick'];
                         $objRes['context']['current'] = 'bonus';
                     }else if($action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 0);
@@ -342,24 +352,25 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                             'context' => [
                                 'actions' => ['spin'],
                                 'current' => 'spins',
-                                'last_args' => [],
-                                'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
-                                'math_version' => 'a',
+                                'last_args' => [
+                                ],
+                                //'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
+                                //'math_version' => 'a',
                                 'round_finished' => true,
                                 'spins' => [
-                                    'bac' => [
-                                        '1' => [0, 0],
-                                        '2' => [0, 0],
-                                        '3' => [0, 0]
-                                    ],
-                                    'bet_per_line' => $betline * $DENOMINATOR,
-                                    'board' => [[2,2,1],[3,6,6],[9,9,9],[2,8,8],[5,2,2]],
-                                    'bs_count' => 0,
-                                    'bs_v' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                                    'bs_values' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],                                    
-                                    'lines' => 10,
-                                    'round_bet' => $betline * $DENOMINATOR * $LINES,
+                                    'bet_per_line' => $betline,
+                                    'board' => [[3,11,3],[13,15,7],[9,9,12],[13,15,7],[9,11,7]],
+                                    'bs' => [0,0,0,12,0,0,0,0,0,5,0,0,0,0,0],
+                                    'bs_jackpots' => [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+                                    'bs_last_bet' => [0,0,0,6000000,0,0,0,0,0,2500000,0,0,0,0,0],
+                                    'collector_levels' => [0,0,0],
+                                    'collector_values' => [0,0,0],
+                                    'current_config' => [0,0,0],
+                                    'extra_miss_animation_counter' => -1,
+                                    'lines' => 25,
+                                    'round_bet' => $betline * $LINES,
                                     'round_win' => 0,
+                                    'src_suffix' => 'bg_',
                                     'total_win' => 0,
                                 ],
                                 'version' => 2
@@ -433,7 +444,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                         
                         $roundstr = sprintf('%.4f', microtime(TRUE));
                         $roundstr = str_replace('.', '', $roundstr);
-                        $roundstr = '739' . substr($roundstr, 4, 10) . '001';
+                        $roundstr = '755' . substr($roundstr, 4, 10) . '001';
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
                     }
                     if(count($tumbAndFreeStacks) > 0 && isset($tumbAndFreeStacks[$totalSpinCount])){
@@ -449,6 +460,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     $moneyCount1 = 0;
                     $moneyCount2 = 0;
                     $moneyCount3 = 0;
+                    $hillValue = 0;
                     for($k = 0; $k < 3; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
@@ -477,13 +489,13 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                     }
                                 }
                             }
-                            if(isset($stack[$spin_type]['bs_v_2'])){
-                                for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
-                                            $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
+                            if(isset($stack[$spin_type]['bs_last_bet'])){
+                                for($i = 0; $i < count($stack[$spin_type]['bs_last_bet']); $i++){
+                                    //for($j = 0; $j < 3; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_last_bet'][$i]))){
+                                            $stack[$spin_type]['bs_last_bet'][$i] = str_replace(',', '', $stack[$spin_type]['bs_last_bet'][$i]) * $betline * $DENOMINATOR;
                                         }
-                                    }
+                                    //}
                                 }
                             }
                             if(isset($stack[$spin_type]['boost_bs_v'])){
@@ -512,11 +524,27 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                     }
                                 }
                             }
+                            if(isset($stack[$spin_type]['bonus_collection_events'])){
+                                for($i = 0; $i < count($stack[$spin_type]['bonus_collection_events']);$i++){
+                                    $stack[$spin_type]['bonus_collection_events'][$i]['new_value_by_bet'] = str_replace(',', '', $stack[$spin_type]['bonus_collection_events'][$i]['new_value_by_bet']) * $betline * $DENOMINATOR;
+                                    $stack[$spin_type]['bonus_collection_events'][$i]['old_value_by_bet'] = str_replace(',', '', $stack[$spin_type]['bonus_collection_events'][$i]['old_value_by_bet']) * $betline * $DENOMINATOR;
+                                }
+                            }
+
+                            if(isset($stack[$spin_type]['bs_origin_last_bet'])){
+                                for($i = 0; $i < count($stack[$spin_type]['bs_origin_last_bet']); $i++){
+                                    if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_origin_last_bet'][$i]))){
+                                        $stack[$spin_type]['bs_origin_last_bet'][$i] = str_replace(',', '', $stack[$spin_type]['bs_origin_last_bet'][$i]) * $betline * $DENOMINATOR;
+                                    }
+                                }
+                            }
+
                             if($slotEvent['slotEvent'] != 'respin' && $spin_types[$k] != 'bonus' && isset($stack[$spin_type]['board'])){
                                 $moneyCount = 0;
                                 $moneyCount1 = 0;
                                 $moneyCount2 = 0;
                                 $moneyCount3 = 0;
+                                $hillValue = 0;
                                 for($i = 0; $i < 5; $i++){
                                     for($j = 0; $j < 3; $j++){
                                         if($stack[$spin_type]['board'][$i][$j] >= 10 && $stack[$spin_type]['board'][$i][$j] <= 12){
@@ -530,6 +558,10 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                                             }
                                         }
                                     }
+                                }
+
+                                if(isset($stack[$spin_type]['reel_set_number'])){
+                                    $hillValue = $stack[$spin_type]['reel_set_number'];
                                 }
                             }  
                             if($spin_type != 'bonus'){
@@ -568,70 +600,26 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     }
                     if($moneyCount > 0){
                         if($moneyCount1 > 0){
-                            $currentHill[0][1]++;
-                            if($currentHill[0][0] <= 2 && $currentHill[0][1] >= ($currentHill[0][0] * 2)){
-                                $currentHill[0][0]++;
-                                $currentHill[0][1] = 0;
-                            }else if($currentHill[0][0] == 3 && $currentHill[0][1] > 6){
-                                $currentHill[0][0]++;
-                                $currentHill[0][1] = 0;
-                            }else if($currentHill[0][0] <= 6 && $currentHill[0][1] >= (($currentHill[0][0] + 1) * 2)){
-                                $currentHill[0][0]++;
-                                $currentHill[0][1] = 0;
-                            }else if($currentHill[0][0] == 7 && $currentHill[0][1] >= 17){
-                                $currentHill[0][0]++;
-                                $currentHill[0][1] = 0;
-                            }else if($currentHill[0][0] == 8 && $currentHill[0][1] >= 20){
-                                $currentHill[0][0]++;
-                                $currentHill[0][1] = 0;
-                            }else if($currentHill[0][0] == 9){
-                                $currentHill[0][0] = 9;
+                            $currentHill[0]++;
+                            if($hillValue > 0){
+                                $hillLevel[0]++;
                             }
                         }
                         if($moneyCount2 > 0){
-                            $currentHill[1][1]++;
-                            if($currentHill[1][0] <= 2 && $currentHill[1][1] >= ($currentHill[1][0] * 2)){
-                                $currentHill[1][0]++;
-                                $currentHill[1][1] = 0;
-                            }else if($currentHill[1][0] == 3 && $currentHill[1][1] > 6){
-                                $currentHill[1][0]++;
-                                $currentHill[1][1] = 0;
-                            }else if($currentHill[1][0] <= 6 && $currentHill[1][1] >= (($currentHill[1][0] + 1) * 2)){
-                                $currentHill[1][0]++;
-                                $currentHill[1][1] = 0;
-                            }else if($currentHill[1][0] == 7 && $currentHill[1][1] >= 17){
-                                $currentHill[1][0]++;
-                                $currentHill[1][1] = 0;
-                            }else if($currentHill[1][0] == 8 && $currentHill[1][1] >= 20){
-                                $currentHill[1][0]++;
-                                $currentHill[1][1] = 0;
-                            }else if($currentHill[1][0] == 9){
-                                $currentHill[1][0] = 9;
+                            $currentHill[1]++;
+                            if($hillValue > 0){
+                                $hillLevel[1]++;
                             }
                         }
                         if($moneyCount3 > 0){
-                            $currentHill[2][1]++;
-                            if($currentHill[2][0] <= 2 && $currentHill[2][1] >= ($currentHill[2][0] * 2)){
-                                $currentHill[2][0]++;
-                                $currentHill[2][1] = 0;
-                            }else if($currentHill[2][0] == 3 && $currentHill[2][1] > 6){
-                                $currentHill[2][0]++;
-                                $currentHill[2][1] = 0;
-                            }else if($currentHill[2][0] <= 6 && $currentHill[2][1] >= (($currentHill[2][0] + 1) * 2)){
-                                $currentHill[2][0]++;
-                                $currentHill[2][1] = 0;
-                            }else if($currentHill[2][0] == 7 && $currentHill[2][1] >= 17){
-                                $currentHill[2][0]++;
-                                $currentHill[2][1] = 0;
-                            }else if($currentHill[2][0] == 8 && $currentHill[2][1] >= 20){
-                                $currentHill[2][0]++;
-                                $currentHill[2][1] = 0;
-                            }else if($currentHill[2][0] == 9){
-                                $currentHill[2][0] = 9;
+                            $currentHill[2]++;
+                            if($hillValue > 0){
+                                $hillLevel[2]++;
                             }
                         }
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'HillLevel', $hillLevel);
                     $BALANCE = $slotSettings->GetBalance();
                     if( $freeSpinNum > 0 ) 
                     {
@@ -648,17 +636,22 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     }else if($stack['actions'] && $stack['actions'][0] == 'bonus_init'){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 3);
                     }
-                    if($stack['actions'][0] == 'bonus_init' && $stack['spins'] != '' && ((isset($stack['freespins']['bac_win']) && $stack['freespins']['bac_win']== true) || (isset($stack['spins']['bac_win']) && $stack['spins']['bac_win']== true))){
+                    // if(($stack['actions'][0] == 'bonus_init' || $stack['actions'][0] == 'freespin_init') && $stack['spins'] != '' && ((isset($stack['freespins']['bac_win']) && $stack['freespins']['bac_win']== true) || (isset($stack['spins']['bac_win']) && $stack['spins']['bac_win']== true))){
+                    if(($stack['actions'][0] == 'bonus_init') && $stack['spins'] != '' ){
                         if($moneyCount1 > 0){
-                            $currentHill[0] = [0, 0];
+                            $currentHill[0] = 0;
+                            $hillLevel[0] = 0;
                         }
                         if($moneyCount2 > 0){
-                            $currentHill[1] = [0, 0];
+                            $currentHill[1] = 0;
+                            $hillLevel[1] = 0;
                         }
                         if($moneyCount3 > 0){
-                            $currentHill[2] = [0, 0];
+                            $currentHill[2] = 0;
+                            $hillLevel[2] = 0;
                         }
                         $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'HillLevel', $hillLevel);
                     }
                     $objRes = [
                         'command' => $slotEvent['command'],
@@ -703,30 +696,18 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                     $isState = true;
                     if($stack['bonus'] != ''){
                         $objRes['context']['bonus'] = $stack['bonus'];
-                        //$objRes['context']['bonus']['bac'] = $currentHill;
-                        $objRes['context']['bonus']['bac'] = [
-                            '1' => $currentHill[0],
-                            '2' => $currentHill[1],
-                            '3' => $currentHill[2],
-                        ];
+                        $objRes['context']['bonus']['collector_levels'] = $hillLevel;
+                        $objRes['context']['bonus']['collector_values'] = $currentHill;
                     }
                     if($stack['freespins'] != ''){
                         $objRes['context']['freespins'] = $stack['freespins'];
-                        //$objRes['context']['freespins']['bac'] = $currentHill;
-                        $objRes['context']['freespins']['bac'] = [
-                            '1' => $currentHill[0],
-                            '2' => $currentHill[1],
-                            '3' => $currentHill[2],
-                        ];
+                        $objRes['context']['freespins']['collector_levels'] = $hillLevel;
+                        $objRes['context']['freespins']['collector_values'] = $currentHill;
                     }
                     if($stack['spins'] != ''){
                         $objRes['context']['spins'] = $stack['spins'];
-                        //$objRes['context']['spins']['bac'] = $currentHill;
-                        $objRes['context']['spins']['bac'] = [
-                            '1' => $currentHill[0],
-                            '2' => $currentHill[1],
-                            '3' => $currentHill[2],
-                        ];
+                        $objRes['context']['spins']['collector_levels'] = $hillLevel;
+                        $objRes['context']['spins']['collector_values'] = $currentHill;
                     }
                     $objRes['context']['actions'] = $stack['actions'];
                     if( $slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin') 
@@ -781,7 +762,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                 }
                 $objRes['context']['last_action'] = $action['name'];
                 $slotSettings->SaveLogReport(json_encode($objRes), $betline * $LINES, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
-                if($action['name'] == 'spin' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
+                if($action['name'] == 'spin' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop' || $action['name'] == 'bonus_pick' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                     if($action['name'] == 'spin'){
                         $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES, $totalWin, $objRes, $slotSettings);
                     }else{
@@ -812,6 +793,7 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                 return;
             }
             $round_finished = $context['round_finished'];
+
             $log = [
                 'context' => $spins,
                 'last_action' => $context['last_action'],
@@ -819,10 +801,13 @@ namespace VanguardLTE\Games\_3egyptchestsbng
                 'round_bet' => $spins['round_bet'],
                 'round_finished' => $round_finished,
                 'round_started' => false,
-                'round_win' => $spins['round_win'],
+                'round_win' => $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'),              
                 "state"=> $state,
                 "version" => $context['version'],
             ];
+            if(isset($spins['round_win'])){
+                $log['round_win'] = $spins['round_win'];
+            }
             $data = [
                 'type' => 'COMMIT',
                 'transaction_id' => str_random(33),

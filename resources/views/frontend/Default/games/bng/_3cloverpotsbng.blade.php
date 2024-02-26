@@ -25,7 +25,7 @@
 
 <body>
     <div id="rounds-info"></div>
-    <script src="/op/games/3_egypt_chests/index.js?_ts=3fa79ff2"></script>
+    <script src="/op/games/3_clover_pots/index.js?_ts=f6a36bc5"></script>
     <script>
         (function() {
             function debounce(fn, ms, immediate) {
@@ -71,7 +71,7 @@
                 el.style.position = 'relative';
 
                 if (window.Drawer) {
-                    (new Drawer('/op/games/3_egypt_chests/', '3fa79ff2')).draw(el, details);
+                    (new Drawer('/op/games/3_clover_pots/', 'f6a36bc5')).draw(el, details);
                     // mobile chrome 90 crashes on orientation change, if svg is last child
                     el.appendChild(document.createElement('br'));
                 } else {

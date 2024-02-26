@@ -356,11 +356,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
             }
-
+            $api_token = $user->generateCode(36);
             $user->update([
-                'remember_token' => $user->api_token
+                'remember_token' => $api_token,
+                'api_token' => $api_token
             ]);
-
+            // $user->update([
+            //     'remember_token' => $user->api_token
+            // ]);
             if ($provider == 'null')
             {
                 $fakeparams = [

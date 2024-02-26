@@ -1301,6 +1301,10 @@ return [
         "crystalscarabs" => "크리스탈 스캐럽스",
         "goldnuggets" => "골드 너겟츠",
         "aztecfire2" => "아즈텍 파이어 2",
+        "sunofegypt4" => "선 오브 이집트 4",
+        "_3egyptchests" => "3 이집트 체스트",
+        "lioncoins" => "라이온 코인즈",
+        "_3cloverpots" => "3 클로버 팟스",
 
         // CQ9
         "Double Fly" => "더블 플라이",
