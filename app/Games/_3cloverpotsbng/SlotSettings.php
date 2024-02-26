@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\sunofegypt4bng
+namespace VanguardLTE\Games\_3cloverpotsbng
 {
     class SlotSettings
     {
@@ -650,7 +650,7 @@ namespace VanguardLTE\Games\sunofegypt4bng
         public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('id', 857)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3CloverPotsStack::where('id', 6367)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -679,11 +679,29 @@ namespace VanguardLTE\Games\sunofegypt4bng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('spin_type','>', 0);
+                    $bonusCount = $this->GetGameData($this->slotId . 'HillLevel');
+                    $bonusStart = false;
+                    for($i = 0; $i < 3; $i++){
+                        if($bonusCount[$i]  > 15){
+                            $bonusStart = true;
+                        }
+                    }
+                    if($bonusStart){
+                        $rand = rand(1,100);
+                        if($rand < 30){
+                            $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3CloverPotsStack::where('spin_type',1);    
+                        }else{
+                            $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3CloverPotsStack::where('spin_type','>',1);    
+                        }
+                        
+                    }else{
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3CloverPotsStack::where('spin_type','>', 0);
+                    }
+                    
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameSunofEgypt4Stack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3CloverPotsStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 58000);
+                $index = mt_rand(0, 68000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 78000);

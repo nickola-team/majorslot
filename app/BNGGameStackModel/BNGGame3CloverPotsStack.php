@@ -1,9 +1,9 @@
 <?php 
 namespace VanguardLTE\BNGGameStackModel;
 {
-    class BNGGame3EgyptChestsStack extends \Illuminate\Database\Eloquent\Model
+    class BNGGame3CloverPotsStack extends \Illuminate\Database\Eloquent\Model
     {
-        protected $table = 'bnggame_3egyptchests_stack';
+        protected $table = 'bnggame_3cloverpots_stack';
         protected $fillable = [
             'id', 
             'game_id', 
