@@ -1,0 +1,150 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+:root {
+    --slot-item-width: 45px;
+    --slot-item-height: 55px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.PickOptions {
+    width: 300px;
+    height: 189px;
+    align-items: flex-end;
+    position: relative
+}
+
+.PickOptions:before {
+    background-image: -webkit-image-set(url(./images/vs25lagoon/bonusBg.png) 1x, url(./images/vs25lagoon/bonusBg@2x.png) 2x);
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    opacity: .3
+}
+
+.PickOptions__Option {
+    width: 70px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    font-size: .64rem;
+    color: hsla(0, 0%, 100%, .72);
+    line-height: normal;
+    padding: 5px;
+    position: relative;
+    margin-bottom: 20px
+}
+
+.PickOptions__Option--selected {
+    color: #fff
+}
+
+.PickOptions__Option-Image {
+    opacity: .8
+}
+
+.PickOptions__Option:first-child,
+.PickOptions__Option:nth-child(3),
+.PickOptions__Option:nth-child(5) {
+    bottom: 15px
+}
+
+.PickOptions__Option-Value {
+    top: 50%;
+    line-height: 15px
+}

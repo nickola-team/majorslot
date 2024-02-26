@@ -1,0 +1,291 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: contain
+}
+
+.BonusWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
+.BonusWrapper .Bonus {
+    display: grid;
+    grid-template-rows: repeat(7, 35px);
+    grid-template-columns: repeat(8, 40px);
+    grid-template-areas: "i0  i1  i2  i3  i4  i5  i6   i7" "i25 ... ... ... ... ... ...  i8" "i24 i26 i26 i27 i27 i28 i28  i9" "i23 i26 i26 i27 i27 i28 i28 i10" "i22 i26 i26 i27 i27 i28 i28 i11" "i21 ... ... ... ... ... ... i12" "i20 i19 i18 i17 i16 i15 i14 i13"
+}
+
+.BonusWrapper .Bonus__Item {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center
+}
+
+.BonusWrapper .Bonus__Item .ReelsSlot__ItemImg {
+    width: 100%;
+    height: 90%;
+    object-fit: contain
+}
+
+.BonusWrapper .Bonus__Item .ReelsSlot__ItemImg[alt="42"] {
+    width: 95%
+}
+
+.BonusWrapper .Bonus__Item--selected:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10strawberry/selectedItemBg.png) 1x, url(./images/vs10strawberry/selectedItemBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 43px;
+    height: 38px;
+    top: -2px;
+    left: -2px
+}
+
+.BonusWrapper .Bonus__Item--0 {
+    grid-area: i0
+}
+
+.BonusWrapper .Bonus__Item--1 {
+    grid-area: i1
+}
+
+.BonusWrapper .Bonus__Item--2 {
+    grid-area: i2
+}
+
+.BonusWrapper .Bonus__Item--3 {
+    grid-area: i3
+}
+
+.BonusWrapper .Bonus__Item--4 {
+    grid-area: i4
+}
+
+.BonusWrapper .Bonus__Item--5 {
+    grid-area: i5
+}
+
+.BonusWrapper .Bonus__Item--6 {
+    grid-area: i6
+}
+
+.BonusWrapper .Bonus__Item--7 {
+    grid-area: i7
+}
+
+.BonusWrapper .Bonus__Item--8 {
+    grid-area: i8
+}
+
+.BonusWrapper .Bonus__Item--9 {
+    grid-area: i9
+}
+
+.BonusWrapper .Bonus__Item--10 {
+    grid-area: i10
+}
+
+.BonusWrapper .Bonus__Item--11 {
+    grid-area: i11
+}
+
+.BonusWrapper .Bonus__Item--12 {
+    grid-area: i12
+}
+
+.BonusWrapper .Bonus__Item--13 {
+    grid-area: i13
+}
+
+.BonusWrapper .Bonus__Item--14 {
+    grid-area: i14
+}
+
+.BonusWrapper .Bonus__Item--15 {
+    grid-area: i15
+}
+
+.BonusWrapper .Bonus__Item--16 {
+    grid-area: i16
+}
+
+.BonusWrapper .Bonus__Item--17 {
+    grid-area: i17
+}
+
+.BonusWrapper .Bonus__Item--18 {
+    grid-area: i18
+}
+
+.BonusWrapper .Bonus__Item--19 {
+    grid-area: i19
+}
+
+.BonusWrapper .Bonus__Item--20 {
+    grid-area: i20
+}
+
+.BonusWrapper .Bonus__Item--21 {
+    grid-area: i21
+}
+
+.BonusWrapper .Bonus__Item--22 {
+    grid-area: i22
+}
+
+.BonusWrapper .Bonus__Item--23 {
+    grid-area: i23
+}
+
+.BonusWrapper .Bonus__Item--24 {
+    grid-area: i24
+}
+
+.BonusWrapper .Bonus__Item--25 {
+    grid-area: i25
+}
+
+.BonusWrapper .Bonus__Item--26 {
+    grid-area: i26
+}
+
+.BonusWrapper .Bonus__Item--27 {
+    grid-area: i27
+}
+
+.BonusWrapper .Bonus__Item--28 {
+    grid-area: i28
+}
+
+.BonusWrapper .MultipliersWrapper {
+    display: flex;
+    margin-right: 10px;
+    flex-direction: column;
+    justify-content: center
+}
+
+.BonusWrapper .MultipliersWrapper .Multiplier {
+    width: 62px;
+    height: 85px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column
+}
+
+.BonusWrapper .MultipliersWrapper .Multiplier__Title {
+    width: 50px;
+    line-height: normal;
+    margin-bottom: 5px;
+    margin-top: 15px
+}
