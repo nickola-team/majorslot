@@ -252,6 +252,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('SC4GetLink : Game url request failed. param=' . json_encode($param));
 
                 return null;
+            }else{
+                $res = $response->json();        
+                if (isset($res['code']) && $res['code'] != 0) {
+                    Log::error('SC4MakeLink : Game url request failed. ' . $response->body());
+                    return null;
+                }
             }
             $data = $response->json();
             if ($data==null || (isset($data['code']) && $data['code'] > 0))
@@ -365,6 +371,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         Log::error('SC4MakeLink : addMemberPoint result failed. ' . $response->body());
                         return null;
+                    }else{
+                        $res = $response->json();        
+                        if (isset($res['code']) && $res['code'] != 0) {
+                            Log::error('SC4MakeLink : addMemberPoint result failed. ' . $response->body());
+                            return null;
+                        }
                     }
                 }
                 catch (\Exception $ex)
@@ -624,6 +636,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     Log::error('SC4AgentBalance : agentbalance request failed. ' . $response->body());
                     return -1;
+                }else{
+                    $res = $response->json();        
+                    if (isset($res['code']) && $res['code'] != 0) {
+                        Log::error('SC4MakeLink : agentbalance result failed. ' . $response->body());
+                        return null;
+                    }
                 }
                 $data = $response->json();
                 if (($data==null) || (isset($data['code']) && $data['code'] > 0))
