@@ -25,7 +25,7 @@
 
 <body>
     <div id="rounds-info"></div>
-    <script src="op/games/3_egypt_chests/index.js?_ts=3fa79ff2"></script>
+    <script src="/op/games/3_egypt_chests/index.js?_ts=3fa79ff2"></script>
     <script>
         (function() {
             function debounce(fn, ms, immediate) {

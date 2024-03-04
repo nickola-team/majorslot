@@ -71,7 +71,7 @@ namespace VanguardLTE\Console
                 $start_date = date("Y-m-d H:i:s",strtotime("-10 days"));
 
                 \VanguardLTE\StatGame::where('date_time', '<', $start_date)->where('status', 1)->delete();
-                \VanguardLTE\BTiTransaction::where('created_at', '<', $start_date)->where('stats',1)->delete();
+                \VanguardLTE\BTiTransaction::where('created_at', '<', $start_date)->where('stats',1)->delete();    //BTI에서 status는 베팅상황(reserve,debitreserve....), stats: 완료된 베팅인가 판정
                 
                 $start_date = date("Y-m-d H:i:s",strtotime("-3 days"));
                 \VanguardLTE\DealLog::where('date_time', '<', $start_date)->delete();
@@ -165,7 +165,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
 
-                $start_date = date("Y-m-d H:i:s", strtotime("-2 hours")) ;
+                $start_date = date("Y-m-d H:i:s", strtotime("-5 hours")) ;
                 \VanguardLTE\PPGameFreeStackLog::where('created_at' , '<=', $start_date)->delete();
             })->everyMinute();
 

@@ -3,7 +3,7 @@ namespace VanguardLTE\BNGGameStackModel;
 {
     class BNGGame3EgyptChestsStack extends \Illuminate\Database\Eloquent\Model
     {
-        protected $table = 'bnggame_3EgyptChests_stack';
+        protected $table = 'bnggame_3egyptchests_stack';
         protected $fillable = [
             'id', 
             'game_id', 
