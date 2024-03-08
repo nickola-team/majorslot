@@ -1205,6 +1205,9 @@ return [
         "BaliDragon" => "발리 드래곤",
         "PompeiiMegareelsMegaways" => "폼페이 메가릴즈 메가웨이즈",
         "WheelOGold" => "휠 오골드",
+        "GreatLagoon" => "그레이트 라군",
+        "MightyMunchingMelons" => "마이티 먼칭 멜론",
+        "StrawberryCocktail" => "스트로베리 칵테일",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

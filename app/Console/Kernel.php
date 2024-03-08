@@ -165,7 +165,7 @@ namespace VanguardLTE\Console
                 \VanguardLTE\Session::where('user_id', '')->delete();
                 \VanguardLTE\Task::where('finished', 1)->delete();
 
-                $start_date = date("Y-m-d H:i:s", strtotime("-2 hours")) ;
+                $start_date = date("Y-m-d H:i:s", strtotime("-5 hours")) ;
                 \VanguardLTE\PPGameFreeStackLog::where('created_at' , '<=', $start_date)->delete();
             })->everyMinute();
 
