@@ -1,0 +1,110 @@
+:root {
+    --slot-item-height: 40px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot {
+    position: relative;
+    margin-left: 10px
+}
+
+.LinesSlot--Hades:before {
+    background-image: -webkit-image-set(url(./images/vs15godsofwar/borderHades.png) 1x, url(./images/vs15godsofwar/borderHades@2x.png) 2x)
+}
+
+.LinesSlot--Hades:before,
+.LinesSlot--Zeus:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.LinesSlot--Zeus:before {
+    background-image: -webkit-image-set(url(./images/vs15godsofwar/borderZeus.png) 1x, url(./images/vs15godsofwar/borderZeus@2x.png) 2x)
+}
+
+.LinesSlot:before {
+    width: 250px;
+    height: 230px;
+    top: -15px;
+    left: -12px;
+    z-index: 2
+}
+
+.LinesSlot .SlotWrap {
+    z-index: 1;
+    position: relative
+}
+
+.WildMultiplier .MoneyScatter__LabelWrap {
+    height: auto;
+    bottom: 0
+}
+
+.WildMultiplier .ReelsSlot__ItemImg[alt="hades/2"],
+.WildMultiplier .ReelsSlot__ItemImg[alt="zeus/2"] {
+    content: -webkit-image-set(url(./images/vs15godsofwar/spin/2_value.png) 1x, url(./images/vs15godsofwar/spin/2_value@2x.png) 2x)
+}
+
+.WinLines-Block .LinesSlot:before {
+    display: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem {
+    animation: none
+}
+
+.WinLines-Group .Animation__CrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeItem--0 {
+    display: none
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:nth-child(n) {
+    animation: none;
+    opacity: 1
+}
+
+.WinLines-Group .Animation__MultiCrossFadeV2>:first-child {
+    display: none
+}
+
+.LinesSlot--Hades:before,
+.LinesSlot--Zeus:before {
+    content: none
+}
+
+.WildMultiplier .ReelsSlot__ItemImg[alt="hades/2"],
+.WildMultiplier .ReelsSlot__ItemImg[alt="zeus/2"] {
+    content: ""
+}
+
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
