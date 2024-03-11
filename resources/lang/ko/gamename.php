@@ -1208,6 +1208,13 @@ return [
         "GreatLagoon" => "그레이트 라군",
         "MightyMunchingMelons" => "마이티 먼칭 멜론",
         "StrawberryCocktail" => "스트로베리 칵테일",
+        "CasinoHeistMegaways" => "카지노 하이스트 메가웨이즈",
+        "GatesofOlympusDice" => "게이츠 오브 올림푸스 다이스",
+        "PowerofNinja" => "파워 오브 닌자",
+        "TraintoSeoul" => "트레인 투 서울",
+        "GearsofHorus" => "기어 오브 호루스",
+        "GatesofGatotKaca1000" => "게이츠 오브 가토카카 1000",
+        "BigBassDayattheRaces" => "빅 베스 데이 엣 더 레이시즈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

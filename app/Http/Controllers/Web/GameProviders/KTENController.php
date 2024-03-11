@@ -52,6 +52,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             return $game;
                             break;
                         }
+                        if ($ref == 'kten-hbn'){                            
+                            if ($game['symbol'] == $uuid)
+                            {
+                                return $game;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -189,12 +196,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         continue;
                     }
-
+                    if ($href == 'kten-hbn'){
+                        $symbol = explode('_', $game['game_id'])[0];
+                    }else{
+                        $symbol = $game['game_id'];
+                    }
                     array_push($gameList, [
                         'provider' => self::KTEN_PROVIDER,
                         'href' => $href,
                         'gamecode' => $game['game_id'],
-                        'symbol' => $game['game_id'],
+                        'symbol' => $symbol,
                         'enname' => $game['cp_game_name_en'],
                         'name' => preg_replace('/\s+/', '', $game['cp_game_name_en']),
                         'title' => $korname,
@@ -565,6 +576,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         if ($thirdname == 'Og' && !$gameObj)
                         {
                             $gameName = 'ogplus_' . $gameName;
+                            $gameObj = self::getGameObj($gameName);
+                        }
+                        if ($thirdname == 'Habanero' && !$gameObj)
+                        {
+                            $gameName = explode('_', $gameName)[0];
                             $gameObj = self::getGameObj($gameName);
                         }
                         
