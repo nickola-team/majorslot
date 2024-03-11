@@ -672,8 +672,13 @@ namespace VanguardLTE\Games\BigBassDayattheRacesPM
                 $bgt = $slotSettings->GetGameData($slotSettings->slotId . 'Bgt');
                 $old_g = $slotSettings->GetGameData($slotSettings->slotId . 'G');
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks');
-                $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
-                $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                while(true){
+                    $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
+                    $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
+                    if($stack['g'] != ''){
+                        break;
+                    }
+                }
                 $ind = -1;
                 if(isset($slotEvent['ind'])){
                     $ind = $slotEvent['ind'];
