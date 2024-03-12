@@ -32,7 +32,7 @@
             var newMsgCount = {{$unreadmsg}};
             if (parseInt(newMsgCount) > 0 && isLogin){
                 $('#message2Player').html('새로운 쪽지가 ' + newMsgCount + '개 있습니다. [쪽지함]에서 확인하세요.');
-                // $('#modal-alert-message').modal();
+                $('#modal-alert-message').modal();
             }
         });
 
