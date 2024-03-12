@@ -54,7 +54,7 @@ function ugml(){
             {
                 $('#msgBg').remove();
                 var msgHtml = '<div id="msgBg" style="width:100%; height:100%; position:fixed; top:0; left:0; background:RGBA(0,0,0,0.7); z-index:9999"> <div style="width: 300px; height: 105px; background: #fff; color: #000; position: absolute; top: calc(50% - 100px); left:  calc(50% - 160px); border: 5px solid #666; border-radius:10px; text-align: center; padding:30px 15px; font-weight: bold; cursor:pointer;" onclick="board(\'message\')">안 읽은 메세지가 <span style="color:orange">'+data.msgCount+'</span>개 있습니다.<br>메세지를 읽으셔야 게임이 가능합니다.</div></div>';
-                $('body').append(msgHtml);
+                // $('body').append(msgHtml);
             }
 
         },
