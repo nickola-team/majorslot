@@ -84,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $balance = -1;
 
-            $data = GOLDController::moneyInfo(self::GOLD_PROVIDER . 'user' . sprintf("%04d",$user->id));
+            $data = GOLDController::moneyInfo(self::GOLD_PROVIDER  . sprintf("%04d",$user->id));
 
             if ($data && $data['status'] == 1)
             {
@@ -167,7 +167,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $params = [
                 'method' => 'game_launch',
-                'user_code' => self::GOLD_PROVIDER . 'user' . sprintf("%04d",$user->id),
+                'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
                 "provider_code" =>  $gamecode,
             ];
 
@@ -193,7 +193,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $params = [
                     'method' => 'user_withdraw',
-                    'user_code' => self::GOLD_PROVIDER . 'user' . sprintf("%04d",$user->id),
+                    'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
                     "amount" =>  $balance,
                 ];
 
@@ -225,7 +225,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //create gold account
             $params = [
                 'method' => 'user_create',
-                'user_code' => self::GOLD_PROVIDER . 'user' . sprintf("%04d",$user->id),
+                'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
             ];
 
             $data = GOLDController::sendRequest($params);
@@ -255,7 +255,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $params = [
                         'method' => 'user_deposit',
-                        'user_code' => self::GOLD_PROVIDER . 'user' . sprintf("%04d",$user->id),
+                        'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
                         "amount" =>  intval($user->balance),
                     ];
     
@@ -377,7 +377,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         
                         $time = date('Y-m-d H:i:s',strtotime($round['CreatedAt'] . ' +9 hours'));
 
-                        $userid = intval(preg_replace('/'. self::GOLD_PROVIDER . 'user' .'(\d+)/', '$1', $round['user_code'])) ;
+                        $userid = intval(preg_replace('/'. self::GOLD_PROVIDER  .'(\d+)/', '$1', $round['user_code'])) ;
 
                         $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
