@@ -378,6 +378,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         $time = date('Y-m-d H:i:s',strtotime($round['CreatedAt'] . ' +9 hours'));
 
                         $userid = intval(preg_replace('/'. self::GOLD_PROVIDER  .'(\d+)/', '$1', $round['user_code'])) ;
+                        if($userid == 0){
+                            $userid = intval(preg_replace('/'. self::GOLD_PROVIDER . 'user' .'(\d+)/', '$1', $round['user_code'])) ;
+                        }
 
                         $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                         $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
