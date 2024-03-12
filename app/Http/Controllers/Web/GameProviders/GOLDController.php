@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const GOLD_PROVIDER = 'gold';
+        const GOLD_PROVIDER = 'goldm';
         const GOLD_GAME_IDENTITY = [
             //==== CASINO ====
             'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
