@@ -1,0 +1,23 @@
+:root {
+    --slot-item-height: 53px;
+    --slot-item-width: 57px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 1
+}

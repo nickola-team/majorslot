@@ -1,0 +1,51 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto;
+    width: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    width: var(--slot-item-width)
+}
+
+.LinesSlot .ReelsSlot__Item--17 {
+    display: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Carousel__Slides .Carousel__Slide {
+    display: flex;
+    align-items: flex-end;
+    position: absolute
+}
+
+.Carousel__Slides .Carousel__Slide:last-child {
+    position: relative
+}
+
+.Spin {
+    flex-direction: column
+}
+
+.Spin .Feature__Title {
+    font-size: .79rem;
+    color: #6d7179;
+    line-height: normal
+}
+
+.PossibleWinLines .Slot__Item:nth-child(6),
+.PossibleWinLines .Slot__Row:first-child,
+.PossibleWinLines .Slot__Row:nth-child(2),
+.WaysWinLines .Footer-direction {
+    display: none
+}

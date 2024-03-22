@@ -1215,6 +1215,9 @@ return [
         "GearsofHorus" => "기어 오브 호루스",
         "GatesofGatotKaca1000" => "게이츠 오브 가토카카 1000",
         "BigBassDayattheRaces" => "빅 베스 데이 엣 더 레이시즈",
+        "PotofFortune" => "팟 오브 포츈",
+        "RiseofSamurai4" => "라이즈 오브 사무라이 4",
+        "BigBurgerLoaditupwithXTRACheese" => "빅 버거",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
