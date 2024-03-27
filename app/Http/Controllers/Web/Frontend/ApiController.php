@@ -22,19 +22,34 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
 
             $credentials = $request->getCredentials();
-            if( !\Auth::validate($credentials) ) 
-            {
-                if( $throttles ) 
+            $users = \VanguardLTE\User::where('username', $credentials['username'])->get();
+            $validateusers = [];
+            if(count($users) == 0){
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }else{
+                $idvalidate = false;
+                foreach($users as $subuser)
                 {
-                    $this->incrementLoginAttempts($request);
+                    if(\Auth::getProvider()->validateCredentials($subuser, $credentials))
+                    {
+                        $validateusers[] = $subuser;      
+                    }
                 }
+            }
+            if(count($validateusers) == 0)
+            {
                 return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
-            $user = \Auth::getProvider()->retrieveByCredentials($credentials);
-            // if( $request->lang ) 
+            // if( !\Auth::validate($credentials) ) 
             // {
-            //     $user->update(['language' => $request->lang]);
+            //     if( $throttles ) 
+            //     {
+            //         $this->incrementLoginAttempts($request);
+            //     }
+            //     return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             // }
+            // $user = \Auth::getProvider()->retrieveByCredentials($credentials);
+            
 
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
@@ -43,7 +58,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $adminid = $site->pluck('adminid')->toArray();
             }
-
+            $user = null;
+            foreach($validateusers as $validateuser)
+            {
+                $validateadmin = $validateuser;
+                while($validateadmin != null && !$validateadmin->isInoutPartner())
+                {
+                    $validateadmin = $validateadmin->referral;
+                }
+                if (in_array($validateadmin->id, $adminid))
+                {
+                    $user = $validateuser;
+                    break;
+                }
+            }
+            if($user == null)
+            {
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }
             $admin = $user;
             while ($admin !=null && !$admin->isInoutPartner())
             {
