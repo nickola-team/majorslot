@@ -94,27 +94,45 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
                     ];
                 }
             }
-            if( !\Auth::validate($credentials) ) 
-            {
-                if( $throttles ) 
+            $users = \VanguardLTE\User::where('username', $credentials['username'])->get();
+            $validateusers = [];
+            if(count($users) == 0){
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }else{
+                $idvalidate = false;
+                foreach($users as $subuser)
                 {
-                    $this->incrementLoginAttempts($request);
+                    if(\Auth::getProvider()->validateCredentials($subuser, $credentials))
+                    {
+                        $validateusers[] = $subuser;      
+                    }
                 }
-                return redirect()->to('login' . $to)->withErrors(trans('auth.failed'));
             }
-            $user = \Auth::getProvider()->retrieveByCredentials($credentials);
-            if( $user->hasRole([
-                1, 
-                2, 
-                3
-            ]) && (!$user->shop || $user->shop->is_blocked) ) 
+            if(count($validateusers) == 0)
             {
-                return redirect()->to('/' . $to)->withErrors('Your shop is blocked');
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
             }
-            if( settings('use_email') && $user->isUnconfirmed() ) 
-            {
-                return redirect()->to('login' . $to)->withErrors(trans('app.please_confirm_your_email_first'));
-            }
+            // if( !\Auth::validate($credentials) ) 
+            // {
+            //     if( $throttles ) 
+            //     {
+            //         $this->incrementLoginAttempts($request);
+            //     }
+            //     return redirect()->to('login' . $to)->withErrors(trans('auth.failed'));
+            // }
+            // $user = \Auth::getProvider()->retrieveByCredentials($credentials);
+            // if( $user->hasRole([
+            //     1, 
+            //     2, 
+            //     3
+            // ]) && (!$user->shop || $user->shop->is_blocked) ) 
+            // {
+            //     return redirect()->to('/' . $to)->withErrors('Your shop is blocked');
+            // }
+            // if( settings('use_email') && $user->isUnconfirmed() ) 
+            // {
+            //     return redirect()->to('login' . $to)->withErrors(trans('app.please_confirm_your_email_first'));
+            // }
             //check admin id per site
             $site = \VanguardLTE\WebSite::where('domain', $request->root())->get();
             $adminid = [1]; //default admin id
@@ -122,7 +140,24 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend\Auth
             {
                 $adminid = $site->pluck('adminid')->toArray();
             }
-
+            $user = null;
+            foreach($validateusers as $validateuser)
+            {
+                $validateadmin = $validateuser;
+                while($validateadmin != null && !$validateadmin->isInoutPartner())
+                {
+                    $validateadmin = $validateadmin->referral;
+                }
+                if (in_array($validateadmin->id, $adminid))
+                {
+                    $user = $validateuser;
+                    break;
+                }
+            }
+            if($user == null)
+            {
+                return response()->json(['error' => true, 'msg' => trans('auth.failed')]);
+            }
             $admin = $user;
             while ($admin !=null && !$admin->isInoutPartner())
             {
