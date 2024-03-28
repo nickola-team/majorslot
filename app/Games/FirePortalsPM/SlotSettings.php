@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\FirePortalsPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameFirePortalsStack::where('id', 5)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameFirePortalsStack::where('id', 21089)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -766,14 +766,14 @@ namespace VanguardLTE\Games\FirePortalsPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameFirePortalsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 38000);
+                $index = mt_rand(0, 42000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 25);    
+                        $stacks = $stacks->where('odd', '<=', 15);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
