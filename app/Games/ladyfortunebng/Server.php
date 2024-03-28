@@ -591,7 +591,7 @@ namespace VanguardLTE\Games\ladyfortunebng
                                 $objRes['context']['current'] = 'freespins';
                             }
                             
-                            if($stack['actions'][0] != 'respin'){
+                            if($stack['actions'][0] != 'respin' && $stack['actions'][0] != 'freespin_init'){
                                 $isState = true;
                                 if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $rounds_left > 0){
                                     $isState = false;
