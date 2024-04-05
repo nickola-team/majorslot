@@ -28,8 +28,7 @@
                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                 <input type="password" class="popup-form__element form-control ng-pristine ng-untouched ng-valid" autocomplete="new-password" ng-model="loginForm.password" placeholder="비밀번호" id="sPASS">
               </div>
-              <button class="btn btn-block btn-primary ng-scope sbmt-login" type="button" ng-disabled="isProcessing" translate="">로그인</button>
-              <!-- <button class="btn btn-block btn-primary ng-scope sbmt-login" type="submit" ng-disabled="isProcessing" translate="">로그인</button> -->
+              <button class="btn btn-block btn-primary ng-scope sbmt-login" type="button" ng-disabled="isProcessing" translate="">로그인</button>              
             </form>
             <div class=""></div>
             <p class="text-center" onclick="navClick(&#39;register-popup&#39;);">아직 계정이 없으신가요? <span style="color:#cab593;">신규 계정 생성</span>
@@ -40,8 +39,7 @@
       </div>
       @else
       <div class="ngdialog-login-page ng-scope" ng-controller="LoginController">
-        <div class="ngdialog-login__header logo text-center">
-          <!-- <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" width="260px" > -->
+        <div class="ngdialog-login__header logo text-center">          
           <img src="/frontend/{{$logo}}/LOGO.png?0.1">
         </div>
         <div class="ngdialog-login__content">
@@ -158,12 +156,10 @@ function loginx() {
   var site_url = "yj-u.com";
   var location = localStorage.getItem('location');
   var provider = localStorage.getItem('provider');
-  //var sID = $("#sID2").val();
-  //var sPASS = $("#sPASS2").val();
+
   var isRemembered = $(".auto_login").prop('checked');
 
   if (sID == '' || sPASS == '') {
-    // alert("로그인에 실패 하였습니다. 정확한 정보를 입력하여 주세요.");
     $(".error-text").text("정확한 정보를 입력해주세요.");
     $(".error-text").removeAttr('style');
     $("#sID2").addClass('error');
@@ -192,18 +188,13 @@ function loginx() {
           }
           window.location.href = "/";
         } else {
-          // alert("로그인에 실패하였습니다. 다시 시도해 주세요.");
-          // $(".error-text").text("로그인에 실패하였습니다. 다시 시도해 주세요.");
-          // $(".error-text").removeAttr('style');
-  //swal("Oops!", result.message , "error");
-  swal({
-    title: "Oops!",
-    text: result.msg,
-    type: "error"
-  }).then(function() {
-    window.location.reload();
-  });
-          //window.location.reload();
+          swal({
+            title: "Oops!",
+            text: result.msg,
+            type: "error"
+          }).then(function() {
+            window.location.reload();
+          });
         }
         ajaxStart = false;
       },
@@ -211,7 +202,6 @@ function loginx() {
         alert("some error");
       }
     });
-    // },1000);
   }
 }
 </script>

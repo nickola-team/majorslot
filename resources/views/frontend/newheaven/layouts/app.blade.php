@@ -62,15 +62,13 @@
     <link rel="stylesheet" href="/frontend/boss/V/ngDialog-games-popup.css?v0.2">
     <link rel="stylesheet" href="/frontend/newheaven/mobile/common/css/ngdialog-default.css">
     <link rel="stylesheet" href="/frontend/newheaven/mobile/common/css/multiple-popup.css">
-
     
     <link rel="stylesheet" href="/frontend/newheaven/mobile/common/css/add2Home.css">
     <link rel="stylesheet" href="/frontend/newheaven/common/plugins/build/css/intlTelInput.css">
     <script type="text/javascript" src="/frontend/newheaven/common/js/addtohomescreen.js"></script>
     <link rel="stylesheet" href="/frontend/newheaven/common/css/custom.css">
     <link rel="stylesheet" href="/frontend/newheaven/mobile/common/css/custom.css">
-    
-    <!-- <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css"> -->
+        
 @else
     <link rel="icon" type="image/png" sizes="16x16" href="/frontend/newheaven/common/images/favicon/16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/frontend/newheaven/common/images/favicon/32x32.png">
@@ -115,9 +113,6 @@
     <script src="/frontend/newheaven/common/js/angular-custom-wallet.js"></script>
     <script src="/frontend/newheaven/common/js/angular-custom-slots.js"></script>   
     
-
-
-
     <script src="/frontend/newheaven/common/js/controllers/multiple-popup.controller.js"></script>
     <script src="/frontend/newheaven/common/js/factory/csrf.factory.js"></script>
 
@@ -141,8 +136,6 @@
     <link rel="stylesheet" href="/frontend/boss/V/ngDialog-games-popup.css?v0.2">
     <link rel="stylesheet" href="/frontend/newheaven/common/css/custom.css">
   @endif
-    <!--  -->
-    <!-- <script language="javascript" type="text/javascript" src="/frontend/boss/V/socket.io.js"></script> -->
     <style>
       .ng-hide {
         display: none !important;
@@ -152,7 +145,7 @@
 
   
 @if( $detect->isMobile() || $detect->isTablet() ) 
-  <!-- <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css"> light -->
+  
 @endif
 @if (empty($logo))
 		<?php $logo = 'newheaven'; ?>
@@ -224,7 +217,6 @@
     @endif
   </body>
 
-<!-- dd -->
 </html>
 
 

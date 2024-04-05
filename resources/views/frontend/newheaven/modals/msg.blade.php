@@ -33,15 +33,13 @@
                 @endif
               </li>
             </ul>
-
-            <!--START DIRECT MESSAGE-->
+            
             @if($detect->isMobile() || $detect->isTablet())
             <div id="notice-set" class="ngdialog-main-default__content ng-hide" style="overflow-y: auto; height: 500px;">
             @else
             <div id="notice-set" class="ngdialog-main-default__content announcement ng-hide" style="overflow-y: auto; height: 500px;">
             @endif
-            
-              <!-- ngIf: readTitle != '' -->
+                          
               <span id="contentSet1" class="contentSet"></span>
               <table class="history-table table" id="noticelist">
                 <tbody>
@@ -69,8 +67,7 @@
 
             </div>
 
-            <div id="event-set" class="ngdialog-main-default__content promo-event ng-hide">
-              <!-- ngIf: readTitle != '' -->
+            <div id="event-set" class="ngdialog-main-default__content promo-event ng-hide">              
               <span id="contentSet3" class="contentSet"></span>
               <table class="history-table table">
                 <tbody>
@@ -112,7 +109,7 @@
                         <th translate="" class="width15 text-center ng-scope">수신 일시</th>
                         <th translate="" class="width15 text-center ng-scope">타입</th>
                       </tr>
-                      <!-- ngRepeat: DirectMessage in filteredPage -->
+                      
                     </tbody>
                   </table>
                 </div>

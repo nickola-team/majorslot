@@ -151,7 +151,7 @@
 }
 
 .ngdialog-games-page .game-buttons.live{
-    width: 100%;
+    min-width: 300px;
     height: 182px;
     margin-right: 10px;
     margin-bottom: 10px;

@@ -495,8 +495,8 @@ ul.pagination li:last-child>a {
 /*.slot-game .mobile-slot-wrapper{ padding:0 10px;}*/
 
 .slot-btn {
-    width: 44%;
-    height:auto;
+    min-width: 280px;
+    height:243px;
     display: inline-block;
     position: relative;
     margin: 0 6.7px;

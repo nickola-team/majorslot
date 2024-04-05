@@ -25169,7 +25169,6 @@ span.signup-inquiry.text-gray {
 /*load slot*/
 
 .slots-games-container {
-    background-color: #f7f7f7;
     transition: 0.5s;
     position: relative;
     display: none;
@@ -25300,7 +25299,6 @@ span.signup-inquiry.text-gray {
     width: 99%;
     margin-top: 16px;
     overflow-x: hidden;
-    background-color: #f7f7f7;
 }
 
 .wrapper__content {

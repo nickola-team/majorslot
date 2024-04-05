@@ -5,7 +5,7 @@
             <div style="margin-bottom: 5px">
                 <strong class="guest_name">{{auth()->user()->username}}</strong>
                 <strong>
-                    <i role="button" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)','');getCustomerPage();" class="guest-dm fa fa-envelope">
+                    <i role="button" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)','고객센터');getCustomerPage();" class="guest-dm fa fa-envelope">
                     <span ng-bind="UnreadDM" class="ng-binding msg-text" id="_top_msg">{{$unreadmsg}}</span>
                     </i>
                 </strong>                
@@ -62,20 +62,6 @@
             <li class="btn-primary-bordered" onclick="navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');">공지 사항</li>
         </ul>
 
-        {{--<table class="history-table table" id="noticelist">
-            <tbody>
-                @foreach ($noticelist as $ntc)
-                <tr ng-repeat="announce in filteredPage" class="ng-scope">
-                    <td ng-bind="announce.num" class="width12 text-center ng-binding">{{$ntc->id}}</td>
-                    <td class="text-left width70">
-                    <a href="javascript:getNotice('notice{{$ntc->id}}')" class="ng-binding">{{$ntc->title}}</a>
-                    </td>
-                    <td class="width15 text-center ng-binding">{{date('Y-m-d', strtotime($ntc->date_time))}}</td>
-                </tr>
-                @endforeach
-
-            </tbody>
-        </table>--}}
         <div class="user-balance-container" style="margin-top:15px;">
             <div class="balance-overflow">
                 <div class="walletCat" style="text-align: center;">

@@ -1,5 +1,5 @@
 
-      @if( $detect->isMobile() || $detect->isTablet() ) 
+@if( $detect->isMobile() || $detect->isTablet() ) 
   <div id="register-popup" class="ngdialog ngdialog-theme-default ngdialog-direct ng-scope ng-hide" role="alertdialog" aria-labelledby="ngdialog4-aria-labelledby" aria-describedby="ngdialog4-aria-describedby">
     <div class="ngdialog-content" role="document">
       <div class="ngdialog-signup" ng-controller="SignUpController">
@@ -12,19 +12,15 @@
           </div>
         </div>
         <div class="ngdialog__content ng-scope">
-            <form name="signUp" novalidate="" ng-submit="processForm()" class="form-signup ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match" id="freg">
-              <!--Member ID-->
-			        <input type="hidden" name="EMODE" value="MEMADD">
-			          <!-- <span class="e-msg"></span> -->
-			        <fieldset class="ngdialog__form-group">
-                
-                <div class="col-xs-12 no-padding">
-                  
+          <form name="signUp" novalidate="" ng-submit="processForm()" class="form-signup ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match" id="freg">              
+			        <input type="hidden" name="EMODE" value="MEMADD">			          
+			        <fieldset class="ngdialog__form-group">                
+                <div class="col-xs-12 no-padding">                  
                   <div class="col-xs-7 no-padding" style="padding-right: 10px;">
-                  <label class="ngdialog__form__label">
-                    <span translate="" class="ng-scope">아이디</span>
-                    <span>*</span>
-                  </label>
+                    <label class="ngdialog__form__label">
+                      <span translate="" class="ng-scope">아이디</span>
+                      <span>*</span>
+                    </label>
                     <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="username" id="reg-username" placeholder="아이디는 영문, 숫자만 가능합니다" oninput="this.value=this.value.replace(/[^A-Za-z0-9\s]/g,'');" lang="en">
                   </div>  
                   <div class="col-xs-5 clear-container no-padding">
@@ -33,9 +29,9 @@
                     </div>
                     <div class="col-xs-4 text-center mobile_signup2">
                       <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="아이디는 4-12자리 입니다">영문,숫자</span>
-                    </div>
-                    
-                  </div>      
+                    </div>  
+                  </div>                  
+                </div>      
               </fieldset>
               <!--Member Password-->
               <fieldset class="ngdialog__form-group">
@@ -46,31 +42,25 @@
                 <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="password" id="reg-password">
                 <div class="form-notice">
                   <p class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="패스워드는 6-16 자리 입니다" translate="">패스워드는 6-16 자리 입니다</p>
-                </div>
-                
+                </div>                
               </fieldset>
-              <!--Member Valid Password-->
+
               <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span translate="" class="ng-scope">비밀번호 재입력</span>
                   <span>*</span>
                 </label>
-                <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-isolate-scope ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-valid-no-match" name="passwordcw" id="reg-cpassword">
-                
+                <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-isolate-scope ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-valid-no-match" name="passwordcw" id="reg-cpassword">                
               </fieldset>
-              <!--Member Withdraw Password-->
               
-              <!--Mobile Number-->
               <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span translate="" class="ng-scope">전화번호</span>
                   <span>*</span>
                 </label>
-                <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required" onkeypress="isInputNumber(event)" name="tel1" placeholder="'-' 없이 숫자만 입력" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="reg-phone">
-                
+                <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required" onkeypress="isInputNumber(event)" name="tel1" placeholder="'-' 없이 숫자만 입력" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="reg-phone">                
               </fieldset>
-			          <!--BankInfo Name-->
-
+			        
               <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span ng-bind="'Bank' | translate" class="ng-binding">은행명</span>
@@ -86,9 +76,9 @@
                     }
                     ?>
                   </select>
-                </p>
-                
+                </p>                
               </fieldset>
+
               <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span ng-bind="'Account Number' | translate" class="ng-binding">계좌번호</span>
@@ -96,15 +86,15 @@
                 </label>
                 <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-pattern" onkeypress="isInputNumber(event)" placeholder="계좌번호" name="account_no" id="reg-accountnum">
               </fieldset>
+
               <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span translate="" class="ng-scope">예금주</span>
                   <span>*</span>
                 </label>
-                <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="recommender" id="reg-name">
-                
+                <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="recommender" id="reg-name">                
               </fieldset>
-              <!--Member Reference-->
+              
 			        <fieldset class="ngdialog__form-group">
                 <label class="ngdialog__form__label">
                   <span translate="" class="ng-scope">추천인코드</span>
@@ -115,171 +105,159 @@
 
               <div class="form-footer">
                 <button type="button" class="btn btn-primary ngdialog__btn" id="reg-continue">회원가입</button>
-              </div>
-              
-            </form>
-          </div>
+              </div>              
+          </form>
         </div>
-        </div>
-</div>        
-      @else
+      </div>
+    </div>
+  </div>        
+@else
 <div id="register-popup" class="ngdialog ngdialog-theme-default ngdialog-signup ng-scope  ng-hide">
     <div class="ngdialog-overlay"></div>
     <div class="ngdialog-content" role="document" style="padding:0;">
         <div class="ngdialog-signup-page ng-scope" ng-controller="SignUpController">
-        <div class="ngdialog-signup__header">
-          <img src="/frontend/{{$logo}}/LOGO.png?0.1">
-          <!-- <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="20%"> -->
-        </div>
+          <div class="ngdialog-signup__header">
+            <img src="/frontend/{{$logo}}/LOGO.png?0.1">
+          </div>
           <div class="ngdialog-signup__content">
-            <!-- <div class="logo">
-              <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="20%">
-            </div> -->
             <form name="signUp" novalidate="" ng-submit="processForm()" class="form-signup ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match" id="freg">
-              <!--Member ID-->
-			  <input type="hidden" name="EMODE" value="MEMADD">
-			  <!-- <span class="e-msg"></span> -->
-			  <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">아이디</span>
-                    <span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="username" id="reg-username" placeholder="아이디는 영문, 숫자만 가능합니다" oninput="this.value=this.value.replace(/[^A-Za-z0-9\s]/g,'');" lang="en">
-                </div>
-                <div class="col-sm-4">
-                  <span style="padding-left: 15px">
-                    <button type="button" class="btn btn-sync btn-sm btn-red sms ng-scope" id="btn-username">중복확인</button>
-                  </span>
-                  <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="아이디는 4-12자리 입니다" style="padding-left: 12px;">영문,숫자</span>
-                </div>
-              </fieldset>
-              <!--Member Password-->
-              <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">비밀번호</span>
-                    <span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="password" id="reg-password">
-                </div>
-                <div class="col-sm-4">
-                  <!-- ngIf: signUp.MemberPwd.$dirty -->
-                  <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="패스워드는 6-16 자리 입니다" translate="">패스워드는 6-16 자리 입니다</span>
-                </div>
-              </fieldset>
-              <!--Member Valid Password-->
-              <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">비밀번호 재입력</span>
-                    <span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-isolate-scope ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-valid-no-match" name="passwordcw" id="reg-cpassword">
-                </div>
-                <div class="col-sm-4">
-                  <!-- ngIf: signUp.MemberValidPwd.$dirty -->
-                </div>
-              </fieldset>
-              <!--Member Withdraw Password-->
               
-              <!--Mobile Number-->
-              <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">전화번호</span>
-                    <span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required" onkeypress="isInputNumber(event)" name="tel1" placeholder="'-' 없이 숫자만 입력" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="reg-phone">
-
-                </div>
-                <div class="col-sm-4">
-                  
-                </div>
-              </fieldset>
-			  <!--BankInfo Name-->
-
-              <fieldset>
-                <div class="form-group">
+			        <input type="hidden" name="EMODE" value="MEMADD">
+			  
+			          <fieldset>
                   <div class="col-sm-3 text-right">
                     <label>
-                      <span ng-bind="'Bank' | translate" class="ng-binding">은행명</span>
+                      <span translate="" class="ng-scope">아이디</span>
                       <span>*</span>
                     </label>
                   </div>
                   <div class="col-sm-5">
-                    <p>
-                      <select class="form-control ng-pristine ng-untouched ng-valid" name="bank_name" id="reg-bankname">
-                      <?php
-                        $banks = \VanguardLTE\User::$values['banks'];
-                        foreach ($banks as $b)
-                        {
-                            echo '<option value="'.$b.'">'.$b.'</option>';
-                        }
-                        ?>
-                     </select>
-                    </p>
-                  </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="form-group">
-                  <div class="col-sm-3 text-right">
-                    <label>
-                      <span ng-bind="'Account Number' | translate" class="ng-binding">계좌번호</span>
-                      <span>*</span>
-                    </label>
-                  </div>
-                  <div class="col-sm-5">
-                    <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-pattern" onkeypress="isInputNumber(event)" placeholder="계좌번호" name="account_no" id="reg-accountnum">
+                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="username" id="reg-username" placeholder="아이디는 영문, 숫자만 가능합니다" oninput="this.value=this.value.replace(/[^A-Za-z0-9\s]/g,'');" lang="en">
                   </div>
                   <div class="col-sm-4">
-                    <!-- ngIf: signUp.AccountNumber.$dirty -->
+                    <span style="padding-left: 15px">
+                      <button type="button" class="btn btn-sync btn-sm btn-red sms ng-scope" id="btn-username">중복확인</button>
+                    </span>
+                    <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="아이디는 4-12자리 입니다" style="padding-left: 12px;">영문,숫자</span>
                   </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">예금주</span>
-                    <span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="recommender" id="reg-name">
-                </div>
-                <div class="col-sm-4">
-                  <!-- ngIf: signUp.MemberName.$dirty -->
-                  <!-- <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="이름은 한글 2-5 자리 입니다" translate="">이름은 한글 2-5 자리 입니다</span> -->
-                </div>
-              </fieldset>
-              <!--Member Reference-->
-			  <fieldset>
-                <div class="col-sm-3 text-right">
-                  <label>
-                    <span translate="" class="ng-scope">추천인코드</span>
-					<span>*</span>
-                  </label>
-                </div>
-                <div class="col-sm-5">
-                  <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="friend" id="reg-refercode" value="">
-                </div>
-                <div class="clearfix"></div>
-              </fieldset>
-              <button type="button" class="btn btn-primary btn-block ng-scope" id="reg-continue">회원가입</button>
+                </fieldset>
+              
+                <fieldset>
+                  <div class="col-sm-3 text-right">
+                    <label>
+                      <span translate="" class="ng-scope">비밀번호</span>
+                      <span>*</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="password" id="reg-password">
+                  </div>
+                  <div class="col-sm-4">                    
+                    <span class="signup-inquiry ng-scope" data-toggle="tooltip" data-placement="top" title="패스워드는 6-16 자리 입니다" translate="">패스워드는 6-16 자리 입니다</span>
+                  </div>
+                </fieldset>
+              
+                <fieldset>
+                  <div class="col-sm-3 text-right">
+                    <label>
+                      <span translate="" class="ng-scope">비밀번호 재입력</span>
+                      <span>*</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="password" autocomplete="new-password" class="form-control ng-pristine ng-untouched ng-isolate-scope ng-valid-have-special-char ng-valid-special-char-c ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-valid-no-match" name="passwordcw" id="reg-cpassword">
+                  </div>
+                  <div class="col-sm-4">                  
+                  </div>
+                </fieldset>
+              
+                <fieldset>
+                  <div class="col-sm-3 text-right">
+                    <label>
+                      <span translate="" class="ng-scope">전화번호</span>
+                      <span>*</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required" onkeypress="isInputNumber(event)" name="tel1" placeholder="'-' 없이 숫자만 입력" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="reg-phone">
+
+                  </div>
+                  <div class="col-sm-4">
+                    
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="form-group">
+                    <div class="col-sm-3 text-right">
+                      <label>
+                        <span ng-bind="'Bank' | translate" class="ng-binding">은행명</span>
+                        <span>*</span>
+                      </label>
+                    </div>
+                    <div class="col-sm-5">
+                      <p>
+                        <select class="form-control ng-pristine ng-untouched ng-valid" name="bank_name" id="reg-bankname">
+                        <?php
+                          $banks = \VanguardLTE\User::$values['banks'];
+                          foreach ($banks as $b)
+                          {
+                              echo '<option value="'.$b.'">'.$b.'</option>';
+                          }
+                          ?>
+                      </select>
+                      </p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <div class="form-group">
+                    <div class="col-sm-3 text-right">
+                      <label>
+                        <span ng-bind="'Account Number' | translate" class="ng-binding">계좌번호</span>
+                        <span>*</span>
+                      </label>
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-pattern" onkeypress="isInputNumber(event)" placeholder="계좌번호" name="account_no" id="reg-accountnum">
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="col-sm-3 text-right">
+                    <label>
+                      <span translate="" class="ng-scope">예금주</span>
+                      <span>*</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" name="recommender" id="reg-name">
+                  </div>
+                  <div class="col-sm-4">
+                  </div>
+                </fieldset>
+              
+			          <fieldset>
+                  <div class="col-sm-3 text-right">
+                    <label>
+                      <span translate="" class="ng-scope">추천인코드</span>
+                      <span>*</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="friend" id="reg-refercode" value="">
+                  </div>
+                  <div class="clearfix"></div>
+                </fieldset>
+                <button type="button" class="btn btn-primary btn-block ng-scope" id="reg-continue">회원가입</button>
             </form>
           </div>
         </div>
         <div class="ngdialog-close"></div>
-        </div>
+    </div>
 </div>
 @endif
 
@@ -326,10 +304,7 @@
               $(".s-msg").html('확인');
 			        swal('확인');
               $("#reg-username").parent().parent().removeClass('has-error');
-              $("#reg-username").parent().parent().addClass('has-success');
-              // setTimeout(function() {
-              //    $(".success-text").text('');
-              // }, 3500);
+              $("#reg-username").parent().parent().addClass('has-success');              
             } else {
               $(".e-msg").text('중복된 아이디입니다');
 			        swal("Oops!", '중복된 아이디입니다', "error");
@@ -340,9 +315,6 @@
           error: function(err) {
             $(".e-msg").text('검증 실패.');
 			      swal("Oops!", '검증 실패.', "error");
-            // setTimeout(function() {
-            //    $(".success-text").text('');
-            // }, 3500);
             isSend = 0;
           }
         });
@@ -441,7 +413,7 @@
         }
       })
       $(document).on('input', '#register-popup input', function() {
-        if ($('#register-popup .has-success').length == 8) {
+        if ($('#register-popup .has-success').length == 7) {
           $('#reg-continue').removeAttr('disabled');
         } else {
           $('#reg-continue').attr('disabled', 'disabled');
@@ -495,16 +467,11 @@
               });
             } else {
               swal('Oops!', result.msg, 'error');
-              // $("#reg-notice").text(result.message);
-              // $("#reg-continue").removeClass('is-loading disabled');
             }
             $('input[name="token"]').val(result.token);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
-            // alert('zzzz')
-            // $("#reg-notice").text("유효하지 않는 코드입니다.");
             swal('Oops!', "오류가 발생하였습니다", 'error');
-            // $("#reg-continue").removeClass('is-loading disabled');
           }
         });
       });

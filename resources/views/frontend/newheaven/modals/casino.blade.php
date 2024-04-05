@@ -22,7 +22,7 @@
           </ul>
         </nav>
         @endif
-        <div class="game-button-container live">
+        <div class="game-button-container live" style="text-align: center;">
         @foreach($categories AS $index=>$category)
 						@if ($category->type =='live')
             @if ($category->status == 0)
@@ -31,7 +31,6 @@
             @else
             <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="javascript:casinoGameStart('{{$category->href}}');">
               <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
-              <button class="btn btn-black pull-right" style="line-height:12px;">플레이</button>
             @endif
                 
             </div>

@@ -1,7 +1,7 @@
 <gamebuttons-page>
     <div class="button-container">
         <div class="button-content">
-            <!-- ngRepeat: games in gameCatergory -->
+            
             <div role="button" ng-repeat="games in gameCatergory" class="gamebutton ng-scope">
                 <div class="gamebuttons game-button-1 live" onclick=
                     @auth
@@ -12,7 +12,7 @@
                     ng-class="games.category">
                 </div>
             </div>
-            <!-- end ngRepeat: games in gameCatergory -->
+            
             <div role="button" ng-repeat="games in gameCatergory" class="gamebutton ng-scope">
                 <div class="gamebuttons game-button-3 slot" onclick=
                 @auth
@@ -23,7 +23,7 @@
                 ng-class="games.category">
                 </div>
             </div>
-            <!-- end ngRepeat: games in gameCatergory -->
+            
             <div role="button" ng-repeat="games in gameCatergory" class="gamebutton ng-scope">
                 <div class="gamebuttons game-button-5 sports" onclick=
                 @auth
@@ -50,12 +50,12 @@
                   ng-class="games.category">
                 </div>
             </div>
-            <!-- end ngRepeat: games in gameCatergory -->
+            
             <div role="button" ng-repeat="games in gameCatergory" class="gamebutton ng-scope">
                 <div class="gamebuttons game-button-4 Others" ng-click="" ng-class="games.category">
                 </div>
             </div>
-            <!-- end ngRepeat: games in gameCatergory -->
+            
             <div role="button" ng-repeat="games in gameCatergory" class="gamebutton ng-scope">
                 <div class="gamebuttons game-button-2 Powerball" onclick=
                 @auth
@@ -86,7 +86,7 @@
                 ng-class="games.category">
                 </div>
             </div>
-            <!-- end ngRepeat: games in gameCatergory -->
+            
             <div role="button" class="gamebutton" ng-click="displayGames('slot')">
                 <div class="slots-jackpot-container click-disable">
                     <div class="jackpot-odometer jackpot">

@@ -128,26 +128,24 @@
   <div class="transaction-container">
     <div class="realtime-event transaction-table">    
         <ul class="realtime-event__list transaction-list event-ticker" id="event-ticker" ng-show="activeTab == 1" style="height: 160px; overflow: hidden;">
-        <!-- ngRepeat: announce in announceList | limitTo: 20 --><!-- end ngRepeat: announce in announceList | limitTo: 20 --><!-- end ngRepeat: announce in announceList | limitTo: 20 --><!-- end ngRepeat: announce in announceList | limitTo: 20 --><!-- end ngRepeat: announce in announceList | limitTo: 20 --><!-- end ngRepeat: announce in announceList | limitTo: 20 -->
-        <!-- <marquee direction="up" scrollamount="3" ng-repeat="{{$ntc}} in {{$noticelist}} | limitTo: 9"> -->
-            
+        
             @foreach ($noticelist as $ntc)
                 <li class="realtime-event__list__item ng-scope" style="margin-top: 0px;">
                     <div class=" ng-binding" onclick="navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');getNotice('notice{{$ntc->id}}');" style="padding: 10px 20px;">{{$ntc->title}}</div>
                     <div class="realtime-event__list__item__date ng-binding">{{date('Y-m-d', strtotime($ntc->date_time))}}</div>
                 </li>
             @endforeach 
-        <!-- </marquee> -->
+        
         </ul>
 
         <ul class="realtime-event__list transaction-list promotion-ticker ng-hide" id="promotion-ticker" ng-show="activeTab == 2" style="height: 160px; overflow: hidden;">
-        <!-- ngRepeat: event in eventList | limitTo: 20 --><!-- end ngRepeat: event in eventList | limitTo: 20 --><!-- end ngRepeat: event in eventList | limitTo: 20 --><!-- end ngRepeat: event in eventList | limitTo: 20 --><!-- end ngRepeat: event in eventList | limitTo: 20 --><!-- end ngRepeat: event in eventList | limitTo: 20 -->
-        @foreach($msgs as $msg)
-        <li class="realtime-event__list__item ng-scope" ng-repeat="{{$msg}} in {{$msgs}} | limitTo: 20" style="margin-top: 0px;">
-            <div class=" ng-binding" ng-bind="event.Subject" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup > div.ngdialog-content > div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(3)','고객센터');getCustomerPage();" style="padding: 10px 20px;">{{$msg->title}}</div>
-            <div class="realtime-event__list__item__date ng-binding" ng-bind="formatDate(event.WriteDate) | date:'yyyy-MM-dd'">{{date('Y-m-d', strtotime($msg->created_at))}}</div>
-        </li>
-        @endforeach
+        
+            @foreach($msgs as $msg)
+            <li class="realtime-event__list__item ng-scope" ng-repeat="{{$msg}} in {{$msgs}} | limitTo: 20" style="margin-top: 0px;">
+                <div class=" ng-binding" ng-bind="event.Subject" onclick="navClick('msg-popup');setTab('customer-set','#msg-popup > div.ngdialog-content > div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(3)','고객센터');getCustomerPage();" style="padding: 10px 20px;">{{$msg->title}}</div>
+                <div class="realtime-event__list__item__date ng-binding" ng-bind="formatDate(event.WriteDate) | date:'yyyy-MM-dd'">{{date('Y-m-d', strtotime($msg->created_at))}}</div>
+            </li>
+            @endforeach
         </ul>
     </div>
   </div>
