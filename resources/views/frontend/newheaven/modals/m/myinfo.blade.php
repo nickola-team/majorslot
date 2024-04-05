@@ -66,7 +66,7 @@
         </div>
         <button type="button" class="btn btn-black btn-block ng-scope" onclick="logOut()" translate="">로그아웃</button>
       </div>
-          <!-- end ngIf: aff_user =='N' -->
+          
     </div>
   </div>
 </div>

@@ -26,11 +26,9 @@
         @foreach($categories AS $index=>$category)
 						@if ($category->type =='live')
             @if ($category->status == 0)
-            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="javascript:swal('점검중입니다');">
-              <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
+            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat;background-size:contain;" onclick="javascript:swal('점검중입니다');">
             @else
-            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="javascript:casinoGameStart('{{$category->href}}');">
-              <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
+            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat;background-size:contain;" onclick="javascript:casinoGameStart('{{$category->href}}');">
             @endif
                 
             </div>
