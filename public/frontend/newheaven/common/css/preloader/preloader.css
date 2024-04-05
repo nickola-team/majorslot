@@ -1,0 +1,22 @@
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10005;
+    background: rgba(19, 13, 9, 0.9);
+    display: none;
+}
+
+.preloader-gif {
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -64px 0 0 -32px;
+    background: url("../images/preloader-main.gif") center no-repeat #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 5px #bebebe;
+}

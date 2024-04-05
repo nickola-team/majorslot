@@ -1,0 +1,93 @@
+.transaction-page .transaction-container {
+    width: 1010px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding: 0 10px 10px;
+    background-color: #000000;
+}
+
+.transaction-table {
+    width: 330px;
+    border: 1px solid #202020;
+    font-size: 13px;
+    color: #999999;
+    font-family: 'Dotum Regular';
+    background: #ffffff;
+}
+
+.transaction-page .table-heading {
+    width: 100%;
+    background: #121113;
+    font-size: 13px;
+    color: #08bbff;
+    padding: 7px 16px;
+    font-weight: 600;
+    font-family: noto sans cjk;
+    letter-spacing: -0.8px;
+    min-height: 32px;
+    height: 32px;
+    white-space: nowrap;
+}
+
+.transaction-page .transaction-list {
+    background: url("/common/images/bg-event.png") bottom repeat-x;
+}
+
+.transaction-page .goldTxt {
+    color: #08bbff;
+    font-weight: 600;
+}
+
+.transaction-page .text-white {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.transaction-page .text-white:hover {
+    color: #08bbff;
+}
+
+.transaction-page .transaction-table tr:nth-of-type(odd) {
+    /*background-color: #111111;*/
+}
+
+.transaction-page .table-heading span.pull-right {
+    color: #818083;
+}
+
+.transaction-page .table-heading span:hover.pull-right {
+    color: #08bbff;
+    cursor: pointer;
+}
+
+.transaction-page .transaction-table {
+    height: 194px;
+    background: #ffffff;
+    margin: 0;
+    border-bottom: 5px solid #202020;
+}
+
+.transaction-page .transaction-table tr {
+    height: 32px;
+    text-align: center;
+    background-color: #1d1d1d;
+}
+
+.transaction-page [class*="col-"] {
+    padding: 0;
+}
+
+.transaction-page .transaction-table li {
+    height: 32px;
+    text-align: center;
+    /*background-color: #000000;*/
+    padding: 0 20px;
+    line-height: 32px;
+    display: flex;
+    white-space: nowrap;
+}
+
+.transaction-page .transaction-table li:nth-of-type(even) {
+    /*background-color: #121113;*/
+}

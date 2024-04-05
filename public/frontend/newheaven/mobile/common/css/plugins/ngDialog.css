@@ -1,0 +1,111 @@
+@-webkit-keyframes ngdialog-fadeout {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes ngdialog-fadeout {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes ngdialog-fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes ngdialog-fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.ngdialog {
+    box-sizing: border-box;
+}
+
+.ngdialog *,
+.ngdialog *:before,
+.ngdialog *:after {
+    box-sizing: inherit;
+}
+
+.ngdialog {
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10000;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ngdialog.ngdialog-disabled-animation,
+.ngdialog.ngdialog-disabled-animation .ngdialog-overlay,
+.ngdialog.ngdialog-disabled-animation .ngdialog-content {
+    animation: none !important;
+    -webkit-animation: none !important;
+}
+
+.ngdialog-overlay {
+    animation: ngdialog-fadein 0.5s;
+    -webkit-animation: ngdialog-fadein 0.5s;
+    background: rgba(0, 0, 0, 0.85);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog-no-overlay {
+    pointer-events: none;
+}
+
+.ngdialog.ngdialog-closing .ngdialog-overlay {
+    animation: ngdialog-fadeout 0.5s;
+    -webkit-animation: ngdialog-fadeout 0.5s;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog-content {
+    animation: ngdialog-fadein 0.5s;
+    -webkit-animation: ngdialog-fadein 0.5s;
+    background: #0e0e0e;
+    pointer-events: all;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog.ngdialog-closing .ngdialog-content {
+    animation: ngdialog-fadeout 0.5s;
+    -webkit-animation: ngdialog-fadeout 0.5s;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog-close:before {
+    content: '\00D7';
+    cursor: pointer;
+    font-family: 'Helvetica', Arial, sans-serif;
+}
+
+html.ngdialog-open,
+body.ngdialog-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+}

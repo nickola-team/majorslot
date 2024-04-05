@@ -1,0 +1,169 @@
+.carousel-text-cont {
+    top: 20px;
+    left: 5px;
+}
+.carousel-text-cont1 {
+    top: 60px;
+    right: 30px;
+}
+
+.carousel-text-cont {
+    top: 35px;
+    right: 50px;
+    position: relative;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+}
+.carousel-text-cont1 {
+    top: 10px;
+    right: -10px;
+    position: relative;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+}
+
+.ct-center {
+    height: auto;
+    display: inline-block;
+    position: relative;
+    transform: translateY(-50%);
+    top: 30%;
+}
+
+.ct-center {
+    top: 60%;
+}
+.ct-center1 {
+    top: 33%;
+}
+
+
+.mobile-welcom-txt1 {
+    margin-top: 38%;
+    width: 70%;
+}
+
+.mobile-welcom-txt2 {
+    margin-top: -17%;
+    width: 70%;
+}
+
+.mobile_signup1 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.mobile_signup2 {
+    margin-top: 19px;
+    margin-bottom: 19px;
+}
+
+.mobile_point_space {
+     margin-right: 15px;
+}
+
+.mobile_info_back {
+    background: #f7f7f7;
+}
+
+
+.mobile__content {
+    position: absolute;
+    width: auto;
+    left: 0;
+    background: white;
+    height: 100vh;
+}
+
+.ngdialog-main-nav {
+    background-color: #ffffff;
+    margin-bottom: 0;
+    margin-left: 0;
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    -webkit-box-shadow: inset 0px -2px 0px 0px rgba(229, 218, 218, 1);
+    -moz-box-shadow: inset 0px -2px 0px 0px rgba(229, 218, 218, 1);
+    box-shadow: inset 0px -2px 0px 0px rgba(255, 255, 255, .2);
+    display: flex;
+}
+
+.ngdialog-main-nav li {
+    color: #999999;
+    font-weight: 700;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.ngdialog-main-nav li:hover,
+.ngdialog-main-nav li:focus {
+    color: #08bbff;
+    cursor: pointer;
+    border-bottom: 2px solid #08bbff;
+}
+
+.ngdialog-main-nav li.active {
+    border-bottom: 2px solid #08bbff;
+    color: #08bbff;
+}
+
+.ngdialog-main-default__content {
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #d7d1d1;
+}
+
+.ngdialog-main-nav .mbadge {
+    background: #08bbff;
+}
+
+
+.mbadge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #777;
+    border-radius: 10px;
+}
+
+
+.m_announcement {
+    padding: 0 10px;
+}
+
+.m_announcement {
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.btn-clear {
+    background: #2a2933;
+    border: 1px solid #303030;
+}
+
+.ngdialog-games-page .game-buttons.live{
+    width: 100%;
+    height: 182px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    transition:  all 0.5s;
+    font-size: 14px;
+    font-weight: bold;
+    --padding: 122px 10px 0 20px;
+    --padding: 150px 10px 0 20px;
+    padding: 156px 10px 0 20px;
+    color: #cc6600;
+    line-height: 30px;
+    position: relative;
+    cursor: pointer;
+  }
