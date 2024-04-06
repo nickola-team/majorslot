@@ -1,0 +1,13 @@
+/* SweetAlert */
+
+.swal-overlay {
+    z-index: 20000;
+}
+
+.swal-modal {
+    z-index: 20001;
+}
+
+.swal-footer {
+    text-align: center;
+}

@@ -1,0 +1,85 @@
+.ngdialog.ngdialog-theme-default.ngdialog-notice .ngdialog-content {
+    width: 660px;
+    border-radius: 0;
+    padding: 0;
+    color: #ffffff;
+    font-size: 14px;
+    background: #ffffff;
+}
+
+.ngdialog-notice-page .ngdialog-notice__title {
+    padding: 18px 29px 14px;
+    background: #2a2933;
+    border-bottom: 1px solid #08bbff;
+}
+
+.ngdialog-notice-page hr {
+    margin: 0;
+    border-top: 1px solid #08bbff;
+}
+
+.ngdialog-notice-page .notice-body {
+    padding: 20px;
+    color: #63626a;
+    border: 1px solid #08bbff;
+    border-top: 0;
+}
+
+.ngdialog-notice-page .ngdialog-notice__content {
+    overflow-y: scroll;
+    height: 290px;
+}
+
+.ngdialog-notice-page .ngdialog-notice__content__footer {
+    padding: 10px;
+    border-top: 0;
+    border: 1px solid #08bbff;
+    border-top: 0;
+}
+
+.ngdialog-notice-page .btn {
+    border-radius: 0;
+    margin-top: 0;
+}
+
+/*Multiple Notice Popup*/
+
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-1,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-3,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-2,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-4 {
+    width: 600px;
+    top: 90px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: absolute;
+    height: 711px;
+}
+
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-1,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-3 {
+    left: -610px;
+}
+
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-2,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-4 {
+    right: -610px;
+}
+
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-3,
+.ngdialog-notice.ngdialog.ngdialog-theme-default.notice-4 {
+    margin-top: 550px;
+}
+
+.ngdialog-notice.ngdialog.ngdialog-theme-default {
+    /*padding: 0;*/
+}
+
+/*html.ngdialog-open, body.ngdialog-open{
+  overflow-y: auto;
+}*/
+
+.centerDialog {
+    left: 0 !important;
+    right: 0 !important;
+}

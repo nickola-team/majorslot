@@ -1,0 +1,2471 @@
+body {
+    background: #fff;
+}
+
+/* Global Button Override */
+
+.btn {
+    transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    height: 45px;
+}
+
+.btn:hover,
+.btn:active,
+.btn:focus {
+    outline: 0;
+    color: #ffffff;
+    opacity: .9;
+}
+
+/* ngDialog Default */
+
+.ngdialog-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.ngdialog.ngdialog-theme-default {
+    padding: 0;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+    border-radius: 0;
+    width: 100%;
+}
+
+.ngdialog-custom.ngdialog.ngdialog-theme-default {
+    padding: 0;
+}
+
+.ngdialog-signup.ngdialog {
+    overflow-x: hidden;
+}
+
+.no-error input.form-control,
+input.no-error {
+    background: url("/common/images/icon-valid.png") 95% center no-repeat transparent;
+    border-color: #53d14c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.has-error .form-control {
+    background: url("/common/images/icon-error.png") 95% center no-repeat transparent;
+    border-color: #d54b4b;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.has-success .form-control {
+    background: url("/common/images/icon-valid.png") 95% center no-repeat transparent;
+    border-color: #3c763d;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.ngdialog--signup .recommender input.form-control,
+.ngdialog--signup .recommender input.no-error {
+    background: transparent;
+    border-color: #666666;
+    box-shadow: none;
+}
+
+.has-error .form-notice {
+    display: none;
+}
+
+.form-notice {
+    font-size: 12px;
+    line-height: 1.2;
+    margin-top: 3px;
+    color: #666666;
+}
+
+.ngdialog--signup .form-footer {
+    margin-top: 20px;
+}
+
+.form-terms {
+    font-size: 14px;
+    line-height: 1.3;
+    margin-top: 10px;
+}
+
+.form-terms i {
+    color: #b73528;
+}
+
+.form-footer .btn {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.form-footer>button[disabled] {
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.ngdialog__phone input,
+.ngdialog__phone button {
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+}
+
+.ngdialog__phone input {
+    width: 70%;
+}
+
+.ngdialog__phone button {
+    width: calc(30% - 5px);
+    height: 35px;
+    font-size: 12px;
+    margin-left: 5px;
+    word-break: keep-all;
+    padding: 8px 5px;
+}
+
+.ngdialog__form__input {
+    width: 100%;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-color: #f7f7f7;
+    border: solid 1px #f7f7f7;
+    color: #a2a5aa;
+    font-size: 16px;
+    height: 40px;
+    padding: 5px 10px;
+    border-radius: 0;
+}
+
+.ngdialog__form__label>i {
+    color: #f56161;
+}
+
+.ngdialog__form__label {
+    color: #5b5a63;
+    font-weight: 600;
+}
+
+.won-text {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* left: 191px; */
+    margin: 0;
+    font-size: 13px;
+    padding-left: 5px;
+    color: #5b5a63;
+}
+
+/* End: Signup popup */
+
+.ngdialog-custom.ngdialog.ngdialog-theme-default .ngdialog-content {
+    background: #fff;
+    border-radius: 0;
+    font-size: 14px;
+    height: 100%;
+    line-height: 1.5;
+    padding: 0;
+    width: 100%;
+}
+
+.ngdialog__form-group {
+    box-shadow: none;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.ngdialog__heading {
+    background: #000000;
+    height: 50px;
+}
+
+.ngdialog__title {
+    color: #08bbff;
+    margin: 0;
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-close {
+    top: 6px;
+}
+
+.ngdialog__content {
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.ngdialog__footer {
+    color: #666666;
+    font-size: 12px;
+}
+
+.ngdialog__footer .btn-link {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* wallet */
+
+.balance__list {
+    margin: 0;
+}
+
+.balance__items {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 20px;
+    background-color: #f7f7f7;
+    color: #5b5a63;
+}
+
+.balance__items:nth-child(even) {
+    background-color: #181818;
+}
+
+.balance__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1;
+}
+
+.balance__content__amount {
+    color: #08bbff;
+}
+
+.balance__content__gspName {
+    margin: 0;
+}
+
+.balance__items--total-balance {
+    background-color: #f7f7f7;
+}
+
+.balance ul li:nth-child(even) {
+    background: #fff;
+}
+
+.ngdialog__content .btn-group.btn-group-justified {
+    margin: 0 0 5px;
+}
+
+.ngdialog__content .btn-group.btn-group-justified .btn-group {
+    padding-right: 3px;
+}
+
+.process-forms fieldset {
+    padding-bottom: 20px;
+    position: relative;
+}
+
+.process-forms fieldset label {
+    color: #08bbff;
+}
+
+.process-forms fieldset select+input {
+    margin-top: 5px;
+}
+
+.process-forms .btn-clear {
+    height: 35px;
+    width: calc(25% - 5px);
+    margin-left: 5px;
+    position: absolute;
+    top: 26px;
+    right: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/*.process-forms .btn-clear{
+  height: 35px;
+  margin-left: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}*/
+
+.lists__content {
+    background-color: #f7f7f7;
+    padding: 10px;
+    color: #a2a5aa;
+    /* border-radius: 10px; */
+    margin-bottom: 5px;
+}
+
+.lists__content ul {
+    margin: 0;
+}
+
+/* history lists */
+
+.history-table-lists>tbody>tr>th,
+.history-table-lists>tbody>tr>td {
+    padding: 5px;
+    text-align: center;
+}
+
+.history-table-lists>tbody>tr>th {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.history-table-lists>tbody>tr>td {
+    background-color: #f5f5f5;
+    vertical-align: middle;
+}
+
+.history-table-lists>tbody>tr>td a {
+    color: inherit;
+}
+
+.history-table-lists>tbody>tr>td a span+span {
+    color: #9b001b;
+    font-weight: bold;
+}
+
+.history-table-lists td .form-control {
+    display: inline-block;
+    width: 77%;
+}
+
+.history-table>tbody>tr>th {
+    background-color: #08bbff;
+    color: #ffffff;
+    border: 0;
+}
+
+.history-table>tbody>tr>th, .history-table>tbody>tr>td {
+    padding: 5px;
+    text-align: center;
+}
+
+/* SweetAlert */
+
+.swal-overlay {
+    z-index: 20000;
+}
+
+.swal-modal {
+    z-index: 20001;
+}
+
+.swal-footer {
+    text-align: center;
+}
+
+/* pagination */
+
+.pagination-items {
+    display: block;
+}
+
+ul.pagination {
+    background: none;
+    border: none;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    height: auto;
+    margin: 10px 0;
+    padding: 0;
+    text-align: center;
+}
+
+ul.pagination li {
+    border: none;
+    display: inline;
+    float: none;
+    height: 29px;
+    line-height: 28px;
+    padding: 0;
+}
+
+ul.pagination li:first-child,
+ul.pagination li:last-child {
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+ul.pagination li:hover {
+    background: none;
+}
+
+ul.pagination li>a {
+    background-color: #f7f7f7;
+    border: 1px solid #f7f7f7;
+    color: #5b5a63;
+    line-height: 29px;
+    margin-left: -1px;
+    padding: 6px 12px;
+    text-decoration: none;
+}
+
+ul.pagination>.active>a,
+ul.pagination>.active>a:hover {
+    background-color: #08bbff;
+    color: #fff;
+}
+
+ul.pagination li.disabled>a {
+    background-color: #f7f7f7;
+    border: 1px solid #f7f7f7;
+    color: #5b5a63;
+    line-height: 29px;
+    margin-left: -1px;
+    padding: 6px 12px;
+}
+
+ul.pagination li:nth-child(1)>a {
+    margin-right: -2px;
+}
+
+ul.pagination li:nth-child(2)>a {
+    margin-right: -3px;
+}
+
+ul.pagination li:nth-last-child(2)>a {
+    margin-left: -4px;
+}
+
+ul.pagination li:last-child>a {
+    margin-left: -5px;
+}
+
+.slick-loading .slick-list {
+    background: #fff url('/common/fonts/ajax-loader.gif') center center no-repeat;
+}
+
+/* Icons */
+
+@font-face {
+    font-family: 'slick';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/common/fonts/slick.eot');
+    src: url('/common/fonts/slick.eot?#iefix') format('embedded-opentype'), url('/common/fonts/slick.woff') format('woff'), url('/common/fonts/slick.ttf') format('truetype'), url('/common/fonts/slick.svg#slick') format('svg');
+}
+
+.slots .jackpot {
+    position: absolute;
+    right: 186px;
+}
+
+.jackpot .dollar-sign img {
+    position: relative;
+    float: left;
+    top: -9px;
+    left: -3px;
+}
+
+.slots .jackpot-odometer {
+    height: 41px;
+    overflow: hidden;
+    position: absolute;
+    width: 190px;
+    left: 16px;
+    top: -10px;
+}
+
+.jackpot-odometer_m{
+    width: 233px;
+    height: 35px;
+    position: relative;
+    overflow: hidden;
+    float: right;
+    margin-right: 10px;
+  }
+
+.footer-copyright {
+    background: #000000;
+}
+
+/*.slot-game .mobile-slot-wrapper{ padding:0 10px;}*/
+
+.slot-btn {
+    min-width: 280px;
+    height:243px;
+    display: inline-block;
+    position: relative;
+    margin: 0 6.7px;
+    margin-bottom: 10px;
+    z-index: 0;
+    transition: 0.3s;
+    perspective: 900px;
+    border-radius: 1px;	overflow:hidden
+  }
+
+/*CSS STARTS HERE*/
+
+.btn-red-plain,
+.btn-red {
+    background: #8a2015;
+    background: -moz-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8a2015), color-stop(100%, #b73528));
+    background: -webkit-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -o-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -ms-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: linear-gradient(to bottom, #4b362f 0%, #c59953 100%);
+    border: 1px solid #000000;
+    /*border-radius: 7px;*/
+    color: #ffffff;
+}
+
+.btn-red-plain:active,
+.btn-red-plain:focus,
+.btn-red:active,
+.btn-red:focus {
+    background: #820000;
+    background: -moz-linear-gradient(top, #820000 0%, #650000 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #820000), color-stop(100%, #650000));
+    background: -webkit-linear-gradient(top, #820000 0%, #650000 100%);
+    background: -o-linear-gradient(top, #820000 0%, #650000 100%);
+    background: -ms-linear-gradient(top, #820000 0%, #650000 100%);
+    background: linear-gradient(to bottom, #820000 0%, #650000 100%);
+    border: 2px solid #000000;
+    color: #ffffff;
+}
+
+.btn-red-plain {
+    border: 1px solid #650000;
+}
+
+.btn-red-plain:active,
+.btn-red-plain:focus {
+    border: 1px solid #650000;
+}
+
+.btn-grey {
+    background: #666666;
+    color: #ffffff;
+}
+
+.btn-grey:active,
+.btn-grey:focus {
+    background: #666666;
+    color: #ffffff;
+}
+
+.btn-black {
+    background: #fff;
+    color: #5b5a63;
+    height: 45px;
+    border: 1px solid #08bbff;
+}
+.btn-mobile-withdraw {
+    background: #2a2933;
+    color: #fff;
+    height: 45px;
+    border: 1px solid #08bbff;
+}
+
+.btn-black:active,
+.btn-black:focus {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    color: #ffffff;
+}
+
+.btn-yellow {
+    background: #a47c00;
+    background: -moz-linear-gradient(top, #a47c00 0%, #b28700 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a47c00), color-stop(100%, #b28700));
+    background: -webkit-linear-gradient(top, #a47c00 0%, #b28700 100%);
+    background: -o-linear-gradient(top, #a47c00 0%, #b28700 100%);
+    background: -ms-linear-gradient(top, #a47c00 0%, #b28700 100%);
+    background: linear-gradient(to bottom, #a47c00 0%, #b28700 100%);
+    border-radius: 7px;
+    color: #ffffff;
+}
+
+.btn-theme {
+    background: #892016;
+    background: -moz-linear-gradient(top, #892016 0%, #b73528 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #892016), color-stop(100%, #b73528));
+    background: -webkit-linear-gradient(top, #892016 0%, #b73528 100%);
+    background: -o-linear-gradient(top, #892016 0%, #b73528 100%);
+    background: -ms-linear-gradient(top, #892016 0%, #b73528 100%);
+    background: linear-gradient(to bottom, #892016 0%, #b73528 100%);
+    border-radius: 0px;
+    color: #ffffff;
+}
+
+[class^="col-xs"] {
+    padding: 0;
+}
+
+.col-xs-12 {
+    padding: 0
+}
+
+/*.header{
+  height: 67px;
+  position: relative;
+}*/
+
+.header .logo img {
+    margin: 5px 0 0 10px;
+    width: 165px;
+}
+
+.header .navigation {
+    margin: 9px 10px;
+}
+
+.header .navigation.logged-in {
+    margin: 13px 37px 0 0;
+}
+
+.header .navigation li {
+    color: #7a746d;
+    font-weight: 700;
+    font-size: 15px;
+    border-left: 1px solid #000000;
+    line-height: 3;
+    padding-left: 10px;
+}
+
+.ngdialog-wallet .logout-nav li:active,
+.ngdialog-wallet .logout-nav li:focus,
+.header .navigation li:active,
+.header .navigation li:focus {
+    outline: 1px solid #e99d3d;
+}
+
+.header .navigation.logged-in li {
+    line-height: 1.1em;
+    text-align: right;
+}
+
+.header .navigation.logged-in .title {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.header .navigation.logged-in .top-balance {
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.header .icon-user {
+    background: url("../images/user-icon.png") center no-repeat;
+    width: 22px;
+    height: 26px;
+    position: absolute;
+    right: 11px;
+    top: 18px;
+}
+
+.casino {
+    padding: 12px;
+}
+
+.slots-top,
+.casino-top,
+.slots-bottom,
+.casino-bottom {
+    width: 100%;
+    float: left;
+    height: 60px;
+}
+
+.slots-top,
+.casino-top {
+    height: 67px;
+}
+
+.casino .casino-buttons {
+    position: relative;
+    float: left;
+    width: 100%;
+}
+
+.casino .casino-buttons img {
+    width: 100%;
+}
+
+.casino .casino-buttons .btn-red {
+    padding: 3px 9px;
+    position: absolute;
+    right: 0;
+}
+
+@media only screen and (max-width: 374px) {
+    .casino-buttons .btn-red {
+        bottom: 2px;
+    }
+}
+
+@media only screen and (min-width: 375px) {
+    .casino-buttons .btn-red {
+        bottom: 7px;
+    }
+}
+
+@media only screen and (min-width: 425px) {
+    .casino-buttons .btn-red {
+        bottom: 9px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .casino-buttons .btn-red {
+        bottom: 26px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .casino-buttons .btn-red {
+        bottom: 41px;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    .casino-buttons .btn-red {
+        bottom: 66px;
+    }
+}
+
+.progressive-content {
+    border-top: 1px solid #000000;
+    height: 85px;
+    left: -20px;
+}
+
+.progressive-content.bg-1 {
+    background: url("../images/slots/slot-header-1.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-2 {
+    background: url("../images/slots/slot-header-2.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-3 {
+    background: url("../images/slots/slot-header-3.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-4 {
+    background: url("../images/slots/slot-header-4.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-5 {
+    background: url("../images/slots/slot-header-5.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-6 {
+    background: url("../images/slots/slot-header-6.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-8 {
+    background: url("../images/slots/slot-header-7.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-12 {
+    background: url("../images/slots/slot-header-8.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-9 {
+    background: url("../images/slots/slot-header-9.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-10 {
+    background: url("../images/slots/slot-header-10.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+.progressive-content.bg-11 {
+    background: url("../images/slots/slot-header-11.jpg") #322712 right no-repeat;
+    background-size: auto 85px;
+}
+
+/*.progressive-content.bg-7 { background:#322712 }*/
+
+.ngdialog.ngdialog-theme-default.ngdialog-signup {
+    padding-top: 17px;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-login {
+    padding: 0;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-signup .ngdialog-content {
+    width: 340px;
+    padding: 0px;
+    border: 3px solid #000000;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-signup {
+    padding-bottom: 0;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-login .ngdialog-content {
+    width: 394px;
+    background: #282426;
+}
+
+.ngdialog-login .ngdialog-login_heading {
+    line-height: 1;
+}
+
+.ngdialog-login button {
+    border-radius: 0;
+    margin-bottom: 10px;
+    line-height: 30px;
+    height: 45px;
+}
+
+.ngdialog-signup_heading,
+.ngdialog-login_heading {
+    padding-top: 15px;
+}
+
+.ngdialog-signup_heading .title,
+.ngdialog-login_heading .title {
+    font-size: 30px;
+}
+
+.ngdialog-signup_heading .desc,
+.ngdialog-login_heading .desc {
+    color: #615e5e;
+}
+
+/*.ngdialog-login .popup-form {*/
+
+/*  margin-top: 20px;*/
+
+/*  margin-top: 20px;*/
+
+/*}*/
+
+.ngdialog-login .close-overlay {
+    position: absolute;
+    top: 0;
+    right: -50px;
+    width: 50px;
+    color: #e2574c;
+    font-size: 40px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.ngdialog-login .close-overlay button:active {
+    outline: transparent;
+}
+
+.ngdialog-content .close-overlay .close-dialog .btn-primary:before {
+    content: '\00D7';
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.ngdialog-content .close-overlay .close-dialog .btn-primary:after {
+    transform: skewX(20deg);
+    content: "";
+    background: linear-gradient(to bottom, #c59953 0%, #4b362f 100%);
+    display: block;
+    height: 42.5px;
+    left: 7px;
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    border-radius: 0 0 0 5px;
+    position: absolute;
+    top: -1px;
+    width: 15px;
+    transition: all 0.3s ease;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-close:before {
+    /*background: #000000;*/
+    color: #bbb;
+    content: '\00D7';
+    font-size: 40px;
+    font-weight: 400;
+    height: 25px;
+    line-height: 26px;
+    position: absolute;
+    right: 12px;
+    text-align: center;
+    top: 3px;
+    width: 30px;
+}
+
+/*.ngdialog.ngdialog-theme-default.ngdialog-login .ngdialog-overlay{
+  background: url("../images/bg-login.jpg") center no-repeat;
+  background-size: cover;
+}*/
+
+.ngdialog.ngdialog-theme-default.ngdialog-notice {
+    padding: 0;
+}
+
+.ngdialog-signup .form-control,
+.ngdialog-login .form-control {
+    border-radius: 0;
+    /* padding: 22px 12px;
+   font-size: 17px;*/
+}
+
+.ngdialog-signup .signup__form fieldset:nth-of-type(3) {
+    padding-bottom: 10px;
+}
+
+.ngdialog-login .info {
+    line-height: 3;
+}
+
+.ngdialog-login__footer {
+    margin-top: 10px;
+}
+
+.ngdialog-login .input-group-addon {
+    background-color: #f7f7f7;
+    border-radius: 0;
+    border: 2px solid #f7f7f7;
+    border-right: 0;
+    position: relative;
+}
+
+.input-group-addon .fa-user:before,
+.input-group-addon .fa-lock:before {
+    color: #08bbff;
+}
+
+.ngdialog-login .input-group-addon:after {
+    content: "";
+    position: absolute;
+    height: 15px;
+    width: 1px;
+    background-color: #999999;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ngdialog-signup .btn-theme,
+.ngdialog-signup .btn-red,
+.ngdialog-login__footer .btn-red,
+.ngdialog-login .ngdialog-content .btn-primary,
+.ngdialog-login .ngdialog-content .btn-red,
+.ngdialog-login__footer .btn-grey {
+    border: transparent;
+}
+
+.ngdialog-login .input-group {
+    margin-bottom: 10px;
+}
+
+.ngdialog-login .form-control {
+    background-color: #f7f7f7;
+    border-radius: 0;
+    border: 2px solid #f7f7f7;
+    border-left: 0;
+    box-shadow: none;
+    color: #2a2933;
+    height: 40px;
+}
+
+.ngdialog-login .form-control::placeholder {
+    color: #2a2933;
+}
+
+.ngdialog-login.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 100%;
+    margin-left: 0;
+    background: #ffffff;
+    padding: 0px;
+    /*height: 100%;*/
+    min-height: 100vh;
+    overflow-y: -moz-hidden-unscrollable;
+}
+
+.ngdialog-login.ngdialog.ngdialog-theme-default .ngdialog-content .ngdialog__content {
+    padding: 0px 40px;
+    background: none;
+}
+
+.ngdialog-login.ngdialog.ngdialog-theme-default .ngdialog-signup .btn-theme {
+    border-radius: 0
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-signup .ngdialog-overlay {
+    background: url("../images/bg-signup.jpg") center no-repeat;
+    background-size: cover;
+}
+
+.ngdialog-signup .ngdialog__content {
+    background: #ffffff;
+    color: #999999;
+    padding: 15px;
+}
+
+.ngdialog-signup .group {
+    position: relative;
+}
+
+.ngdialog-signup .float-button {
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+}
+
+.ngdialog-signup .signup-inquiry {
+    font-size: 13px;
+    color: #999999;
+    font-weight: 700;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.ngdialog-signup .birthday-input {
+    position: relative;
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.bdayDatePicker {
+    left: 0 !important;
+    top: 33px !important;
+    position: absolute !important;
+}
+
+.has-error .form-control {
+    background: url("../images/icon-error.png") right 10px center no-repeat;
+    border-color: #9b001b;
+}
+
+.has-success .form-control {
+    background: url("../images/icon-valid.png") right 10px center no-repeat;
+    border-color: #3c763d;
+}
+
+.has-not-used .form-control,
+.has-not-used .form-control:hover,
+.has-not-used .form-control:focus {
+    background: #f7f7f7;
+    border-color: #f7f7f7;
+    box-shadow: none;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-custom.ngdialog-wallet .ngdialog-content {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    background: white;
+    height: 100vh;
+}
+
+.ngdialog-wallet .ngdialog__heading.desktop {
+    background: linear-gradient(to bottom, #4b362f 0%, #c59953 100%);
+}
+
+.ngdialog-wallet .ngdialog__heading .ngdialog__title {
+    font-size: 14px;
+    line-height: 1;
+    padding: 15px 20px;
+}
+
+.ngdialog-wallet .ngdialog__heading .ngdialog__title strong {
+    margin-left: 5px;
+}
+
+.ngdialog-wallet .logout-nav {
+    margin: 10px 10px;
+}
+
+.ngdialog-wallet .logout-nav li {
+    color: #7a746d;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 5px 8px;
+    background: #201d1e;
+    color: #999;
+}
+
+.ngdialog-wallet .my-wallet {
+    float: left;
+    position: relative;
+    width: 100%;
+    background: #7cc131;
+    font-size: 13px;
+    color: #8b8884;
+    padding: 7px 20px;
+    color: #8b8884;
+    height: 32px;
+    font-weight: 700;
+    text-align: center;
+    border-top: 2px solid #171717;
+}
+
+.text-white,
+.ngdialog-wallet .my-wallet .title {
+    color: #ffffff;
+}
+
+.ngdialog-wallet .ngdialog__content {
+    background: #ffffff;
+    padding: 0;
+}
+
+.navigation-buttons ul {
+    color: #ffffff;
+    background: #1e170c;
+}
+
+.navigation-buttons li {
+    border-top: 1px solid #352b1b;
+    border-bottom: 1px solid #000000;
+    padding: 10px 10px;
+    background: #100c05;
+}
+
+.get-balance:active,
+.get-balance:focus,
+.navigation-buttons li:active,
+.navigation-buttons li:focus {
+    outline: 1px solid #e99d3d;
+}
+
+.navigation-buttons .badge {
+    background: #840000;
+}
+
+.ngdialog-wallet .close-overlay {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    width: 50px;
+    font-size: 40px;
+    padding-top: -2px;
+    z-index: 3;
+    text-align: center;
+}
+
+.ngdialog-wallet .close-overlay:active,
+.ngdialog-wallet .close-overlay:focus {
+    border: 0px solid #e99d3d;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-notice .ngdialog-content {
+    background-size: cover;
+    padding: 0;
+    height: 100%;
+}
+
+.popup-notice__header {
+    padding: 12px 10px;
+    color: #ffffff;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.ngdialog-notice .btn-red {
+    border: none;
+}
+
+.ngdialog-notice__content {
+    padding: 10px 20px;
+}
+
+.ngdialog-notice__content .title {
+    color: #c3a660;
+}
+
+.ngdialog-notice__content .popup-content p span {
+    color: #ffffff !important;
+}
+
+.popup-notice__footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    float: left;
+    border-top: 1px solid #3a3a3a;
+    padding: 10px;
+}
+
+/*notice*/
+
+.ngdialog.ngdialog-theme-default.ngdialog-notice .ngdialog-content {
+    background-size: cover;
+}
+
+.ngdialog-notice-page .ngdialog__title {
+    background-color: transparent;
+    border-top: 0;
+    margin-left: 13px;
+    margin-right: 13px;
+    border-bottom: 1px solid #999;
+}
+
+.ngdialog-notice-page .ngdialog__content {
+    background: #fff;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.ngdialog-notice-page .ngdialog__content h5 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #08bbff;
+}
+
+.ngdialog-notice-page .ngdialog__content p {
+    color: #999999;
+}
+
+.ngdialog-notice-page button {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    color: #ffffff;
+    position: fixed;
+    border: 0;
+    border-bottom: 1px solid #000;
+    bottom: 0;
+}
+
+.ngdialog-notice-page button:hover {
+    color: #ffffff;
+}
+
+.signup-error {
+    color: #9b001b;
+    font-weight: bold;
+    letter-spacing: -0.06em;
+}
+
+.has-success .signup-error {
+    display: none;
+}
+
+.has-error .signup-inquiry {
+    display: none;
+}
+
+/**/
+
+.header {
+    position: relative;
+    /*border-top: 2px solid #000;*/
+}
+
+#header {
+    width: 100%;
+    background: url(../images/bg-header.png) top repeat-x;
+}
+
+.logo {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.banner-containers {
+    background: url(../images/banner/mobile-main-banner-01.jpg) #2b2934 top center no-repeat;
+    background-size: 100%;
+    width: 100%;
+    top: 0;
+    position: relative;    
+}
+
+.banner-containers .banner-sliders {
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+/* .banner .banner-slider img {
+    width: 100%;
+} */
+
+.banner-slider .slick-dots li button:before {
+    font-size: 12px;
+    color: #5b5a63;
+    opacity: 1;
+}
+
+.banner-slider .slick-dots li.slick-active button:before {
+    color: #08bbff;
+}
+
+.banner-slider .slick-dots li {
+    width: 15px;
+}
+
+.banner-slider .slick-dots {
+    bottom: -18px;
+}
+
+.bg-primary {
+    /*background: #391310;*/
+    /*background: -moz-linear-gradient(top, #391310 0%, #781b13 100%);*/
+    /*background: -webkit-linear-gradient(top, #391310 0%,#781b13 100%);*/
+    /*background: linear-gradient(to bottom, #391310 0%,#781b13 100%);*/
+    background-color: #232323;
+}
+
+/*.bg-primary-header{*/
+
+/*  background: linear-gradient(to bottom,#292929 0%,#000000 100%);*/
+
+/*}*/
+
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.open>.dropdown-toggle.btn-primary,
+.btn-primary:active:hover,
+.btn-primary.active:hover,
+.open>.dropdown-toggle.btn-primary:hover,
+.btn-primary:active:focus,
+.btn-primary.active:focus,
+.open>.dropdown-toggle.btn-primary:focus,
+.btn-primary:active.focus,
+.btn-primary.active.focus,
+.open>.dropdown-toggle.btn-primary.focus {
+    border-color: #99211f;
+    background: #6e2120;
+}
+
+.ngdialog-login .btn-primary:focus,
+.ngdialog-login .btn-primary.focus,
+.ngdialog-login .btn-primary:hover,
+.ngdialog-login .btn-primary:active,
+.ngdialog-login .btn-primary.active {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    border-color: #4bd5e9;
+    color: #ffffff;
+}
+
+.ngdialog-signup .btn-primary {
+    background: #99211f;
+    border-color: #99211f;
+}
+
+.ngdialog-signup .btn-primary.ngdialog__btn {
+    background: #2a2933;
+    border-color: #08bbff;
+}
+
+.btn-primary {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    border-color: #08bbff;
+}
+
+.ngdialog-login .ngdialog-content .btn-primary.outline {
+    background: #2a2933;
+    border: 1px solid #08bbff;
+    color: #fff;
+}
+
+.btn-top-left,
+.btn-top-right,
+.btn-bottom-left,
+.btn-bottom-right {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    position: relative;
+    z-index: 2;
+    height: 42px;
+    /*padding: 6px 20px;*/
+}
+
+.ngdialog-settlement-container .form-control {
+    background: #ffffff;
+    border-color: #f2f2f2;
+    border-radius: 0;
+    color: #a2a5aa;
+}
+
+.btn-top-left,
+.btn-bottom-left {
+    border-left: 0;
+}
+
+.btn-top-right,
+.btn-bottom-right {
+    border-right: 0;
+}
+
+.btn-top-left,
+.btn-top-right {
+    border-top: 0;
+    border-bottom: 2px solid #000;
+}
+
+.btn-bottom-left,
+.btn-bottom-right {
+    border-bottom: 0;
+}
+
+.btn-top-left {
+    border-radius: 0px 0px 10px 0px;
+    position: absolute;
+}
+
+.btn-top-left:after {
+    right: -8px;
+    transform: skewX(-20deg);
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+}
+
+.btn-top-right {
+    border-radius: 0px 0px 0px 10px;
+    position: absolute;
+    right: 0;
+    height: 42px;
+}
+
+.btn-top-right:after {
+    left: -8px;
+    transform: skewX(20deg);
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    height: 44px;
+}
+
+.btn-bottom-left {
+    border-radius: 0px 10px 0px 0px;
+    height: 42px;
+}
+
+.btn-bottom-left:after {
+    right: -8px;
+    transform: skewX(20deg);
+    height: 44px;
+}
+
+.btn-bottom-right {
+    border-radius: 10px 0px 0px 0px;
+    height: 42px;
+}
+
+.btn-bottom-right:after {
+    left: -8px;
+    transform: skewX(-20deg);
+}
+
+.btn-primary:hover.btn-top-left:after,
+.btn-primary:focus.btn-top-left:after,
+.btn-primary:hover.btn-top-right:after,
+.btn-primary:focus.btn-top-right:after,
+.btn-primary:hover.btn-bottom-left:after,
+.btn-primary:focus.btn-bottom-left:after,
+.btn-primary:hover.btn-bottom-right:after,
+.btn-primary:focus.btn-bottom-right:after {
+    border-color: #08bbff;
+    background: #161616;
+}
+
+.btn-top-left:after,
+.btn-top-right:after {
+    content: "";
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    display: block;
+    height: 44px;
+    position: absolute;
+    top: -2px;
+    z-index: -1;
+    width: 15px;
+}
+
+.btn-bottom-left:after,
+.btn-bottom-right:after {
+    content: "";
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    display: block;
+    height: 44px;
+    position: absolute;
+    top: -2px;
+    z-index: -1;
+    width: 15px;
+}
+
+.btn:after {
+    transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    /*border-bottom: 2px solid #000;*/
+}
+
+.game-content,
+.game-content2 {
+    padding: 10px 5px 10px 5px;
+    background-color: #2d2d2d;
+    overflow: auto;
+}
+
+.game-content .game-button,
+.game-content2 .game-button {
+    position: relative;
+    float: left;
+    height: 110px;
+    border-radius: 5px;
+    width: 49%;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+.game-content .game-button-content,
+.game-content2 .game-button-content {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: black;
+    opacity: 0.8;
+    padding: 5px;
+}
+
+.game-content .game-button-content p,
+.game-content2 .game-button-content p {
+    color: #7cc131;
+    margin: 0 0 2px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+    /*font-size: 14pt;*/
+}
+
+.live-button-1 {
+    background: url(../images/live-buttons/mobile-live-button-1.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.live-button-2 {
+    background: url(../images/live-buttons/mobile-live-button-2.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.live-button-3 {
+    background: url(../images/live-buttons/mobile-live-button-3.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.live-button-4 {
+    background: url(../images/live-buttons/mobile-live-button-4.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-1 {
+    background: url(../images/sports-buttons/mobile-sports-button-1.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-2 {
+    background: url(../images/sports-buttons/mobile-sports-button-2.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-3 {
+    background: url(../images/sports-buttons/mobile-sports-button-3.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-4 {
+    background: url(../images/sports-buttons/mobile-sports-button-4.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-5 {
+    background: url(../images/sports-buttons/mobile-sports-button-5.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-6 {
+    background: url(../images/sports-buttons/mobile-sports-button-6.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.sports-button-7 {
+    background: url(../images/sports-buttons/mobile-sports-button-7.jpg) center no-repeat #252326;
+    background-size: 100%;
+}
+
+.game-buttons {
+    position: relative;
+    background: #0c080b;
+}
+
+.game-buttons .button,
+.game-button-2 .button {
+    padding: 10px;
+    border-bottom: 2px solid #000;
+    border-top: 2px solid #000;
+    background: url("/mobile/common/images/sports-header.jpg") center no-repeat;
+    color: #7cc131;
+}
+
+.game-button-1 a,
+.game-button-2 a,
+.game-button-3 a {
+    color: #d1d1d1;
+    text-decoration: none;
+}
+
+.game-button-1 a span,
+.game-button-2 a span,
+.game-button-3 a span {
+    color: #ffffff;
+}
+
+.game-buttons .game-button-1 img,
+.game-buttons .game-button-2 img {
+    height: auto;
+    border: 1px solid #000000;
+    width: 100%;
+}
+
+/*copupn*/
+
+.ngdialog-coupon .form-control {
+    border-radius: 0;
+    /* border-radius: 0; */
+    border: 1px solid #3a3a3a;
+    color: #999999;
+    background: #2f2f2f;
+    margin: 10px 0;
+}
+
+/* playtechHTML5 */
+
+.ngdialog-playtech.ngdialog.ngdialog-theme-default {
+    padding: 0;
+}
+
+.ngdialog-playtech.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 100%;
+    height: 100%;
+    background: url("../images/playtech/bg.png") #000000 top right / 100% no-repeat;
+    padding: 0;
+}
+
+.ngdialog-playtechHTML5.ngdialog.ngdialog-theme-default {
+    padding: 0;
+}
+
+.footer-copyright {
+    padding: 10px 10px 10px 10px;
+    text-align: center;
+    color: #a2a5aa;
+    font-size: 12px;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-copyright span {
+    color: #08bbff;
+    font-weight: bold
+}
+
+.footer-copyright a {
+    background: #333333;
+    color: #ffffff;
+    border: 0;
+    padding: 7px;
+    line-height: 1;
+}
+
+.game-content .game-button:nth-child(even),
+.game-content2 .game-button:nth-child(even) {
+    margin-right: 0px;
+}
+
+.game-content .game-button:nth-child(5),
+.game-content .game-button:nth-child(6),
+.game-content2 .game-button:nth-child(3),
+.game-content2 .game-button:nth-child(4) {
+    margin-bottom: 0px;
+}
+
+.ngdialog-wallet-container .guest-dm {
+    width: 38px;
+    background: #99211f;
+    text-align: center;
+    height: 18px;
+    vertical-align: top;
+    line-height: 18px;
+    border-radius: 3px;
+    margin-left: 7px;
+    vertical-align: middle;
+}
+
+.balance .balance__list .total {
+    height: 32px;
+}
+
+.ngdialog-content .btn-black {
+    margin-top: 1px;
+}
+
+.ngdialog-content .btn-group-justified .btn-group:nth-child(1) {
+    /*padding-right: 1px;*/
+}
+
+/*.balance .balance__list li:last-of-type{*/
+
+/*  margin-bottom: 10px;*/
+
+/*}*/
+
+.live-chat {
+    /*position: absolute;*/
+    /*width: 100%;*/
+    /*left: 0;*/
+    /*top: 2px;*/
+    outline: none;
+}
+
+.custom-loader-container {
+    background-color: #212426;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.loader svg {
+    animation: rotate360 .75s linear infinite;
+}
+
+/*
+  Set the color of the icon
+*/
+
+svg path,
+svg rect {
+    fill: #e4d9c8;
+}
+
+.custom-loader-container {
+    background-color: #212426;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.custom-loader {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 150px;
+}
+
+@keyframes rotate360 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* End: loader */
+
+.ngdialog.ngdialog-theme-default.ngdialog-direct .ngdialog-content {
+    background: #fff;
+    padding: 0px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.ngdialog-login .ngdialog__footer p {
+    font-weight: 300;
+    color: #a2a5aa;
+}
+
+.ngdialog-login .ngdialog__footer p:hover,
+.ngdialog-login .ngdialog__footer p:focus,
+.ngdialog-login .ngdialog__footer p:active {
+    color: #08bbff;
+}
+
+.ngdialog-custom .ngdialog__content .list-unstyled li>a {
+    font-weight: 700;
+    background: #000000;
+    color: #08bbff;
+    -webkit-background-clip: text;
+    /*-webkit-text-fill-color: transparent;*/
+}
+
+.ngdialog-custom .ngdialog__heading .badge {
+    background-color: #b13d3b;
+}
+
+.ngdialog-custom .ngdialog__content .list-unstyled li .badge {
+    background-color: #b13d3b;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.ngdialog__logo {
+    padding-top: 50px;
+}
+
+.right-align {
+    text-align: right;
+    position: relative;
+}
+
+fieldset label span {
+    font-weight: 700;
+}
+
+.process-forms .form-control {
+    background-color: #f7f7f7;
+    border: solid 1px #f7f7f7;
+    color: #5b5a63;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 0;
+}
+
+.process-forms input.form-control {
+    height: 40px;
+}
+
+.process-forms label span:nth-child(2) {
+    color: #f56161;
+}
+
+.process-forms .wallet-button button {
+    padding: 5px 8px;
+    margin-top: 10px;
+}
+
+.process-forms select.form-control {
+    padding: 5px;
+}
+
+/* micropopup */
+
+.ngdialog-playtechHTML5.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 100%;
+    height: 100%;
+    background: url("../images/microgaming/bg.png") #000000 top right / 100% no-repeat;
+}
+
+.ngdialog-playtechHTML5.ngdialog.ngdialog-theme-default {
+    padding: 0;
+}
+
+/*notice event button*/
+
+.ngdialog--promotion .ngdialog-content {
+    background: #ffffff;
+}
+
+.customercenter-container {
+    background: #111111;
+    padding: 10px 0;
+}
+
+.customercenter-container .list-inline {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.customercenter-container ul li {
+    position: relative;
+    text-align: center;
+    width: 20%;
+    height: 45px;
+    color: #7cc131;
+    padding-right: 10px;
+}
+
+.customercenter-container li img {
+    width: 30px;
+}
+
+.customercenter-container ul li:after {
+    content: "";
+    position: absolute;
+    height: 30px;
+    width: 2px;
+    background-color: #272727;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.customercenter-container ul li:last-child:after {
+    display: none;
+}
+
+.filter-color-yellow svg path {
+    fill: #deb97d;
+}
+
+.customercenter-container li .notice {
+    background: url("/mobile/common/images/customer-center/notice-icon.svg");
+}
+
+/*notice event*/
+
+.customer-nav [class*='col-'] {
+    padding: 0;
+}
+
+.comment-box {
+    border: 1px solid #ffffff;
+    margin-bottom: 10px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.comment-box-read {
+    border: 1px solid #c0c0c0;
+    margin-bottom: 10px;
+}
+
+.comment-box-read {
+    margin-left: 30px;
+}
+
+.comment-box__header,
+.comment-box-read__header {
+    background-color: #08bbff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.comment-box__title,
+.comment-box__date {
+    margin: 0;
+    display: block;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.comment-box__content,
+.comment-box-read__content {
+    background-color: #f7f7f7;
+    color: #5b5a63;
+    padding: 10px 20px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    word-break: break-all;
+}
+
+.customer {
+    height: auto;
+}
+
+.customer .button-group .button {
+    background-color: #333333;
+}
+
+.customer-nav {
+    /*margin-top: 40px;*/
+    padding: 0;
+}
+
+.customer-nav.contact .customer {
+    padding: 10px;
+}
+
+.customer-nav .list-inline {
+    margin: 0;
+}
+
+.customer-nav__list .customer-nav__items .customer-nav__link {
+    line-height: 1.5;
+    padding: 10px 5px;
+    color: #ffffff;
+    border: 1px solid #c29652;
+}
+
+.customer-nav__items {
+    /*border-bottom: 1px solid #d5d5d5;*/
+    float: left;
+}
+
+.customer-nav__items.pull-right {
+    margin-left: 0;
+}
+
+.customer-nav__link {
+    /*border-right: 1px solid #d5d5d5;*/
+    color: #333333;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.navFaq {
+    border: none;
+}
+
+.customer-nav__link {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.customer-nav__link.active {
+    background: #8a2015;
+    background: -moz-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8a2015), color-stop(100%, #b73528));
+    background: -webkit-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -o-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: -ms-linear-gradient(top, #8a2015 0%, #b73528 100%);
+    background: linear-gradient(to bottom, #4b362f 0%, #c59953 100%);
+    color: #ffffff;
+    border-radius: 0;
+}
+
+.customer__title {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.customer .contact li {
+    height: 70px;
+}
+
+.customer .contact .col-xs-2 {
+    text-align: center;
+    line-height: 45px;
+}
+
+.cust-icon {
+    width: 40px;
+}
+
+.customer-info {
+    display: grid;
+    color: #ffffff;
+    padding-left: 10px;
+}
+
+.customer-info .gold-text {
+    letter-spacing: -1.44px;
+    color: #c1ad8b;
+    font-size: 24px;
+}
+
+/*Slot*/
+
+.slot_header {
+    height: 60px;
+    width: 100%;
+    background-color: #000000;
+    background-repeat: no-repeat;
+    margin-top: -1px;
+    border-top: solid 1px #373535;
+    border-radius: 10px 10px 0 0;
+}
+
+.slot-header-title {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px 0 20px;
+}
+
+.slot-open {
+    background: transparent;
+    border: none;
+}
+
+.slot-open .fa-times:before {
+    font-size: 20px;
+    color: #fff;
+    margin: 0 0 0 -20px;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.slots .slot-container {
+    padding: 10px 0;
+}
+
+.slot-games-container {
+    display: none;
+}
+
+.responsive-thumbnails li {
+    /*min-height: 150px;*/
+    height: 175px;
+}
+
+.middle__text {
+    width: 100%;
+    text-align: center;
+}
+
+.input-group.second-input {
+    margin-bottom: 20px;
+}
+
+.middle__text .ngdialog__title {
+    font-size: 20px;
+    line-height: 72px;
+    font-weight: 700;
+}
+
+.walletCat {
+    flex-grow: 1;
+    color: #ffffff;
+    padding: 5px 20px;
+    line-height: 1;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%)
+}
+
+.my-wallet.user-info {
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    color: #2a2933;
+    align-items: center;
+    height: 60px;
+    padding: 0 20px;
+}
+
+.user-info .guest-dm {
+    height: 18px;
+    margin-left: 5px;
+    line-height: 18px;
+    width: 38px;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+    background-color: #99211f;
+}
+
+.get-balance .glyphicon-refresh:before {
+    color: #08bbff;
+}
+
+.text-green {
+    color: #7cc131;
+}
+
+.sticky-header .btn-primary:hover,
+.btn-primary:active,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+    border-color: #08bbff;
+    background: #161616;
+}
+
+.sticky-header .btn-primary:hover.btn-top-left:after,
+.btn-primary:focus,
+.btn-primary:hover.btn-top-right:after,
+.btn-primary:focus.btn-top-right:after,
+.btn-primary:hover.btn-top-right:after,
+.btn-primary:focus.btn-top-right:after,
+.btn-primary:focus.btn-bottom-right:after {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+}
+
+.dm-badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #b13d3b;
+    border-radius: 10px;
+}
+
+/*swal*/
+
+.swal-title {
+    font-size: 20px;
+}
+
+.swal-text {
+    text-align: center;
+}
+
+/*alert*/
+
+.alert-danger {
+    background-color: #242424;
+    border-color: #242424;
+    color: #08bbff;
+}
+
+/*overlay*/
+
+.gamebuttons .overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.5s;
+    background-color: rgba(16, 16, 16, 0.8);
+    opacity: 0;
+    /* background-image: url(../images/deco/company.png); */
+    background-repeat: no-repeat;
+    background-position: left top;
+    z-index: 0;
+}
+
+.gamebuttons .overlay .tbl {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.gamebuttons .overlay .center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+}
+
+.gamebuttons.sports .overlay button {
+    width: 40px;
+    height: 40px;
+}
+
+.gamebuttons .overlay button {
+    width: 80px;
+    height: 80px;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    position: relative;
+    outline: none;
+}
+
+.gamebuttons .overlay button>i {
+    color: #4bd5e9;
+    font-size: 25px;
+}
+
+.gamebuttons.sports .overlay button>i {
+    color: #4bd5e9;
+    font-size: 14px;
+}
+
+.gamebuttons .overlay button.btn-primary {
+    height: 30px;
+    max-width: 100%;
+    margin: 10px auto 0;
+    display: block;
+    border: solid 1px #4bd5e9;
+    width: auto;
+    font-size: 12px;
+    background-color: #111111;
+}
+
+.overlay button img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+}
+
+textarea.form-control {
+    resize: none;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-notice1 .ngdialog-content {
+    padding: 0;
+    margin: 0 auto;
+    border: 1px solid #20b6e8;
+    background: #000;
+    width: 100%;
+}
+
+.sm-notice__popup {
+    text-align: right;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-notice1 .ngdialog-close:before {
+    background: #000;
+    line-height: 2.5rem;
+    font-size: 3.5rem;
+}
+
+@media not all and (min-resolution:.001dpcm) {
+    @media {
+        .ngdialog.ngdialog-theme-default.ngdialog-notice1 .ngdialog-close:before {
+            background: #000;
+            line-height: 2.5rem;
+            font-size: 3rem;
+            height: 3rem;
+        }
+    }
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+    select.form-control {
+        background: url("/common/images/chevron-down.png") no-repeat 95% 50%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+}
+
+@supports not (-webkit-overflow-scrolling: touch) {
+    select.form-control.ngdialog__form__input {
+        /*-webkit-appearance: none;*/
+    }
+}
+
+.btn-custom-shape {
+    height: 42px;
+    width: 105px;
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    color: #ffffff;
+    border-color: #4bd5e9;
+}
+
+.btn-custom-shape.top-left {
+    -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
+    padding-right: 24px;
+    position: absolute;
+    z-index: 1;
+}
+
+.btn-custom-shape.top-right {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 25% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 25% 100%);
+    padding-left: 24px;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+
+.btn-custom-shape.bottom-left {
+    -webkit-clip-path: polygon(0 0, 75% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 0, 75% 0, 100% 100%, 0% 100%);
+    padding-right: 24px;
+}
+
+.btn-custom-shape.bottom-right {
+    -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+    padding-left: 24px;
+}
+
+.btn-custom-shape:hover {
+    border-color: #08bbff;
+    background-color: #161616;
+}
+
+.btn-custom-shape:focus {
+    border-color: #08bbff;
+    background-color: #161616;
+    opacity: 1;
+}
+
+.btn-signup {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    color: #fff;
+}
+
+.btn-signup:active {
+    background: linear-gradient(to bottom, #4bd5e9 0%, #00a5e2 100%);
+    color: #fff;
+}
+
+.form-control {
+    transition: none !important;
+    box-shadow: none !important;
+}
+
+#chat-widget-container {
+    z-index: 9999 !important;
+}
+
+.change-password-error span {
+    color: #a94442;
+    font-weight: 700;
+}
+
+.csrf-swal .swal-title,
+.csrf-swal .swal-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, .65);
+}
+
+.newsticker {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.ngdialog.ngdialog-theme-default.ngdialog-gamespopup.ngdialog-gamespopup .ngdialog-content{
+    height: 100%;
+    padding: 0;
+    background: #1d1d1d;
+    width: 100%;
+  }

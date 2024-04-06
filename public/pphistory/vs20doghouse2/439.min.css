@@ -1,0 +1,170 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+:root {
+    --slot-item-height: 60px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.Wild .MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.Wild .MoneyScatter__Label {
+    margin-bottom: 3px
+}
+
+.MoneyScatter__Label {
+    font-size: 14px
+}
+
+.Bonus .SlotWrap__Field {
+    border: transparent
+}
+
+.Bonus .ReelsSlot {
+    width: 325px;
+    height: 210px;
+    background-image: -webkit-image-set(url(./images/vs20doghouse2/bonusBg.png) 1x, url(./images/vs20doghouse2/bonusBg@2x.png) 2x);
+    background-size: auto;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-evenly;
+    padding: 11px 15px 4px;
+    box-sizing: border-box
+}
+
+.Bonus .ReelsSlot__Reel {
+    width: 60px;
+    background-color: transparent
+}
+
+.Bonus .ReelsSlot__Item {
+    border-color: transparent
+}
+
+.Bonus .FsCount {
+    background-image: -webkit-image-set(url(./images/vs20doghouse2/fsBg.png) 1x, url(./images/vs20doghouse2/fsBg@2x.png) 2x);
+    background-size: auto;
+    background-position: 50%;
+    background-repeat: no-repeat
+}
+
+.RetriggerIn {
+    width: 55px;
+    height: 50px;
+    margin: 10px 5px 0 0
+}
+
+.RetriggerIn .Image__Children {
+    display: flex;
+    gap: 2px
+}

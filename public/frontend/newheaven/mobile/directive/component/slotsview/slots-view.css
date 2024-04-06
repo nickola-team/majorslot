@@ -1,0 +1,179 @@
+/* Slot View Page */
+
+.slots-view-page {
+    display: none;
+}
+
+.slots-nav-container {
+    position: relative;
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    margin: 0 auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 5px;
+    text-align: center;
+}
+
+.slots-nav-container::-webkit-scrollbar {
+    display: none;
+}
+
+.slots .slots-nav {
+    display: table-cell;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 0 10px 10px;
+    position: relative;
+    color: #a2a5aa;
+}
+
+.slots-nav.active {
+    color: #08bbff;
+}
+
+/*.slot-box-1156:nth-of-type(6n+6) {*/
+
+/*  margin-right: 10px !important;*/
+
+/*}*/
+
+/*li.slot-item-wrapper.animated.fadeInUp.bg-4{*/
+
+/*  display: none;*/
+
+/*}*/
+
+/*.slots-nav.active:before {*/
+
+/*  content: "";*/
+
+/*  display: block;*/
+
+/*  position: absolute;*/
+
+/*  bottom: 0;*/
+
+/*  left: 50%;*/
+
+/*  transform: translateX(-50%);*/
+
+/*  background-color: #08bbff;*/
+
+/*  height: 2px;*/
+
+/*  width: calc(100% - 15px);*/
+
+/*}*/
+
+.slot-container {
+    padding: 9px;
+    min-height: 300px;
+}
+
+.slot-item-wrapper {
+    /*height: 180px !important;*/
+    padding: 0 !important;
+    border: solid 1px transparent !important;
+    margin-bottom: 1px !important;
+    -webkit-animation-duration: .75s;
+    -moz-animation-duration: .75s;
+    -o-animation-duration: .75s;
+    animation-duration: .75s;
+    animation-timing-function: ease-in;
+}
+
+.slot-item {
+    height: 100%;
+    position: relative;
+    background-color: #00000010 !important;
+    margin: 0 !important;
+}
+
+.slot-title {
+    text-align: center;
+    background-color: #2a2933;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 5px 1px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0;
+    margin-top: 80px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.slot-animate.ng-leave {
+    animation: slideOutLeft .25s ease-in;
+}
+
+.slot-view-animate.ng-enter {
+    animation: slideInRight .25s cubic-bezier(0.01, 1.01, 0.72, 1.01);
+}
+
+.slot-item-wrapper.animated.fadeInUp {
+    animation-duration: .35s;
+    -webkit-animation-duration: .35s;
+}
+
+.loading-placeholder ul li {
+    height: 180px;
+    width: calc(100% / 3 - 5px);
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #444444;
+    display: inline-block;
+    position: relative;
+    float: left;
+    overflow: hidden;
+}
+
+.loading-placeholder ul li:before {
+    content: '';
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 80%) 50% 50%;
+    animation: phLoad 1s linear infinite;
+}
+
+.loading-placeholder ul li span {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.15);
+    width: 100%;
+}
+
+.loading-placeholder ul li:last-child {
+    margin-right: 0;
+}
+
+main.slot-page {
+    animation-duration: .15s;
+}
+
+@keyframes phLoad {
+    0% {
+        transform: translateX(-200%);
+    }
+    100% {
+        transform: translateX(200%)
+    }
+}
+
+/* End: Slots View Page */
+
+.slot-games__item.slot-160020,
+.slot-games__item.slot-cs5moneyroll,
+.slot-games__item.slot-1037,
+.slot-games__item.slot-1290,
+.slot-item-wrapper.slot-games__item.slot-vs20olympgrace {
+    display: none;
+}

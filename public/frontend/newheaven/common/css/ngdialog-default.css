@@ -1,0 +1,134 @@
+.ngdialog.ngdialog-theme-default.ngdialog-main-default .ngdialog-content {
+    width: 900px;
+    border-radius: 0;
+    font-size: 14px;
+    padding: 0;
+}
+
+.ngdialog__heading {
+    background: #2a2933;
+}
+
+.ngdialog__title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #08bbff;
+    margin: 0;
+    padding: 20px;
+    text-transform: uppercase;
+}
+
+.ngdialog-main-nav {
+    background-color: #ffffff;
+    margin-bottom: 0;
+    margin-left: 0;
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    -webkit-box-shadow: inset 0px -2px 0px 0px rgba(229, 218, 218, 1);
+    -moz-box-shadow: inset 0px -2px 0px 0px rgba(229, 218, 218, 1);
+    box-shadow: inset 0px -2px 0px 0px rgba(255, 255, 255, .2);
+    display: flex;
+}
+
+.ngdialog-main-nav li {
+    color: #999999;
+    font-weight: 700;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.ngdialog-main-nav li:hover,
+.ngdialog-main-nav li:focus {
+    color: #08bbff;
+    cursor: pointer;
+    border-bottom: 2px solid #08bbff;
+}
+
+.ngdialog-main-nav li.active {
+    border-bottom: 2px solid #08bbff;
+    color: #08bbff;
+}
+
+.ngdialog-main-default__content {
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #f7f7f7;
+}
+
+.ngdialog-main-nav .badge {
+    background: #08bbff;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-close {
+    top: -2px;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-close:before {
+    top: 20px;
+    right: 10px;
+}
+
+.ngdialog-main-default .panel-heading {
+    background-color: #08bbff;
+    border-color: #f2f2f2;
+    border-radius: 0;
+    color: #ffffff;
+}
+
+.read.panel.panel-primary {
+    margin-left: 50px;
+}
+
+.ngdialog-main-default .panel-primary {
+    border: #f2f2f2;
+}
+
+.disable-event {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.dialog-btn-open {
+    position: relative;
+    overflow: hidden;
+}
+
+.dialog-btn-open:before,
+.dialog-btn-open:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+}
+
+.dialog-btn-open:after {
+    background-image: url("/mobile/common/images/preloader.svg");
+    background-repeat: no-repeat;
+    background-size: 18%;
+    background-position: center center;
+    animation: rotate360 .75s linear infinite;
+    opacity: .50;
+}
+
+.ngdialog-customer-page .btn-primary.btn-block,
+.ngdialog-customer-page .btn-black.btn-block {
+    line-height: 30px;
+    width: 436px;
+    margin: 0 auto;
+}
+
+.ngdialog-customer-page .ngdialog-content {
+    border: thin solid #08bbff;
+}
+
+.ngdialog-customer-page .history-table>tbody>tr>td {
+    padding: 5px;
+}
+
+.ngdialog-customer-page fieldset {
+    padding: 10px 0 0;
+}

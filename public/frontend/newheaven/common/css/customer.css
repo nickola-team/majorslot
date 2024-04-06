@@ -1,0 +1,13 @@
+.ngdialog-customer-page a {
+    color: #63626a;
+    font-weight: bold;
+}
+
+.ngdialog-customer-page a:hover {
+    color: #08bbff;
+}
+
+.ngdialog-customer-page .panel-body {
+    background: #f7f7f7;
+    color: #63626a;
+}

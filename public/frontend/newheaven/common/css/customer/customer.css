@@ -1,0 +1,76 @@
+.customer-page {
+    font-size: 13px;
+    color: #000000;
+    width: 100%;
+    padding: 0 10px 10px;
+    letter-spacing: -0.78px;
+    background-color: #000000;
+}
+
+.customer-page .goldTxt {
+    letter-spacing: -1.44px;
+    color: #08bbff;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.customer-page .customer-content {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    border: 1px solid #202020;
+    height: 99px;
+    background: #121113;
+}
+
+.customer-page .customer-buttons {
+    float: left;
+    width: calc(100% / 4);
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .customer-page .customer-buttons {
+        padding: 18px;
+    }
+}
+
+.customer-page .customer-buttons:nth-child(1):hover,
+.customer-page .customer-buttons:nth-child(2):hover,
+.customer-page .customer-buttons:nth-child(3):hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.customer-page .customer-buttons img {
+    vertical-align: baseline;
+}
+
+.customer-page .customer-buttons:nth-of-type(-n+3)::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 60px;
+    right: 0;
+    top: 50%;
+    background: #202020;
+    transform: translateY(-50%);
+}
+
+.customer-page .text-con {
+    display: inline-block;
+    margin-left: 5px;
+    color: #a2a5aa;
+}
+
+.customer-page .text-con p {
+    margin: 0;
+    text-align: left;
+}
+
+.customer-page .customer-buttons:nth-of-type(n + 3) {
+    /*padding: 20px 0;*/
+}

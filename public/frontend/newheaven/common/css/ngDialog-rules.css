@@ -1,0 +1,35 @@
+.ngdialog.ngdialog-theme-default.ngdialog-main-default.ngdialog-rules .ngdialog-content {
+    width: 752px;
+}
+
+.ngdialog-nav {
+    height: 53px;
+    background-color: #ffffff;
+}
+
+.ngdialog-nav>li {
+    padding: 15px 30px;
+    cursor: pointer;
+    color: #a2a5aa;
+    font-weight: 700;
+    margin-left: -4px;
+}
+
+.ngdialog-nav li:first-of-type {
+    margin-left: 0px;
+}
+
+.ngdialog-nav li:last-of-type {
+    border-right: none;
+}
+
+.ngdialog-nav>li.isactive {
+    border-bottom: 2px solid #08bbff;
+    color: #08bbff;
+}
+
+.ngdialog-nav li:hover {
+    color: #08bbff;
+    cursor: pointer;
+    border-bottom: 2px solid #08bbff;
+}
