@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\SugarRush1000PM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameSugarRush1000Stack::where('id', 32927)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameSugarRush1000Stack::where('id', 23650)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -771,14 +771,21 @@ namespace VanguardLTE\Games\SugarRush1000PM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameSugarRush1000Stack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 38000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 25);    
+                        if($pur <= 0)
+                        {
+                            $stacks = $stacks->where('odd', '<=', 15);  
+                        }
+                        else
+                        {
+                            $stacks = $stacks->where('odd', '<=', 75);  
+                        }  
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

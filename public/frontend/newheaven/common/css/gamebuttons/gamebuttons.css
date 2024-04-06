@@ -1,0 +1,153 @@
+.main-page .button-container {
+    width: inherit;
+    padding: 10px;
+    background-color: #000000;
+    min-height: 460px;
+}
+
+.main-page .gamebutton {
+    float: left;
+    width: 490px;
+    height: 160px;
+    font-size: 16px;
+    color: #ffffff;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.main-page .gamebutton:nth-child(-n+2) {
+    width: calc(100% / 2 - 5px);
+}
+
+.main-page .gamebutton:nth-child(n+3) {
+    width: calc(100% / 3 - 7px);
+}
+
+.main-page .gamebutton:nth-last-of-type(2) {
+    width: 100%;
+    margin: 0;
+}
+
+.main-page .gamebutton:first-child {
+    margin-right: 10px;
+}
+
+.main-page .gamebutton:nth-child(3) {
+    margin-right: 10px;
+}
+
+.main-page .gamebutton:nth-child(4) {
+    margin-right: 11px;
+}
+
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {
+    /* IE10+ CSS styles go here */
+    .main-page :nth-child(n+3).gamebutton {
+        width: calc(100% / 3 - 7px);
+    }
+    .main-page .gamebutton:nth-child(4) {
+        margin-right: 10.5px;
+    }
+    .main-page .gamebutton:nth-last-of-type(2) {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+.main-page .gamebutton .games-content {
+    position: absolute;
+    bottom: 9px;
+    width: 100%;
+    padding: 0 14px 0 24px;
+}
+
+.main-page .gamebutton .games-content {
+    position: absolute;
+    bottom: 9px;
+    width: 100%;
+    padding: 0 14px 0 24px;
+}
+
+.main-page .gamebutton:hover img.gamebutton-hover {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.gamebutton-hover {
+    display: none;
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .main-page .gamebutton .games-content {
+        padding: 0 14px 0 16px;
+    }
+}
+
+.main-page .gamebutton .games-content .col-xs-6:nth-child(1),
+.main-page .gamebutton .games-content .col-xs-2:nth-child(1) {
+    line-height: 30px;
+}
+
+.games-content .col-xs-6 .casino-btn {
+    padding: 5px 52px;
+}
+
+.button-container .gamebutton .games-content .casino-title {
+    width: 146px;
+}
+
+.gamebuttons {
+    width: 100%;
+    height: 100%;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+}
+
+.game-button-1 {
+    background: url("/common/images/gamebuttons/game-button-1.jpg");
+}
+
+.game-button-2 {
+    background: url("/common/images/gamebuttons/game-button-2.jpg");
+}
+
+.game-button-3 {
+    background: url("/common/images/gamebuttons/game-button-3.jpg");
+}
+
+.game-button-4 {
+    background: url("/common/images/gamebuttons/game-button-4.jpg");
+}
+
+.game-button-5 {
+    background: url("/common/images/gamebuttons/game-button-5.jpg");
+}
+
+.gamebutton:hover .game-button-1 {
+    background: url("/common/images/gamebuttons/game-button-1-hover.jpg");
+}
+
+.gamebutton:hover .game-button-2 {
+    background: url("/common/images/gamebuttons/game-button-2-hover.jpg");
+}
+
+.gamebutton:hover .game-button-3 {
+    background: url("/common/images/gamebuttons/game-button-3-hover.jpg");
+}
+
+.gamebutton:hover .game-button-4 {
+    background: url("/common/images/gamebuttons/game-button-4-hover.jpg");
+}
+
+.gamebutton:hover .game-button-5 {
+    background: url("/common/images/gamebuttons/game-button-5-hover.jpg");
+}

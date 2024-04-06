@@ -2744,11 +2744,21 @@ main .title {
 
 .jackpot-odometer{
   width: 233px;
-  height: 35px;
+  height: 45px;
   position: relative;
   overflow: hidden;
   float: right;
   margin-right: 10px;
+}
+
+.jackpot-odometer_m{ 
+  width: 233px;
+  height: 45px;
+  position: relative;
+  overflow: hidden;
+  float: right;
+  margin-right: 10px;
+  
 }
 
 .btn-wallet-amount{

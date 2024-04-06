@@ -1,0 +1,55 @@
+.main-page .jackpot-container {
+    width: inherit;
+    padding: 0 10px 10px;
+    background-color: #000000;
+}
+
+.main-page .jackpot-content {
+    background: url("/common/images/main/jackpot/coupon-banner.jpg") no-repeat;
+    background-position-y: -1px;
+    border: 1px solid #282828;
+    height: 60px;
+    position: relative;
+}
+
+.main-page .jackpot-content form {
+    position: absolute;
+    right: 20px;
+    top: 13px;
+}
+
+.main-page .jackpot-content form .form-control,
+.main-page .jackpot-content form .form-group {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.main-page .jackpot-content form select.form-control {
+    background: url("/common/images/chevron-down.png") center right 15px no-repeat #000000;
+    width: 235px;
+    border: 1px solid #202020;
+}
+
+.main-page .jackpot-content form .form-control {
+    border-radius: 0;
+    background: #000000;
+    color: #a2a5aa;
+    border: 1px solid #202020;
+    width: 220px;
+    margin: 0 10px 0 0;
+    box-shadow: none;
+}
+
+.main-page .jackpot-content form .btn-red {
+    height: 32px;
+}
+
+.main-page .jackpot-content .form-group .btn {
+    width: 120px;
+    height: 32px;
+}
+
+.main-page .jackpot-content .form-group .form-control::placeholder {
+    letter-spacing: -1px;
+}

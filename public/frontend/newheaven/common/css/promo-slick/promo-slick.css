@@ -1,0 +1,61 @@
+.promo-slick {
+    text-align: center;
+    top: 60px;
+    width: 400px;
+}
+
+.promo-slick-2 {
+    width: 100%;
+    left: 0;
+    top: auto;
+    bottom: 0;
+}
+
+.promo-slick-2.slick-slider {
+    position: absolute;
+}
+
+.promo-slick .slick-slide img {
+    display: inline-block;
+}
+
+.promo-slick .slick-dots button {
+    width: 15px;
+}
+
+.promo-slick .slick-dots li button:before {
+    font-size: 10px;
+    color: #a2a5aa;
+    opacity: .90;
+    width: 15px;
+}
+
+.promo-slick .slick-dots li.slick-active button:before {
+    opacity: .75;
+    color: #05bffc;
+}
+
+.promo-slick .slick-slide:focus {
+    outline: none;
+    border: none;
+}
+
+.promo-slick .slick-dots li {
+    margin: 0;
+    width: 15px;
+}
+
+.btn.btn-primary.btn-block.promo-learn-more {
+    border-radius: 20px;
+    height: 40px;
+    width: 200px;
+    margin: 10px auto;
+}
+
+.btn.btn-primary.btn-block.promo-learn-more:hover {
+    border: 2px solid #05bffc;
+}
+
+.promo-slick .slick-dots {
+    bottom: -15px;
+}

@@ -1,0 +1,129 @@
+footer {
+    padding: 20px 0;
+    text-align: center;
+    background-color: #000000;
+}
+
+.footer__links {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    list-style: none;
+}
+
+.footer__links__item {
+    position: relative;
+    text-align: center;
+    width: calc(100% / 4);
+}
+
+.footer__links__item:after {
+    content: "";
+    position: absolute;
+    height: 30px;
+    width: 2px;
+    background: #202020;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 0;
+}
+
+.footer__links__item:last-child::after {
+    display: none;
+}
+
+.footer__links__item__icon.icon {
+    margin: 0 auto 10px;
+    height: 26px;
+}
+
+.footer__links__item__title {
+    color: #a2a5aa;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.footer__pc-button {
+    background-color: #000000;
+    color: #ffffff;
+    margin: 10px 0;
+    padding: 10px 0;
+    width: 80%;
+    border-radius: 0;
+    font-weight: 700;
+}
+
+.footer__copyright {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+.footer__copyright>p {
+    font-size: 13px;
+    margin: 0;
+    color: #bdbcbf;
+}
+
+.icon {
+    display: block;
+    margin: 0 auto;
+    height: 30px;
+    width: 29px;
+}
+
+.footer1 .icon {
+    width: 26px;
+}
+
+.icon.comp {
+    background-image: url('/mobile/common/images/footer/icons/comp-icon.svg');
+}
+
+.icon.comp-history {
+    background-image: url('/mobile/common/images/footer/icons/coupon-icon.svg');
+}
+
+.icon.affiliates {
+    background-image: url('/mobile/common/images/footer/icons/affiliates-icon.svg');
+}
+
+.icon.faq {
+    background-image: url('/mobile/common/images/footer/icons/faq-icon.svg');
+}
+
+.icon.notice {
+    background-image: url('/mobile/common/images/footer/icons/notice-icon.svg');
+}
+
+.icon.promotion {
+    background-image: url('/mobile/common/images/footer/icons/promo-icon.svg');
+}
+
+.icon.customer {
+    background-image: url('/mobile/common/images/footer/icons/customer-icon.svg');
+}
+
+.icon.live-chat {
+    background-image: url('/mobile/common/images/footer/icons/live-chat-icon.svg');
+}
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: 0;
+    background-color: #08bbff;
+    color: #ffffff;
+    width: auto;
+}
+
+footer .badge {
+    right: 18px;
+}
