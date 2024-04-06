@@ -17,20 +17,20 @@
                 </div>
                 <div style="overflow: hidden; height:160px;">
                     <ul class=" list-unstyled transaction-list" >
-                    @foreach ($noticelist as $ntc)
-                        <li role="button" class="ng-scope">
-                            <div class="col-xs-4 text-left">
-                                <span class="ng-binding">{{date('Y-m-d', strtotime($ntc->date_time))}}</span>&nbsp;
-                            </div>
-                            <div class="col-xs-8 text-left text-white">
-                                <span onclick=@auth
-                                    "navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');getNotice('notice{{$ntc->id}}');"
-                                    @else
-                                    "navClick('login-popup')"
-                                    @endif class="ng-binding">{{$ntc->title}}</span>
-                            </div>
-                        </li>
-                    @endforeach
+                        @foreach ($noticelist as $ntc)
+                            <li role="button" class="ng-scope">
+                                <div class="col-xs-4 text-left">
+                                    <span class="ng-binding">{{date('Y-m-d', strtotime($ntc->date_time))}}</span>&nbsp;
+                                </div>
+                                <div class="col-xs-8 text-left text-white">
+                                    <span onclick=@auth
+                                        "navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');getNotice('notice{{$ntc->id}}');"
+                                        @else
+                                        "navClick('login-popup')"
+                                        @endif class="ng-binding">{{$ntc->title}}</span>
+                                </div>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 

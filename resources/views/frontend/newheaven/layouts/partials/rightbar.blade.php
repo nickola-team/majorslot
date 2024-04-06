@@ -69,14 +69,23 @@
                 </div>
                 <table  class="table h5 scrollbar" >
                     <tbody>
-                    @foreach ($noticelist as $ntc)
-                        <tr ng-repeat="agentGsp in agentGspList |  orderBy:'OrderNumber'| limitTo: rightPanelLimit" ng-if="agentGsp.category == walletCategoryValues.category">
-                            <td class="text-left width80">
-                            <a href="javascript:;" onclick="navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');getNotice('notice{{$ntc->id}}');">{{$ntc->title}}</a>
-                            </td>
-                            <td class="width15 text-center">{{date('Y-m-d', strtotime($ntc->date_time))}}</td>
-                        </tr>
-                        @endforeach
+                        @if(count($noticelist) > 0)
+                            @foreach ($noticelist as $ntc)
+                            <tr ng-repeat="agentGsp in agentGspList |  orderBy:'OrderNumber'| limitTo: rightPanelLimit" ng-if="agentGsp.category == walletCategoryValues.category">
+                                <td class="text-left width80">
+                                <a href="javascript:;" onclick="navClick('msg-popup');setTab('notice-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(1)','공지사항');getNotice('notice{{$ntc->id}}');">{{$ntc->title}}</a>
+                                </td>
+                                <td class="width15 text-center">{{date('Y-m-d', strtotime($ntc->date_time))}}</td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr ng-repeat="agentGsp in agentGspList |  orderBy:'OrderNumber'| limitTo: rightPanelLimit" ng-if="agentGsp.category == walletCategoryValues.category">
+                                <td class="text-center width100">
+                                <span>공지가 없습니다.</span>
+                                </td>
+                            </tr>
+                        @endif
+                    
                     </tbody>
                 </table>
             </div>
