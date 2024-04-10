@@ -1,0 +1,86 @@
+.ngdialog-casino.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 900px;
+}
+
+.casino-page .button-container {
+    width: inherit;
+    padding: 10px;
+    background-color: #333333;
+}
+
+.casino-page .gamebutton {
+    float: left;
+    width: 435px;
+    height: 140px;
+    font-size: 16px;
+    color: #ffffff;
+    position: relative;
+}
+
+.casino-page .gamebutton:nth-child(-n+2) {
+    margin-bottom: 10px;
+}
+
+.casino-page .gamebutton:nth-child(odd) {
+    margin-right: 9px;
+}
+
+.casino-page .gamebutton .games-content {
+    position: absolute;
+    bottom: 9px;
+    width: 100%;
+    padding: 0px 14px 0px 24px;
+}
+
+.casino-page .gamebutton .games-content .col-xs-6 button {
+    padding: 5px 40px;
+}
+
+.casino-page .gamebutton .games-content .col-xs-6 button.playcheck {
+    padding: 5px 10px;
+}
+
+.casino-page .gamebutton .games-content .col-xs-6:nth-child(1),
+.casino-page .gamebutton .games-content .col-xs-2:nth-child(1) {
+    line-height: 30px;
+}
+
+.casino-page .gamebutton .gamebutton-1 {
+    background: url("/common/images/casino/live-button-1.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-2 {
+    background: url("/common/images/casino/live-button-2.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-3 {
+    background: url("/common/images/casino/live-button-3.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-4 {
+    background: url("/common/images/casino/live-button-4.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-1:hover {
+    background: url("/common/images/casino/live-button-1-hover.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-2:hover {
+    background: url("/common/images/casino/live-button-2-hover.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-3:hover {
+    background: url("/common/images/casino/live-button-3-hover.jpg") no-repeat;
+    height: inherit;
+}
+
+.casino-page .gamebutton .gamebutton-4:hover {
+    background: url("/common/images/casino/live-button-4-hover.jpg") no-repeat;
+    height: inherit;
+}

@@ -1,0 +1,49 @@
+.mp-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mp-popup-container {
+    position: absolute;
+    min-width: 100%;
+}
+
+.ngdialog-mulitple-popup.ngdialog.ngdialog-theme-default .ngdialog-content {
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+}
+
+.ngdialog-mulitple-popup.ngdialog.ngdialog-theme-default {
+    padding: 0;
+    z-index: 10002;
+}
+
+.mp-close-btn {
+    font-size: 18px;
+    background-color: transparent;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    border-radius: 0;
+    line-height: 1;
+    transition: color 200ms ease-in-out;
+}
+
+.mp-close-btn:hover,
+.mp-close-btn:focus {
+    border-color: #20b6e8;
+    background: #4bd5e9;
+    background: -moz-linear-gradient(top, #4bd5e9 0%, #01a5e2 100%);
+    background: -webkit-linear-gradient(top, #4bd5e9 0%, #01a5e2 100%);
+    background: linear-gradient(to bottom, #4bd5e9 0%, #01a5e2 100%);
+    padding: 3px 8px;
+}
+
+.mp-not-today-btn {
+    background: #2a2933;
+    color: #ffffff;
+    border-radius: 0;
+    border-color: #08bbff;
+}

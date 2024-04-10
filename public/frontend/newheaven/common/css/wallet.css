@@ -1,0 +1,270 @@
+.transfer-block {
+    padding-right: 5px;
+}
+
+.transfer form {
+    padding: 10px 20px 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #f2f2f2;
+}
+
+.transfer .btn.btn-block {
+    height: 45px;
+}
+
+.balance__content:nth-child(odd) {
+    background-color: #f7f7f7;
+}
+
+.balance__content:last-child {
+    /*width: 527px;*/
+}
+
+.balance__content {
+    border-bottom: 1px solid #f2f2f2;
+    border-top: 1px solid #f2f2f2;
+    padding: 8px 10px;
+    color: #63626a;
+    /*min-height: 36px;*/
+}
+
+.balance__content .amount {
+    color: #08bbff;
+}
+
+.ngdialog-wallet-page fieldset {
+    padding: 10px 0;
+}
+
+.ngdialog-wallet-page form fieldset:last-of-type {
+    margin-bottom: 30px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.ngdialog-wallet-page .btn-black {
+    background: #2a2933;
+    color: #ffffff;
+    border-radius: 0;
+    border-color: #08bbff;
+    outline: none;
+}
+
+.ngdialog-wallet-page .balance-overflow .walletCat {
+    border-right: none;
+}
+
+.deposit label,
+.withdraw label {
+    float: left;
+    line-height: 34px;
+    width: 120px;
+    text-align: left;
+    padding-left: 10px;
+    color: #08bbff;
+}
+
+.change-password label {
+    line-height: 34px;
+}
+
+.change-password label span+span,
+.deposit label span+span,
+.withdraw label span+span {
+    color: #991528;
+}
+
+.side-note {
+    line-height: 34px;
+    color: #999;
+}
+
+.history-table>tbody>tr>th {
+    background-color: #08bbff;
+    color: #ffffff;
+    border: 0;
+}
+
+.history-table>tbody>tr>th,
+.history-table>tbody>tr>td {
+    padding: 5px;
+    text-align: center;
+}
+
+.history-table>tbody>tr>td {
+    padding: 10px;
+    font-weight: normal;
+    color: #a2a5aa;
+    border-top: 1px solid #f2f2f2;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.history-table tr:nth-of-type(even) td {
+    background: #f7f7f7;
+}
+
+.history-table .coupon-container {
+    display: flex;
+    align-items: center;
+}
+
+.ngdialog-wallet-page .bonus-history form fieldset {
+    padding: 10px;
+    margin-bottom: 0;
+    background-color: #f7f7f7;
+}
+
+.ngdialog-wallet-page .transfer .won-text {
+    position: absolute;
+    top: 43px;
+    right: 10px;
+    margin: 0;
+    font-size: 13px;
+    color: #63626a;
+}
+
+.ngdialog-wallet-page .form-control.wonText {
+    padding-right: 25px;
+    border-radius: 0;
+    border: 1px solid #f2f2f2;
+    color: #08bbff;
+    background: #f7f7f7;
+}
+
+.ngdialog-wallet-page .won-text.deposit,
+.ngdialog-wallet-page .won-text.withdraw,
+.ngdialog-wallet-page .won-text.bonus {
+    position: absolute;
+    top: 8px;
+    right: 25px;
+    margin: 0;
+    color: #63626a;
+}
+
+.ngdialog-wallet-page select {
+    background: url(/common/images/chevron-down-black.png) center right 15px no-repeat #f7f7f7;
+    border-radius: 0;
+    border-radius: 0;
+    border: 1px solid #f2f2f2;
+    color: #63626a;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-main-default.ngdialog-wallet .ngdialog-content {
+    width: 1024px;
+}
+
+.alert-danger p {
+    font-size: 13px;
+}
+
+.sw-title {
+    color: black;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sw-required {
+    color: darkred;
+}
+
+.ngdialog.ngdialog-theme-default.ngdialog-settlementwithdraw .ngdialog-content {
+    width: 627px;
+}
+
+.ngdialog.ngdialog-wallet .ngdialog-wallet-page .balance-overflow {
+    height: 500px;
+    overflow: auto;
+}
+
+.ngdialog-wallet-page .balance-overflow .category {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 30px;
+    padding: 5px 10px;
+}
+
+.deposit fieldset,
+.withdraw fieldset {
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
+}
+
+.ngdialog-wallet-page button.btn-red {
+    border: none;
+    margin: 0 1px;
+    color: #fff;
+    height: 34px;
+    flex: auto;
+}
+
+.btn-clear {
+    background: #2a2933;
+    border: 1px solid #303030;
+}
+
+.ngdialog-wallet-page .withdraw .btn-primary.btn-block,
+.ngdialog-wallet-page .deposit .btn-primary.btn-block,
+.ngdialog-wallet-page .change-password .btn-primary.btn-block,
+.ngdialog-wallet-page .withdraw .btn-black.btn-block,
+.ngdialog-wallet-page .deposit .btn-black.btn-block,
+.ngdialog-wallet-page .change-password .btn-black.btn-block {
+    line-height: 30px;
+    width: 436px;
+    margin: 0 auto;
+}
+
+.ngdialog-wallet-page hr {
+    border-top: 1px solid #f2f2f2;
+}
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+    background-color: #f7f7f7;
+    opacity: 1;
+    color: #ccc;
+}
+
+.ngdialog-wallet-page .ngdialog__content {
+    border: 1px solid #08bbff;
+}
+
+.btn-primary.btn-point {
+    width: calc(100% / 2 - 2px);
+    height: 45px;
+}
+
+.settlement-side-note .btn-sm.btn-primary {
+    line-height: 32px;
+    padding: 0 5px;
+    width: calc(100% / 2 - 5px);
+}
+
+.side-note .btn-sm.btn-primary {
+    line-height: 32px;
+    padding: 0 5px;
+    width: 100px;
+}
+
+.btn-primary.btn-point.active {
+    color: #fff;
+    background: #2a2933;
+    border-color: #08bbff;
+    transition: ease-in .5s;
+    outline: none;
+}
+
+button.btn.btn-black.btn-point.active {
+    background: #4bd5e9;
+    background: -moz-linear-gradient(top, #4bd5e9 0%, #01a5e2 100%);
+    background: -webkit-linear-gradient(top, #4bd5e9 0%, #01a5e2 100%);
+    background: linear-gradient(to bottom, #4bd5e9 0%, #01a5e2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4bd5e9', endColorstr='#01a5e2', GradientType=0);
+    outline: none;
+}
+
+button.btn.btn-black.btn-point {
+    width: calc(100% / 2 - 2px);
+    height: 45px;
+}

@@ -1,0 +1,126 @@
+.main-page.main-first .banner-container {
+    background: url("/frontend/newheaven/common/images/main/main-banner.png") center bottom no-repeat;
+    height: 337px;
+    margin-top: 110px;
+}
+
+/*VIEW SPORTS*/
+
+.sports-page .main-container {
+    width: 100%;
+}
+
+.sports-view-nav .main-container {
+    padding-right: 24px;
+}
+
+.sports-view-nav {
+    background: #ffffff;
+    border-bottom: 3px solid #f7f7f7;
+    width: 100%;
+}
+
+.sports-view-nav .sports-nav {
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.sports-nav>li {
+    display: inline-block;
+    list-style: none;
+    font-size: 14px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    height: 46px;
+    line-height: 45px;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0 15px;
+    text-align: center;
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .sports-nav>li {
+        padding: 0 11px;
+    }
+}
+
+.sports-nav>li>a {
+    color: #999;
+}
+
+.sports-nav>li>a:hover,
+.sports-nav>li>a.active {
+    color: #08bbff;
+    text-decoration: none;
+}
+
+.sports-view-nav .user-balance-container {
+    width: 220px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 28px;
+}
+
+.sports-view-nav .user-balance-container .total-balance {
+    border: 1px solid #585858;
+    background: #302e36;
+    padding: 0 8px;
+    height: 31px;
+    width: 189px;
+    float: left;
+    letter-spacing: 0;
+}
+
+.sports-view-nav .user-balance-container .total-balance:hover {
+    border-color: #08bbff;
+    cursor: pointer;
+}
+
+.sports-view-nav .user-balance-container .show-wallet {
+    float: left;
+    width: 31px;
+    height: 31px;
+    background: #b2423f;
+    font-size: 25px;
+    text-align: center;
+    padding-right: 6px;
+}
+
+iframe#sports1,
+iframe#sports2,
+iframe#sports3 {
+    height: calc(100vh - 165px);
+    padding-bottom: 20px;
+}
+
+.sports-page .main-container .main-content .header-nav .header-nav__top .header-nav__top-item .sub-nav {
+    position: unset;
+}
+
+.sports-page .main-container .main-content .header-nav .header-nav__top .main-container {
+    display: flex;
+    justify-content: space-between;
+    width: 1010px;
+}
+
+.sports-page .main-container .main-content .header-nav .header-nav__menu .main-container {
+    width: 1010px;
+}
+
+.sports-view__container {
+    position: relative;
+    top: 110px;
+}
+
+.sports-view-nav .main-container {
+    width: 1010px;
+}
+
+.slot-box.slot-box-1065.bg-vs20olympgrace {
+    display: none;
+}
