@@ -185,7 +185,7 @@ namespace VanguardLTE\Games\SugarRush1000PM
                         $strOtherResponse = $strOtherResponse . '&rs_win=' . implode(',', $arr_rs_win);
                     }
                     if($str_pw != ''){
-                        $strOtherResponse = $strOtherResponse . '&pw=' . (str_replace(',', '', $str_pw) / $original_bet * $betline);
+                        $strOtherResponse = $strOtherResponse . '&pw=' . (str_replace(',', '', $str_pw) / $original_bet * $bet);
                     }
                     if($str_accv != ''){
                         $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0&accv=' . $str_accv;
