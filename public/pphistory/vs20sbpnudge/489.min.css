@@ -1,0 +1,169 @@
+.Progress {
+    position: relative
+}
+
+.Progress,
+.Progress__Bg {
+    height: 100%
+}
+
+.Progress__ActiveWrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0
+}
+
+.Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+.Progress--hearts,
+.Progress--items {
+    align-self: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Progress--hearts .Progress__Bg,
+.Progress--items .Progress__Bg {
+    position: absolute
+}
+
+.Progress--hearts .Progress__Hearts,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Hearts,
+.Progress--items .Progress__Items {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%
+}
+
+.Progress--hearts .Progress__Heart,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Heart,
+.Progress--items .Progress__Items {
+    position: relative
+}
+
+:root {
+    --slot-item-height: 65px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="13"] {
+    z-index: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "win carousel mult" "..  carousel coins"
+}
+
+.Spin .Carousel {
+    grid-area: carousel
+}
+
+.Spin .Multiplier {
+    grid-area: mult
+}
+
+.Spin .Coins {
+    grid-area: coins
+}
+
+.Spin .Win {
+    grid-area: win
+}
+
+.Coins {
+    background-image: -webkit-image-set(url(./images/vs20sbpnudge/bgCoins.png) 1x, url(./images/vs20sbpnudge/bgCoins@2x.png) 2x);
+    width: 64px;
+    height: 208px;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.Coins__Progress {
+    flex: 1;
+    padding: 27px 12px 2px;
+    box-sizing: border-box;
+    width: 100%
+}
+
+.Coins__Progress .Progress__Items {
+    height: 100%;
+    flex-direction: column-reverse;
+    justify-content: space-evenly
+}
+
+.Coins__Progress .Progress__Item--disabled {
+    opacity: .7
+}
+
+.Coins__Count {
+    height: 55px
+}
+
+.Coins__Count,
+.Multiplier,
+.Win {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Multiplier,
+.Win {
+    background-image: -webkit-image-set(url(./images/vs20sbpnudge/bgMult.png) 1x, url(./images/vs20sbpnudge/bgMult@2x.png) 2x);
+    width: 82px;
+    height: 50px;
+    align-self: center
+}
+
+.Win__Text {
+    width: 65px
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.MoneyScatter--m .MoneyScatter__Label {
+    font-size: 14px
+}
+
+.MoneyScatter--m .MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
