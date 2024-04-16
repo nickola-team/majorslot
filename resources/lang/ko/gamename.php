@@ -1218,7 +1218,13 @@ return [
         "PotofFortune" => "팟 오브 포츈",
         "RiseofSamurai4" => "라이즈 오브 사무라이 4",
         "BigBurgerLoaditupwithXTRACheese" => "빅 버거",
-        
+        "CyberHeist" => "사이버 하이스트",
+        "FirePortals" => "파이어 포탈즈",
+        "SugarRush1000" => "슈가 러시 1000",
+        "TheDogHouseDogorAlive" => "더 도그 하우스 - 도그 오어 얼라이브",
+        "AztecPowernudge" => "아즈텍 파워넛지",
+        "ReleasetheBison" => "릴리즈 더 바이슨",
+
         //Booongo
         "tigerstone" => "타이거 스톤",
 
