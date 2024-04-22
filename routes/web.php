@@ -1421,6 +1421,7 @@ Route::get('clientinfo', 'GameProviders\CQ9Controller@clientInfo');
 Route::get('clientinfo/toggle', 'GameProviders\CQ9Controller@toggle');
 Route::get('platform/', 'GameProviders\CQ9Controller@cq9History');
 Route::get('playerodh5/', 'GameProviders\CQ9Controller@cq9PlayerOrder');
+Route::get('verify/', 'GameProviders\CQ9Controller@cq9Verify');
 Route::get('api/player_betting/search_time', 'GameProviders\CQ9Controller@searchTime');
 Route::get('api/player_betting/detail_link', 'GameProviders\CQ9Controller@detailLink');
 Route::get('api/inquire/v1/db/wager', 'GameProviders\CQ9Controller@wager');
@@ -1430,6 +1431,7 @@ Route::get('gbapi/ginplayerhistory/inquire/v1/db/wager', 'GameProviders\CQ9Contr
 Route::get('feedback/', 'GameProviders\CQ9Controller@cq9Feedback');
 Route::get('/api/frontend/feedback/init', 'GameProviders\CQ9Controller@cq9FeedbackInit');
 Route::post('/api/frontend/feedback/create', 'GameProviders\CQ9Controller@cq9FeedbackCreate');
+Route::get('_next/image/', 'GameProviders\CQ9Controller@getImage');
 
 
 /**
