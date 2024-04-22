@@ -1,0 +1,146 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    flex-direction: row-reverse;
+    align-items: flex-end
+}
+
+.Spin .Prg {
+    width: 85px;
+    height: 190px;
+    margin: 0 0 5px 5px
+}
+
+.Spin .Prg .Image__Children {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+}
+
+.Spin .Prg__Section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2px
+}
+
+.Spin .Prg__Section .SectionWild {
+    width: 30px;
+    height: auto
+}
+
+.Spin .Prg__Section .SectionWild .ReelsSlot__ItemImg {
+    width: 100%
+}
+
+.Spin .Prg__Section .SectionScatters {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 18px;
+    width: 70px
+}
+
+.Spin .Prg__Section .SectionScatters:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs40stckwldlvl/prg/scattersBg__disabled.png) 1x, url(./images/vs40stckwldlvl/prg/scattersBg__disabled@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-size: contain
+}
+
+.Spin .Prg__Section .SectionScatters__Item {
+    width: 14px;
+    z-index: 1;
+    object-fit: contain
+}
+
+.Spin .Prg__Section .SectionScatters--active:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs40stckwldlvl/prg/scattersBg__active.png) 1x, url(./images/vs40stckwldlvl/prg/scattersBg__active@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Spin .Prg__Section-0 {
+    margin-bottom: 5px
+}
+
+.Spin .Prg__Section-0 .SectionWild .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs40stckwldlvl/spin/2.png) 1x, url(./images/vs40stckwldlvl/spin/2@2x.png) 2x)
+}
+
+.Spin .Prg__Section-0 .SectionScatters,
+.Spin .Prg__Section-0 .SectionWild .MoneyScatter__LabelWrap {
+    display: none
+}
+
+.Spin .Prg__Section-1 {
+    margin-bottom: 5px
+}
+
+.Spin .Prg__Section-1 .SectionScatters {
+    gap: 5px
+}
+
+.Spin .Prg__Section-1 .SectionScatters__Item {
+    width: 18px
+}
+
+.Spin .Prg__Section-2 {
+    margin-bottom: 3px
+}
+
+.Spin .Prg__Section-2 .SectionScatters {
+    gap: 5px
+}
+
+.Spin .Prg__Section-2 .SectionScatters__Item {
+    width: 16px
+}
+
+.Spin .Prg__Section--disabled .SectionWild .MoneyScatter__LabelWrap {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
