@@ -1661,7 +1661,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             return view('frontend.Default.games.cq9.playerorder');
         }
-
+        public function cq9Verify(\Illuminate\Http\Request $request)
+        {
+            return view('frontend.Default.games.cq9.verify');
+        }
+        public function getImage(\Illuminate\Http\Request $request)
+        {
+            if(isset($request->url))
+            {
+                if(strpos($request->url, 'logo.png'))
+                    return imagewebp(imagecreatefromwebp(public_path('/cq9history/verify/image/logo.webp')));
+                else if(strpos($request->url, 'arrow.png'))
+                return imagewebp(imagecreatefromwebp(public_path('/cq9history/verify/image/arrow.webp')));
+            }
+            else
+            {
+                return "";
+            }
+        }
         public function searchTime(\Illuminate\Http\Request $request)
         {
             $token = $request->token;
