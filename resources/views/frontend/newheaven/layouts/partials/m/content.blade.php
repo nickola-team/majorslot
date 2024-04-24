@@ -82,7 +82,31 @@
                     @endif>
             <img class="gamebutton__img" ng-src="/frontend/newheaven/mobile/common/images/main/mobile-game-button-5.jpg" src="/frontend/newheaven/mobile/common/images/main/mobile-game-button-5.jpg">
         </div>
-        <div id="halfwidth" ng-repeat="gamebutton in gamebuttons" ng-if="gamebutton.category != 'casino' &amp;&amp; gamebutton.category != 'jackpot' " class="game-buttons mini-games-open">
+        <div id="halfwidth" ng-repeat="gamebutton in gamebuttons" ng-if="gamebutton.category != 'casino' &amp;&amp; gamebutton.category != 'jackpot' " class="game-buttons mini-games-open" onclick=@auth
+                    @php
+                    $isMini = false;
+                    @endphp
+                    @foreach($categories AS $index=>$category)
+                        @if ($category->type =='pball')
+                            @if ($category->view == 0)
+                                "swal('지원하지 않는 게임입니다.');"
+                            @elseif ($category->status == 0)
+                                "swal('점검중입니다');"
+                            @else
+                                "minisGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
+                            @endif
+                                @php
+                                    $isMini = true;
+                                @endphp
+                            @break
+                        @endif
+                    @endforeach
+                    @if(!$isMini)
+                        "swal('지원하지 않는 게임입니다.');"
+                    @endif
+                @else
+                "navClick('login-popup')"
+                @endif>
             <img class="gamebutton__img" ng-src="/frontend/newheaven/mobile/common/images/main/mobile-game-button-4.jpg" src="/frontend/newheaven/mobile/common/images/main/mobile-game-button-4.jpg">
         </div>
         <div id="halfwidth" ng-repeat="gamebutton in gamebuttons" ng-if="gamebutton.category != 'casino' &amp;&amp; gamebutton.category != 'jackpot' " class="game-buttons " onclick=@auth
