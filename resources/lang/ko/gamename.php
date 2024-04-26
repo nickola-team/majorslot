@@ -1224,10 +1224,10 @@ return [
         "TheDogHouseDogorAlive" => "더 도그 하우스 - 도그 오어 얼라이브",
         "AztecPowernudge" => "아즈텍 파워넛지",
         "ReleasetheBison" => "릴리즈 더 바이슨",
-        "BigBassSecretsoftheGoldenLakePM" => "빅 배스 - 시크릿 오브 더 골든 레이크",
-        "RipeRewardsPM" => "라이프 리워즈",
-        "BarnyardMegahaysMegawaysPM" => "반야드 메가헤이즈",
-        "IceLobsterPM" => "아이스 랍스터",
+        "BigBassSecretsoftheGoldenLake" => "빅 배스 - 시크릿 오브 더 골든 레이크",
+        "RipeRewards" => "라이프 리워즈",
+        "BarnyardMegahaysMegaways" => "반야드 메가헤이즈",
+        "IceLobster" => "아이스 랍스터",
         //Booongo
         "tigerstone" => "타이거 스톤",
 
