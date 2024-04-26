@@ -1,0 +1,60 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 40px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none;
+    position: relative
+}
+
+.Collector {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative
+}
+
+.Collector:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20stickypos/spin/14.png) 1x, url(./images/vs20stickypos/spin/14@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.MoneyScatter__Money {
+    margin-top: 18px;
+    line-height: normal
+}
+
+.Spin {
+    align-items: center
+}
+
+.Spin .Multiplier {
+    width: 56px;
+    height: 50px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    line-height: normal
+}
+
+.Spin .Multiplier__Title {
+    width: 45px
+}
