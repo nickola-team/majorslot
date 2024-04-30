@@ -83,6 +83,7 @@ namespace VanguardLTE\Games\sunofegypt2bng
                     'context' => [
                         'actions' => ['spin'],
                         'current' => 'spins',
+                        'last_action' => 'init',
                         'last_args' => [
                             'bet_per_line' => $bets[6],
                             'lines' => $LINES,

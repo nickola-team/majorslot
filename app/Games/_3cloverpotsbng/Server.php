@@ -83,6 +83,7 @@ namespace VanguardLTE\Games\_3cloverpotsbng
                     'context' => [
                         'actions' => ['spin'],
                         'current' => 'spins',
+                        'last_action' => 'init',
                         'last_args' => [
                         ],
                         //'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
