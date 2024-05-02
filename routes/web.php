@@ -1511,7 +1511,7 @@ Route::prefix('booongo')->group(function () {
     ]);
     Route::get('/verify', [
         'as' => 'frontend.booongo.verify',
-        'uses' => 'GameProviders\BNGController@booongo_verify',
+        'uses' => 'GameProviders\KTENController@bngverify',
     ]);
 });
 

@@ -1500,6 +1500,173 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
         }
 
+
+        public function bngverify(\Illuminate\Http\Request $request){          
+
+            $gamecode = '254_Booongo';
+            if(isset($request->game_id)){
+                $gamecode = $request->game_id . '_Booongo';
+            }
+            
+            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";
+
+            $user = \Auth()->user();
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+
+                $url = config('app.kten_api') . '/api/checkUser';
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo request failed. ' . $response->body());
+                    return redirect($failed_url);
+                }
+                $data = $response->json();
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo result failed. ' . ($data==null?'null':$data['msg']));
+                    return redirect($failed_url);
+                }
+                if ($data['errorCode'] == 4)
+                {
+                    $alreadyUser = 0;
+                }
+            }
+            catch (\Exception $ex)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                return redirect($failed_url);
+            }
+            if ($alreadyUser == 0){
+                //create kten account
+                $params = [
+                    'agentId' => $op,
+                    'token' => $token,
+                    'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
+                {
+
+                    $url = config('app.kten_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : createAccount Boongo request failed. ' . $response->body());
+                        return redirect($failed_url);
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : createAccount Boongo result failed. ' . ($data==null?'null':$data['msg']));
+                        return redirect($failed_url);
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                }
+            }
+
+            
+
+            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+            if ($url == null)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'make game link error');
+                return redirect($failed_url);
+            }
+
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            if($response->status() == 302){
+                $parse = parse_url($url);
+                $parsedtoken = explode('&',$parse['query']);
+                $token = explode('=',$parsedtoken[0])[1];
+
+                $responseTxt = $response->body();
+                preg_match('/"desktop": {"client_url".+?server_url": "(?<VAL>[^"]*)/',$responseTxt,$matchresult);
+                $serverUrl = $matchresult[1];
+                preg_match('/"queue": "(?<VAL>[^"]*)/',$serverUrl,$matchresult1);
+                $queueValue = $matchresult1[1];
+                if(!isset($serverUrl) || !isset($queueValue)){
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game Response Value failed. ' . $response->body());
+                        return redirect($failed_url);
+                }
+
+                $params = [
+                    'command' => 'login',
+                    'request_id' => $this->randomString(),
+                    'token' => $token,
+                    'language' => "ko"
+                ];
+
+                try{
+                    $requestUrl = preg_replace('/{QUEUE}/',$queueValue,$serverUrl);
+                    $url = "https://" . $requestUrl . "?gsc=login";
+                    $response = Http::asForm()->post($url, $params);
+                    if (!$response->ok())
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
+                        return redirect($failed_url);
+                    }
+                    $responseData = json_decode($response);
+                    $session_id = $responseData->session_id;
+                    $huid = $responseData->huid;
+                    $params = [
+                        'command' => 'start',
+                        'request_id' => $this->randomString(),
+                        'session_id' => $session_id,
+                        'mode' => "play",
+                        'huid' => $huid
+                    ];
+
+                    try{
+                        $url = "https://" . $requestUrl . "?gsc=start";
+                        $response = Http::asForm()->post($url, $params);
+                        if (!$response->ok())
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
+                            return redirect($failed_url);
+                        }
+                        $responseStartData = json_decode($response);
+                        $verifyUrl = $responseStartData->authenticity_link;
+                        if(isset($verifyUrl)){
+                            return redirect($verifyUrl);
+                        }
+                        return redirect($failed_url);    
+                    }catch(\Exception $ex){
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game start Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                    }
+                }catch (\Exception $ex){
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                }
+            }
+        }
+
+        function randomString() {
+            $chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $result = '';
+            for ($i = 32; $i > 0; --$i){
+                $result += $chars[floor(mt_rand(0,1) * strlen($chars))];
+            } 
+            return $result;
+          }
+
     }
 
 }
