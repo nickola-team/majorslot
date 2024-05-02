@@ -1598,8 +1598,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 $responseTxt = $response->body();
                 preg_match('/"desktop": {"client_url".+?server_url": "(?<VAL>[^"]*)/',$responseTxt,$matchresult);
+                if(count($matchresult) < 2)
+                {
+                    return redirect($failed_url);
+                }
                 $serverUrl = $matchresult[1];
                 preg_match('/"queue": "(?<VAL>[^"]*)/',$serverUrl,$matchresult1);
+                if(count($matchresult1) < 2)
+                {
+                    return redirect($failed_url);
+                }
                 $queueValue = $matchresult1[1];
                 if(!isset($serverUrl) || !isset($queueValue)){
                     $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game Response Value failed. ' . $response->body());
@@ -1616,13 +1624,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 try{
                     $requestUrl = preg_replace('/{QUEUE}/',$queueValue,$serverUrl);
                     $url = "https://" . $requestUrl . "?gsc=login";
-                    $response = Http::asForm()->post($url, $params);
+                    $response = Http::withHeaders([
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json'
+                        ])->post($url, $params);
                     if (!$response->ok())
                     {
                         $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
                         return redirect($failed_url);
                     }
-                    $responseData = json_decode($response);
+                    $responseData = json_decode($response->body());
                     $session_id = $responseData->session_id;
                     $huid = $responseData->huid;
                     $params = [
@@ -1635,13 +1646,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                     try{
                         $url = "https://" . $requestUrl . "?gsc=start";
-                        $response = Http::asForm()->post($url, $params);
+                        $response = Http::withHeaders([
+                            'Accept' => 'application/json',
+                            'Content-Type' => 'application/json'
+                            ])->post($url, $params);
                         if (!$response->ok())
                         {
                             $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
                             return redirect($failed_url);
                         }
-                        $responseStartData = json_decode($response);
+                        $responseStartData = json_decode($response->body());
                         $verifyUrl = $responseStartData->authenticity_link;
                         if(isset($verifyUrl)){
                             return redirect($verifyUrl);
@@ -1649,7 +1663,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return redirect($failed_url);    
                     }catch(\Exception $ex){
                         $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game start Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
-                    return redirect($failed_url);
+                        return redirect($failed_url);
                     }
                 }catch (\Exception $ex){
                     $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
