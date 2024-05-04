@@ -1502,13 +1502,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
 
         public function bngverify(\Illuminate\Http\Request $request){          
-
+            set_time_limit(0);
             $gamecode = '254_Booongo';
             if(isset($request->game_id)){
-                $gamecode = $request->game_id . '_Booongo';
+                $gamecode = $request->game_id . '_Booongo';    //호출하려는 게임 아이디를 kten사 gamecode형식으로 전환
             }
             
-            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";
+            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";    //호출 요청 실패시 잘못된 링크로 이동
 
             $user = \Auth()->user();
             $op = config('app.kten_op');
@@ -1523,9 +1523,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $alreadyUser = 1;
             try
             {
-
-                $url = config('app.kten_api') . '/api/checkUser';
-                $response = Http::get($url, $params);
+                $url = config('app.kten_api') . '/api/checkUser';   //유저 확인
+                $response = Http::get($url, $params);   //get요청
                 if (!$response->ok())
                 {
                     $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo request failed. ' . $response->body());
@@ -1547,7 +1546,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
                 return redirect($failed_url);
             }
-            if ($alreadyUser == 0){
+            if ($alreadyUser == 0){    //유저가 없는 경우 창조
                 //create kten account
                 $params = [
                     'agentId' => $op,
@@ -1561,7 +1560,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
 
                     $url = config('app.kten_api') . '/api/createAccount';
-                    $response = Http::asForm()->post($url, $params);
+                    $response = Http::asForm()->post($url, $params);   //post요청
                     if (!$response->ok())
                     {
                         $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : createAccount Boongo request failed. ' . $response->body());
@@ -1581,31 +1580,42 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
 
-            
-
-            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);
+            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);   //kten사에서 게임링크 얻기
             if ($url == null)
             {
                 $this->ppverifyLog($gamecode, $user->id, 'make game link error');
                 return redirect($failed_url);
             }
 
-            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);  //url요청시 redirect되는 링크 (response->header('location')으로 호출)
             if($response->status() == 302){
-                $parse = parse_url($url);
+                $location = $response->header('location');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($location);
+                $parse = parse_url(urldecode($location));    //redirect한 링크를 decode
                 $parsedtoken = explode('&',$parse['query']);
-                $token = explode('=',$parsedtoken[0])[1];
+                $token = '';   //decode한 url에서 token 얻기
+                foreach($parsedtoken as $item)
+                {
+                    $arr_item = explode('=',$item);
+                    if(count($arr_item) == 2 && $arr_item[0]=='token')
+                    {
+                        $token = $arr_item[1];
+                        break;
+                    }
+                }
 
-                $responseTxt = $response->body();
+                $responseTxt = $response->body();  //response에서 호출할 url 얻어내기
                 preg_match('/"desktop": {"client_url".+?server_url": "(?<VAL>[^"]*)/',$responseTxt,$matchresult);
                 if(count($matchresult) < 2)
                 {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo client url match failed. ' . $response->body());
                     return redirect($failed_url);
                 }
                 $serverUrl = $matchresult[1];
-                preg_match('/"queue": "(?<VAL>[^"]*)/',$serverUrl,$matchresult1);
+                preg_match('/"queue": "(?<VAL>[^"]*)/',$responseTxt,$matchresult1);  //url의 {QUEUE}에 넣을 queue값 얻기
                 if(count($matchresult1) < 2)
                 {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo client url match 2 failed. ' . $response->body());
                     return redirect($failed_url);
                 }
                 $queueValue = $matchresult1[1];
@@ -1622,20 +1632,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ];
 
                 try{
-                    $requestUrl = preg_replace('/{QUEUE}/',$queueValue,$serverUrl);
-                    $url = "https://" . $requestUrl . "?gsc=login";
+                    $requestUrl = preg_replace('/{QUEUE}/',$queueValue,$serverUrl); //login요청 url생성
+                    $url = "https:" . $requestUrl . "?gsc=login";
                     $response = Http::withHeaders([
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json'
-                        ])->post($url, $params);
+                        ])->post($url, $params);    //post요청
                     if (!$response->ok())
                     {
                         $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
                         return redirect($failed_url);
                     }
-                    $responseData = json_decode($response->body());
+                    $responseData = json_decode($response->body());  //start요청에 필요한 파라메터 얻기
                     $session_id = $responseData->session_id;
-                    $huid = $responseData->huid;
+                    $huid = $responseData->user->huid;
                     $params = [
                         'command' => 'start',
                         'request_id' => $this->randomString(),
@@ -1645,7 +1655,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ];
 
                     try{
-                        $url = "https://" . $requestUrl . "?gsc=start";
+                        $url = "https:" . $requestUrl . "?gsc=start";  //start요청
                         $response = Http::withHeaders([
                             'Accept' => 'application/json',
                             'Content-Type' => 'application/json'
@@ -1656,9 +1666,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             return redirect($failed_url);
                         }
                         $responseStartData = json_decode($response->body());
-                        $verifyUrl = $responseStartData->authenticity_link;
+                        $verifyUrl = $responseStartData->settings->authenticity_link;   //verify요청 링크
                         if(isset($verifyUrl)){
-                            return redirect($verifyUrl);
+                            return redirect($verifyUrl); 
                         }
                         return redirect($failed_url);    
                     }catch(\Exception $ex){
@@ -1673,11 +1683,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         function randomString() {
-            $chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
             $result = '';
-            for ($i = 32; $i > 0; --$i){
-                $result += $chars[floor(mt_rand(0,1) * strlen($chars))];
-            } 
+            for ($i = 0; $i < 32; $i++) {
+                $result .= $characters[random_int(0, $charactersLength - 1)];
+            }
             return $result;
           }
 
