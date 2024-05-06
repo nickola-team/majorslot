@@ -286,7 +286,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
 	Route::post('game/{game}/server', [
         'as' => 'frontend.game.server',
         'uses' => 'GamesController@server'
-    ]);    
+    ]);   
+    Route::post('game/{game}/gameService', [
+        'as' => 'frontend.game.gameService',
+        'uses' => 'GamesController@server'
+    ]);   
 	Route::get('game_result', [
         'as' => 'frontend.game_result',
         'uses' => 'GamesController@game_result',
@@ -1481,7 +1485,9 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
     Route::post('api/history/v2/action/children', 'GameProviders\PPController@children');    
     Route::get('session/play-verify/{gamecode}', 'GameProviders\PPController@verify');    
-    Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify');  
+    Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify'); 
+    Route::get('{game}/reloadBalance.do', 'GameProviders\PPController@pp_update'); 
+    Route::post('{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
 });
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
@@ -1508,6 +1514,10 @@ Route::prefix('booongo')->group(function () {
     Route::post('/mobilelog', [
         'as' => 'frontend.booongo.mobilelog',
         'uses' => 'GameProviders\BNGController@booongo_mobilelog',
+    ]);
+    Route::get('/verify', [
+        'as' => 'frontend.booongo.verify',
+        'uses' => 'GameProviders\KTENController@bngverify',
     ]);
 });
 

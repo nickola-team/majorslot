@@ -12,6 +12,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const KTEN_PROVIDER = 'kten';
         const KTEN_PREFIX = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
+        const KTEN_BNG_HREF = 'kten-bng';
         const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
             //==== SLOT ====
@@ -1050,7 +1051,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $promo->racewinners = $response->body();
                 }
 
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/games?' . $mgckey );
                 if ($response->ok())
                 {
                     $json_data = $response->json();
@@ -1499,6 +1500,202 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
         }
+
+
+        public function bngverify(\Illuminate\Http\Request $request){          
+            set_time_limit(0);
+            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";    //호출 요청 실패시 잘못된 링크로 이동
+            $gamecode = '254_Booongo';
+            $user = \Auth()->user();
+            if(isset($request->game_id)){
+                $game = KTENController::getGameObj($request->game_id . '_Booongo');
+                if ($game == null)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : there is no game, gamecode=' . $request->game_id);
+                    return redirect($failed_url);
+                }
+                $gamecode = $request->game_id . '_Booongo';    //호출하려는 게임 아이디를 kten사 gamecode형식으로 전환
+            }
+            $op = config('app.kten_op');
+            $token = config('app.kten_key');
+            //check kten account
+            $params = [
+                'agentId' => $op,
+                'token' => $token,
+                'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                'time' => time(),
+            ];
+            $alreadyUser = 1;
+            try
+            {
+                $url = config('app.kten_api') . '/api/checkUser';   //유저 확인
+                $response = Http::get($url, $params);   //get요청
+                if (!$response->ok())
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo request failed. ' . $response->body());
+                    return redirect($failed_url);
+                }
+                $data = $response->json();
+                if ($data==null || ($data['errorCode'] != 0 && $data['errorCode'] != 4))
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo result failed. ' . ($data==null?'null':$data['msg']));
+                    return redirect($failed_url);
+                }
+                if ($data['errorCode'] == 4)
+                {
+                    $alreadyUser = 0;
+                }
+            }
+            catch (\Exception $ex)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                return redirect($failed_url);
+            }
+            if ($alreadyUser == 0){    //유저가 없는 경우 창조
+                //create kten account
+                $params = [
+                    'agentId' => $op,
+                    'token' => $token,
+                    'userId' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id),
+                    'time' => time(),
+                    'email' => self::KTEN_PPVERIFY_PROVIDER . sprintf("%04d",$user->id) . '@masu.com',
+                    'password' => '111111'
+                ];
+                try
+                {
+
+                    $url = config('app.kten_api') . '/api/createAccount';
+                    $response = Http::asForm()->post($url, $params);   //post요청
+                    if (!$response->ok())
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : createAccount Boongo request failed. ' . $response->body());
+                        return redirect($failed_url);
+                    }
+                    $data = $response->json();
+                    if ($data==null || $data['errorCode'] != 0)
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : createAccount Boongo result failed. ' . ($data==null?'null':$data['msg']));
+                        return redirect($failed_url);
+                    }
+                }
+                catch (\Exception $ex)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : checkUser Boongo Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                }
+            }
+
+            $url = KTENController::makegamelink($gamecode, $user, self::KTEN_PPVERIFY_PROVIDER);   //kten사에서 게임링크 얻기
+            if ($url == null)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'make game link error');
+                return redirect($failed_url);
+            }
+
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);  //url요청시 redirect되는 링크 (response->header('location')으로 호출)
+            if($response->status() == 302){
+                $location = $response->header('location');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($location);
+                $parse = parse_url(urldecode($location));    //redirect한 링크를 decode
+                $parsedtoken = explode('&',$parse['query']);
+                $token = '';   //decode한 url에서 token 얻기
+                foreach($parsedtoken as $item)
+                {
+                    $arr_item = explode('=',$item);
+                    if(count($arr_item) == 2 && $arr_item[0]=='token')
+                    {
+                        $token = $arr_item[1];
+                        break;
+                    }
+                }
+
+                $responseTxt = $response->body();  //response에서 호출할 url 얻어내기
+                preg_match('/"desktop": {"client_url".+?server_url": "(?<VAL>[^"]*)/',$responseTxt,$matchresult);
+                if(count($matchresult) < 2)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo client url match failed. ' . $response->body());
+                    return redirect($failed_url);
+                }
+                $serverUrl = $matchresult[1];
+                preg_match('/"queue": "(?<VAL>[^"]*)/',$responseTxt,$matchresult1);  //url의 {QUEUE}에 넣을 queue값 얻기
+                if(count($matchresult1) < 2)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo client url match 2 failed. ' . $response->body());
+                    return redirect($failed_url);
+                }
+                $queueValue = $matchresult1[1];
+                if(!isset($serverUrl) || !isset($queueValue)){
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game Response Value failed. ' . $response->body());
+                        return redirect($failed_url);
+                }
+
+                $params = [
+                    'command' => 'login',
+                    'request_id' => $this->randomString(),
+                    'token' => $token,
+                    'language' => "ko"
+                ];
+
+                try{
+                    $requestUrl = preg_replace('/{QUEUE}/',$queueValue,$serverUrl); //login요청 url생성
+                    $url = "https:" . $requestUrl . "?gsc=login";
+                    $response = Http::withHeaders([
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json'
+                        ])->post($url, $params);    //post요청
+                    if (!$response->ok())
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
+                        return redirect($failed_url);
+                    }
+                    $responseData = json_decode($response->body());  //start요청에 필요한 파라메터 얻기
+                    $session_id = $responseData->session_id;
+                    $huid = $responseData->user->huid;
+                    $params = [
+                        'command' => 'start',
+                        'request_id' => $this->randomString(),
+                        'session_id' => $session_id,
+                        'mode' => "play",
+                        'huid' => $huid
+                    ];
+
+                    try{
+                        $url = "https:" . $requestUrl . "?gsc=start";  //start요청
+                        $response = Http::withHeaders([
+                            'Accept' => 'application/json',
+                            'Content-Type' => 'application/json'
+                            ])->post($url, $params);
+                        if (!$response->ok())
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login response failed. ' . $response->body());
+                            return redirect($failed_url);
+                        }
+                        $responseStartData = json_decode($response->body());
+                        $verifyUrl = $responseStartData->settings->authenticity_link;   //verify요청 링크
+                        if(isset($verifyUrl)){
+                            return redirect($verifyUrl); 
+                        }
+                        return redirect($failed_url);    
+                    }catch(\Exception $ex){
+                        $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game start Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                        return redirect($failed_url);
+                    }
+                }catch (\Exception $ex){
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : Boongo Game login Exception. Exception=' . $ex->getMessage() . '. PARAMS=' . json_encode($params));
+                    return redirect($failed_url);
+                }
+            }
+        }
+
+        function randomString() {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $result = '';
+            for ($i = 0; $i < 32; $i++) {
+                $result .= $characters[random_int(0, $charactersLength - 1)];
+            }
+            return $result;
+          }
 
     }
 
