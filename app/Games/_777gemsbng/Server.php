@@ -153,7 +153,7 @@ namespace VanguardLTE\Games\_777gemsbng
                 $Counter++;
 
                 $action = $slotEvent['action'];
-                $set_denominator = $slotEvent['set_denominator'];
+                // $set_denominator = $slotEvent['set_denominator'];
                 $quick_spin = $slotEvent['quick_spin'];
                 $sound = $slotEvent['sound'];
                 $autogame = $slotEvent['autogame'];

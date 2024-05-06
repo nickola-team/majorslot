@@ -646,6 +646,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $details = $bngLog->log;
             return view('frontend.Default.games.bng.' . $gameName, compact('details'));
         }
+        public function booongo_verify(\Illuminate\Http\Request $request)
+        {
+            if(!isset($request->game_id)){
+                return redirect("https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MWQ2YTI2N2NkNjk4MTFm");
+            }
+            return redirect("https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MWQ2YTI2N2NkNjk4MTFm");
+        }
     }
 
 }

@@ -177,7 +177,7 @@ namespace VanguardLTE\Games\bookofsunchoicebng
                 $linesId[24] = [3, 1, 3, 1, 3];
 
                 $action = $slotEvent['action'];
-                $set_denominator = $slotEvent['set_denominator'];
+                // $set_denominator = $slotEvent['set_denominator'];
                 $quick_spin = $slotEvent['quick_spin'];
                 $sound = $slotEvent['sound'];
                 $autogame = $slotEvent['autogame'];
