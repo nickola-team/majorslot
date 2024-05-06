@@ -1509,6 +1509,10 @@ Route::prefix('booongo')->group(function () {
         'as' => 'frontend.booongo.mobilelog',
         'uses' => 'GameProviders\BNGController@booongo_mobilelog',
     ]);
+    Route::get('/verify', [
+        'as' => 'frontend.booongo.verify',
+        'uses' => 'GameProviders\KTENController@bngverify',
+    ]);
 });
 
 Route::post('op/major/history/api/v1/game/list', [
