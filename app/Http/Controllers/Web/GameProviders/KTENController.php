@@ -12,6 +12,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const KTEN_PROVIDER = 'kten';
         const KTEN_PREFIX = 'kten';
         const KTEN_PP_HREF = 'kten-pp';
+        const KTEN_BNG_HREF = 'kten-bng';
         const KTEN_PPVERIFY_PROVIDER = 'vrf';
         const KTEN_GAME_IDENTITY = [
             //==== SLOT ====
@@ -1503,14 +1504,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public function bngverify(\Illuminate\Http\Request $request){          
             set_time_limit(0);
+            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";    //호출 요청 실패시 잘못된 링크로 이동
             $gamecode = '254_Booongo';
+            $user = \Auth()->user();
             if(isset($request->game_id)){
+                $game = KTENController::getGameObj($request->game_id . '_Booongo');
+                if ($game == null)
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'BNGVerify : there is no game, gamecode=' . $request->game_id);
+                    return redirect($failed_url);
+                }
                 $gamecode = $request->game_id . '_Booongo';    //호출하려는 게임 아이디를 kten사 gamecode형식으로 전환
             }
-            
-            $failed_url = "https://bng.games/verify?key=57:MjY4NnwyNjg2fDhmMGUxMDY2ZWQ3ODQ1YWY5MTI2N2NkNjk4MTFm";    //호출 요청 실패시 잘못된 링크로 이동
-
-            $user = \Auth()->user();
             $op = config('app.kten_op');
             $token = config('app.kten_key');
             //check kten account
