@@ -2026,5 +2026,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response($request->settings);
             }
         }
+        
+        public function pp_update($game, \Illuminate\Http\Request $request)
+        {
+            if (!isset($game))
+            {
+                return redirect()->route('frontend.auth.login');
+            }
+            $slot = null;
+            $userId = auth()->user()->id;
+            $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
+            $slotSettings = new $object($game, $userId);
+            $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+            if(!isset($Balance)){
+                $Balance = $slotSettings->GetBalance();
+            }
+            return 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
+        }
     }
 }
