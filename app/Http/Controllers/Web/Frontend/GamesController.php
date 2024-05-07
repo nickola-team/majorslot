@@ -583,13 +583,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
+            if(config('app.env') == 'production')
+            {
+                $url = str_replace('http://', 'https://', $url);
+            }
             $gameConfig = 
             [
                 "lobbyLaunched"=>false,
                 "jurisdiction"=>"99",
                 "openHistoryInWindow"=>false,
                 "RELOAD_JACKPOT"=>"/gs2c/jackpot/reload.do",
-                "styleName"=>"agst3_agst3",
+                "styleName"=> $styleName,
                 "SETTINGS"=>"/games/". $game->name . "/saveSettings.do",
                 "openHistoryInTab"=>false,
                 "replaySystemUrl"=> $replayUrl,
@@ -600,11 +604,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "vendor"=>"T",
                 "currency"=>"KRW",
                 "lang"=>"ko",
-                "datapath"=>  "/games/_". $game->name . "/common/v5/games-html5/games/vs/" . $game->label . "/",
+                "datapath"=>  "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common/v5/games-html5/games/vs/" . $game->label . "/",
                 "amountType"=>"COIN",
                 "LOGOUT"=>"/gs2c/logout.do",
                 "REGULATION"=>"/gs2c/regulation/process.do?symbol\u003dvswaysmegahays",
-                "datapath_alternative"=>"/games/_". $game->name . "/common/v5/games-html5/games/vs/" . $game->label . "/",
+                "datapath_alternative"=>"/games/_". preg_replace('/^[_]/', '', $game->name) . "/common/v5/games-html5/games/vs/" . $game->label . "/",
                 "replaySystemContextPath"=>"/ReplayService",
                 "sessionKey"=>["VC8hg9RNXC7HWDlDYQl7HtAGMLsPlAwoVA4ytczIT5TSynxyBzU1xjiit5G2TRqF3J7kVcb3Xs8dfBpKWIvlOw\u003d\u003d",
                 "r48/4M0kDw0ZUpNowc/CqA\u003d\u003d",
@@ -614,7 +618,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "accountType"=>"R",
                 "clock"=>"0",
                 "mgckey"=>"AUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467",
-                "gameService"=>$url . "/game/". $game->name . "/server",
+                "gameService"=> $url . "/game/". $game->name . "/gameService",
                 "gameVerificationURL"=>"/gs2c/session/verify/" . $game->label,
                 "RELOAD_BALANCE"=>"/gs2c/". $game->name . "/reloadBalance.do",
                 "currencyOriginal"=>"KRW",
