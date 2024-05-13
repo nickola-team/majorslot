@@ -1265,7 +1265,40 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($promo){
                 $data = $promo->games;
                 $json_data = json_decode($data, true);
-                $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                if(isset($json_data['gameLaunchURL']) && isset($json_data['lobbyCategories']))
+                {
+                    $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                }
+                else if(isset($json_data['data']) && count($json_data['data']) > 0)
+                {
+                    $multi_json = $json_data['data'][0];
+                    if(isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL']))
+                    {
+                        $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    }
+                    if(isset($multi_json['games']))
+                    {
+                        $user_id = \Illuminate\Support\Facades\Auth::user()->id;
+                        $lastPlayed = [];
+                        $statgames = \VanguardLTE\StatGame::where(['user_id' => $user_id, 'category_id' => 14])->groupby('game_id')->orderby('date_time', 'desc')->limit(8)->get();
+                        foreach($statgames as $stat)                        
+                        {
+                            foreach($multi_json['games'] as $index=>$game)
+                            {
+                                if($stat->game_item->label == $game['symbol'])
+                                {
+                                    $lastPlayed[] = $index;
+                                    break;
+                                }
+                            }   
+                        }
+                        if(count($lastPlayed) > 0)
+                        {
+                            $multi_json['lastPlayed'] = $lastPlayed;
+                        }
+                    }
+                    $json_data['data'][0] = $multi_json;
+                }
                 $data = json_encode($json_data);
             }
             else{
@@ -2025,6 +2058,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 \DB::commit();
                 return response($request->settings);
             }
+        }
+        
+        public function pp_update($game, \Illuminate\Http\Request $request)
+        {
+            if (!isset($game))
+            {
+                return redirect()->route('frontend.auth.login');
+            }
+            $slot = null;
+            $userId = auth()->user()->id;
+            $object = '\VanguardLTE\Games\\' . $game . '\SlotSettings';
+            $slotSettings = new $object($game, $userId);
+            $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+            if(!isset($Balance)){
+                $Balance = $slotSettings->GetBalance();
+            }
+            return 'balance=' . $Balance . '&balance_cash=' . $Balance . '&balance_bonus=0.00&na=s&stime=' . floor(microtime(true) * 1000);
         }
     }
 }
