@@ -1,0 +1,166 @@
+:root {
+    --slot-item-height: 52px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none;
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="12"] {
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemWrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.LinesSlot .ReelsSlot__ItemWrap:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20candybltz2/bg.png) 1x, url(./images/vs20candybltz2/bg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    background-size: 50px 50px
+}
+
+.LinesSlot .ReelsSlot__ItemWrap--tmb:before {
+    background: none
+}
+
+.Carousel__Controls {
+    left: -38px
+}
+
+.Carousel__Slide {
+    display: grid;
+    column-gap: 5px;
+    grid-template-areas: "win  ..        " "slot multiplier"
+}
+
+.Carousel__Slide .MultiplierStack {
+    grid-area: multiplier
+}
+
+.Carousel__Slide .LinesSlot {
+    grid-area: slot
+}
+
+.Carousel__Slide .TumblingWin {
+    grid-area: win
+}
+
+.TumblingWin {
+    margin-bottom: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: normal;
+    height: 27px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    background-image: -webkit-image-set(url(./images/vs20candybltz2/tumbWinBg.png) 1x, url(./images/vs20candybltz2/tumbWinBg@2x.png) 2x);
+    background-size: 135px 100%;
+    background-repeat: no-repeat;
+    background-position: 50%
+}
+
+.TumblingWin span {
+    white-space: nowrap;
+    width: 120px
+}
+
+.MoneyScatter__Label {
+    font-size: 14px;
+    z-index: 1
+}
+
+.MultiplierStack {
+    width: 72px;
+    background-image: -webkit-image-set(url(./images/vs20candybltz2/multPrgBg.png) 1x, url(./images/vs20candybltz2/multPrgBg@2x.png) 2x);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    padding: 27px 15px;
+    box-sizing: border-box
+}
+
+.MultiplierStack__Items {
+    width: 100%;
+    flex-direction: column-reverse;
+    height: 100%
+}
+
+.MultiplierStack__Item,
+.MultiplierStack__Items {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.MultiplierStack__Item {
+    flex: 1
+}
+
+.MultiplierStack__Item:after {
+    position: absolute;
+    background-image: -webkit-image-set(url(./images/vs20candybltz2/candy.png) 1x, url(./images/vs20candybltz2/candy@2x.png) 2x);
+    background-size: 41px 40px;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    content: "";
+    opacity: .3
+}
+
+.MultiplierStack__Item:nth-child(3) {
+    z-index: 1
+}
+
+.MultiplierStack__Item:nth-child(3):before {
+    position: absolute;
+    background-image: -webkit-image-set(url(./images/vs20candybltz2/multBg.png) 1x, url(./images/vs20candybltz2/multBg@2x.png) 2x);
+    content: "";
+    width: 62px;
+    height: 59px;
+    background-repeat: no-repeat;
+    background-position: 50%
+}
+
+.MultiplierStack__Item:nth-child(-n+2) .MoneyScatter__Label {
+    display: none
+}
+
+.WinLines-Block .SlotWrap__Field {
+    overflow: hidden
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

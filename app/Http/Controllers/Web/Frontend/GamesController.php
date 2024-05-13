@@ -583,10 +583,28 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         {
             $styleName = config('app.stylename');
             $replayUrl = config('app.replayurl');
+            $multiProductMiniLobby = false;
+            $promo = \VanguardLTE\PPPromo::take(1)->first();
+            if($promo->multiminilobby == 1)
+            {
+                $multiProductMiniLobby = true;
+            }
             if(config('app.env') == 'production')
             {
                 $url = str_replace('http://', 'https://', $url);
             }
+            $resource_type = '/v5';
+            // if(!file_exists(public_path() . '/games/_'. preg_replace('/^[_]/', '', $game->name) . '/common/games-html5/'))
+            // {
+            //     for($k = 1; $k < 10; $k++)
+            //     {
+            //         if(file_exists(public_path() . '/games/_'. preg_replace('/^[_]/', '', $game->name) . '/common/v' . $k))
+            //         {
+            //             $resource_type = '/v' . $k;
+            //             break;
+            //         }
+            //     }
+            // }
             $gameConfig = 
             [
                 "lobbyLaunched"=>false,
@@ -597,18 +615,18 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "SETTINGS"=>"/games/". $game->name . "/saveSettings.do",
                 "openHistoryInTab"=>false,
                 "replaySystemUrl"=> $replayUrl,
-                "multiProductMiniLobby"=>true,
+                "multiProductMiniLobby"=>$multiProductMiniLobby,
                 "ingameLobbyApiURL"=>"/gs2c/minilobby/games.json",
                 "environmentId"=>$game->original_id,
                 "historyType"=>"internal",
                 "vendor"=>"T",
                 "currency"=>"KRW",
                 "lang"=>"ko",
-                "datapath"=>  $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common/v5/games-html5/games/vs/" . $game->label . "/",
+                "datapath"=>  $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common". $resource_type ."/games-html5/games/vs/" . $game->label . "/",
                 "amountType"=>"COIN",
                 "LOGOUT"=>"/gs2c/logout.do",
-                "REGULATION"=>"/gs2c/regulation/process.do?symbol\u003dvswaysmegahays",
-                "datapath_alternative"=> $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common/v5/games-html5/games/vs/" . $game->label . "/",
+                "REGULATION"=>"/gs2c/regulation/process.do?symbol\u003d" . $game->label,
+                "datapath_alternative"=> $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common". $resource_type ."/games-html5/games/vs/" . $game->label . "/",
                 "replaySystemContextPath"=>"/ReplayService",
                 "sessionKey"=>["VC8hg9RNXC7HWDlDYQl7HtAGMLsPlAwoVA4ytczIT5TSynxyBzU1xjiit5G2TRqF3J7kVcb3Xs8dfBpKWIvlOw\u003d\u003d",
                 "r48/4M0kDw0ZUpNowc/CqA\u003d\u003d",
@@ -624,11 +642,11 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "currencyOriginal"=>"KRW",
                 "extend_events"=>"1",
                 "sessionTimeout"=>"30",
-                "CLOSE_GAME"=>"/gs2c/closeGame.do?symbol\u003dvswaysmegahays",
+                "CLOSE_GAME"=>"/gs2c/closeGame.do?symbol\u003d" . $game->label,
                 "region"=>"Asia",
                 "sessionKeyV2"=>["jbiB0Ul8cCVfgJtaiVvXtOCEyAISsPWXfaiMQ7hA7YA8lNcmcKbtIG4rCzqPj3QQ5Yviw+EyCZcnhAMA80Ao6GDfIvLQN+vE4exoUdB/ojDyT7OFeZhD8FGMit2Uoz3yhPf0PfZtFl3Y6rsbtwQNDke8jtPhWG6hHV0S5g5QOfc\u003d",
                 "Ve+/3hr3rhy+2g1zcD2DJt19d0lZWrPDqVUjwDgKjgvxE687aZVY8Ca4+4bAhiVhyO2VwJsTr7J3mn7P+RiRu/qxh3SX342OrQabjlIjBSAl13h/ik/mcWvxP1BQM0as1Mq+ttaCGdej0DK3nB9fAOkchUqkIy6MqPWu/cFrtng\u003d"],
-                "HISTORY"=>"/gs2c/lastGameHistory.do?symbol\u003dvswaysmegahays\u0026mgckey\u003dAUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467"
+                "HISTORY"=>"/gs2c/lastGameHistory.do?symbol\u003d" . $game->label . "\u0026mgckey\u003dAUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467"
             ];
 
             return json_encode($gameConfig);
