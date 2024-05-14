@@ -1051,7 +1051,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $promo->racewinners = $response->body();
                 }
 
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/minilobby/games?' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/games?' . $mgckey );
                 if ($response->ok())
                 {
                     $json_data = $response->json();
@@ -1059,30 +1059,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
                     $gIds = $ownCats->games->pluck('game_id')->toArray();
                     $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
-
-                    $lobbyCats = $json_data['lobbyCategories'];
-                    $filteredCats = [];
-                    foreach ($lobbyCats as $cat)
+                    $multiLobby = 0;
+                    if(isset($json_data['lobbyCategories']) || isset($json_data['gameLaunchURL']))
                     {
-                        $lobbyGames = $cat['lobbyGames'];
-                        $filteredGames = [];
-                        foreach ($lobbyGames as $game)
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat)
                         {
-                            foreach ($ownGames as $og)
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game)
                             {
-                                if ($og->label == $game['symbol'])
+                                foreach ($ownGames as $og)
                                 {
-                                    $filteredGames[] = $game;
-                                    break;
+                                    if ($og->label == $game['symbol'])
+                                    {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
                                 }
                             }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
                         }
-                        $cat['lobbyGames'] = $filteredGames;
-                        $filteredCats[] = $cat;
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
                     }
-                    $json_data['lobbyCategories'] = $filteredCats;
-                    $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    else if(isset($json_data['data']) && count($json_data['data']) > 0)
+                    {
+                        $multiLobby = 1;
+                        $multi_json = $json_data['data'][0];
+                        if(isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL']))
+                        {
+                            $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                        }
+                    }   
                     $promo->games = json_encode($json_data);
+                    $promo->multiminilobby = $multiLobby;
                 }
 
                 $promo->save();

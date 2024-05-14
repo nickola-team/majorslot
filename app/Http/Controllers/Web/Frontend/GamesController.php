@@ -356,8 +356,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
                 }
             }
-
-            return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
+            if(strpos($game->name, 'PM') !== false)
+            {                
+                $gameConfig = $this->getPPGameConfig($userId, $game, $request->root());
+                $mgckey = "AUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467";
+                $title = \Illuminate\Support\Facades\Lang::has('gamename.'.$game->title)? __('gamename.'.$game->title):$game->title;
+                return view('frontend.games.list.PPMain', compact('game', 'gameConfig','mgckey', 'title'));
+            }
+            else
+            {
+                return view('frontend.games.list.' . $game->name, compact('slot', 'game', 'is_api','envID', 'userId', 'styleName', 'replayUrl', 'cq_loadimg','pagelang'));
+            }
         }
         public function pball_go(\Illuminate\Http\Request $request)
         {
@@ -569,6 +578,78 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 abort(404);
             }
+        }   
+        public function getPPGameConfig($userId, $game, $url)
+        {
+            $styleName = config('app.stylename');
+            $replayUrl = config('app.replayurl');
+            $multiProductMiniLobby = false;
+            $promo = \VanguardLTE\PPPromo::take(1)->first();
+            if($promo->multiminilobby == 1)
+            {
+                $multiProductMiniLobby = true;
+            }
+            if(config('app.env') == 'production')
+            {
+                $url = str_replace('http://', 'https://', $url);
+            }
+            $resource_type = '/v5';
+            // if(!file_exists(public_path() . '/games/_'. preg_replace('/^[_]/', '', $game->name) . '/common/games-html5/'))
+            // {
+            //     for($k = 1; $k < 10; $k++)
+            //     {
+            //         if(file_exists(public_path() . '/games/_'. preg_replace('/^[_]/', '', $game->name) . '/common/v' . $k))
+            //         {
+            //             $resource_type = '/v' . $k;
+            //             break;
+            //         }
+            //     }
+            // }
+            $gameConfig = 
+            [
+                "lobbyLaunched"=>false,
+                "jurisdiction"=>"99",
+                "openHistoryInWindow"=>false,
+                "RELOAD_JACKPOT"=>"/gs2c/jackpot/reload.do",
+                "styleName"=> $styleName,
+                "SETTINGS"=>"/games/". $game->name . "/saveSettings.do",
+                "openHistoryInTab"=>false,
+                "replaySystemUrl"=> $replayUrl,
+                "multiProductMiniLobby"=>$multiProductMiniLobby,
+                "ingameLobbyApiURL"=>"/gs2c/minilobby/games.json",
+                "environmentId"=>$game->original_id,
+                "historyType"=>"internal",
+                "vendor"=>"T",
+                "currency"=>"KRW",
+                "lang"=>"ko",
+                "datapath"=>  $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common". $resource_type ."/games-html5/games/vs/" . $game->label . "/",
+                "amountType"=>"COIN",
+                "LOGOUT"=>"/gs2c/logout.do",
+                "REGULATION"=>"/gs2c/regulation/process.do?symbol\u003d" . $game->label,
+                "datapath_alternative"=> $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common". $resource_type ."/games-html5/games/vs/" . $game->label . "/",
+                "replaySystemContextPath"=>"/ReplayService",
+                "sessionKey"=>["VC8hg9RNXC7HWDlDYQl7HtAGMLsPlAwoVA4ytczIT5TSynxyBzU1xjiit5G2TRqF3J7kVcb3Xs8dfBpKWIvlOw\u003d\u003d",
+                "r48/4M0kDw0ZUpNowc/CqA\u003d\u003d",
+                "nfsH8UsO1bqZi/ohjw21/vhe8of3PaMILcnMvetLLvBmQECrM3wWurrX2dPybcdhcgTMhK8rFVZVtvdxv+XFI7AvU0qXZlu7UDFXDKnWVs+7AScd0ZDYepj1I98l6RoI68veAS/jr1jQmuGIUg/RwTEaqWpNiBkRsC2MyW+Hqa1m//VVDNJYrBwvtdoJdFX+MTEg3LriN0lxIaNG4iIWJYElwIEpcW/Qg0uQF1DPYf93jWfV+/0I8+p0GZO6/Nrg+lcr5GpWury7dqlR46MtDg\u003d\u003d"],
+                "showRealCash"=>"1",
+                "statisticsURL"=>"/gs2c/stats.do",
+                "accountType"=>"R",
+                "clock"=>"0",
+                "mgckey"=>"AUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467",
+                "gameService"=> $url . "/game/". $game->name . "/gameService",
+                "gameVerificationURL"=>"/gs2c/session/verify/" . $game->label,
+                "RELOAD_BALANCE"=>"/gs2c/". $game->name . "/reloadBalance.do",
+                "currencyOriginal"=>"KRW",
+                "extend_events"=>"1",
+                "sessionTimeout"=>"30",
+                "CLOSE_GAME"=>"/gs2c/closeGame.do?symbol\u003d" . $game->label,
+                "region"=>"Asia",
+                "sessionKeyV2"=>["jbiB0Ul8cCVfgJtaiVvXtOCEyAISsPWXfaiMQ7hA7YA8lNcmcKbtIG4rCzqPj3QQ5Yviw+EyCZcnhAMA80Ao6GDfIvLQN+vE4exoUdB/ojDyT7OFeZhD8FGMit2Uoz3yhPf0PfZtFl3Y6rsbtwQNDke8jtPhWG6hHV0S5g5QOfc\u003d",
+                "Ve+/3hr3rhy+2g1zcD2DJt19d0lZWrPDqVUjwDgKjgvxE687aZVY8Ca4+4bAhiVhyO2VwJsTr7J3mn7P+RiRu/qxh3SX342OrQabjlIjBSAl13h/ik/mcWvxP1BQM0as1Mq+ttaCGdej0DK3nB9fAOkchUqkIy6MqPWu/cFrtng\u003d"],
+                "HISTORY"=>"/gs2c/lastGameHistory.do?symbol\u003d" . $game->label . "\u0026mgckey\u003dAUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467"
+            ];
+
+            return json_encode($gameConfig);
         }
 
 
