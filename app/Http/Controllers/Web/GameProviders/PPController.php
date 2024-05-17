@@ -2011,7 +2011,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => true, 'msg' => 'Error'];
             }
         }
-
+        public function pp_stats(\Illuminate\Http\Request $request)
+        {
+            return response()->json([]);
+        }
         public static function toJson($data) {
             $keys = explode('&', $data);
             $response = [];
