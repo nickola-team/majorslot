@@ -1228,6 +1228,11 @@ return [
         "RipeRewards" => "라이프 리워즈",
         "BarnyardMegahaysMegaways" => "반야드 메가헤이즈",
         "IceLobster" => "아이스 랍스터",
+        "CandyBlitzBombs" => "캔디 블리츠 밤즈",
+        "JokersJewelsWild" => "조커스 쥬웰스 와일드",
+        "LobsterBobsSeaFoodandWinIt" => "랍스타 밥스",
+        "HeroicSpins" => "히로익 스핀즈",
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
