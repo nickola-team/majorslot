@@ -1324,6 +1324,9 @@ return [
         "_3egyptchests" => "3 이집트 체스트",
         "lioncoins" => "라이온 코인즈",
         "_3cloverpots" => "3 클로버 팟스",
+        "_3chinapots" => "3 차이나 팟스",
+        "fishingbear" => "피신 베어",
+        "superstickypiggy" => "슈퍼 스티키 피기",
 
         // CQ9
         "Double Fly" => "더블 플라이",
