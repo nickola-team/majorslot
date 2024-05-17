@@ -1,0 +1,67 @@
+:root {
+    --slot-item-height: 72px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter__Label {
+    margin-top: 15px;
+    align-self: flex-end;
+    margin-right: 3px;
+    font-size: 14px
+}
+
+.Multiplier {
+    width: 50px;
+    height: 38px;
+    background-image: -webkit-image-set(url(./images/vs20shootstars/multBg.png) 1x, url(./images/vs20shootstars/multBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    margin-top: 20px
+}
+
+.BonusWheel,
+.Multiplier {
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.BonusWheel {
+    width: 250px;
+    height: 171px;
+    background-image: -webkit-image-set(url(./images/vs20shootstars/wheel.png) 1x, url(./images/vs20shootstars/wheel@2x.png) 2x)
+}
+
+.BonusWheel__Fs {
+    position: absolute;
+    margin-top: 80px;
+    width: 100%
+}
+
+.BonusWheel__Mult {
+    margin-top: 40px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

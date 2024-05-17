@@ -1488,6 +1488,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify'); 
     Route::get('{game}/reloadBalance.do', 'GameProviders\PPController@pp_update'); 
     Route::post('{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
+    Route::post('stats.do', 'GameProviders\PPController@pp_stats');
 });
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
