@@ -410,17 +410,22 @@ namespace VanguardLTE\Games\superstickypiggybng
                     // $_winAvaliableMoney = 1000;
                     $isBuyFreeSpin = false;
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
+                        $pur = -1;
                         $allBet = $betline * $LINES;                        
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', -1);
                         if($action['name'] == 'buy_spin'){
                             if($action['params']['paid_feature'] == 'fs'){
+                                $pur = 0;
                                 $allBet = $allBet * 100;
+                                $selectedMode = 'fs';
                             }else if($action['params']['paid_feature'] == 'sfs'){
+                                $pur = 1;
                                 $allBet = $allBet * 200;
-                            }                        
+                                $selectedMode = 'sfs';
+                            }                   
                             
                             $isBuyFreeSpin = true;
-                            $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 1);
+                            $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', $pur);
                             $winType = 'bonus';
                         }
                         $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
@@ -704,20 +709,25 @@ namespace VanguardLTE\Games\superstickypiggybng
                 }
                 $objRes['context']['last_action'] = $action['name'];
                 $allBet = $betline * $LINES;
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
-                    if($selectedMode == 'fs'){
-                        $allBet = $allBet * 100;
-                    }else if($selectedMode == 'sfs'){
-                        $allBet = $allBet * 200;
-                    }
+                // if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
+                //     if($selectedMode == 'fs'){
+                //         $allBet = $allBet * 100;
+                //     }else if($selectedMode == 'sfs'){
+                //         $allBet = $allBet * 200;
+                //     }
                     
-                }}
+                // }}
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
+                    $allBet = $allBet * 200;
+                }}else if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 0){
+                    $allBet = $allBet * 100;
+                }
                 $slotSettings->SaveLogReport(json_encode($objRes), $allBet, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 if($action['name'] == 'spin' || $action['name'] == 'freespin' || $action['name'] == 'buy_spin' || $action['name'] == 'freespin_stop' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
                     if($action['name'] == 'spin'){
-                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES, $totalWin, $objRes, $slotSettings);
-                    }else if($action['name'] == 'buy_spin'){
-                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES * 50, $totalWin, $objRes, $slotSettings);
+                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $allBet, $totalWin, $objRes, $slotSettings);
+                    }else if($action['name'] == 'buy_spin'){                        
+                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $allBet, $totalWin, $objRes, $slotSettings);
                     }else{
                         $this->SaveBNGLogParse($beforeBalance, $BALANCE, NULL, $totalWin, $objRes, $slotSettings);
                     }
