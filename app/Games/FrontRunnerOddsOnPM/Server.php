@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
+namespace VanguardLTE\Games\FrontRunnerOddsOnPM
 {
     class Server
     {
@@ -59,7 +59,7 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                 $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 10);
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [17,17,17,17,17,17,17,17,17,17,17,17,3,10,4,7,13,17,6,8,9,6,8,17,4,12,5,4,13,17]);
+                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [13,11,13,10,13,11,9,10,9,10,12,10,9,13,9]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
@@ -113,11 +113,10 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     $str_srf = $stack['srf'];
                     $str_trail = $stack['trail'];
                     $str_stf = $stack['stf'];
-                    $str_apwa = $stack['apwa'];
+                    $str_pw = $stack['pw'];
                     $str_apv = $stack['apv'];
                     $str_apt = $stack['apt'];
                     $str_psym = $stack['psym'];
-                    $str_wlc_v = $stack['wlc_v'];
                     $fsmax = $stack['fsmax'];
                     $fsmore = $stack['fsmore'];
                     $strWinLine = $stack['win_line'];
@@ -145,14 +144,13 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                         $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
                     }
                     if($str_apv != ''){
-                        $arr_apwa = explode(',', $str_apwa);
-                        for($k = 0; $k<count($arr_apwa); $k++){
-                            $apwa_win = str_replace(',', '', $arr_apwa[$k]) / $original_bet * $bet;
-                            $arr_apwa[$k] = $apwa_win;
-                        }                    
-                        $str_apwa = implode(',', $arr_apwa);
+                        $str_apaw = $str_apv * $bet;
                         $strOtherResponse = $strOtherResponse . '&apv=' . $str_apv . '&apt=' . $str_apt . '&apwa=' . $str_apwa;
-                    }                    
+                    }    
+                    if($str_pw != ''){
+                        $str_pw = str_replace(',', '', $str_pw) / $original_bet * $bet;
+                        $strOtherResponse = $strOtherResponse . '&pw=' . $str_pw;
+                    }
                     if($str_psym != ''){
                         $arr_psym = explode('~', $str_psym);
                         $arr_psym[1] = str_replace(',', '', $arr_psym[1]) / $original_bet * $bet;
@@ -169,16 +167,6 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                         }
                         $strWinLine = implode('&', $arr_lines);
                         $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
-                    }
-                    if($str_wlc_v != ''){
-                        $arr_lines = explode(';', $str_wlc_v);
-                        for($k = 0; $k < count($arr_lines); $k++){
-                            $arr_sub_lines = explode('~', $arr_lines[$k]);
-                            $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $bet;
-                            $arr_lines[$k] = implode('~', $arr_sub_lines);
-                        }
-                        $str_wlc_v = implode(';', $arr_lines);
-                        $strOtherResponse = $strOtherResponse . '&wlc_v=' . $str_wlc_v;
                     }
                     if( $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') > 0 || $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 )
                     {
@@ -198,7 +186,7 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                 }
                     
                 $Balance = $slotSettings->GetBalance();
-                $response = 'def_s=17,17,17,17,17,17,17,17,17,17,17,17,3,10,4,7,13,17,6,8,9,6,8,17,4,12,5,4,13,17&balance='. $Balance .'&cfgs=11022&ver=3&index=1&balance_cash='. $Balance .'&def_sb=7,11,12,7,10,17&reel_set_size=3&def_sa=5,9,12,6,9,17&reel_set=0&balance_bonus=0.00&na=s&scatters=1~1000,100,50,20,10,5,2,1,0,0~0,0,0,0,0,0,0,0,0,0~1,1,1,1,1,1,1,1,1,1;14~0,0,0,0,0,0~0,0,0,0,0,0~1,1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"124814",max_rnd_win:"3000",max_rnd_sim_a:"1",max_rnd_win_a:"2000",max_rnd_hr_a:"63543"}}&wl_i=tbm~3000;tbm_a~2000&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&sa=5,9,12,6,9,17&sb=7,11,12,7,10,17&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&purInit_e=1&sh=5&wilds=2~0,0,0,0,0,0~1,1,1,1,1,1&bonuses=0&st=rect&c='.$bet.'&sw=6&sver=5&bls=10,15&counter=2&paytable=0,0,0,0,0,0;0,0,0,0,0,0,0,0,0,0;0,0,0,0,0,0;5000,1000,500,200,20,0;1000,500,200,100,10,0;500,200,100,50,5,0;200,100,50,20,0,0;200,100,50,20,0,0;100,50,20,10,0,0;100,50,20,10,0,0;100,50,20,10,0,0;50,20,10,5,0,0;50,20,10,5,0,0;50,20,10,5,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0;0,0,0,0,0,0&l=10&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=1,7,11,9,10,8,12,11,11,11,3,6,1,10,1,14,7,12,12,12,4,11,9,11,9,13,8,5,8,9,9,9,7,5,6,13,12,13,10,9,11,10,10,10,12,13,12,6,11,13,14,10,8,12~9,7,11,13,10,7,1,1,6,12,12,12,13,4,5,12,13,10,5,12,6,8,8,13,13,13,3,9,12,9,13,8,12,11,11,4,11,10~13,13,10,10,13,11,9,12,11,11,11,6,1,11,8,1,12,1,6,10,12,12,12,13,13,11,11,5,8,9,12,11,13,13,13,8,9,6,4,3,10,7,14,7,10,10,10,12,1,8,14,12,5,9,14,4,7~4,7,12,1,13,13,11,11,11,10,9,9,6,8,9,12,12,12,7,13,10,6,12,12,11,13,13,13,11,1,1,8,3,4,10,10,10,12,7,5,8,5,11,10,11~10,13,11,5,1,14,7,11,11,11,4,6,13,10,12,1,12,12,7,12,12,12,9,8,14,11,1,11,1,8,13,13,13,9,8,9,12,10,7,6,11,3,9,9,9,10,6,14,5,9,8,12,11,13,13~17,17,17,17,17&s='.$lastReelStr.'&reel_set2=11,6,9,6,8,11,11,11,11,9,13,5,14,11,10,12,12,12,12,4,12,5,14,3,7,13,13,13,13,11,8,8,11,8,7,7,7,7,10,11,14,5,13,13,10,9,9,9,9,6,7,11,3,8,9,10,10,10,10,4,7,10,10,9,12,9,7~10,3,13,11,4,11,11,11,11,12,8,8,12,11,8,6,12,12,12,12,4,7,6,13,6,9,13,13,13,13,10,9,10,8,9,5,12,8,8,8,8,7,10,5,9,8,6,9,9,9,9,11,7,5,12,7,9,10,10,10,10,12,9,8,10,3,13,12,4~7,7,8,8,16,11,11,11,11,6,4,9,8,8,11,14,10,12,12,12,12,9,8,13,10,6,13,7,13,13,13,13,9,8,4,4,16,15,7,7,7,7,9,12,10,9,16,5,9,8,8,8,8,6,12,12,9,3,13,11,3,9,9,9,9,15,7,8,10,14,5,10,10,10,10,15,13,6,10,7,13,5,6,13~9,10,9,11,11,11,11,12,13,7,3,4,6,5,12,12,12,12,6,11,7,7,8,9,4,13,13,13,13,8,10,6,7,10,8,8,8,8,10,12,5,9,4,10,5,9,9,9,9,13,11,8,11,11,13,8,10,10,10,10,9,6,8,6,3,9,7,12~6,7,8,6,13,9,5,11,11,11,11,6,8,6,11,13,3,10,5,12,12,12,12,14,9,9,14,10,10,12,12,13,13,13,13,8,7,7,11,7,4,10,6,3,8,8,8,8,9,12,11,10,12,10,13,9,9,9,9,8,12,4,7,11,5,8,13,10,10,10,10,8,10,14,8,12,12,10,12,5,9~13,10,9,10,9,11,11,11,11,3,8,13,4,6,12,12,12,12,8,10,10,11,6,7,13,13,13,13,11,8,12,6,8,11,8,8,8,8,7,6,13,9,12,5,9,9,9,9,5,8,4,10,10,9,10,10,10,10,7,13,5,8,7,13,3,13&reel_set1=9,11,13,10,7,5,11,11,11,12,4,3,13,8,1,10,12,12,12,5,6,11,9,7,12,11,9,9,9,12,1,12,13,8,6,1,10,10,10,9,13,14,8,14,10,14,11~1,12,6,11,4,12,10,8,3,4,12,12,12,11,11,1,13,10,5,8,11,9,7,13,13,13,5,8,7,6,10,13,6,1,13,12,9,12,9~9,14,13,5,9,13,7,10,11,11,11,8,1,6,10,3,13,11,12,9,12,12,12,8,10,8,6,7,9,11,1,13,13,13,8,12,13,14,4,11,11,13,12,10,10,10,1,12,14,7,4,11,12,10,6,5~12,8,3,7,13,1,11,11,11,7,5,10,12,1,1,12,12,12,11,9,12,4,13,11,6,13,13,13,7,13,9,13,8,5,4,10,10,10,8,6,10,6,11,10,9,12~12,7,12,1,13,13,11,11,11,5,8,5,11,11,12,10,12,12,12,9,6,4,3,12,14,9,13,13,13,14,8,9,1,11,10,13,9,9,9,13,10,14,1,7,6,8,11~17,17,17,17,17&purInit=[{bet:1000,type:"fs"}]&total_bet_min=20.00';
+                $response = 'def_s=13,11,13,10,13,11,9,10,9,10,12,10,9,13,9&balance='. $Balance .'&cfgs=11335&ver=3&index=1&balance_cash='. $Balance .'&def_sb=10,13,8,11,11&reel_set_size=8&def_sa=10,12,11,12,12&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"427023",max_rnd_win:"3000",max_rnd_win_a:"2000",max_rnd_hr_a:"259159"}}&wl_i=tbm~3000;tbm_a~2000&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) . '&sa=10,12,11,12,12&sb=10,13,8,11,11&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&purInit_e=1&sh=3&wilds=2~2000,200,50,5,0~1,1,1,1,1;3~0,0,0,0,0~1,1,1,1,1;4~0,0,0,0,0~1,1,1,1,1;5~0,0,0,0,0~1,1,1,1,1&bonuses=0&st=rect&c='.$bet.'&sw=5&sver=5&bls=10,15&counter=2&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;2000,200,50,5,0;1000,150,30,0,0;500,100,20,0,0;60,20,10,0,0;60,20,10,0,0;30,10,5,0,0;30,10,5,0,0;30,10,5,0,0&l=10&total_bet_max='.$slotSettings->game->rezerv.'&reel_set0=11,12,1,13,2,6,7,8,9,10~13,12,1,13,2,12,11,8,9,10,7,12,6,10,11~11,12,1,13,2,6,7,8,9,10~11,12,1,13,2,6,7,8,9,10~11,12,1,13,2,6,7,8,9,10&s='.$lastReelStr.'&accInit=[{id:0,mask:"h1;h2;h3;wp1;wp2;wp3;t;mul"}]&reel_set2=11,12,13,6,7,8,9,10~12,11,8,10,12,13,11,1,7,9,6,13~11,12,1,13,6,7,8,9,10~10,12,11,7,6,11,12,13,10,13,10,8,9~11,12,13,6,7,8,9,10&reel_set1=11,12,1,13,6,7,8,9,10~8,9,12,13,9,6,11,12,11,7,12,13,10~7,12,6,11,9,8,10,11,13,9,10,12,13~11,12,1,13,6,7,8,9,10~12,6,7,8,13,9,10,13,9,10,11,12&reel_set4=11,12,1,13,6,7,8,9,10~12,9,13,7,11,8,10,9,13,12,10,12,6,11~11,12,1,13,6,7,8,9,10~8,10,13,7,9,13,9,10,11,12,10,11,6,12~6,11,12,11,13,10,13,10,9,8,13,9,12,7&purInit=[{bet:1000,type:"default"}]&reel_set3=6,13,12,7,9,10,13,10,8,9,11,12,11,13~12,6,13,11,9,11,13,7,12,1,8,10,12,10~11,12,13,6,7,8,9,10~11,12,1,13,6,7,8,9,10~11,12,13,6,7,8,9,10&reel_set6=12,13,12,13,11,9,12,10,7,2,9,10,13,11,10,12,8,12,13,6,11,13,10,12,8,13,12,8,12~11,3,8,10,12,10,8,12,13,11,10,13,6,9,13,9,7,12,11,2,13,12,13,12~7,10,12,4,13,2,8,12,11,10,9,6,11,12,13~13,12,9,13,9,11,13,10,12,8,7,13,6,12,2,12,11,10,5~13,9,12,8,12,13,7,12,10,13,12,11,9,11,13,11,2,10,6&reel_set5=11,12,13,2,6,7,8,9,10~11,12,13,2,3,6,7,8,9,10~6,9,13,7,12,8,11,9,10,2,4,12,13,10,12~11,12,13,2,5,6,7,8,9,10~10,2,9,13,12,11,10,11,6,12,8,13,11,9,12,7&reel_set7=2,7,8,9~2,8,9~2,7,8,9~2,7,8,9,10~9,12,13,6,13,8,11,13,9,12,10,12,11,10,2,7&total_bet_min=20.00';
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
@@ -354,9 +342,8 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                 $str_sa = '';
                 $str_sb = '';
                 $str_apv = '';
-                $str_apwa = '';
+                $str_pw = '';
                 $str_apt = '';
-                $str_wlc_v = '';
                 $str_psym = '';
                 if($slotEvent['slotEvent'] == 'freespin'){
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
@@ -370,10 +357,9 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     $str_sts = $stack['sts'];
                     $str_sty = $stack['sty'];
                     $str_srf = $stack['srf'];
-                    $str_apwa = $stack['apwa'];
+                    $str_pw = $stack['pw'];
                     $str_apv = $stack['apv'];
                     $str_apt = $stack['apt'];
-                    $str_wlc_v = $stack['wlc_v'];
                     $str_psym = $stack['psym'];
                     $fsmax = $stack['fsmax'];
                     $fsmore = $stack['fsmore'];
@@ -398,10 +384,9 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     $str_sts = $stack[0]['sts'];
                     $str_sty = $stack[0]['sty'];
                     $str_srf = $stack[0]['srf'];
-                    $str_apwa = $stack[0]['apwa'];
+                    $str_pw = $stack[0]['pw'];
                     $str_apv = $stack[0]['apv'];
                     $str_apt = $stack[0]['apt'];
-                    $str_wlc_v = $stack[0]['wlc_v'];
                     $str_psym = $stack[0]['psym'];
                     $fsmax = $stack[0]['fsmax'];
                     $fsmore = $stack[0]['fsmore'];
@@ -420,30 +405,16 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     }
                     $strWinLine = implode('&', $arr_lines);
                 } 
-                if($str_wlc_v != ''){
-                    $arr_lines = explode(';', $str_wlc_v);
-                    for($k = 0; $k < count($arr_lines); $k++){
-                        $arr_sub_lines = explode('~', $arr_lines[$k]);
-                        $arr_sub_lines[1] = str_replace(',', '', $arr_sub_lines[1]) / $original_bet * $betline;
-                        $totalWin = $totalWin + $arr_sub_lines[1];
-                        $arr_lines[$k] = implode('~', $arr_sub_lines);
-                    }
-                    $str_wlc_v = implode(';', $arr_lines);
-                } 
                 if($str_psym != ''){
                     $arr_psym = explode('~', $str_psym);
                     $arr_psym[1] = str_replace(',', '', $arr_psym[1]) / $original_bet * $betline;
                     $totalWin = $totalWin + $arr_psym[1];
                     $str_psym = implode('~', $arr_psym);
                 }
-                if($str_apwa != ''){
-                    $arr_apwa = explode(',', $str_apwa);
-                    for($k = 0; $k<count($arr_apwa); $k++){
-                        $apwa_win = str_replace(',', '', $arr_apwa[$k]) / $original_bet * $betline;
-                        $arr_apwa[$k] = $apwa_win;
-                        $totalWin = $totalWin + $apwa_win;
-                    }                    
-                    $str_apwa = implode(',', $arr_apwa);
+                $apwa = 0;
+                if($str_apv != ''){
+                    $apwa = $str_apv * $betline;
+                    $totalWin = $totalWin + $apwa;
                 }
                 $spinType = 's';
                 
@@ -523,13 +494,13 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
                 }
                 if($str_apv != ''){
-                    $strOtherResponse = $strOtherResponse . '&apv=' . $str_apv . '&apt=' . $str_apt . '&apwa=' . $str_apwa;
+                    $strOtherResponse = $strOtherResponse . '&apv=' . $str_apv . '&apt=' . $str_apt . '&apwa=' . $apwa;
                 }
                 if($str_psym != ''){
                     $strOtherResponse = $strOtherResponse . '&psym=' . $str_psym;
                 }
-                if($str_wlc_v != ''){
-                    $strOtherResponse = $strOtherResponse . '&wlc_v=' . $str_wlc_v;
+                if($str_pw != ''){
+                    $strOtherResponse = $strOtherResponse . '&pw=' . str_replace(',', '', $str_pw) / $original_bet * $betline;
                 }
                 if($str_initReel != ''){
                     $strOtherResponse = $strOtherResponse . '&is=' . $str_initReel;
@@ -537,7 +508,7 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'] .'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime=' . floor(microtime(true) * 1000) .'&st=rect&c='.$betline.'&sa='. $str_sa .'&sb='. $str_sb .'&sh=5&sw=6&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&s='. $strLastReel .'&w='.$totalWin;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'] .'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime=' . floor(microtime(true) * 1000) .'&st=rect&c='.$betline.'&sa='. $str_sa .'&sb='. $str_sb .'&sh=3&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&s='. $strLastReel .'&w='.$totalWin;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0)) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
