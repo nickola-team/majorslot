@@ -734,7 +734,7 @@ namespace VanguardLTE\Games\HeartofCleopatraPM
         {
             // if($winType='bonus'){
                 // $stack = \VanguardLTE\PPGameStackModel\PPGameHeartofCleopatraStack::where([
-                //     'id' => 5
+                //     'id' => 29242
                 // ])->first();
                 // return json_decode($stack->spin_stack, true);
             // }
