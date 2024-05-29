@@ -155,7 +155,7 @@ namespace VanguardLTE\Games\BigBurgerLoaditupwithXTRACheesePM
                     }                    
                     if($str_psym != ''){
                         $arr_psym = explode('~', $str_psym);
-                        $arr_psym[1] = str_replace(',', '', $arr_psym[1]) / $original_bet * $betline;
+                        $arr_psym[1] = str_replace(',', '', $arr_psym[1]) / $original_bet * $bet;
                         $totalWin = $totalWin + $arr_psym[1];
                         $str_psym = implode('~', $arr_psym);
                         $strOtherResponse = $strOtherResponse . '&psym=' . $str_psym;

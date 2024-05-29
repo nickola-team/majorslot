@@ -155,10 +155,10 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                     if($str_slm_mv != ''){
                         $strOtherResponse = $strOtherResponse . '&slm_mp=' . $str_slm_mp . '&slm_mv=' . $str_slm_mv;
                     }
-                    if($rs_p >= 0){
+                    if($rs_p != -1){
                         $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_m=' . $rs_m . '&rs_c=' . $rs_c;
                     }
-                    if($rs_t > 0){
+                    if($rs_t != 0){
                         $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t;
                     }                   
                     if($apv != ''){
@@ -514,7 +514,10 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                 }
                 $_obf_totalWin = $totalWin;
                 $isState = true;
-                $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', $rs_p);
+                if($rs_p != -1)
+                {
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 1);
+                }
                 if($fsmax > 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $fsmax);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 1);
@@ -526,10 +529,11 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                 $slotSettings->SetGameData($slotSettings->slotId . 'LastReel', $lastReel);
                 
                 $strOtherResponse = '';
-                if($rs_p >= 0){
+                if($rs_p != -1){
                     $isState = false;
                     $spinType = 's';
-                }else if($rs_t > 0){
+                }else if($rs_t != 0){
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', -1);
                     $isState = true;
                     $spinType = 'c';
                 }
@@ -540,7 +544,7 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                     $spinType = 's';
                     $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
                     $isEnd = false;
-                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $rs_p < 0) 
+                    if( $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $rs_p == -1) 
                     {
                         $isEnd = true;
                         $strOtherResponse = $strOtherResponse . '&fs_total='.$slotSettings->GetGameData($slotSettings->slotId . 'FreeGames').'&fswin_total=' . ($slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')) . '&fsend_total=1&fsmul_total=1&fsres_total=' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin');
@@ -598,10 +602,10 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                 if($str_slm_mv != ''){
                     $strOtherResponse = $strOtherResponse . '&slm_mp=' . $str_slm_mp . '&slm_mv=' . $str_slm_mv;
                 }
-                if($rs_p >= 0){
+                if($rs_p != -1){
                     $strOtherResponse = $strOtherResponse . '&rs_p=' . $rs_p . '&rs_m=' . $rs_m . '&rs_c=' . $rs_c;
                 }
-                if($rs_t > 0){
+                if($rs_t != 0){
                     $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t;
                 }
                 if($str_psym != ''){
@@ -638,14 +642,14 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
                 $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse  .'&balance='.$Balance. '&index='.$slotEvent['index'] .'&balance_cash='.$Balance.'&reel_set='. $currentReelSet .'&balance_bonus=0.00&na='.$spinType .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&st=rect&c='.$betline.'&sa='. $str_sa .'&sb='. $str_sb .'&sh=3&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=20&s='. $strLastReel .'&w='.$totalWin;
-                if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $rs_p < 0) 
+                if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $rs_p == -1) 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                     // $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0); 
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                     // $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
                 }
-                if( $slotEvent['slotEvent'] != 'freespin' && $fsmax > 0 && $rs_p < 0) 
+                if( $slotEvent['slotEvent'] != 'freespin' && $fsmax > 0 && $rs_p == -1) 
                 {
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $Balance);
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
@@ -663,7 +667,7 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin')  . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') . ',"Bl":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bl') . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')  .',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 $allBet = $betline * $lines;
-                if($rs_t > 0 && $str_rs == 'hs')
+                if($rs_p == -1 && $rs_t != 0 && strpos($str_rs, 'hs') !== false)
                 {
                     $slotEvent['slotEvent'] = 'respin';
                 }

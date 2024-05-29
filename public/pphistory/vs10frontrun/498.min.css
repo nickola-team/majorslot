@@ -1,0 +1,513 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 50px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    flex-direction: column-reverse
+}
+
+.Spin,
+.Wreath {
+    align-items: center
+}
+
+.Wreath {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center
+}
+
+.Wreath:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10frontrun/spin/wreath.png) 1x, url(./images/vs10frontrun/spin/wreath@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    bottom: -7px;
+    z-index: 1
+}
+
+.Wreath .ReelsSlot__ItemImg {
+    z-index: 1
+}
+
+.Race {
+    width: 400px;
+    height: 130px
+}
+
+.Race .Image__Children {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end
+}
+
+.Race .RaceFields {
+    flex: 1;
+    height: 45px;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-areas: "..  ..  s0  s0  ..  s1  ..  s2  s2  ..  s3  ..  s4  s4  ..  s5  ..  s6 s6  ..  ..  s7  ..  .." "..  s8  s8  ..  s9  s9  ..  s10 s11 s11 s11 s11 s12 s12 ..  s13 s13 .. s14 ..  ..  ..  s15 .." "s16 s16 s16 s17 s17 ..  s18 s18 s19 s19 s19 ..  s20 s20 ..  ..  s21 .. s22 s22 ..  ..  ..  s23"
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--0 {
+    grid-area: s0
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--1 {
+    grid-area: s1
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--2 {
+    grid-area: s2
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--3 {
+    grid-area: s3
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--4 {
+    grid-area: s4
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--5 {
+    grid-area: s5
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--6 {
+    grid-area: s6
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--7 {
+    grid-area: s7
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--8 {
+    grid-area: s8
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--9 {
+    grid-area: s9
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--10 {
+    grid-area: s10
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--11 {
+    grid-area: s11
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--12 {
+    grid-area: s12
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--13 {
+    grid-area: s13
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--14 {
+    grid-area: s14
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--15 {
+    grid-area: s15
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--16 {
+    grid-area: s16
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--17 {
+    grid-area: s17
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--18 {
+    grid-area: s18
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--19 {
+    grid-area: s19
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--20 {
+    grid-area: s20
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--21 {
+    grid-area: s21
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--22 {
+    grid-area: s22
+}
+
+.Race .RaceFields .RaceFields__Item--racePosition--23 {
+    grid-area: s23
+}
+
+.Race .RaceFields__Item {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center
+}
+
+.Race .RaceFields__Item-Image {
+    width: 17px;
+    position: absolute;
+    opacity: .5
+}
+
+.Race .RaceFields__Item--racePosition--10,
+.Race .RaceFields__Item--racePosition--11 {
+    margin-right: -8px
+}
+
+.Race .RaceFields__Item--racePosition--13 {
+    margin-left: -10px
+}
+
+.Race .RaceFields__Item--racePosition--17 {
+    margin-right: -15px
+}
+
+.Race .RaceFields__Item--racePosition--18 {
+    margin-right: -10px
+}
+
+.Race .RaceFields__Item--racePosition--19 {
+    margin-right: -20px
+}
+
+.Race .RaceFields__Item--racePosition--21 {
+    margin-left: -15px
+}
+
+.Race .RaceFields__Item--wreathActive:after {
+    bottom: 0;
+    left: 0;
+    background-image: -webkit-image-set(url(./images/vs10frontrun/race/wreath.png) 1x, url(./images/vs10frontrun/race/wreath@2x.png) 2x);
+    width: 36px;
+    height: 35px;
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%) scale(.9)
+}
+
+.Race .RaceFields__Item--type--1.RaceFields__Item--active:before,
+.Race .RaceFields__Item--wreathActive:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: auto;
+    right: auto
+}
+
+.Race .RaceFields__Item--type--1.RaceFields__Item--active:before {
+    bottom: 0;
+    left: 0;
+    background-image: -webkit-image-set(url(./images/vs10frontrun/race/horse1.png) 1x, url(./images/vs10frontrun/race/horse1@2x.png) 2x);
+    width: 80px;
+    height: 51px;
+    left: auto;
+    transform: scale(.9);
+    bottom: -5px
+}
+
+.Race .RaceFields__Item--type--1.RaceFields__Item--active:after {
+    left: auto;
+    right: auto;
+    bottom: 25px;
+    transform: none
+}
+
+.Race .RaceFields__Item--type--1.RaceFields__Item--active .RaceFields__Item-Image {
+    opacity: 1
+}
+
+.Race .RaceFields__Item--type--2.RaceFields__Item--active:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10frontrun/race/horse2.png) 1x, url(./images/vs10frontrun/race/horse2@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 80px;
+    height: 51px;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: scale(.9);
+    bottom: -5px
+}
+
+.Race .RaceFields__Item--type--2.RaceFields__Item--active:after {
+    left: auto;
+    right: auto;
+    bottom: 25px;
+    transform: none
+}
+
+.Race .RaceFields__Item--type--2.RaceFields__Item--active .RaceFields__Item-Image {
+    opacity: 1
+}
+
+.Race .RaceFields__Item--type--3.RaceFields__Item--active:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10frontrun/race/horse3.png) 1x, url(./images/vs10frontrun/race/horse3@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 80px;
+    height: 51px;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: scale(.9);
+    bottom: -5px
+}
+
+.Race .RaceFields__Item--type--3.RaceFields__Item--active:after {
+    left: auto;
+    right: auto;
+    bottom: 25px;
+    transform: none
+}
+
+.Race .RaceFields__Item--type--3.RaceFields__Item--active .RaceFields__Item-Image {
+    opacity: 1
+}
+
+.Race .RaceFields__Item--racePosition--0:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--0:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--1:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--1:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--2:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--2:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--3:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--3:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--4:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--4:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--5:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--5:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--6:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--6:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--7:before {
+    z-index: 2
+}
+
+.Race .RaceFields__Item--racePosition--7:after {
+    z-index: 1
+}
+
+.Race .RaceFields__Item--racePosition--8:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--8:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--9:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--9:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--10:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--10:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--11:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--11:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--12:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--12:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--13:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--13:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--14:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--14:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--15:before {
+    z-index: 4
+}
+
+.Race .RaceFields__Item--racePosition--15:after {
+    z-index: 3
+}
+
+.Race .RaceFields__Item--racePosition--16:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--16:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--17:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--17:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--18:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--18:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--19:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--19:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--20:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--20:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--21:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--21:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--22:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--22:after {
+    z-index: 5
+}
+
+.Race .RaceFields__Item--racePosition--23:before {
+    z-index: 6
+}
+
+.Race .RaceFields__Item--racePosition--23:after {
+    z-index: 5
+}
+
+.ResultTooltip .SimpleTooltip__Tip {
+    line-height: 1.2rem
+}
+
+.Modal {
+    z-index: 6
+}

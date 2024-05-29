@@ -1,0 +1,36 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 43px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.MoneyScatter__LabelWrap {
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center
+}
+
+.MoneyScatterWild--2 .MoneyScatter__LabelWrap {
+    align-items: flex-start;
+    justify-content: flex-start
+}
+
+.MoneyScatterWild--2 .MoneyScatter__LabelWrap .MoneyScatter__Money {
+    margin: 10px
+}
+
+.Footer-direction {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
