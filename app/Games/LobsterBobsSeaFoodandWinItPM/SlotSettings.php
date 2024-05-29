@@ -714,7 +714,7 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsSeaFoodandWinItStack::where('id', 34147)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsSeaFoodandWinItStack::where('id', 23208)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -754,10 +754,10 @@ namespace VanguardLTE\Games\LobsterBobsSeaFoodandWinItPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameLobsterBobsSeaFoodandWinItStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 28000);
+                $index = mt_rand(0, 52000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    $index = mt_rand(0, 130000);
+                    // $index = mt_rand(0, 130000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){

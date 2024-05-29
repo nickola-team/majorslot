@@ -1232,7 +1232,12 @@ return [
         "JokersJewelsWild" => "조커스 쥬웰스 와일드",
         "LobsterBobsSeaFoodandWinIt" => "랍스타 밥스",
         "HeroicSpins" => "히로익 스핀즈",
-        
+        "HeartofCleopatra" => "하트 오브 클레오파트라",
+        "FrontRunnerOddsOn" => "프론트 러너",
+        "DwarfandDragon" => "드워프 앤드 드래곤",
+        "RiseofPyramids" => "라이즈 오브 피라미드",
+        "SweetBonanza1000" => "스위트 보난자 1000",
+
         //Booongo
         "tigerstone" => "타이거 스톤",
 

@@ -714,7 +714,7 @@ namespace VanguardLTE\Games\FrontRunnerOddsOnPM
         public function GetReelStrips($winType, $bet)
         {
             // if($fsmax > 0){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameFrontRunnerOddsOnStack::where('id', 2)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameFrontRunnerOddsOnStack::where('id', 1779)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             if($winType == 'bonus'){
@@ -749,14 +749,14 @@ namespace VanguardLTE\Games\FrontRunnerOddsOnPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameFrontRunnerOddsOnStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 58000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        $stacks = $stacks->where('odd', '<=', 20);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
