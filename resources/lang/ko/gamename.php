@@ -1495,7 +1495,10 @@ return [
         "GoodFortune" => "굿 포춘",
         "MuayThai" => "무에타이",
         "Chicago2" => "시카고 2",
-        "TheBeastWar" => "더 비스트 워"
+        "TheBeastWar" => "더 비스트 워",
+        "GodofWar" => "갓 오브 워",
+        "GodofWarM" => "갓 오브 워 M",
+        "AllStarTeam" => "모든 스타 팀"
 ];
 
 
