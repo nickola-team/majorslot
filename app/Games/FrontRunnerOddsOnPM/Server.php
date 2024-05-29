@@ -145,7 +145,7 @@ namespace VanguardLTE\Games\FrontRunnerOddsOnPM
                     }
                     if($str_apv != ''){
                         $str_apaw = $str_apv * $bet;
-                        $strOtherResponse = $strOtherResponse . '&apv=' . $str_apv . '&apt=' . $str_apt . '&apwa=' . $str_apwa;
+                        $strOtherResponse = $strOtherResponse . '&apv=' . $str_apv . '&apt=' . $str_apt . '&apwa=' . $str_apaw;
                     }    
                     if($str_pw != ''){
                         $str_pw = str_replace(',', '', $str_pw) / $original_bet * $bet;

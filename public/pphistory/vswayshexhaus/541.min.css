@@ -1,0 +1,113 @@
+:root {
+    --slot-item-height: 48px;
+    --slot-item-width: 55px
+}
+
+.LinesSlot .ReelsSlot {
+    align-items: center
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    width: 42px;
+    height: auto;
+    background-color: transparent
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    border: none
+}
+
+.LinesSlot .ReelsSlot__Item--win {
+    background-color: transparent
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.MoneyScatter__LabelWrap .MoneyScatter__Label {
+    line-height: normal;
+    z-index: 1
+}
+
+.LinesSlot {
+    position: relative
+}
+
+.LinesSlot:before {
+    width: 315px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswayshexhaus/slotBg.png) 1x, url(./images/vswayshexhaus/slotBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: 2px;
+    left: -10px
+}
+
+.WinLines-Group {
+    gap: 15px
+}
+
+.WinLines-Group .LinesSlot:before {
+    content: none
+}
+
+.WinLines-Group .LinesSlot .ReelsSlot__Item--14 {
+    opacity: .6
+}
+
+.WinLines-Group .LinesSlot .ReelsSlot__Item--14 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vswayshexhaus/14_winLines.png) 1x, url(./images/vswayshexhaus/14_winLines@2x.png) 2x)
+}
+
+.Spin {
+    display: flex
+}
+
+.Spin .Multiplier,
+.Spin .RespinsLeft {
+    width: 85px;
+    height: 50px;
+    margin-right: 15px;
+    line-height: normal;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .Multiplier__Title,
+.Spin .RespinsLeft__Title {
+    width: 75px;
+    white-space: nowrap;
+    font-size: .79rem
+}
+
+.Carousel__Controls {
+    bottom: -25px
+}
+
+.SlotWrap__Field {
+    border: none
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
