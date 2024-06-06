@@ -23,6 +23,8 @@
 	<script async="" defer="" src="https://weblogs.io/matomo.js"></script>
 	<link rel="stylesheet" href="/frontend/dove/css/default.css?v=202301301150">
 	<link rel="stylesheet" href="/frontend/dove/css/custom.css?v=202301301150">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 	<meta data-n-head="1" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 </head>
 <body class="">
@@ -42,7 +44,9 @@
 							</div>
 							<div data-v-525011a5="" class="content-wrap column">
 								@include('frontend.dove.layouts.partials.header')
-								@include('frontend.dove.layouts.partials.content')								
+								@include('frontend.dove.layouts.partials.content')	
+								@include('frontend.dove.layouts.partials.live_content')	
+								@include('frontend.dove.layouts.partials.slot_content')								
 							</div>
 						</div> <!----> 
 						<div data-v-47d63ae2="" data-v-525011a5="" class="row" style="flex-direction: row;">

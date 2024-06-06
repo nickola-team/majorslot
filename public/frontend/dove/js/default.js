@@ -1,10 +1,10 @@
 function openNav() {
     $('.slideout-wrapper').css('display', 'block');
-  }
+}
   
-  function closeNav() {
+function closeNav() {
     $('.slideout-wrapper').css('display', 'none');
-  }
+}
 function openLoginModal(logo) {
     const div = document.getElementById('main-modal');
     var logincontent = `<div id="login-modal" class="dialog row" style="flex-direction: row;">
@@ -149,4 +149,33 @@ function openRegisterModal(logo) {
     </div>
   </div>`;
   div.innerHTML = logincontent;
+}
+
+function swal2(message, status='success'){ // status : 'success', 'warning', 'error'
+    Swal.fire(
+        '',
+        message,
+        status
+      );
+}
+
+
+
+// show content
+function showContent(id) {
+    $('#main_content').css('display', 'none');
+    $('#live_content').css('display', 'none');
+    $('#slot_content').css('display', 'none');
+
+    $('#' + id).css('display', 'flex');
+    closeNav();
+}
+
+function scrolRight(id) {
+    var leftPos = $('#' + id).scrollLeft();
+    $('#' + id).animate({scrollLeft: leftPos + 200}, 0);
+}
+function scrolLeft(id) {
+    var leftPos = $('#' + id).scrollLeft();
+    $('#' + id).animate({scrollLeft: leftPos - 200}, 0);
 }
