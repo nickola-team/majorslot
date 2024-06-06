@@ -165,14 +165,14 @@
         <div data-v-e77ddfb0="" class="row" style="flex-direction: row;">
             <div data-v-6194c674="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
                 <div class="row" style="width: 100%; flex-direction: row;">
-                    <button data-v-e77ddfb0="" class="signin button text" style="background: transparent;">
+                    <button data-v-e77ddfb0="" class="signin button text" style="background: transparent;" onclick="openLoginModal('{{$logo}}');">
                         <span data-v-e77ddfb0="" class="text">로그인</span>
                     </button>
                 </div> <!---->
             </div> 
             <div data-v-06860046="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
                 <div class="row" style="width: 100%; flex-direction: row;">
-                    <button data-v-e77ddfb0="" class="signup button">
+                    <button data-v-e77ddfb0="" class="signup button" onclick="openRegisterModal('{{$logo}}');">
                         <span data-v-e77ddfb0="" class="text">회원가입</span>
                     </button>
                 </div> <!---->

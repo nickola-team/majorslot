@@ -29,11 +29,15 @@
                 <div data-v-fad191c6="" class="contents row" style="flex-direction: row;">
                     <div data-v-fad191c6="" class="scroll-menu row" style="flex-direction: row;">
                         <div data-v-05849275="" data-v-fad191c6="" class="list scrollable-auto events row" style="flex-direction: row;">
-                            <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                <button data-v-fad191c6="" class="button">
-                                    <img data-v-fad191c6="" src="https://imghour.com/img/309cc615f80e7607471d7d4b1078635ddf1d732f.jpg" class="list-6">
-                                </button>
-                            </div>
+                        @foreach($categories AS $index=>$category)
+                            @if ($category->type =='live')
+                                <div data-v-fad191c6="" class="top-game-event zoomIn column">
+                                    <button data-v-fad191c6="" class="button">
+                                        <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{$category->title}}.png" class="list-6">
+                                    </button>
+                                </div>
+                            @endif
+                        @endforeach
                         </div>
                     </div>
                 </div>
@@ -65,11 +69,15 @@
                 <div data-v-fad191c6="" class="contents row" style="flex-direction: row;">
                     <div data-v-fad191c6="" class="scroll-menu row" style="flex-direction: row;">
                         <div data-v-05849275="" data-v-fad191c6="" class="list scrollable-auto events row" style="flex-direction: row;">
-                            <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                <button data-v-fad191c6="" class="button">
-                                    <img data-v-fad191c6="" src="https://imghour.com/img/38df54af46810302d0cfd69c3c14b7decf4f642e.jpg" class="list-6">
-                                </button>
-                            </div>
+                            @foreach($categories AS $index=>$category)
+                                @if ($category->type =='slot')
+                                    <div data-v-fad191c6="" class="top-game-event zoomIn column">
+                                        <button data-v-fad191c6="" class="button">
+                                            <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{$category->title}}.png" class="list-6">
+                                        </button>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
