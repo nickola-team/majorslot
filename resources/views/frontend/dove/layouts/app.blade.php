@@ -26,6 +26,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 	<meta data-n-head="1" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
 </head>
 <body class="">
 	<div id="app">
@@ -70,3 +71,5 @@
 	<script type="text/javascript" src="/frontend/dove/js/default.js"></script>
 </body>
 </html>
+
+
