@@ -1237,7 +1237,11 @@ return [
         "DwarfandDragon" => "드워프 앤드 드래곤",
         "RiseofPyramids" => "라이즈 오브 피라미드",
         "SweetBonanza1000" => "스위트 보난자 1000",
-
+        "FruitTreats" => "후루티 트릿스",
+        "RevengeofLokiMegaways" => "리벤지 오브 로키 메가웨이즈",
+        "StarlightPrincessPachi" => "스타라이트 프린세스 파치",
+        "Wildies" => "와일디즈",
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
