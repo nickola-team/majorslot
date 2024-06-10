@@ -1,0 +1,342 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+.Progress {
+    position: relative
+}
+
+.Progress,
+.Progress__Bg {
+    height: 100%
+}
+
+.Progress__ActiveWrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0
+}
+
+.Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+.Progress--hearts,
+.Progress--items {
+    align-self: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Progress--hearts .Progress__Bg,
+.Progress--items .Progress__Bg {
+    position: absolute
+}
+
+.Progress--hearts .Progress__Hearts,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Hearts,
+.Progress--items .Progress__Items {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%
+}
+
+.Progress--hearts .Progress__Heart,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Heart,
+.Progress--items .Progress__Items,
+.ProgressV2 {
+    position: relative
+}
+
+.ProgressV2__Bg {
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar {
+    overflow: hidden;
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar,
+.ProgressV2__ActiveImg {
+    position: absolute;
+    bottom: 0;
+    left: 0
+}
+
+:root {
+    --slot-item-height: 60px;
+    --slot-item-width: 60px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "progress slot" "lives    slot";
+    column-gap: 10px
+}
+
+.Spin .CountProgress {
+    grid-area: progress
+}
+
+.Spin .MiniGame__Lives {
+    grid-area: lives
+}
+
+.Spin .LinesSlot {
+    grid-area: slot
+}
+
+.CountProgress {
+    width: 50px;
+    height: 40px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    line-height: normal;
+    white-space: nowrap;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.CountProgress .Image__Children {
+    width: 100%;
+    margin-top: 10px;
+    font-size: .79rem
+}
+
+.MiniGame__Lives {
+    width: 49px;
+    height: 126px;
+    align-self: flex-end;
+    margin-bottom: 5px
+}
+
+.MiniGame__Lives .Progress__Items {
+    flex-direction: column
+}
+
+.MiniGame__Lives .Progress__Item--disabled {
+    opacity: .3
+}
+
+.MiniGame .MoneyScatter__Label {
+    line-height: normal;
+    font-size: 14px;
+    filter: drop-shadow(3px 1px 1px black)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
