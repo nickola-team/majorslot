@@ -1,0 +1,9 @@
+{
+  "name": "nuxt-sportsbook",
+  "short_name": "nuxt-sportsbook",
+  "icons": [],
+  "start_url": "/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "lang": "ko"
+}
