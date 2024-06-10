@@ -1,4 +1,4 @@
-<div data-v-525011a5="" class="content column">
+<div data-v-525011a5="" id="main_content" class="content column">
     <div data-v-525011a5="" class="layout-spacing column">
         <div data-v-fad191c6="" data-v-525011a5="" class="main column">
             @include('frontend.dove.layouts.partials.banner')
@@ -10,17 +10,17 @@
                     <div data-v-fad191c6="" class="spacer"></div> 
                     <div data-v-fad191c6="" class="carousel row" style="flex-direction: row;">
                         <div data-v-fad191c6="" class="left row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolLeft('live_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-left fa-lg"></i>
                             </button>
                         </div> 
                         <div data-v-fad191c6="" class="right row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolRight('live_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-right fa-lg"></i>
                             </button>
                         </div> 
                         <div data-v-fad191c6="" class="all row" style="flex-direction: row;">
-                            <a data-v-fad191c6="" href="/casino/1" class="">
+                            <a data-v-fad191c6="" href="#" class=""  onclick="showContent('live_content');">
                                 <span data-v-fad191c6="" class="text">ALL</span>
                             </a>
                         </div>
@@ -28,12 +28,16 @@
                 </div> 
                 <div data-v-fad191c6="" class="contents row" style="flex-direction: row;">
                     <div data-v-fad191c6="" class="scroll-menu row" style="flex-direction: row;">
-                        <div data-v-05849275="" data-v-fad191c6="" class="list scrollable-auto events row" style="flex-direction: row;">
-                            <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                <button data-v-fad191c6="" class="button">
-                                    <img data-v-fad191c6="" src="https://imghour.com/img/309cc615f80e7607471d7d4b1078635ddf1d732f.jpg" class="list-6">
-                                </button>
-                            </div>
+                        <div data-v-05849275="" data-v-fad191c6="" id="live_list" class="list scrollable-auto events row" style="flex-direction: row;">
+                        @foreach($categories AS $index=>$category)
+                            @if ($category->type =='live')
+                                <div data-v-fad191c6="" class="top-game-event zoomIn column">
+                                    <button data-v-fad191c6="" class="button" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+                                        <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png" class="list-6">
+                                    </button>
+                                </div>
+                            @endif
+                        @endforeach
                         </div>
                     </div>
                 </div>
@@ -46,17 +50,17 @@
                     <div data-v-fad191c6="" class="spacer"></div> 
                     <div data-v-fad191c6="" class="carousel row" style="flex-direction: row;">
                         <div data-v-fad191c6="" class="left row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolLeft('slot_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-left fa-lg"></i>
                             </button>
                         </div> 
                         <div data-v-fad191c6="" class="right row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolRight('slot_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-right fa-lg"></i>
                             </button>
                         </div> 
                         <div data-v-fad191c6="" class="all row" style="flex-direction: row;">
-                            <a data-v-fad191c6="" href="/casino/3" class="">
+                            <a data-v-fad191c6="" href="#" class=""  onclick="showContent('slot_content');">
                                 <span data-v-fad191c6="" class="text">ALL</span>
                             </a>
                         </div>
@@ -64,12 +68,16 @@
                 </div> 
                 <div data-v-fad191c6="" class="contents row" style="flex-direction: row;">
                     <div data-v-fad191c6="" class="scroll-menu row" style="flex-direction: row;">
-                        <div data-v-05849275="" data-v-fad191c6="" class="list scrollable-auto events row" style="flex-direction: row;">
-                            <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                <button data-v-fad191c6="" class="button">
-                                    <img data-v-fad191c6="" src="https://imghour.com/img/38df54af46810302d0cfd69c3c14b7decf4f642e.jpg" class="list-6">
-                                </button>
-                            </div>
+                        <div data-v-05849275="" data-v-fad191c6="" id="slot_list" class="list scrollable-auto events row" style="flex-direction: row;">
+                            @foreach($categories AS $index=>$category)
+                                @if ($category->type =='slot')
+                                    <div data-v-fad191c6="" class="top-game-event zoomIn column">
+                                        <button data-v-fad191c6="" class="button" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+                                            <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png" class="list-6">
+                                        </button>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -82,12 +90,12 @@
                     <div data-v-fad191c6="" class="spacer"></div> 
                     <div data-v-fad191c6="" class="carousel row" style="flex-direction: row;">
                         <div data-v-fad191c6="" class="left row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolLeft('providers_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-left fa-lg"></i>
                             </button>
                         </div> 
                         <div data-v-fad191c6="" class="right row" style="flex-direction: row;">
-                            <button data-v-fad191c6="" class="button">
+                            <button data-v-fad191c6="" class="button" onclick="scrolRight('providers_list');">
                                 <i data-v-e56d064c="" data-v-fad191c6="" class="fa-regular fa-angle-right fa-lg"></i>
                             </button>
                         </div>
@@ -95,7 +103,7 @@
                 </div> 
                 <div data-v-fad191c6="" class="contents row" style="flex-direction: row;">
                     <div data-v-fad191c6="" class="scroll-menu row" style="flex-direction: row;">
-                        <div data-v-05849275="" data-v-fad191c6="" class="list scrollable-auto events row" style="flex-direction: row;">
+                        <div data-v-05849275="" data-v-fad191c6="" id="providers_list" class="list scrollable-auto events row" style="flex-direction: row;">
                             <div data-v-fad191c6="" class="top-provider-list zoomIn column">
                                 <button data-v-fad191c6="" class="button">
                                     <img data-v-fad191c6="" src="https://imghour.com/img/b39829da268b3eac1b82015facc8d5c2e7f2a495.png" class="list-6">

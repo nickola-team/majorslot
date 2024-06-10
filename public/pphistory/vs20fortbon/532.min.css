@@ -1,0 +1,109 @@
+:root {
+    --slot-item-height: 43px;
+    --slot-item-width: 43px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter.Multiplier--m1:before {
+    background-image: -webkit-image-set(url(./images/vs20fortbon/multipliers/m1.png) 1x, url(./images/vs20fortbon/multipliers/m1@2x.png) 2x)
+}
+
+.MoneyScatter.Multiplier--m1:before,
+.MoneyScatter.Multiplier--m2:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.MoneyScatter.Multiplier--m2:before {
+    background-image: -webkit-image-set(url(./images/vs20fortbon/multipliers/m2.png) 1x, url(./images/vs20fortbon/multipliers/m2@2x.png) 2x)
+}
+
+.MoneyScatter.Multiplier--m3:before {
+    background-image: -webkit-image-set(url(./images/vs20fortbon/multipliers/m3.png) 1x, url(./images/vs20fortbon/multipliers/m3@2x.png) 2x)
+}
+
+.MoneyScatter.Multiplier--m3:before,
+.MoneyScatter.Multiplier--m4:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.MoneyScatter.Multiplier--m4:before {
+    background-image: -webkit-image-set(url(./images/vs20fortbon/multipliers/m4.png) 1x, url(./images/vs20fortbon/multipliers/m4@2x.png) 2x)
+}
+
+.MoneyScatter.Multiplier:before {
+    width: 50px;
+    height: 50px;
+    top: -5px;
+    left: -5px
+}
+
+.MoneyScatter.Multiplier .ReelsSlot__ItemImg {
+    position: relative
+}
+
+.Spin {
+    flex-direction: row-reverse
+}
+
+.Spin .Multipliers {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 40px 0
+}
+
+.Spin .Multipliers__Item {
+    width: 50px;
+    height: 50px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    font-size: 14px
+}
+
+.Spin .Multipliers__Item--m4 {
+    order: 1
+}
+
+.Spin .Multipliers__Item--m3 {
+    order: 2
+}
+
+.Spin .Multipliers__Item--m2 {
+    order: 3
+}
+
+.Spin .Multipliers__Item--m1 {
+    order: 4
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
