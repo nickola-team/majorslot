@@ -36,14 +36,14 @@
                 </div>
             </a> 
             <div data-v-556f8885="" class="division row" style="flex-direction: row; margin-bottom: 20px;"></div> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=@auth 'openDepositModal(<?php echo json_encode(mb_substr(auth()->user()->recommender, 0, 2)); ?>);' @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
             <img data-v-e77ddfb0="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTkgOFY4QzIwLjEwNDYgOCAyMSA4Ljg5NTQzIDIxIDEwVjE4QzIxIDE5LjEwNDYgMjAuMTA0NiAyMCAxOSAyMEg2QzQuMzQzMTUgMjAgMyAxOC42NTY5IDMgMTdWN0MzIDUuMzQzMTUgNC4zNDMxNSA0IDYgNEgxN0MxOC4xMDQ2IDQgMTkgNC44OTU0MyAxOSA2VjhaTTE5IDhIN00xNyAxNEgxNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=" class="margin-right-10" style="width: 22px; height: 22px;">
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">입금신청</span> 
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Deposit</span>
                 </div>
             </a> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=@auth 'openWithdrawModal(<?php echo json_encode(number_format(auth()->user()->balance)); ?>);' @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
                 <img data-v-556f8885="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-10" style="width: 22px; height: 22px;"> 
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">출금신청</span> 
@@ -58,7 +58,7 @@
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Notice</span>
                 </div>
             </a> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=@auth "openRequestPop()" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
                 <img data-v-556f8885="" src="/frontend/dove/assets/img/livechat.7cf9419.svg" class="margin-right-10" style="width: 22px; height: 22px;"> 
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">1:1문의</span> 

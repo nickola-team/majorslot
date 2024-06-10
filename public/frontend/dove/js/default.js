@@ -5,6 +5,9 @@ function openNav() {
 function closeNav() {
     $('.slideout-wrapper').css('display', 'none');
 }
+
+//Login Modal
+
 function openLoginModal(logo, banks) {    
     const div = document.getElementById('main-modal');
 
@@ -446,27 +449,13 @@ function submitRegister() {
     success: function(result) {
       if (result.error == false) {
         $("#freg input").val('');
-        // swal2(result.msg).then((value) => {
-        //   $('#register-popup').addClass('ng-hide');
-        //   $("fieldset").removeClass('has-success');
-        //   $("fieldset").removeClass('has-error');
-        // });
         swal2(result.msg);
-        // $('#register-popup').addClass('ng-hide');
-        // $("fieldset").removeClass('has-success');
-        // $("fieldset").removeClass('has-error');
       } else {
         swalPop(result.msg);
-        // $("#reg-notice").text(result.message);
-        // $("#reg-continue").removeClass('is-loading disabled');
       }
-      // $('input[name="token"]').val(result.token);
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
-      // alert('zzzz')
-      // $("#reg-notice").text("유효하지 않는 코드입니다.");
       swal2(result.msg,"error");
-      // $("#reg-continue").removeClass('is-loading disabled');
     }
   });
 };
@@ -480,6 +469,7 @@ function isInputNumber(evt) {
 }
 
 
+//Deposit
 
 function openDepositModal(username){
   const div = document.getElementById('main-modal');
@@ -537,7 +527,8 @@ function openDepositModal(username){
 												<span data-v-5290ad82="" class="text">입금 금액</span>
 											</div> 
 											<div data-v-5290ad82="" class="margin-bottom-10 row" style="flex-direction: row;">
-												<input data-v-578d3222="" data-v-5290ad82="" id="charge_money" type="text" placeholder="입금하실 금액을 입력해주세요" inputmode="numeric" class="input deposit-money">
+												<input data-v-578d3222="" data-v-5290ad82="" id="charge_money" type="text" placeholder="입금하실 금액을 입력해주세요" inputmode="numeric" class="input deposit-money money">
+                        <button data-v-43e90682="" class="reset-button button" onclick="resetMoney()"><i data-v-e56d064c="" data-v-43e90682="" class="fa-solid fa-xmark"></i></button>
 											</div> 
 											<div data-v-5290ad82="" class="deposit-money-btn row" style="flex-direction: row;">
 												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(10000)">
@@ -570,7 +561,15 @@ function openDepositModal(username){
 													</div> <!---->
 												</div> 
 												<div data-v-5290ad82="" class="spacer"></div> 
-												<button data-v-5290ad82="" class="deposit-button button">입금 계좌요청</button> 
+                        <div style="padding-right: 15px;">
+                        <button data-v-5290ad82="" class="withdraw button" onclick="autorequest();" style="background-color: #2c303a;border-radius: 8px;">빠른 계좌문의</button> 
+                        </div>
+                        
+                        <!---->
+                        <div>
+                        <button data-v-5290ad82="" class="deposit-button button" onclick="depositRequest();">입금 신청</button> 
+                        </div>
+												
 												<div data-v-3b808694="" data-v-5290ad82="" class="row" style="flex-direction: row;">
 													<div class="row" style="width: 100%; flex-direction: row;"></div> <!---->
 												</div> 
@@ -614,15 +613,13 @@ function insertComma(str)
 }
 
 function addMoneyDeposit(money) {
-  // alert(money)
-  // var obj  =   $("#money");
   var str = $("#charge_money").val();
   if (str == null || str.length == 0) str = "0";
   str = replaceComma(str);
   var betMoney = parseInt(str);
   betMoney += money;
   $("#charge_money").val(insertComma("" + betMoney));
-  }
+}
 
   function depositGuidePop(){
     const div = document.getElementById('pop-modal');
@@ -659,84 +656,7 @@ function addMoneyDeposit(money) {
     <div data-v-40c960e6="" class="container column"><div data-v-40c960e6="" class="dialog-title row" style="flex-direction: row;">
       <span data-v-40c960e6="" class="text-level-7 text"><img data-v-40c960e6="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 20px; height: 20px;">입금내역</span>
     </div> 
-    <div data-v-40c960e6="" class="button-wrap margin-bottom-10 row" style="flex-direction: row;">
-      <div data-v-40c960e6="" class="spacer"></div> 
-      <button data-v-40c960e6="" class="button"><span data-v-40c960e6="" class="text">선택내역삭제</span></button>
-    </div> 
     <div data-v-40c960e6="" class="fill-height" id="mydeposit">
-      <!--<div data-v-40c960e6="" class="deposit-log-list scrollable-auto margin-bottom-10 column">
-        <div data-v-40c960e6="" class="no-data row" style="flex-direction: row;">
-          <span data-v-40c960e6="" class="text">데이터가 없습니다.</span>
-        </div>
-      </div>-->
-    </div> 
-    <div data-v-40c960e6="" class="margin-bottom-10 row" style="flex-direction: row;">
-      <div data-v-30f53f18="" data-v-40c960e6="" class="pagination row" style="flex-direction: row; align-items: center;">
-        <div data-v-30f53f18="" class="row" style="flex-direction: row;">
-          <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;"> 
-            <div id="vs3__combobox" role="combobox" aria-expanded="false" aria-owns="vs3__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-              <div class="vs__selected-options">
-                <span class="vs__selected">
-                    15
-                </span> 
-                <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs3__combobox" aria-controls="vs3__listbox" type="search" autocomplete="off" class="vs__search">
-              </div> 
-              <div class="vs__actions">
-                <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
-                    <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
-                  </svg>
-                </button> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
-                  <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
-                </svg> 
-                <div class="vs__spinner" style="display: none;">Loading...</div>
-              </div>
-            </div> 
-            <ul id="vs3__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
-          </div>
-        </div> 
-        <div data-v-30f53f18="" class="row" style="flex-direction: row; align-items: center;">
-          <span data-v-30f53f18="" class="text" style="opacity: 0.6;">
-            개 씩 표시
-          </span>
-        </div> 
-        <div data-v-30f53f18="" class="spacer"></div> 
-        <div data-v-30f53f18="" class="row" style="flex-direction: row;">
-          <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;"> 
-            <div id="vs4__combobox" role="combobox" aria-expanded="false" aria-owns="vs4__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-              <div class="vs__selected-options">
-                <span class="vs__selected">
-                  1
-                </span> 
-                <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs4__combobox" aria-controls="vs4__listbox" type="search" autocomplete="off" class="vs__search">
-              </div> 
-              <div class="vs__actions">
-                <button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
-                    <path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
-                  </svg>
-                </button> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
-                  <path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
-                </svg> 
-                <div class="vs__spinner" style="display: none;">Loading...</div>
-              </div>
-            </div> 
-            <ul id="vs4__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
-          </div>
-        </div> 
-        <div data-v-30f53f18="" class="row" style="flex-direction: row;">
-          <button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
-            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i>
-          </button>
-        </div> 
-        <div data-v-30f53f18="" class="row" style="flex-direction: row;">
-          <button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
-            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>`;
@@ -754,12 +674,12 @@ function addMoneyDeposit(money) {
       data : {type: 'add'},
       success: function(data) {
         if(data.error == false){
-			var html = `<tbody>
+			var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
 						<tr>
-							<th width="20%" class="ng-scope">번호</td>
-							<th width="20%" class="ng-scope">충전금액</td>
-							<th width="20%" class="ng-scope">신청날짜</td>
-							<th width="20%" class="ng-scope">상태</td>
+							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
+							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">충전금액</td>
+							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
+							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
 						</tr>
                         `;
 			if (data.data.length > 0) {
@@ -771,15 +691,17 @@ function addMoneyDeposit(money) {
 				for (var i = 0; i < data.data.length; i++) {
 					date = new Date(data.data[i].created_at);
 					html += `<tr>
-						<td class="ng-binding">${i+1}</td>
-						<td class="ng-binding">${parseInt(data.data[i].sum).toLocaleString()}원</td>
-						<td class="ng-binding">${date.toLocaleString()}</td>
-						<td class="ng-binding">${status_name[data.data[i].status]}</td>
+						<td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
+						<td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
+						<td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
+						<td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
 						</tr>
 						</thead>`;
 				}
 				
-			}
+			}else{
+        html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
+      }
 			html += `</table>`;
 			$("#mydeposit").html(html);
 			
@@ -789,3 +711,432 @@ function addMoneyDeposit(money) {
       }
     });
   }
+
+  function autorequest(){
+    var f = confirm("계좌요청을 하시겠습니까?");
+    if(!f){
+        return false;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/api/depositAccount",
+        data: null,
+        cache: false,
+        async: false,
+        success: function (data) {
+            if (data.error) {
+                alert(data.msg);
+                return;
+            }
+            if (data.url != null)
+            {
+                var leftPosition, topPosition;
+                width = 600;
+                height = 1000;
+                leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+                topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+                wndGame = window.open(data.url, "Deposit",
+                "status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+                + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+                + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+            }
+            else
+            {
+                alert(data.msg);
+            }
+            
+        },
+        error: function (err, xhr) {
+            alert(err.responseText);
+        },
+    });
+}
+
+function depositRequest() {
+  var cmoney = $('.money').val();
+  var cmoneyx = $('.money').val().replace(/,/g, '');
+  var y = parseNumberToInt(cmoney);
+  var x = 10000;
+  var remainder = Math.floor(y % x);
+  if (remainder != 0) {
+      alert('입금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.');
+      return false;
+  }
+  var conf = confirm('입금신청을 하시겠습니까?');
+  if (!conf) {
+      return false;
+  }
+  if (cmoney <= 0) {
+      alert('신청하실 충전금액을 입력해주세요.');
+      return false;
+  }
+  $.ajax({
+      url: '/api/addbalance',
+      type: 'POST',
+      dataType: "json",
+      data: {
+      money: cmoney,
+      },
+      success: function(result) {
+      if (result.error == false) {
+          $("#charge_money").val(0);
+          swal2('신청완료 되었습니다.');
+      } else {
+          swal2( result.msg);
+      }
+      }
+  });
+  $(".btn-pointr").on('click', function() {
+      $(".btn-pointr").removeClass('active');
+      $(this).addClass('active');
+      isReceivedPoint = $(this).attr('data-type');
+  });
+}
+
+function parseNumberToInt(val) {
+  val = val.replace(/[^\/\d]/g, '');
+  return parseInt(val);
+}
+
+
+
+
+//Withdraw
+function openWithdrawModal(userbalance){
+  const div = document.getElementById('main-modal');
+  var wdcontent = `<div class="dialog row" style="flex-direction: row;">
+    <div class="container row" style="flex-direction: row; max-width: 500px;">
+        <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+           <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+        </button>  
+        <div data-v-43e90682="" class="container column">
+            <div data-v-43e90682="" class="dialog-title row" style="flex-direction: row;"> 
+             <span data-v-43e90682="" class="text-level-7 text"><img data-v-43e90682="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-5" style="width: 20px; height: 20px;">출금신청</span> 
+        </div> 
+        <div data-v-43e90682="" class="margin-bottom-10 column">
+            <div data-v-43e90682="" class="title row" style="flex-direction: row;"> 
+                <span data-v-43e90682="" class="text">보유금액</span>
+            </div> 
+            <div data-v-43e90682="" class="row" style="flex-direction: row;">
+                <input data-v-578d3222="" data-v-43e90682="" type="text" inputmode="numeric" disabled="disabled" class="input account-name" value="${userbalance}">
+            </div>
+        </div>         
+        <div data-v-43e90682="" class="margin-bottom-10 column">
+            <div data-v-43e90682="" class="title row" style="flex-direction: row;">
+                <span data-v-43e90682="" class="text">출금금액</span>
+            </div> 
+            <div data-v-43e90682="" class="margin-bottom-10 row" style="flex-direction: row;">
+                <input data-v-578d3222="" data-v-43e90682="" type="text" placeholder="출금하실 금액을 입력해주세요" id="exchange_money" inputmode="numeric" class="input withdraw-money exchange_money"> 
+                <button data-v-43e90682="" class="reset-button button" onclick="resetMoney()"><i data-v-e56d064c="" data-v-43e90682="" class="fa-solid fa-xmark"></i></button>
+            </div> 
+            <div data-v-43e90682="" class="withdraw-money-btn row" style="flex-direction: row;">
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(10000)">10,000</span></button> 
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(30000)">30,000</span></button> 
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(50000)">50,000</span></button> 
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(100000)">100,000</span></button> 
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(500000)">500,000</span></button> 
+                <button data-v-43e90682="" class="button"><span data-v-43e90682="" class="text" onclick="addMoneyWithdraw(1000000)">1,000,000</span></button>
+            </div>
+        </div> 
+        <div data-v-43e90682="" class="margin-bottom-10 column">
+            <div data-v-43e90682="" class="button-wrap row" style="flex-direction: row;">
+                <div data-v-29f40e58="" data-v-43e90682="" class="row" style="flex-direction: row;">
+                    <div class="row" style="width: 100%; flex-direction: row;">
+                        <button data-v-43e90682="" class="history button text" style="background: transparent;" onclick="withdrawHistoryPop();">
+                            <span data-v-43e90682="" class="text"><i data-v-e56d064c="" data-v-43e90682="" class="margin-right-5 fa-solid fa-list" ></i>출금내역</span>
+                        </button>
+                    </div> <!---->
+                </div> 
+                <div data-v-43e90682="" class="spacer"></div> 
+                <div data-v-43e90682="" class="detail-btn-wrap row" style="flex-direction: row;">
+                    <button data-v-43e90682="" class="detail-btn button" onclick="WithdrawGuidePop();"><span data-v-43e90682="" class="text"><i data-v-e56d064c="" data-v-43e90682="" class="fa-solid fa-circle-question fa-lg"></i></span></button>
+                </div> <!----> 
+                <button data-v-43e90682="" class="withdraw-button button" onclick="withdrawRequest();">출금신청</button>
+            </div>
+        </div>
+    </div> <!---->
+</div>`;
+  div.innerHTML = wdcontent;
+}
+
+function addMoneyWithdraw(money) {
+  // var obj  =   $("#money");
+  var str = $("#exchange_money").val();
+  if (str == null || str.length == 0) str = "0";
+  str = replaceComma(str);
+  var betMoney = parseInt(str);
+  betMoney += money;
+  $("#exchange_money").val(insertComma("" + betMoney));
+}
+
+function resetMoney() {
+  var obj = $('#exchange_money').val(0);
+  var obj1 = $('#charge_money').val(0);
+}
+
+function WithdrawGuidePop(){
+  const div = document.getElementById('pop-modal');
+  var wdguidecontent = `<div class="swal2-container swal2-center v-application swal2-backdrop-show" style="overflow-y: auto;">
+        <div aria-labelledby="swal2-title" aria-describedby="swal2-html-container" class="swal2-popup swal2-modal swal2-show" tabindex="-1" role="dialog" aria-live="assertive" aria-modal="true" style="display: grid;">
+            <button type="button" class="swal2-close" aria-label="Close this dialog" style="display: none;">×</button>
+            <ul class="swal2-progress-steps" style="display: none;"></ul>
+            <div class="swal2-icon" style="display: none;"></div>
+            <img class="swal2-image" style="display: none;">
+            <h2 class="swal2-title" id="swal2-title" style="display: none;"></h2>
+            <div class="swal2-html-container" id="swal2-html-container" style="display: block;">
+                <p><span style="color: rgb(239, 198, 49);">입금자명과 출금자명이 다를경우 본인확인 요청이 있을 수 있습니다.</span></p>
+            </div>
+            <div class="swal2-actions" style="display: flex;">
+                <div class="swal2-loader"></div>
+                <button type="button" class="swal2-confirm v-btn v-btn--depressed theme--dark v-size--default primary mx-1" aria-label="" style="display: inline-block;"  onclick="closeModal('pop-modal');">확인</button>
+            </div>
+        </div>
+    </div>`;
+div.innerHTML = wdguidecontent;
+}
+
+function withdrawHistoryPop(){    
+  const div = document.getElementById('main-modal');
+  var wdhistorycontent= `<div class="dialog row" id="dehitory-modal" style="flex-direction: row; ">
+<div class="container row" style="flex-direction: row; max-width: 450px;">
+  <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
+    <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+  </button>  
+  <div data-v-40c960e6="" class="container column"><div data-v-40c960e6="" class="dialog-title row" style="flex-direction: row;">
+    <span data-v-40c960e6="" class="text-level-7 text"><img data-v-40c960e6="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 20px; height: 20px;">출금내역</span>
+  </div> 
+  <div data-v-40c960e6="" class="fill-height" id="mywithdraw">
+  </div>
+</div>
+</div>`;
+  div.innerHTML += wdhistorycontent;
+  mywithdrawlist();
+}
+
+function mywithdrawlist() {
+  $.ajax({
+      type: "POST",
+      cache: false,
+      async: true,
+      url: '/api/inouthistory',
+      dataType: 'json',
+      data : {type: 'out'},
+      success: function(data) {
+        if(data.error == false){
+            var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
+                        <tr>
+                            <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
+                            <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">환전금액</td>
+                            <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
+                            <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
+                        </tr>
+                        `;
+            if (data.data.length > 0) {
+                status_name = {
+                    0 : '대기',
+                    1 : '완료',
+                    2 : '취소'
+                 };
+                for (var i = 0; i < data.data.length; i++) {
+                    date = new Date(data.data[i].created_at);
+                    html += `<tr>
+                        <td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
+                        <td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
+                        <td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
+                        <td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
+                        </tr>
+                        </thead>`;
+                }
+                
+            }
+            html += `</table>`;
+            $("#mywithdraw").html(html);
+            
+        } else {
+            alert(data.msg);
+        }
+      }
+    });
+}
+
+
+
+function withdrawRequest() {
+  var cmoney = $('.exchange_money').val();
+  var y = parseNumberToInt(cmoney);
+  var x = 10000;
+  var remainder = Math.floor(y % x);
+  if (remainder != 0) {
+    swal2('출금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.');
+    return false;
+  }
+  var conf = confirm('출금신청을 하시겠습니까?');
+  if (!conf) {
+    return false;
+  }
+  if (cmoney <= 0) {
+    // alert('Invalid Amount');
+    swal2('정확한 금액을 입력해주세요');
+    return false;
+  }
+  $.ajax({
+    url: '/api/outbalance',
+    type: 'POST',
+    dataType: "json",
+    data: {
+      money: cmoney,
+    },
+    success: function(result) {
+      if (result.error == false) {
+        $("#exchange_money").val(0);
+        swal2('신청완료 되었습니다.');
+      } else {
+          swal2(result.msg);
+      }
+    }
+  })
+}
+
+
+//1:1 Request
+function openRequestPop(){
+  const div = document.getElementById('main-modal');
+  var requestcontent= `<v class="dialog row" style="flex-direction: row;">
+  <div class="container row" style="flex-direction: row; max-width: 500px;">
+    <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+      <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+    </button>  
+    <div data-v-ca1f65a4="" class="container column" id="request-modal">
+      <div data-v-ca1f65a4="" class="dialog-title row" style="flex-direction: row;">
+        <span data-v-ca1f65a4="" class="text-level-7 text">
+          <img data-v-ca1f65a4="" src="/frontend/dove/assets/img/inquiry-icon.75f60ef.svg" class="margin-right-5" style="width: 20px; height: 20px;">1:1문의
+        </span>
+      </div> 
+      <div data-v-ca1f65a4="" class="inquiry-list column" id="inquiry-list">
+        <div data-v-ca1f65a4="" class="fill-height">
+          <div data-v-ca1f65a4="" class="list-wrap column">
+            <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
+              <div data-v-ca1f65a4="" class="column" id="customerList" style="margin: auto; align-items: center;">
+                <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
+                
+              </div>
+            </div> 
+            <div data-v-ca1f65a4="" class="margin-bottom-10 padding-horizontal-10 row" style="flex-direction: row;">
+              <button data-v-ca1f65a4="" class="remove-btn padding-horizontal-10 button" style="height: 30px; display:none;">
+                <span data-v-ca1f65a4="" class="text">선택내역삭제</span>
+              </button> <div data-v-ca1f65a4="" class="spacer">              
+            </div> 
+            <button data-v-ca1f65a4="" class="write-btn padding-horizontal-10 button" style="height: 30px;" onclick="openWriteMsgPop();">
+              <span data-v-ca1f65a4="" class="text"><i data-v-e56d064c="" data-v-ca1f65a4="" class="margin-right-5 fa-solid fa-pen-to-square" ></i>문의작성</span>
+            </button>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  div.innerHTML += requestcontent;
+  getCustomerPage();
+}
+
+function getCustomerPage() {
+	$.ajax({
+        type: "POST",
+        cache: false,
+        async: true,
+        url: '/api/messages',
+        dataType: 'json',
+        success: function(data) {
+        if(data.error == false){
+			var html = `<table class="history-table table">
+                  <tbody id="customerList" style="width: 100%;max-width: 100%;">
+                    <tr class="table-border">
+                            <th translate="" class="text-left ng-scope" style="padding-left: 20px">제목</th>
+                            <th translate="" width="20%" class=" text-center ng-scope">작성 일시</th>
+                            <th translate="" width="20%" class=" text-center ng-scope">수신 일시</th>
+                            <th translate="" width="10%" class=" text-center ng-scope">타입</th>
+                        </tr>`;
+			if (data.data.length > 0) {
+				for (var i = 0; i < data.data.length; i++) {
+					date = new Date(data.data[i].created_at);
+					if (data.data[i].read_at == null)
+					{
+						read = '읽지 않음';
+					}
+					else
+					{
+						date1 = new Date(data.data[i].read_at);
+						read = date1.toLocaleString();
+					}
+					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
+					html += `                    
+          <tr>
+						<td class="text-left" style="padding: 5px;text-align: center;vertical-align: middle;"> <a href="#" onclick="showMsg('${data.data[i].id}')">${data.data[i].title}</a></td>
+						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
+						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${read}</td>
+						<td width="10%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${type}</td>
+						</tr>
+						<tr id="msg${data.data[i].id}" style="display:none;">
+						<td colspan="4" class="ng-scope">${data.data[i].content}</td>
+						</tr>`;
+				}
+        html +=`</tbody>
+                </table>`;
+				
+			}else{
+        html = `<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>`;
+      }
+			$("#customerList").html(html);
+            
+			
+        } else {
+            alert(data.msg);
+        }
+    }
+    });
+}
+
+function openWriteMsgPop(){
+  const inqdiv = document.getElementById('inquiry-list');
+  inqdiv.style.display="none";
+  const reqdiv = document.getElementById('request-modal');
+  var reqcontent= `<div data-v-ca1f65a4="" class="column">
+  <div data-v-ca1f65a4="" class="write-form column">
+    <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
+      <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;">
+        <div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+          <div id="vs18__combobox" role="combobox" aria-expanded="false" aria-owns="vs18__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+            <div class="vs__selected-options">
+              <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs18__combobox" aria-controls="vs18__listbox" type="search" autocomplete="off" class="vs__search">
+            </div>             
+          </div>
+        </div> 
+        <input data-v-578d3222="" data-v-ca1f65a4="" type="text" placeholder="제목" inputmode="text" class="input">
+      </div> 
+      <div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
+        <div class="editr--toolbar">
+          <div title="이미지 첨부">
+            <a class="vw-btn-imageModule">
+              <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M576 576q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm1024 384v448h-1408v-192l320-320 160 160 512-512zm96-704h-1600q-13 0-22.5 9.5t-9.5 22.5v1216q0 13 9.5 22.5t22.5 9.5h1600q13 0 22.5-9.5t9.5-22.5v-1216q0-13-9.5-22.5t-22.5-9.5zm160 32v1216q0 66-47 113t-113 47h-1600q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1600q66 0 113 47t47 113z"></path>
+              </svg>
+            </a>
+            <div class="dashboard" style="display: none;"><!----></div>
+          </div>
+        </div>
+        <div contenteditable="true" tabindex="1" placeholder="내용을 입력하세요." class="editr--content"></div>
+      </div> <!----> 
+      <div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
+        <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px;">
+          <span data-v-ca1f65a4="" class="text">작성취소</span>
+        </button> 
+        <div data-v-ca1f65a4="" class="spacer"></div> 
+        <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;">
+          <span data-v-ca1f65a4="" class="text">작성완료</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>`;
+reqdiv.innerHTML += reqcontent;
+}
