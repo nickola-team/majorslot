@@ -18,10 +18,10 @@
                 <!---->
             </div>
             <div data-v-43e90682="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
-                <div class="row" style="width: 100%; flex-direction: row;">
+                <div class="row" style="width: 100%; flex-direction: row;" onclick='openWithdrawModal(<?php echo json_encode(number_format(auth()->user()->balance)); ?>);'>
                 <button data-v-e77ddfb0="" class="withdraw button">
                     <span data-v-e77ddfb0="" class="text">
-                    <img data-v-e77ddfb0="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-5" style="width: 16px; height: 16px;">출금 </span>
+                    <img data-v-e77ddfb0="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-5" style="width: 16px; height: 16px;" >출금 </span>
                 </button>
                 </div>
                 <!---->
