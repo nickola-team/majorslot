@@ -63,6 +63,8 @@
 						</div> 
 						<div data-v-525011a5="" id="main-modal" class="vue-portal-target">
 						</div>
+
+						<div id="pop-modal"></div>
 					</div>
 				</div>
 			</div>

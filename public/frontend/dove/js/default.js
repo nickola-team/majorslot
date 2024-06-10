@@ -10,7 +10,7 @@ function openLoginModal(logo, banks) {
 
     var logincontent = `<div id="login-modal" class="dialog row" style="flex-direction: row;">
     <div class="container row" style="flex-direction: row; max-width: 400px;">
-      <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal();">
+      <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
         <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
       </button>
       <div data-v-6194c674="" class="container column">
@@ -46,8 +46,8 @@ function openLoginModal(logo, banks) {
   </div>`;
   div.innerHTML = logincontent;
 }
-function closeModal(){
-    document.getElementById('main-modal').innerHTML = "";
+function closeModal(modalname){
+    document.getElementById(modalname).innerHTML = "";
 }
 function openRegisterModal(logo, banks) {
     if(Array.isArray(banks)){
@@ -66,7 +66,7 @@ function openRegisterModal(logo, banks) {
     const div = document.getElementById('main-modal');
     var logincontent = `<div class="dialog row" id="register-popup" style="flex-direction: row;">
     <div class="container row" style="flex-direction: row; max-width: 400px;">
-      <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal();">
+      <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
         <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
       </button>
       <div data-v-06860046="" class="container column">
@@ -475,3 +475,185 @@ function isInputNumber(evt) {
     evt.preventDefault();
   }
 }
+
+
+
+function openDepositModal(username){
+  const div = document.getElementById('main-modal');
+    var depositcontent = `<div class="dialog row" style="flex-direction: row;">
+							<div class="container row" style="flex-direction: row; max-width: 500px;">
+								<button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+									<i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+								</button>  
+								<div data-v-5290ad82="" class="fill-height">
+									<div data-v-5290ad82="" class="container column">
+										<div data-v-5290ad82="" class="dialog-title row" style="flex-direction: row;">
+											<span data-v-5290ad82="" class="text-level-7 text"><img data-v-5290ad82="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTkgOFY4QzIwLjEwNDYgOCAyMSA4Ljg5NTQzIDIxIDEwVjE4QzIxIDE5LjEwNDYgMjAuMTA0NiAyMCAxOSAyMEg2QzQuMzQzMTUgMjAgMyAxOC42NTY5IDMgMTdWN0MzIDUuMzQzMTUgNC4zNDMxNSA0IDYgNEgxN0MxOC4xMDQ2IDQgMTkgNC44OTU0MyAxOSA2VjhaTTE5IDhIN00xNyAxNEgxNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=" class="margin-right-5" style="width: 20px; height: 20px;">입금신청</span>
+										</div> 
+										<div data-v-5290ad82="" class="margin-bottom-10 column">
+											<div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+												<span data-v-5290ad82="" class="text">입금방식</span>
+											</div> <div data-v-5290ad82="" class="deposit-method row" style="flex-direction: row; flex-shrink: 0;">
+												<div data-v-5290ad82="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+													<div id="vs20__combobox" role="combobox" aria-expanded="false" aria-owns="vs20__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+														<div class="vs__selected-options">
+															<span class="vs__selected">현금</span> 
+															<input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs20__combobox" aria-controls="vs20__listbox" type="search" autocomplete="off" class="vs__search">
+														</div> 
+														<div class="vs__actions">
+															<button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
+																<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+																	<path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
+																</svg>
+															</button> 
+															<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
+																<path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
+															</svg> 
+															<div class="vs__spinner" style="display: none;">Loading...</div>
+														</div>
+													</div> 
+													<ul id="vs20__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
+												</div> 
+												<div data-v-5290ad82="" class="detail-btn-wrap row" style="flex-direction: row;">
+													<button data-v-5290ad82="" class="detail-btn button" onclick="depositGuidePop();">
+														<span data-v-5290ad82="" class="text"><i data-v-e56d064c="" data-v-5290ad82="" class="fa-solid fa-circle-question fa-lg"></i></span>
+													</button>
+												</div>
+											</div>
+										</div> 
+										<div data-v-5290ad82="" class="margin-bottom-10 column">
+											<div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+												<span data-v-5290ad82="" class="text">입금자명</span>
+											</div> 
+											<div data-v-5290ad82="" class="row" style="flex-direction: row;">
+												<input data-v-578d3222="" data-v-5290ad82="" type="text" inputmode="text" disabled="disabled" class="input account-name" value="${username}">
+											</div>
+										</div> 
+										<div data-v-5290ad82="" class="margin-bottom-10 column">
+											<div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+												<span data-v-5290ad82="" class="text">입금 금액</span>
+											</div> 
+											<div data-v-5290ad82="" class="margin-bottom-10 row" style="flex-direction: row;">
+												<input data-v-578d3222="" data-v-5290ad82="" id="charge_money" type="text" placeholder="입금하실 금액을 입력해주세요" inputmode="numeric" class="input deposit-money">
+											</div> 
+											<div data-v-5290ad82="" class="deposit-money-btn row" style="flex-direction: row;">
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(10000)">
+													<span data-v-5290ad82="" class="text">10,000</span>
+												</button> 
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(30000)">
+													<span data-v-5290ad82="" class="text">30,000</span>
+												</button> 
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(50000)">
+													<span data-v-5290ad82="" class="text">50,000</span>
+												</button> 
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(100000)">
+													<span data-v-5290ad82="" class="text">100,000</span>
+												</button> 
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(500000)">
+													<span data-v-5290ad82="" class="text">500,000</span>
+												</button> 
+												<button data-v-5290ad82="" class="button" onclick="addMoneyDeposit(1000000)">
+													<span data-v-5290ad82="" class="text">1,000,000</span>
+												</button>
+											</div>
+										</div> 
+										<div data-v-5290ad82="" class="margin-bottom-10 column">
+											<div data-v-5290ad82="" class="button-wrap row" style="flex-direction: row;">
+												<div data-v-40c960e6="" data-v-5290ad82="" class="row" style="flex-direction: row;">
+													<div class="row" style="width: 100%; flex-direction: row;">
+														<button data-v-5290ad82="" class="history button text" style="background: transparent;" onclick="depositHistoryPop();">
+															<span data-v-5290ad82="" class="text"><i data-v-e56d064c="" data-v-5290ad82="" class="margin-right-5 fa-solid fa-list"></i>입금내역</span>
+														</button>
+													</div> <!---->
+												</div> 
+												<div data-v-5290ad82="" class="spacer"></div> 
+												<button data-v-5290ad82="" class="deposit-button button">입금 계좌요청</button> 
+												<div data-v-3b808694="" data-v-5290ad82="" class="row" style="flex-direction: row;">
+													<div class="row" style="width: 100%; flex-direction: row;"></div> <!---->
+												</div> 
+												<div data-v-75458f4a="" data-v-5290ad82="" class="row" style="flex-direction: row;">
+													<div class="row" style="width: 100%; flex-direction: row;"></div> <!---->
+												</div>
+											</div>
+										</div>
+									</div> <!---->
+								</div>
+							</div>
+						</div>`;
+  div.innerHTML = depositcontent;
+}
+
+function replaceComma(str)
+{
+	if(str==null || str.length==0) return "";
+	while(str.indexOf(",")>-1){
+		str = str.replace(",","");
+	}
+	return str;
+}
+
+function insertComma(str)
+{
+	var rightchar = replaceComma(str);
+	var moneychar="";
+	for(index=rightchar.length-1;index>=0;index--){
+		splitchar = rightchar.charAt(index);
+		if(isNaN(splitchar)){
+			return "";
+		}
+		moneychar = splitchar+moneychar;
+		if(index%3==rightchar.length%3 && index  !=0) {
+			moneychar = ','+moneychar;
+		}
+	}
+	str = moneychar;
+	return str;
+}
+
+function addMoneyDeposit(money) {
+  // alert(money)
+  // var obj  =   $("#money");
+  var str = $("#charge_money").val();
+  if (str == null || str.length == 0) str = "0";
+  str = replaceComma(str);
+  var betMoney = parseInt(str);
+  betMoney += money;
+  $("#charge_money").val(insertComma("" + betMoney));
+  }
+
+  function depositGuidePop(){
+    const div = document.getElementById('pop-modal');
+    var depositguidecontent = `<div class="swal2-container swal2-center v-application swal2-backdrop-show" style="overflow-y: auto;">
+          <div aria-labelledby="swal2-title" aria-describedby="swal2-html-container" class="swal2-popup swal2-modal swal2-show" tabindex="-1" role="dialog" aria-live="assertive" aria-modal="true" style="display: grid;">
+              <button type="button" class="swal2-close" aria-label="Close this dialog" style="display: none;">×</button>
+              <ul class="swal2-progress-steps" style="display: none;"></ul>
+              <div class="swal2-icon" style="display: none;"></div>
+              <img class="swal2-image" style="display: none;">
+              <h2 class="swal2-title" id="swal2-title" style="display: none;"></h2>
+              <div class="swal2-html-container" id="swal2-html-container" style="display: block;">
+                  <p><span style="color: rgb(239, 198, 49);">수표입금시 입금처리 절대 되지 않습니다.</span></p>
+                  <p><span style="color: rgb(239, 198, 49);">23:50 ~ 00:30, 휴일 다음 첫 영업일 새벽에는 은행점검으로 인해 계좌이체가 지연될 수 있습니다.</span></p>
+                  <p><span style="color: rgb(239, 198, 49);">위 시간 이외에도 몇몇 은행은 추가적 점검시간이 따로 있으니 이점 유념하시기 바랍니다. </span></p>
+                  <p><br></p>
+              </div>
+              <div class="swal2-actions" style="display: flex;">
+                  <div class="swal2-loader"></div>
+                  <button type="button" class="swal2-confirm v-btn v-btn--depressed theme--dark v-size--default primary mx-1" aria-label="" style="display: inline-block;"  onclick="closeModal('pop-modal');">확인</button>
+              </div>
+          </div>
+      </div>`;
+  div.innerHTML = depositguidecontent;
+  }
+
+
+  function depositHistoryPop(){
+    const div = document.getElementById('main-modal');
+    var dehistorycontent= `<div class="container row" style="flex-direction: row; max-width: 450px;"><button class="close-button button" style="background: rgb(44, 48, 58);"><i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i></button>  <div data-v-40c960e6="" class="container column"><div data-v-40c960e6="" class="dialog-title row" style="flex-direction: row;"><span data-v-40c960e6="" class="text-level-7 text"><img data-v-40c960e6="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 20px; height: 20px;">입금내역</span></div> <div data-v-40c960e6="" class="button-wrap margin-bottom-10 row" style="flex-direction: row;"><div data-v-40c960e6="" class="spacer"></div> <button data-v-40c960e6="" class="button"><span data-v-40c960e6="" class="text">선택내역삭제</span></button></div> <div data-v-40c960e6="" class="fill-height"><div data-v-40c960e6="" class="deposit-log-list scrollable-auto margin-bottom-10 column"><div data-v-40c960e6="" class="no-data row" style="flex-direction: row;"><span data-v-40c960e6="" class="text">데이터가 없습니다.</span></div></div></div> <div data-v-40c960e6="" class="margin-bottom-10 row" style="flex-direction: row;"><div data-v-30f53f18="" data-v-40c960e6="" class="pagination row" style="flex-direction: row; align-items: center;"><div data-v-30f53f18="" class="row" style="flex-direction: row;"><div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;"> <div id="vs3__combobox" role="combobox" aria-expanded="false" aria-owns="vs3__listbox" aria-label="Search for option" class="vs__dropdown-toggle"><div class="vs__selected-options"><span class="vs__selected">
+            15
+           <!----></span> <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs3__combobox" aria-controls="vs3__listbox" type="search" autocomplete="off" class="vs__search"></div> <div class="vs__actions"><button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path></svg></button> <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator"><path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path></svg> <div class="vs__spinner" style="display: none;">Loading...</div></div></div> <ul id="vs3__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> </div></div> <div data-v-30f53f18="" class="row" style="flex-direction: row; align-items: center;"><span data-v-30f53f18="" class="text" style="opacity: 0.6;">
+      개 씩 표시
+    </span></div> <div data-v-30f53f18="" class="spacer"></div> <div data-v-30f53f18="" class="row" style="flex-direction: row;"><div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;"> <div id="vs4__combobox" role="combobox" aria-expanded="false" aria-owns="vs4__listbox" aria-label="Search for option" class="vs__dropdown-toggle"><div class="vs__selected-options"><span class="vs__selected">
+            1
+           <!----></span> <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs4__combobox" aria-controls="vs4__listbox" type="search" autocomplete="off" class="vs__search"></div> <div class="vs__actions"><button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path></svg></button> <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator"><path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path></svg> <div class="vs__spinner" style="display: none;">Loading...</div></div></div> <ul id="vs4__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> </div></div> <div data-v-30f53f18="" class="row" style="flex-direction: row;"><button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);"><i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i></button></div> <div data-v-30f53f18="" class="row" style="flex-direction: row;"><button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);"><i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i></button></div></div></div></div></div>`;
+    div.innerHTML = dehistorycontent;
+  }
