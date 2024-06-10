@@ -1,12 +1,32 @@
 <div data-v-e77ddfb0="" data-v-525011a5="" class="header column">
     @auth()
-    <div data-v-e77ddfb0="" class="mobile-header row" style="flex-direction: row;">
+    <div data-v-e77ddfb0="" class="header-container row" style="flex-direction: row;">
         <div data-v-e77ddfb0="" class="amount row" style="flex-direction: row;">
             <span data-v-e77ddfb0="" class="text" style="margin-right: 5px; opacity: 0.7;">보유금액
                 <span data-v-e77ddfb0="" class="text" style="opacity: 0.7; margin-left: 5px;">₩</span>
             </span> 
             <span data-v-e77ddfb0="" class="cash text">0</span>
         </div> 
+        <div data-v-e77ddfb0="" class="quick-btn row" style="flex-direction: row;">
+            <div data-v-5290ad82="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
+                <div class="row" style="width: 100%; flex-direction: row;">
+                <button data-v-e77ddfb0="" class="deposit button" onclick='openDepositModal(<?php echo json_encode(mb_substr(auth()->user()->recommender, 0, 2)); ?>);'>
+                    <span data-v-e77ddfb0="" class="text">
+                    <img data-v-e77ddfb0="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTkgOFY4QzIwLjEwNDYgOCAyMSA4Ljg5NTQzIDIxIDEwVjE4QzIxIDE5LjEwNDYgMjAuMTA0NiAyMCAxOSAyMEg2QzQuMzQzMTUgMjAgMyAxOC42NTY5IDMgMTdWN0MzIDUuMzQzMTUgNC4zNDMxNSA0IDYgNEgxN0MxOC4xMDQ2IDQgMTkgNC44OTU0MyAxOSA2VjhaTTE5IDhIN00xNyAxNEgxNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=" class="margin-right-5" style="width: 16px; height: 16px;" >입금 </span>
+                </button>
+                </div>
+                <!---->
+            </div>
+            <div data-v-43e90682="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
+                <div class="row" style="width: 100%; flex-direction: row;">
+                <button data-v-e77ddfb0="" class="withdraw button">
+                    <span data-v-e77ddfb0="" class="text">
+                    <img data-v-e77ddfb0="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-5" style="width: 16px; height: 16px;">출금 </span>
+                </button>
+                </div>
+                <!---->
+            </div>
+        </div>
         <div data-v-e77ddfb0="" class="spacer"></div> 
         <div data-v-e77ddfb0="" class="account row" style="flex-direction: row;">
             <div data-v-e77ddfb0="" class="dropdown">
@@ -185,3 +205,6 @@
 <!-- <?php
 	$banks = \VanguardLTE\User::$values['banks'];
 ?> -->
+
+
+    
