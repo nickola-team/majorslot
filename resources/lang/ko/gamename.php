@@ -1237,7 +1237,11 @@ return [
         "DwarfandDragon" => "드워프 앤드 드래곤",
         "RiseofPyramids" => "라이즈 오브 피라미드",
         "SweetBonanza1000" => "스위트 보난자 1000",
-
+        "FruitTreats" => "후루티 트릿스",
+        "RevengeofLokiMegaways" => "리벤지 오브 로키 메가웨이즈",
+        "StarlightPrincessPachi" => "스타라이트 프린세스 파치",
+        "Wildies" => "와일디즈",
+        
         //Booongo
         "tigerstone" => "타이거 스톤",
 
@@ -1500,7 +1504,10 @@ return [
         "GoodFortune" => "굿 포춘",
         "MuayThai" => "무에타이",
         "Chicago2" => "시카고 2",
-        "TheBeastWar" => "더 비스트 워"
+        "TheBeastWar" => "더 비스트 워",
+        "GodofWar" => "갓 오브 워",
+        "GodofWarM" => "갓 오브 워 M",
+        "AllStarTeam" => "모든 스타 팀"
 ];
 
 

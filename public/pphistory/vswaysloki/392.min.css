@@ -1,0 +1,876 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 24px;
+    --slot-item-width: 52px;
+    --slot-last-row-height: 40px;
+    --reel-height: calc((var(--reelslot-sh) - 1)*var(--slot-item-height) + var(--slot-last-row-height))
+}
+
+.WinLines-Group .ReelsSlot__Item--win,
+.WinLines-Group .Slot__Item--win {
+    border-width: 1px
+}
+
+.ReelsSlot__Reel:first-child .ReelsSlot__Item:last-child,
+.ReelsSlot__Reel:last-child .ReelsSlot__Item:last-child {
+    opacity: 1
+}
+
+.ReelsSlot__Reel:first-child .ReelsSlot__Item:last-child:before,
+.ReelsSlot__Reel:last-child .ReelsSlot__Item:last-child:before {
+    content: "";
+    background-color: #252d31;
+    position: absolute;
+    top: -1px;
+    bottom: -2px;
+    left: -2px;
+    right: -1px;
+    border-color: #4c4c4c;
+    border-style: solid;
+    border-width: 1px 1px 0 0
+}
+
+.ReelsSlot__Reel:last-child .ReelsSlot__Item:last-child:before {
+    border-width: 1px 0 0 1px;
+    right: -2px
+}
+
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item--8 .ReelsSlot__ItemImg,
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item--9 .ReelsSlot__ItemImg,
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item--10 .ReelsSlot__ItemImg,
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item--11 .ReelsSlot__ItemImg,
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item--12 .ReelsSlot__ItemImg {
+    object-fit: contain
+}
+
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item:last-child {
+    display: inline-block;
+    height: var(--slot-last-row-height);
+    flex-basis: auto;
+    flex-grow: 0
+}
+
+.LinesSlot .ReelsSlot__Reel .ReelsSlot__Item:last-child:not(.ReelsSlot__Item--win) {
+    border-top: 1px solid #4c4c4c
+}
+
+.Bonus35 {
+    display: flex;
+    align-items: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Bonus35__Items {
+    display: flex;
+    flex-direction: column-reverse
+}
+
+.Bonus35__Items .Bonus35__Item {
+    width: 68px;
+    height: 45px;
+    position: relative
+}
+
+.Bonus35__Items .Bonus35__Item:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysloki/bonus35/nff_closed.png) 1x, url(./images/vswaysloki/bonus35/nff_closed@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    z-index: 1
+}
+
+.Bonus35__Items .Bonus35__Item--opened:before {
+    content: none
+}
+
+.Bonus35__Items .Bonus35__Item--previous:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysloki/bonus35/nff_previous.png) 1x, url(./images/vswaysloki/bonus35/nff_previous@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Bonus35__Items .Bonus35__Item+.Bonus35__Item {
+    margin-bottom: 10px
+}
+
+.Bonus35__Items .Bonus35__Item-Title {
+    width: 55px;
+    white-space: nowrap
+}
+
+.Bonus35__Items .Bonus35__Item .Image {
+    font-size: .79rem;
+    line-height: normal
+}
+
+.Bonus35__Items .Bonus35__Item .Image__Source {
+    width: 100%;
+    height: 100%
+}
+
+.Bonus35 .ResultWrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end
+}
+
+.Bonus35 .ResultWrap .GambleResult {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto 15px
+}
+
+.Bonus35 .ResultWrap .GambleResult__Bg {
+    width: 50px;
+    height: 42px
+}
+
+.Bonus35 .ResultWrap .GambleResult__Title {
+    width: 40px;
+    font-size: .64rem
+}
+
+.Bonus35 .ResultWrap .Result {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.Bonus35 .ResultWrap .Result__Collect {
+    width: 100px;
+    height: 50px;
+    margin-top: 10px
+}
+
+.Bonus35 .ResultWrap .Result--selected {
+    padding: 5px;
+    color: #fff;
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.Multiplier {
+    width: 55px;
+    height: 72px;
+    margin: 5px 5px 0 0
+}
+
+.Multiplier .Image__Children {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Multiplier__Title {
+    width: 45px;
+    margin: 8px 0 4px
+}
+
+.SuperSymbol .MoneyScatter__Money {
+    width: var(--slot-item-width);
+    white-space: nowrap;
+    line-height: normal
+}
+
+.SuperSymbol .MoneyScatter__Label {
+    line-height: normal
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.ReelsSlot__ItemImg[alt="1"],
+.ReelsSlot__ItemImg[alt="2"],
+.ReelsSlot__ItemImg[alt="3"],
+.ReelsSlot__ItemImg[alt="4"],
+.ReelsSlot__ItemImg[alt="5"],
+.ReelsSlot__ItemImg[alt="6"],
+.ReelsSlot__ItemImg[alt="7"],
+.ReelsSlot__ItemImg[alt="13"] {
+    object-fit: fill
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswaysloki/spin/1x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswaysloki/spin/1x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswaysloki/spin/2x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswaysloki/spin/2x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswaysloki/spin/3x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswaysloki/spin/3x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswaysloki/spin/4x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswaysloki/spin/4x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswaysloki/spin/5x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswaysloki/spin/5x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswaysloki/spin/6x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswaysloki/spin/6x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswaysloki/spin/7x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswaysloki/spin/7x2@2x.png)
+    }
+}
+
+.ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="13"] {
+    content: url(images/vswaysloki/spin/13x2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Item:last-child .ReelsSlot__ItemImg[alt="13"] {
+        content: url(images/vswaysloki/spin/13x2@2x.png)
+    }
+}
