@@ -5,7 +5,7 @@
             <span data-v-e77ddfb0="" class="text" style="margin-right: 5px; opacity: 0.7;">보유금액
                 <span data-v-e77ddfb0="" class="text" style="opacity: 0.7; margin-left: 5px;">₩</span>
             </span> 
-            <span data-v-e77ddfb0="" class="cash text">0</span>
+            <span data-v-e77ddfb0="" class="cash text">{{number_format(auth()->user()->balance,0)}}</span>
         </div> 
         <div data-v-e77ddfb0="" class="quick-btn row" style="flex-direction: row;">
             <div data-v-5290ad82="" data-v-e77ddfb0="" class="row" style="flex-direction: row;">
@@ -30,10 +30,10 @@
         <div data-v-e77ddfb0="" class="spacer"></div> 
         <div data-v-e77ddfb0="" class="account row" style="flex-direction: row;">
             <div data-v-e77ddfb0="" class="dropdown">
-                <button data-v-e77ddfb0="" class="button text" style="background: transparent;">
+                <button data-v-e77ddfb0="" class="button text" style="background: transparent;" onclick="showProfile()">
                     <div data-v-e77ddfb0="" class="user-info column">
                         <div data-v-e77ddfb0="" class="row" style="flex-direction: row;">
-                            <span data-v-e77ddfb0="" class="text">구글총판</span>
+                            <span data-v-e77ddfb0="" class="text">{{auth()->user()->username}}</span>
                         </div>
                     </div> 
                     <div data-v-e77ddfb0="" class="user-icon row" style="flex-direction: row;">
@@ -45,7 +45,7 @@
                         </span>
                     </div>
                 </button> 
-                <div class="dropdown-menu show" style="display: none;">
+                <div class="dropdown-menu show" id="profile-drop" style="display: none;">
                     <div class="column" style="width: 100%;">
                         <div data-v-3b098160="" data-v-e77ddfb0="" class="card column">
                             <div data-v-3b098160="" class="account-detail column">
@@ -55,12 +55,11 @@
                                     </div> 
                                     <div data-v-3b098160="" class="row" style="flex-direction: row; flex-grow: 2;">
                                         <div data-v-3b098160="" class="column" style="align-items: flex-start;">
-                                            <span data-v-3b098160="" class="text-level-6 text">구글총판</span> 
-                                            <span data-v-3b098160="" class="text-level-9 text" style="opacity: 0.7;">브론즈</span>
+                                            <span data-v-3b098160="" class="text-level-6 text">{{auth()->user()->username}}</span> 
                                         </div> 
                                         <div data-v-3b098160="" class="spacer"></div> 
                                         <div data-v-3b098160="" class="logout column" style="justify-content: center;">
-                                            <button data-v-3b098160="" class="logout-btn button text" style="background: transparent;">
+                                            <button data-v-3b098160="" class="logout-btn button text" style="background: transparent;" onclick="logOut();">
                                                 <span data-v-3b098160="" class="text" style="font-weight: bold;">
                                                     <i data-v-e56d064c="" data-v-3b098160="" class="margin-right-5 fa-regular fa-right-from-bracket"></i>로그아웃
                                                 </span>
@@ -71,11 +70,11 @@
                                 <div data-v-3b098160="" class="money-detail row" style="flex-direction: row; margin-top: 0px;">
                                     <div data-v-3b098160="" class="column">
                                         <span data-v-3b098160="" class="text">보유금액</span> 
-                                        <span data-v-3b098160="" class="text">0</span>
+                                        <span data-v-3b098160="" class="text">{{number_format(auth()->user()->balance,0)}} 원</span>
                                     </div> 
                                     <div data-v-3b098160="" class="column">
                                         <span data-v-3b098160="" class="text">보유포인트</span> 
-                                        <span data-v-3b098160="" class="text">0</span>
+                                        <span data-v-3b098160="" class="text">{{number_format(auth()->user()->deal_balance,0)}}</span>
                                     </div>
                                 </div>
                             </div> 
@@ -108,7 +107,7 @@
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-1f1727bf="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
-                                                <button data-v-3b098160="" class="exchange button">
+                                                <button data-v-3b098160="" class="exchange button" onclick="PointToMoney();">
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNOCAxMEgyMEwxNiA2IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik0xNiAxNEw0IDE0TDggMTgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+" class="margin-right-5" style="width: 16px; height: 16px;">포인트전환
                                                     </span>
@@ -117,7 +116,7 @@
                                         </div>
                                     </div> 
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
-                                        <a data-v-3b098160="" href="/mypage/userinfo" class="">
+                                        <a data-v-3b098160="" href="#" class="" onclick="openProfileModal('{{auth()->user()->username}}', '{{number_format(auth()->user()->balance,0)}}', '{{number_format(auth()->user()->deal_balance,0)}}');">
                                             <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                 <img data-v-3b098160="" src="/frontend/dove/assets/img/mypage-icon.6ac2d7a.svg" class="margin-right-5" style="width: 16px; height: 16px;">마이페이지
                                             </span>
@@ -131,11 +130,13 @@
                                                 <button data-v-3b098160="" class="message button">
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIGZpbGw9IiNmZmZmZmYiIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDE5MjAgMTkyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0wIDE2OTQuMjM1aDE5MjBWMjI2SDB2MTQ2OC4yMzVaTTExMi45NDEgMzc2LjY2NFYzMzguOTRIMTgwNy4wNnYzNy43MjNMOTYwIDExMTEuMjMzbC04NDcuMDU5LTczNC41N1pNMTgwNy4wNiA1MjYuMTk4djk1MC41MTNsLTM1MS4xMzQtNDM4Ljg5LTg4LjMyIDcwLjQ3NSAzNzguMzUzIDQ3Mi45OThIMTc0LjA0MmwzNzguMzUzLTQ3Mi45OTgtODguMzItNzAuNDc1LTM1MS4xMzQgNDM4Ljg5VjUyNi4xOThMOTYwIDEyNjAuNzY4bDg0Ny4wNTktNzM0LjU3WiIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 16px; height: 16px;">메세지
+                                                    <span data-v-e77ddfb0="" class="text" style="margin-left: 5px;">{{$unreadmsg}}</span>
                                                     </span>
                                                 </button>
                                             </div> <!---->
                                         </div>
                                     </div> 
+                                    <!--
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-db5cba90="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
@@ -144,9 +145,10 @@
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 16px; height: 16px;">베팅로그
                                                     </span>
                                                 </button>
-                                            </div> <!---->
+                                            </div>
                                         </div>
                                     </div>
+                                    -->
                                 </div>
                             </div>
                         </div>

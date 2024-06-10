@@ -381,27 +381,8 @@
                         </div>
                     </div> 
                     <div data-v-fad191c6="" class="fill-height">
-                        <div data-v-fad191c6="" class="lists column">
-                            <div data-v-fad191c6="" class="data row" style="flex-direction: row;">
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="game-name text">에볼루션</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">맥*</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">18:09:29</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">₩10,000</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">2x</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="win text">₩20,000</span>
-                                </div>
-                            </div>
+                        <div data-v-fad191c6="" class="lists column" id="last_bet_list">
+                            
                         </div>
                     </div>
                 </div>

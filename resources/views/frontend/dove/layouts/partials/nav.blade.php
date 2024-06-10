@@ -21,18 +21,59 @@
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Slot Games</span>
                 </div>
             </a> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=
+                @auth
+                {{$isSports = false}}
+                    @foreach($categories AS $index=>$category)
+                        @if ($category->type =='sports')
+                            @if ($category->status == 0)
+                                "swal2('점검중입니다', 'warning');"
+                            @elseif ($category->view == 0)
+                                "swal2('지원하지 않는 게임입니다.', 'warning');"
+                            @else
+                                "startGameByProvider('bti', 'sports')"
+                            @endif 
+                                {{$isSports = true}} 
+                                @break
+                        @endif
+                    @endforeach
+                    @if(!$isSports)
+                        "swal2('지원하지 않는 게임입니다.', 'warning');"
+                    @endif
+                @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
                 <img data-v-556f8885="" src="/frontend/dove/assets/img/hotel-casino.d9f8c4a.svg" class="margin-right-10" style="width: 22px; height: 22px;"> 
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">스포츠</span> 
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Sports</span>
                 </div>
             </a> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=@auth
+            @php
+            $isMini = false;
+            @endphp
+                @foreach($categories AS $index=>$category)
+                    @if ($category->type =='pball')
+                        @if ($category->view == 0)
+                            "swal2('지원하지 않는 게임입니다.', 'warning');"
+                        @elseif ($category->status == 0)
+                            "swal2('점검중입니다', 'warning');"
+                        @else
+                            "slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
+                        @endif
+                            @php
+                                $isMini = true;
+                            @endphp
+                        @break
+                    @endif
+                @endforeach
+                @if(!$isMini)
+                    "swal2('지원하지 않는 게임입니다.', 'warning');"
+                @endif
+            @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
                 <img data-v-556f8885="" src="/frontend/dove/assets/img/holdem.4f9680f.svg" class="margin-right-10" style="width: 22px; height: 22px;">
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">파워볼</span> 
-                    <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Power Ball</span>
+                    <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Mini Game</span>
                 </div>
             </a> 
             <div data-v-556f8885="" class="division row" style="flex-direction: row; margin-bottom: 20px;"></div> 

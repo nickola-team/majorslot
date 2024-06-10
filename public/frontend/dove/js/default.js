@@ -1,9 +1,98 @@
+var slot_games = [];
+$(document).ready(function(){
+    setInterval(function () {
+      updateLastBet();  
+    }, 5000);
+    // withdrawRealtime();
+});
 function openNav() {
     $('.slideout-wrapper').css('display', 'block');
 }
   
 function closeNav() {
     $('.slideout-wrapper').css('display', 'none');
+}
+function logOut() {
+  top.location.href="/logout";
+}
+function updateLastBet() {
+  $.ajax({
+    url: '/api/last_bet',
+    type: 'POST',
+    dataType: "json",
+    data : null,
+    success: function(result) {
+        if (result.error == false)
+        {
+          const div = document.getElementById('last_bet_list');
+          var htmlasthistory = ``;
+          var datas = result.data;
+          for(var i = 0; i < datas.length; i++){
+            htmlasthistory += `<div data-v-fad191c6="" class="data row" style="flex-direction: row;">
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="game-name text">${datas[i].game}</span>
+                          </div> 
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="text">${datas[i].username}</span>
+                          </div> 
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="text">${datas[i].time}</span>
+                          </div> 
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="text">₩${datas[i].betamount}</span>
+                          </div> 
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="text">${datas[i].odd}x</span>
+                          </div> 
+                          <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+                              <span data-v-fad191c6="" class="win text">₩${datas[i].winamount}</span>
+                          </div>
+                      </div>`;
+          }
+          div.innerHTML = htmlasthistory;
+        }
+    }
+  });
+}
+function PointToMoney() {
+  showProfile();
+  Swal.fire({
+    title: '',
+    text: '모든 포인트를 머니로 변환하시겠습니까?',
+    icon: 'warning',
+    
+    showCancelButton: false, // cancel버튼 보이기. 기본은 원래 없음
+    confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+    confirmButtonText: '확인', // confirm 버튼 텍스트 지정
+    
+    reverseButtons: true, // 버튼 순서 거꾸로
+    
+ }).then(result => {
+    // 만약 Promise리턴을 받으면,
+    if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면    
+      $.ajax({
+        url: '/api/convert_deal_balance',
+        type: 'POST',
+        dataType: "json",
+        data : null,
+        success: function(result) {
+  
+            if (result.error == false)
+            {
+                swal2('전환되었습니다', 'success', ()=>{window.location.href = "/";});
+            }else{
+              swal2(result.msg, 'error');
+            }
+        }
+      });
+    }
+ });
+}
+function showProfile(){
+  if($('#profile-drop').css('display') == 'flex')
+    $('#profile-drop').css('display', 'none');
+  else
+    $('#profile-drop').css('display', 'flex');
 }
 function openLoginModal(logo, banks) {    
     const div = document.getElementById('main-modal');
@@ -141,12 +230,20 @@ function openRegisterModal(logo, banks) {
   div.innerHTML = logincontent;
 }
 
-function swal2(message, status='success'){ // status : 'success', 'warning', 'error'
+function swal2(message, status='success', callback=null){ // status : 'success', 'warning', 'error'
     Swal.fire(
         '',
         message,
         status
-      );
+      ).then(result => {
+        // 만약 Promise리턴을 받으면,
+        if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면    
+          if(callback != null)
+          {
+            callback();
+          }
+        }
+     });
 }
 
 
@@ -789,3 +886,208 @@ function addMoneyDeposit(money) {
       }
     });
   }
+  function openProfileModal(username, balance, dealbalance){
+    const div = document.getElementById('main-modal');
+      var depositcontent = `<div class="dialog row" style="flex-direction: row;">
+                <div class="container row" style="flex-direction: row; max-width: 500px;">
+                  <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+                    <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+                  </button>  
+                  <div data-v-5290ad82="" class="fill-height">
+                    <div data-v-5290ad82="" class="container column">
+                      <div data-v-5290ad82="" class="dialog-title row" style="flex-direction: row;">
+                        <span data-v-5290ad82="" class="text-level-7 text"><img data-v-5290ad82="" src="/frontend/dove/assets/img/mypage-icon.6ac2d7a.svg" class="margin-right-5" style="width: 20px; height: 20px;">마이페이지</span>
+                      </div> 
+                      <div data-v-5290ad82="" class="margin-bottom-10 column">
+                        <div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+                          <span data-v-5290ad82="" class="text">닉네임</span>
+                        </div> 
+                        <div data-v-5290ad82="" class="row" style="flex-direction: row;">
+                          <input data-v-578d3222="" data-v-5290ad82="" type="text" inputmode="text" disabled="disabled" class="input account-name" value="${username}">
+                        </div>
+                      </div> 
+                      <div data-v-5290ad82="" class="margin-bottom-10 column">
+                        <div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+                          <span data-v-5290ad82="" class="text">보유금</span>
+                        </div> 
+                        <div data-v-5290ad82="" class="row" style="flex-direction: row;">
+                          <input data-v-578d3222="" data-v-5290ad82="" type="text" inputmode="text" disabled="disabled" class="input account-name" value="${balance}">
+                        </div>
+                      </div> 
+                      <div data-v-5290ad82="" class="margin-bottom-10 column">
+                        <div data-v-5290ad82="" class="title row" style="flex-direction: row;">
+                          <span data-v-5290ad82="" class="text">보유포인트</span>
+                        </div> 
+                        <div data-v-5290ad82="" class="row" style="flex-direction: row;">
+                          <input data-v-578d3222="" data-v-5290ad82="" type="text" inputmode="text" disabled="disabled" class="input account-name" value="${dealbalance}">
+                        </div>
+                      </div> 
+                    </div> <!---->
+                  </div>
+                </div>
+              </div>`;
+    div.innerHTML = depositcontent;
+    showProfile();
+  }
+  function startGameByProvider(provider, gamecode,max = false) {
+    var formData = new FormData();
+    formData.append("provider", provider);
+    formData.append("gamecode", gamecode);
+    $.ajax({
+    type: "POST",
+    url: "/api/getgamelink",
+    data: formData,
+    processData: false,
+    contentType: false,
+    cache: false,
+    async: false,
+    success: function (data) {
+      if (data.error) {
+        alert(data.msg);
+        return;
+      }
+          if (max)
+         {
+           window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+         }else{
+           window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+         }
+    }
+    });
+    
+   }
+  function slotGame(category, title){
+    const div = document.getElementById('main-modal');
+    $.ajax({
+      type: "POST",
+      url: "/api/getgamelist",
+      data: {category : category},
+      cache: false,
+      async: true,
+      success: function (data, status) {
+        if (data.error) {
+          swal2(data.msg, "error");
+          return;
+        }
+        if (data.games.length > 0) {
+          slot_games =  JSON.stringify(data.games);
+          var innerlistcss = `list-4`;
+          if(window.innerWidth > 960)
+          {
+            innerlistcss = `list-6`;
+          }
+          var htmgames = `<div data-v-4f69ab08="" class="casino-list row ${innerlistcss}" style="flex-direction: row; overflow:scroll">`;
+          for (i=0;i<data.games.length;i++)
+          {
+            if (data.games[i].provider)
+            {
+              htmgames += `<button data-v-4f69ab08="" id="slot_${i}" class="zoomIn button" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
+                            <img data-v-4f69ab08="" src="${data.games[i].icon}">
+                          </button>`;
+            }
+            else
+            {
+              htmgames += `<button data-v-4f69ab08="" id="slot_${i}" class="zoomIn button" onclick="startGameByProvider(null, '${data.games[i].name}');">
+                            <img data-v-4f69ab08="" src="/frontend/Default/ico/${data.games[i].name}.jpg">
+                          </button>`;
+            }
+          }
+          htmgames += `</div>`;
+          var htmldoc = `<div class="dialog row" id="dehitory-modal" style="flex-direction: row;">
+                          <div class="container row" style="flex-direction: row; max-width:1480px; max-height:95%; min-height:95%; padding:10px">
+                            <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
+                              <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+                            </button>  
+                            <div data-v-40c960e6="" class="container column">
+                              <div data-v-40c960e6="" class="dialog-title row" style="flex-direction: row;flex-shrink:0;">
+                                <span data-v-40c960e6="" class="text-level-7 text">${title}</span>
+                              </div>
+                              <div data-v-4f69ab08="" class="search-bar row" style="flex-direction: row;">
+                                <div data-v-4f69ab08="" class="row" style="flex-direction: row; background-color: #22262e;">
+                                  <input data-v-578d3222="" data-v-4f69ab08="" id="slot_search" type="text" placeholder="검색할 게임을 입력하세요" inputmode="text" class="input input" style="background-color: #22262e;" onchange="slotSearchFunc()">
+                                  <button data-v-4f69ab08="" class="search-btn button" style="background-color: #22262e;" onclick="slotSearchFunc();">
+                                    <i data-v-e56d064c="" data-v-4f69ab08="" class="fa-regular fa-magnifying-glass" style="padding: 0px;"></i>
+                                  </button>
+                                  <!---->
+                                </div>
+                              </div>
+                              ${htmgames}
+                            </div>
+                          </div>
+                        </div> `;
+          div.innerHTML = htmldoc;
+        }
+        else
+        {
+          swal2("게임이 없습니다", "error");
+        }
+         },
+             complete: function() {
+              $('.loading').hide();
+          }
+    });
+    closeNav();
+  }
+  function casinoGameStart(category){
+    $.ajax({
+       type: "POST",
+       url: "/api/getgamelist",
+       data: {category : category},
+       cache: false,
+       async: true,
+       success: function (data, status) {
+         if (data.error) {
+          swal2(data.msg, "error");
+           return;
+         }
+         if (data.games.length > 0) {
+         startGameByProvider(data.games[0].provider, data.games[0].gamecode);
+         }
+         else
+         {
+          swal2("게임실행 오류", "error");
+         }
+        }
+       });
+   }
+  
+  function startGameByProvider(provider, gamecode,max = false) {
+    var formData = new FormData();
+    formData.append("provider", provider);
+    formData.append("gamecode", gamecode);
+    $.ajax({
+    type: "POST",
+    url: "/api/getgamelink",
+    data: formData,
+    processData: false,
+    contentType: false,
+    cache: false,
+    async: false,
+    success: function (data) {
+      if (data.error) {
+        swal2(data.msg, "error");
+        return;
+      }
+          if (max)
+         {
+           window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+         }else{
+           window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+         }
+    }
+    });
+    
+   }
+   function slotSearchFunc(){
+    var searchText = $('#slot_search').val();
+    var games = JSON.parse(slot_games);
+    for (i=0;i<games.length;i++)
+    {
+      if(games[i]['title'].toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+      {
+        $('#slot_' + i).css('display', 'block');
+      }else{
+        $('#slot_' + i).css('display', 'none');
+      }
+    }
+   }

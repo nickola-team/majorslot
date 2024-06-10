@@ -2232,5 +2232,42 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $games = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($provider) . 'Controller::getgamelist', $href);
             return response()->json($games);
         }
+
+        public function getLastBet(\Illuminate\Http\Request $request)
+        {
+            $site = \VanguardLTE\WebSite::where('domain', $request->root())->first();
+            if ($site && $site->admin)
+            {
+                $stats = \VanguardLTE\StatGame::whereIn('user_id', $site->admin->availableUsers())->orderBy('stat_game.date_time', 'DESC')->take(10)->get();
+            }else{
+                $stats = \VanguardLTE\StatGame::whereIn('user_id', $site->admin->availableUsers())->orderBy('stat_game.date_time', 'DESC')->take(10)->get();
+            }
+            $data = [];
+            foreach($stats as $stat)
+            {
+                $categorytitle = '';
+                if($stat->category){
+                    if($stat->category->trans){
+                        $categorytitle = $stat->category->trans->trans_title;
+                    }else{
+                        $categorytitle = $stat->category->title;
+                    }
+                }
+                $username = $stat->user->username;
+                $odd = 0;
+                if($stat->bet > 0 && $stat->win > 0){
+                    $odd = floor($stat->win / $stat->bet * 100) / 100;
+                }
+                $data[] = [
+                    'game' => $categorytitle,
+                    'username' => $username,
+                    'time' => date("H:i:s", strtotime($stat->date_time)),
+                    'betamount' => number_format($stat->bet,0),
+                    'winamount' => number_format($stat->win,0),
+                    'odd' => $odd
+                ];
+            }
+            return response()->json(['error' => false, 'data'=>$data]);
+        }
     }
 }
