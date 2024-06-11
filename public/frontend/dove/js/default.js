@@ -274,6 +274,7 @@ function showContent(id) {
     $('#main_content').css('display', 'none');
     $('#live_content').css('display', 'none');
     $('#slot_content').css('display', 'none');
+    $('#notice_content').css('display', 'none');
 
     $('#' + id).css('display', 'flex');
     closeNav();
@@ -1347,14 +1348,15 @@ function getCustomerPage() {
         dataType: 'json',
         success: function(data) {
         if(data.error == false){
-			var html = `<table class="history-table table">
-                  <tbody id="customerList" style="width: 100%;max-width: 100%;">
-                    <tr class="table-border">
-                            <th translate="" class="text-left ng-scope" style="padding-left: 20px">제목</th>
-                            <th translate="" width="20%" class=" text-center ng-scope">작성 일시</th>
-                            <th translate="" width="20%" class=" text-center ng-scope">수신 일시</th>
-                            <th translate="" width="10%" class=" text-center ng-scope">타입</th>
-                        </tr>`;
+			// var html = `<table class="history-table table">
+      //             <tbody id="customerList" style="width: 100%;max-width: 100%;">
+      //               <tr class="table-border">
+      //                       <th translate="" class="text-left ng-scope" style="padding-left: 20px">제목</th>
+      //                       <th translate="" width="20%" class=" text-center ng-scope">작성 일시</th>
+      //                       <th translate="" width="20%" class=" text-center ng-scope">수신 일시</th>
+      //                       <th translate="" width="10%" class=" text-center ng-scope">타입</th>
+      //                   </tr>`;
+      var html = ``;
 			if (data.data.length > 0) {
 				for (var i = 0; i < data.data.length; i++) {
 					date = new Date(data.data[i].created_at);
@@ -1367,20 +1369,27 @@ function getCustomerPage() {
 						date1 = new Date(data.data[i].read_at);
 						read = date1.toLocaleString();
 					}
-					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
-					html += `                    
-          <tr>
-						<td class="text-left" style="padding: 5px;text-align: center;vertical-align: middle;"> <a href="#" onclick="showMsg('${data.data[i].id}')">${data.data[i].title}</a></td>
-						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
-						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${read}</td>
-						<td width="10%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${type}</td>
-						</tr>
-						<tr id="msg${data.data[i].id}" style="display:none;">
-						<td colspan="4" class="ng-scope">${data.data[i].content}</td>
-						</tr>`;
+					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';				
+                html += `<div data-v-ca1f65a4="" class="list scrollable-auto column">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;">
+              <div data-v-ca1f65a4="" class="inquiry column">
+                <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
+                  <span data-v-ca1f65a4="" class="margin-right-5 text" style="opacity: 0.6;">[입/출금]</span> 
+                  <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                  <input data-v-e2c0eff6="" data-v-ca1f65a4="" type="checkbox" class="checkbox" value="32072">
+                </div> 
+                <div data-v-ca1f65a4="" class="row" style="flex-direction: row;">
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">${date.toLocaleString()}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${read} </span>
+                </div>
+              </div>
+            </button>
+          </div>`;
 				}
-        html +=`</tbody>
-                </table>`;
+        // html +=`</tbody>
+        //         </table>`;
 				
 			}else{
         html = `<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>`;
@@ -1439,3 +1448,72 @@ function openWriteMsgPop(){
 </div>`;
 reqdiv.innerHTML += reqcontent;
 }
+
+
+
+
+
+
+//Notice
+function openNoticePanel(){
+  const div = document.getElementById('main-modal');
+  var requestcontent= `<v class="dialog row" style="flex-direction: row;">
+  <div class="container row" style="flex-direction: row; max-width: 500px;">
+    <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+      <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+    </button>  
+    <div data-v-ca1f65a4="" class="container column" id="request-modal">
+      <div data-v-ca1f65a4="" class="dialog-title row" style="flex-direction: row;">
+        <span data-v-ca1f65a4="" class="text-level-7 text">
+          <img data-v-ca1f65a4="" src="/frontend/dove/assets/img/inquiry-icon.75f60ef.svg" class="margin-right-5" style="width: 20px; height: 20px;">공지사항
+        </span>
+      </div> 
+      <div data-v-ca1f65a4="" class="inquiry-list column" id="inquiry-list">
+        <div data-v-ca1f65a4="" class="fill-height">
+          <div data-v-ca1f65a4="" class="list-wrap column">
+            <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
+              <div data-v-ca1f65a4="" class="column" id="customerList" style="margin: auto; align-items: center;">
+                <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
+                
+              </div>
+            </div> 
+            <div data-v-ca1f65a4="" class="margin-bottom-10 padding-horizontal-10 row" style="flex-direction: row;">
+              <button data-v-ca1f65a4="" class="remove-btn padding-horizontal-10 button" style="height: 30px; display:none;">
+                <span data-v-ca1f65a4="" class="text">선택내역삭제</span>
+              </button> <div data-v-ca1f65a4="" class="spacer">              
+            </div> 
+            <button data-v-ca1f65a4="" class="write-btn padding-horizontal-10 button" style="height: 30px;" onclick="openWriteMsgPop();">
+              <span data-v-ca1f65a4="" class="text"><i data-v-e56d064c="" data-v-ca1f65a4="" class="margin-right-5 fa-solid fa-pen-to-square" ></i>문의작성</span>
+            </button>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  div.innerHTML += requestcontent;
+  getCustomerPage();
+}
+function getCookie(key) {
+  var re = new RegExp(key + "=([^;]+)");
+  var value = re.exec(document.cookie);
+  var tt = (value != null) ? unescape(value[1]) : null;
+  return tt;
+}
+
+function setCookie( name, value, expiredays ) { 
+  var todayDate = new Date(); 
+  todayDate.setDate( todayDate.getDate() + expiredays ); 
+  document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+  } 
+
+function closeWinpopDay(id) { 
+  setCookie( "pop" + id, "done" , 1 ); 
+
+  document.getElementById("pop" + id).style.visibility = "hidden"; 
+} 
+
+function closeWinpop(id) {
+  document.getElementById("pop" + id).style.visibility = "hidden"; 
+}
+

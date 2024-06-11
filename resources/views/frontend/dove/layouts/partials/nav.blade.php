@@ -92,7 +92,7 @@
                 </div>
             </a> 
             <div data-v-556f8885="" class="division row" style="flex-direction: row; margin-bottom: 20px;"></div> 
-            <a data-v-556f8885="" href="#" class="" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+            <a data-v-556f8885="" href="#" class="" onclick=@auth "openNoticePanel()" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
                 <img data-v-556f8885="" src="/frontend/dove/assets/img/notice.d792102.svg" class="margin-right-10" style="width: 22px; height: 22px;"> 
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">공지사항</span> 
