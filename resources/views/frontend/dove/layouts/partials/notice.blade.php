@@ -8,11 +8,11 @@ $width = '100vw'; $height = '100vh';
 <?php
 $width = '330px'; $height = '400px';
 ?>
-    style="position:absolute; left:{{50+$loop->index * 350}}px; top:150px; z-index:200; width:{{$width}};height:{{$width}}; " 
+    style="position:absolute; left:{{275+floor($loop->index%4) * 350}}px; top:{{125+ floor($loop->index / 4) * 375}}px; z-index:200; width:{{$width}};height:{{$width}}; " 
             @endif>
   <div class="dialog row" style="flex-direction: row; position:relative;">
     <div class="container row" style="flex-direction: row; width: 100%;  margin: unset;">
-      <button class="close-button button" style="background: rgb(44, 48, 58);top: 4px;right: 15px;" onclick="closeModal('pop{{$ntc->id}}');">
+      <button class="close-button button" style="background: rgb(44, 48, 58);top: 4px;right: 15px;" onclick="closeWinpop({{$ntc->id}});">
         <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
       </button>  
       <div data-v-5290ad82="" class="fill-height">
