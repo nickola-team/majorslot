@@ -29,7 +29,7 @@
         </div>
         <div data-v-e77ddfb0="" class="spacer"></div> 
         <div data-v-e77ddfb0="" class="account row" style="flex-direction: row;">
-            <button data-v-e77ddfb0="" class="button text row" style="background: transparent;" onclick="showProfile()">
+            <button data-v-e77ddfb0="" class="button text row" style="background: transparent;" onclick="openRequestPop()">
                 <span data-v-e77ddfb0="" class="text">
                     <img id="letterimg" src="/frontend/todayslot/images/letter_on.gif" width="18" height="18" border="0">
                 </span>

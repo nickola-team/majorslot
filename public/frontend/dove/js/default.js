@@ -593,7 +593,10 @@ function openDepositModal(username){
 											</div> <div data-v-5290ad82="" class="deposit-method row" style="flex-direction: row; flex-shrink: 0;">
 												<div data-v-5290ad82="" dir="auto" class="v-select vs--single vs--unsearchable"> 
 													<div id="vs20__combobox" role="combobox" aria-expanded="false" aria-owns="vs20__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-														<div class="vs__selected-options">
+                            <select class="vs__selected-options" value="현금" name="bank_name" id="reg-bankname">
+                              <option style="background-color: #2c303a;zoom:1.25;">현금</option>
+                            </select>
+														<!--<div class="vs__selected-options">
 															<span class="vs__selected">현금</span> 
 															<input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs20__combobox" aria-controls="vs20__listbox" type="search" autocomplete="off" class="vs__search">
 														</div> 
@@ -607,7 +610,7 @@ function openDepositModal(username){
 																<path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
 															</svg> 
 															<div class="vs__spinner" style="display: none;">Loading...</div>
-														</div>
+														</div>-->
 													</div> 
 													<ul id="vs20__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
 												</div> 
@@ -753,7 +756,7 @@ function addMoneyDeposit(money) {
   function depositHistoryPop(){    
     const div = document.getElementById('main-modal');
     var dehistorycontent= `<div class="dialog row" id="dehitory-modal" style="flex-direction: row; ">
-  <div class="container row" style="flex-direction: row; max-width: 450px;">
+  <div class="container row" style="flex-direction: row; max-width: 450px; min-height:250px">
     <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
       <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
     </button>  
@@ -1206,7 +1209,7 @@ div.innerHTML = wdguidecontent;
 function withdrawHistoryPop(){    
   const div = document.getElementById('main-modal');
   var wdhistorycontent= `<div class="dialog row" id="dehitory-modal" style="flex-direction: row; ">
-<div class="container row" style="flex-direction: row; max-width: 450px;">
+<div class="container row" style="flex-direction: row; max-width: 450px;min-height:250px">
   <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
     <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
   </button>  
@@ -1256,6 +1259,8 @@ function mywithdrawlist() {
                         </thead>`;
                 }
                 
+            }else{
+              html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
             }
             html += `</table>`;
             $("#mywithdraw").html(html);
@@ -1324,7 +1329,7 @@ function openRequestPop(){
         <div data-v-ca1f65a4="" class="fill-height">
           <div data-v-ca1f65a4="" class="list-wrap column">
             <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
-              <div data-v-ca1f65a4="" class="column" id="customerList" style="margin: auto; align-items: center;">
+              <div data-v-ca1f65a4="" class="column" id="customerList" style=" align-items: center;">
                 <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
                 
               </div>
@@ -1356,14 +1361,6 @@ function getCustomerPage() {
         dataType: 'json',
         success: function(data) {
         if(data.error == false){
-			// var html = `<table class="history-table table">
-      //             <tbody id="customerList" style="width: 100%;max-width: 100%;">
-      //               <tr class="table-border">
-      //                       <th translate="" class="text-left ng-scope" style="padding-left: 20px">제목</th>
-      //                       <th translate="" width="20%" class=" text-center ng-scope">작성 일시</th>
-      //                       <th translate="" width="20%" class=" text-center ng-scope">수신 일시</th>
-      //                       <th translate="" width="10%" class=" text-center ng-scope">타입</th>
-      //                   </tr>`;
       var html = ``;
 			if (data.data.length > 0) {
 				for (var i = 0; i < data.data.length; i++) {
@@ -1378,19 +1375,17 @@ function getCustomerPage() {
 						read = date1.toLocaleString();
 					}
 					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';				
-                html += `<div data-v-ca1f65a4="" class="list scrollable-auto column">
-            <button data-v-ca1f65a4="" class="button text" style="background: transparent;">
+                html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
               <div data-v-ca1f65a4="" class="inquiry column">
                 <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
-                  <span data-v-ca1f65a4="" class="margin-right-5 text" style="opacity: 0.6;">[입/출금]</span> 
                   <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
                   <div data-v-ca1f65a4="" class="spacer"></div> 
-                  <input data-v-e2c0eff6="" data-v-ca1f65a4="" type="checkbox" class="checkbox" value="32072">
                 </div> 
                 <div data-v-ca1f65a4="" class="row" style="flex-direction: row;">
                   <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">${date.toLocaleString()}</span> 
                   <div data-v-ca1f65a4="" class="spacer"></div> 
-                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${read} </span>
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${type} </span>
                 </div>
               </div>
             </button>
@@ -1406,7 +1401,7 @@ function getCustomerPage() {
             
 			
         } else {
-            alert(data.msg);
+            swal2(data.msg);
         }
     }
     });
@@ -1416,48 +1411,108 @@ function openWriteMsgPop(){
   const inqdiv = document.getElementById('inquiry-list');
   inqdiv.style.display="none";
   const reqdiv = document.getElementById('request-modal');
-  var reqcontent= `<div data-v-ca1f65a4="" class="column">
-  <div data-v-ca1f65a4="" class="write-form column">
-    <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
-      <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;">
-        <div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
-          <div id="vs18__combobox" role="combobox" aria-expanded="false" aria-owns="vs18__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-            <div class="vs__selected-options">
-              <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs18__combobox" aria-controls="vs18__listbox" type="search" autocomplete="off" class="vs__search">
-            </div>             
-          </div>
-        </div> 
-        <input data-v-578d3222="" data-v-ca1f65a4="" type="text" placeholder="제목" inputmode="text" class="input">
-      </div> 
-      <div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
-        <div class="editr--toolbar">
-          <div title="이미지 첨부">
-            <a class="vw-btn-imageModule">
-              <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                <path d="M576 576q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm1024 384v448h-1408v-192l320-320 160 160 512-512zm96-704h-1600q-13 0-22.5 9.5t-9.5 22.5v1216q0 13 9.5 22.5t22.5 9.5h1600q13 0 22.5-9.5t9.5-22.5v-1216q0-13-9.5-22.5t-22.5-9.5zm160 32v1216q0 66-47 113t-113 47h-1600q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1600q66 0 113 47t47 113z"></path>
-              </svg>
-            </a>
-            <div class="dashboard" style="display: none;"><!----></div>
-          </div>
+  var reqcontent= `<div data-v-ca1f65a4="" class="column" id="requset-write">
+    <div data-v-ca1f65a4="" class="write-form column">
+        <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
+            <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;"><div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+            <ul id="vs13__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
         </div>
-        <div contenteditable="true" tabindex="1" placeholder="내용을 입력하세요." class="editr--content"></div>
-      </div> <!----> 
-      <div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
-        <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px;">
-          <span data-v-ca1f65a4="" class="text">작성취소</span>
-        </button> 
-        <div data-v-ca1f65a4="" class="spacer"></div> 
-        <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;">
-          <span data-v-ca1f65a4="" class="text">작성완료</span>
-        </button>
-      </div>
-    </div>
-  </div>
+    </div> 
+    <input data-v-578d3222="" data-v-ca1f65a4="" type="text" placeholder="제목" inputmode="text" id="txt_title" class="input">
+</div> 
+<div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
+    
+    <textarea contenteditable="true" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;"></textarea>
+</div> <!----> 
+<div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
+    <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">작성취소</span>
+    </button> 
+    <div data-v-ca1f65a4="" class="spacer"></div> 
+    <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;" onclick="send_text();">
+        <span data-v-ca1f65a4="" class="text">작성완료</span>
+    </button>
 </div>`;
 reqdiv.innerHTML += reqcontent;
 }
 
 
+function cancelWrite(){
+  const reqdiv = document.getElementById('requset-write');
+  reqdiv.remove();
+  const inqdiv = document.getElementById('inquiry-list');
+  inqdiv.style.display="block";
+ 
+}
+
+function send_text() {
+  var title = $("#txt_title").val();
+  var message = $('#content_txt').val();
+  if ((title == '') || (message == '')) 
+  {
+    swal2('제목과 내용을 입력해주세요', 'error');
+  } 
+  else 
+  {
+      $.ajax({
+          url: "/api/writeMsg",
+          type: "POST",
+          dataType: "json",
+          data: {
+            title: title,
+            content: message
+          },
+          success: function(result) {
+            if (result.error == false) {
+              swal2('저장 되었습니다');
+              $("#txt_title").val('');
+              $('#content_txt').val('');
+              getCustomerPage();
+              // },2000);
+            }
+            else 
+            {
+              swal2('Opps!', result.msg, "error");
+            }
+          }
+        });
+  }              
+}
+
+
+function showMsg(objId,objContent,objTitle){
+  $.post('/api/readMsg',{id : objId},function(data){
+  }); 
+            
+  const inqdiv = document.getElementById('inquiry-list');
+  inqdiv.style.display="none";
+  const reqdiv = document.getElementById('request-modal');
+  var reqcontent= `<div data-v-ca1f65a4="" class="column" id="requset-write">
+    <div data-v-ca1f65a4="" class="write-form column">
+        <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
+            <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;"><div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+            <ul id="vs13__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
+        </div>
+    </div> 
+    <input data-v-578d3222="" data-v-ca1f65a4="" type="text" value='${objTitle}' inputmode="text" id="txt_title" class="input" readonly>
+</div> 
+<div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
+    
+    <textarea contenteditable="false" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;" readonly>${objContent}</textarea>
+</div> <!----> 
+<div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
+    <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px; display:none;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">작성취소</span>
+    </button> 
+    <div data-v-ca1f65a4="" class="spacer"></div> 
+    <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">완료</span>
+    </button>
+</div>`;
+
+reqdiv.innerHTML += reqcontent;
+
+}
 
 
 
@@ -1480,7 +1535,7 @@ function openNoticePanel(){
         <div data-v-ca1f65a4="" class="fill-height">
           <div data-v-ca1f65a4="" class="list-wrap column">
             <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
-              <div data-v-ca1f65a4="" class="column" id="customerList" style="margin: auto; align-items: center;">
+              <div data-v-ca1f65a4="" class="column" id="noticeList" style=" align-items: center;">
                 <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
                 
               </div>
@@ -1490,7 +1545,7 @@ function openNoticePanel(){
                 <span data-v-ca1f65a4="" class="text">선택내역삭제</span>
               </button> <div data-v-ca1f65a4="" class="spacer">              
             </div> 
-            <button data-v-ca1f65a4="" class="write-btn padding-horizontal-10 button" style="height: 30px;" onclick="openWriteMsgPop();">
+            <button data-v-ca1f65a4="" class="write-btn padding-horizontal-10 button" style="height: 30px; display:none;" onclick="openWriteMsgPop();">
               <span data-v-ca1f65a4="" class="text"><i data-v-e56d064c="" data-v-ca1f65a4="" class="margin-right-5 fa-solid fa-pen-to-square" ></i>문의작성</span>
             </button>
           </div> 
@@ -1500,8 +1555,65 @@ function openNoticePanel(){
   </div>
 </div>`;
   div.innerHTML += requestcontent;
-  getCustomerPage();
+  getNoticeList();
 }
+
+function getNoticeList() {
+	$.ajax({
+        type: "POST",
+        cache: false,
+        async: true,
+        url: '/api/notices',
+        dataType: 'json',
+        success: function(data) {
+        if(data.error == false){
+      var html = ``;
+			if (data.data.length > 0) {
+				for (var i = 0; i < data.data.length; i++) {
+					date = new Date(data.data[i].date_time);
+					if (data.data[i].read_at == null)
+					{
+						read = '읽지 않음';
+					}
+					else
+					{
+						date1 = new Date(data.data[i].date_time);
+						read = date1.toLocaleString();
+					}
+					type = (data.data[i].writer_id!='popup')?'팝업':'일반';				
+                html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
+              <div data-v-ca1f65a4="" class="inquiry column">
+                <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
+                  <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                </div> 
+                <div data-v-ca1f65a4="" class="row" style="flex-direction: row;">
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">${date.toLocaleString()}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${type} </span>
+                </div>
+              </div>
+            </button>
+          </div>`;
+				}
+        // html +=`</tbody>
+        //         </table>`;
+				
+			}else{
+        html = `<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>`;
+      }
+			$("#noticeList").html(html);
+            
+			
+        } else {
+            swal2(data.msg);
+        }
+    }
+    });
+}
+
+
 function getCookie(key) {
   var re = new RegExp(key + "=([^;]+)");
   var value = re.exec(document.cookie);
@@ -1524,4 +1636,7 @@ function closeWinpopDay(id) {
 function closeWinpop(id) {
   document.getElementById("pop" + id).style.visibility = "hidden"; 
 }
+
+
+
 
