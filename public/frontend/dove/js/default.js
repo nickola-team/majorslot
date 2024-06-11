@@ -2,8 +2,18 @@ var slot_games = [];
 $(document).ready(function(){
     setInterval(function () {
       updateLastBet();  
-    }, 5000);
+    }, 10000);
     updateLastBet();
+});
+$(document).mouseup(function(e) 
+{
+    var container = $("#profile-drop");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+    }
 });
 function openNav() {
     $('.slideout-wrapper').css('display', 'block');
@@ -55,7 +65,6 @@ function updateLastBet() {
   });
 }
 function PointToMoney() {
-  showProfile();
   Swal.fire({
     title: '',
     text: '모든 포인트를 머니로 변환하시겠습니까?',
@@ -846,7 +855,6 @@ function addMoneyDeposit(money) {
                 </div>
               </div>`;
     div.innerHTML = depositcontent;
-    showProfile();
   }
   function startGameByProvider(provider, gamecode,max = false) {
     var formData = new FormData();
