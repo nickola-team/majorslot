@@ -3,7 +3,7 @@ $(document).ready(function(){
     setInterval(function () {
       updateLastBet();  
     }, 5000);
-    // withdrawRealtime();
+    updateLastBet();
 });
 function openNav() {
     $('.slideout-wrapper').css('display', 'block');
