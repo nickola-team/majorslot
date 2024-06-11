@@ -366,12 +366,14 @@ function loginx() {
       'username': sID,
       'password': sPASS,
     };
+    $('#loading-page').show();
     $.ajax({
       url: '/api/login',
       type: 'POST',
       data: data,
       dataType: "json",
       success: function(result) {
+        $('#loading-page').hide();
         $(".sbmt-login").removeClass('is-loading disabled');
         if (result.error==false) {
           if (isRemembered) {
@@ -391,6 +393,7 @@ function loginx() {
         ajaxStart = false;
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
+        $('#loading-page').hide();
         swal2("some error");
       }
     });
@@ -543,7 +546,7 @@ function submitRegister() {
     'tel1': $("#reg-phone").val(),
   };
 
-  $(this).addClass('is-loading disabled');
+  $('#loading-page').show();
   $.ajax({
     url: '/api/join',
     type: 'POST',
@@ -551,6 +554,7 @@ function submitRegister() {
     dataType: "json",
     async: false,
     success: function(result) {
+      $('#loading-page').hide();
       if (result.error == false) {
         $("#freg input").val('');
         swal2(result.msg);
@@ -559,6 +563,7 @@ function submitRegister() {
       }
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
+      $('#loading-page').hide();
       swal2(result.msg,"error");
     }
   });
@@ -769,6 +774,7 @@ function addMoneyDeposit(money) {
   }
 
   function mydepositlist() {
+    $('#loading-page').show();
     $.ajax({
       type: "POST",
       cache: false,
@@ -777,40 +783,42 @@ function addMoneyDeposit(money) {
       dataType: 'json',
       data : {type: 'add'},
       success: function(data) {
+        $('#loading-page').hide();
         if(data.error == false){
-			var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
-						<tr>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">충전금액</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
-						</tr>
-                        `;
-			if (data.data.length > 0) {
-				status_name = {
-					0 : '대기',
-					1 : '완료',
-					2 : '취소'
-				 };
-				for (var i = 0; i < data.data.length; i++) {
-					date = new Date(data.data[i].created_at);
-					html += `<tr>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
-						</tr>
-						</thead>`;
-				}
-				
-			}else{
-        html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
-      }
-			html += `</table>`;
-			$("#mydeposit").html(html);
-			
+          var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
+                <tr>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">충전금액</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
+                </tr>
+                            `;
+          if (data.data.length > 0) {
+            status_name = {
+              0 : '대기',
+              1 : '완료',
+              2 : '취소'
+            };
+            for (var i = 0; i < data.data.length; i++) {
+              date = new Date(data.data[i].created_at);
+              html += `<tr>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
+                </tr>
+                </thead>`;
+            }
+            
+          }else{
+            html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
+          }
+          html += `</table>`;
+          $("#mydeposit").html(html);
+          
         } else {
-            alert(data.msg);
+          $('#loading-page').hide();
+          swal2(data.msg, "error");
         }
       }
     });
@@ -861,6 +869,7 @@ function addMoneyDeposit(money) {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
+    $('#loading-page').show();
     $.ajax({
     type: "POST",
     url: "/api/getgamelink",
@@ -870,22 +879,27 @@ function addMoneyDeposit(money) {
     cache: false,
     async: false,
     success: function (data) {
+      $('#loading-page').hide();
       if (data.error) {
-        alert(data.msg);
+        swal2(data.msg, "error");
         return;
       }
-          if (max)
-         {
-           window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
-         }else{
-           window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
-         }
+      if (max)
+      {
+        window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+      }else{
+        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+      }
+    },
+    complete: function() {
+      $('#loading-page').hide();
     }
     });
     
    }
   function slotGame(category, title){
     const div = document.getElementById('main-modal');
+    $('#loading-page').show();
     $.ajax({
       type: "POST",
       url: "/api/getgamelist",
@@ -949,14 +963,15 @@ function addMoneyDeposit(money) {
         {
           swal2("게임이 없습니다", "error");
         }
-         },
-             complete: function() {
-              $('.loading').hide();
-          }
+      },
+      complete: function() {
+        $('#loading-page').hide();
+      }
     });
     closeNav();
   }
   function casinoGameStart(category){
+    $('#loading-page').show();
     $.ajax({
        type: "POST",
        url: "/api/getgamelist",
@@ -964,6 +979,7 @@ function addMoneyDeposit(money) {
        cache: false,
        async: true,
        success: function (data, status) {
+        $('#loading-page').hide();
          if (data.error) {
           swal2(data.msg, "error");
            return;
@@ -975,6 +991,9 @@ function addMoneyDeposit(money) {
          {
           swal2("게임실행 오류", "error");
          }
+        },
+        complete: function() {
+          $('#loading-page').hide();
         }
        });
    }
@@ -983,6 +1002,7 @@ function addMoneyDeposit(money) {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
+    $('#loading-page').show();
     $.ajax({
     type: "POST",
     url: "/api/getgamelink",
@@ -992,6 +1012,7 @@ function addMoneyDeposit(money) {
     cache: false,
     async: false,
     success: function (data) {
+      $('#loading-page').hide();
       if (data.error) {
         swal2(data.msg, "error");
         return;
@@ -1002,6 +1023,9 @@ function addMoneyDeposit(money) {
          }else{
            window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
          }
+    },
+    complete: function() {
+      $('#loading-page').hide();
     }
     });
     
@@ -1025,6 +1049,7 @@ function addMoneyDeposit(money) {
     if(!f){
         return false;
     }
+    $('#loading-page').show();
     $.ajax({
         type: "POST",
         url: "/api/depositAccount",
@@ -1032,8 +1057,9 @@ function addMoneyDeposit(money) {
         cache: false,
         async: false,
         success: function (data) {
+            $('#loading-page').hide();
             if (data.error) {
-                alert(data.msg);
+                swal2(data.msg, "error");
                 return;
             }
             if (data.url != null)
@@ -1050,12 +1076,13 @@ function addMoneyDeposit(money) {
             }
             else
             {
-                alert(data.msg);
+                swal2(data.msg, "error");
             }
             
         },
         error: function (err, xhr) {
-            alert(err.responseText);
+            $('#loading-page').hide();
+            
         },
     });
 }
@@ -1078,6 +1105,7 @@ function depositRequest() {
       alert('신청하실 충전금액을 입력해주세요.');
       return false;
   }
+  $('#loading-page').show();
   $.ajax({
       url: '/api/addbalance',
       type: 'POST',
@@ -1086,12 +1114,17 @@ function depositRequest() {
       money: cmoney,
       },
       success: function(result) {
-      if (result.error == false) {
-          $("#charge_money").val(0);
-          swal2('신청완료 되었습니다.');
-      } else {
-          swal2( result.msg);
-      }
+        $('#loading-page').hide();
+        if (result.error == false) {
+            $("#charge_money").val(0);
+            swal2('신청완료 되었습니다.');
+        } else {
+            swal2( result.msg);
+        }
+      },
+      error: function (err, xhr) {
+          $('#loading-page').hide();
+          
       }
   });
   $(".btn-pointr").on('click', function() {
@@ -1222,6 +1255,7 @@ function withdrawHistoryPop(){
 }
 
 function mywithdrawlist() {
+  $('#loading-page').show();
   $.ajax({
       type: "POST",
       cache: false,
@@ -1230,6 +1264,7 @@ function mywithdrawlist() {
       dataType: 'json',
       data : {type: 'out'},
       success: function(data) {
+        $('#loading-page').hide();
         if(data.error == false){
             var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
                         <tr>
@@ -1261,8 +1296,12 @@ function mywithdrawlist() {
             $("#mywithdraw").html(html);
             
         } else {
-            alert(data.msg);
+            swal2(data.msg, "error");
         }
+      },
+      error: function (err, xhr) {
+          $('#loading-page').hide();
+          
       }
     });
 }
@@ -1287,6 +1326,7 @@ function withdrawRequest() {
     swal2('정확한 금액을 입력해주세요');
     return false;
   }
+  $('#loading-page').show();
   $.ajax({
     url: '/api/outbalance',
     type: 'POST',
@@ -1295,12 +1335,17 @@ function withdrawRequest() {
       money: cmoney,
     },
     success: function(result) {
+      $('#loading-page').hide();
       if (result.error == false) {
         $("#exchange_money").val(0);
         swal2('신청완료 되었습니다.');
       } else {
           swal2(result.msg);
       }
+    },
+    error: function (err, xhr) {
+        $('#loading-page').hide();
+        
     }
   })
 }
@@ -1501,6 +1546,208 @@ function openNoticePanel(){
 </div>`;
   div.innerHTML += requestcontent;
   getCustomerPage();
+}
+
+function openBetHistoryPanel(){
+  const div = document.getElementById('main-modal');
+  var requestcontent = `<div class="dialog row" style="flex-direction: row;">
+                <div class="container row" style="flex-direction: row; max-width: 600px;">
+                  <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+                    <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+                  </button>
+                  <div data-v-db5cba90="" class="container column">
+                    <div data-v-db5cba90="" class="dialog-title row" style="flex-direction: row;">
+                      <span data-v-db5cba90="" class="text-level-7 text">
+                        <img data-v-db5cba90="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 20px; height: 20px;">베팅로그 </span>
+                    </div>
+                    <div data-v-db5cba90="" class="fill-height">
+                      <div data-v-db5cba90="" class="mybet-list margin-top-10 column">
+                        <div data-v-db5cba90="" class="select-type row" style="flex-direction: row;">
+                          <button data-v-db5cba90="" id="btn_table" class="button active" onclick="getBetHistory('table');"> 라이브카지노 </button>
+                          <button data-v-db5cba90="" id="btn_slot" class="button" onclick="getBetHistory('slot');"> 슬롯머신 </button>
+                          <button data-v-db5cba90="" id="btn_sports" class="button" onclick="getBetHistory('sports');"> 스포츠 </button>
+                          <button data-v-db5cba90="" id="btn_pball" class="button" onclick="getBetHistory('pball');"> 파워볼 </button>
+                        </div>
+                        <div data-v-db5cba90="" id="bethistory_list" class="list scrollable-auto margin-bottom-10 column">
+                          <table data-v-db5cba90="">
+                            <thead data-v-db5cba90="">
+                              <tr data-v-db5cba90="">
+                                <th data-v-db5cba90="">게임명</th>
+                                <th data-v-db5cba90="">베팅시간</th>
+                                <th data-v-db5cba90="">베팅금액</th>
+                                <th data-v-db5cba90="">배당</th>
+                                <th data-v-db5cba90="">당첨금액</th>
+                              </tr>
+                            </thead>
+                            <tbody data-v-db5cba90="" id="bethistory_body">
+                              
+                            </tbody>
+                          </table>
+                        </div>
+                        <div data-v-30f53f18="" data-v-db5cba90="" class="pagination row" style="flex-direction: row; align-items: center;">
+                          <div data-v-30f53f18="" class="row" style="flex-direction: row;">
+                            <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
+                              <div id="vs11__combobox" role="combobox" aria-expanded="false" aria-owns="vs11__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                <select class="vs__selected-options" name="bethistory_page_count" id="bethistory_page_count">
+                                  <option class="vs__dropdown-option" value="5">5</option>
+                                  <option class="vs__dropdown-option" value="10">10</option>
+                                  <option class="vs__dropdown-option" value="20">20</option>
+                                  <option class="vs__dropdown-option" value="50">50</option>
+                                  <option class="vs__dropdown-option" value="100">100</option>
+                                  <option class="vs__dropdown-option" value="200">200</option>
+                                </select>
+                              </div>
+                              <ul id="vs11__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
+                            </div>
+                          </div>
+                          <div data-v-30f53f18="" class="row" style="flex-direction: row; align-items: center;">
+                            <span data-v-30f53f18="" class="text" style="opacity: 0.6;"> 개 씩 표시 </span>
+                          </div>
+                          <div data-v-30f53f18="" class="spacer"></div>
+                          <div data-v-30f53f18="" class="row" style="flex-direction: row;">
+                            <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
+                              <div id="vs12__combobox" role="combobox" aria-expanded="false" aria-owns="vs12__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                              <select class="vs__selected-options" name="bethistory_page_num" id="bethistory_page_num">
+                                
+                              </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div data-v-30f53f18="" id="btn_bethistory_before_page" class="row" style="flex-direction: row;">
+                            
+                          </div>
+                          <div data-v-30f53f18="" id="btn_bethistory_next_page" class="row" style="flex-direction: row;">
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+  div.innerHTML += requestcontent;
+  $("#bethistory_page_count").val(10);
+  getBetHistory('table');
+}
+$(document).on('change', '#bethistory_page_count', function() {
+  var gametype = '';
+  if($('#btn_table').hasClass('active')){
+    gametype = 'table';
+  }else if($('#btn_slot').hasClass('active')){
+    gametype = 'slot';
+  }else if($('#btn_sports').hasClass('active')){
+    gametype = 'sports';
+  }else if($('#btn_pball').hasClass('active')){
+    gametype = 'pball';
+  }
+  getBetHistory(gametype, 1);
+})
+$(document).on('change', '#bethistory_page_num', function() {
+  var gametype = '';
+  if($('#btn_table').hasClass('active')){
+    gametype = 'table';
+  }else if($('#btn_slot').hasClass('active')){
+    gametype = 'slot';
+  }else if($('#btn_sports').hasClass('active')){
+    gametype = 'sports';
+  }else if($('#btn_pball').hasClass('active')){
+    gametype = 'pball';
+  }
+  getBetHistory(gametype, $("#bethistory_page_num").val());
+})
+function getBetHistory(gametype, pagenum){
+  $('#btn_table').removeClass('active');
+  $('#btn_slot').removeClass('active');
+  $('#btn_sports').removeClass('active');
+  $('#btn_pball').removeClass('active');
+  $('#btn_' + gametype).addClass('active');
+
+  $('#loading-page').show();
+  $.ajax({
+    url: '/api/mybethistory',
+    type: 'POST',
+    dataType: "json",
+    data: {
+      type: gametype,
+      pagecount:$("#bethistory_page_count").val(),
+      pagenum:pagenum
+    },
+    success: function(result) {
+      $('#loading-page').hide();
+      if (result.error == false) {
+        stats = result.data.stats;
+        var first = result.data.first;
+        var last = result.data.last;
+        var current = result.data.current;
+        pagination = result.data.pagination;
+        var htmlhistory = ``;
+        var htmlpagenumlist = ``;
+        var htmlbeforepage = ``;
+        var htmlnextpage = ``;
+        if(stats.length > 0){
+          for(var i = 0; i < stats.length; i++)
+          {
+            var color = `#22262e`
+            if(i % 2 == 0)
+            {
+              color = `rgb(41, 46, 56)`;
+            }
+            htmlhistory += `<tr><td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].game} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].time} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ₩${stats[i].betamount} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].odd} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="win text" style="justify-content: center;"> ₩${stats[i].winamount} </span>
+                            </td></tr>`
+          }
+        }else{
+          htmlhistory =  `<td data-v-db5cba90="" colspan="5" style="background-color: rgb(41, 46, 56);">
+          <span data-v-db5cba90="" class="text" style="justify-content: center;"> 베팅내역이 없습니다 </span>
+        </td>`;
+        }
+        for(var i = 0; i < last; i++)
+        {
+          htmlpagenumlist += `<option class="vs__dropdown-option" value="${(i+1)}">${(i+1)}</option>`;
+        }
+        if(current > first){
+          htmlbeforepage = `<button data-v-30f53f18="" class="button icon" onclick="getBetHistory('${gametype}', ${(current - 1)});" style="background: #e3e3e3;">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i>
+                          </button>`;
+        }else{
+          htmlbeforepage = `<button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
+                              <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i>
+                            </button>`;
+        }
+        if(current < last){
+          htmlnextpage = `<button data-v-30f53f18="" class="button icon" onclick="getBetHistory('${gametype}', ${(current + 1)});"  style="background: #e3e3e3;">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i>
+                          </button>`;
+        }else{
+          htmlnextpage = `<button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i>
+                          </button>`;
+        }
+        document.getElementById('bethistory_body').innerHTML = htmlhistory;
+        document.getElementById('bethistory_page_num').innerHTML = htmlpagenumlist;
+        document.getElementById('btn_bethistory_before_page').innerHTML = htmlbeforepage;
+        document.getElementById('btn_bethistory_next_page').innerHTML = htmlnextpage;
+        $('#bethistory_page_num').val(current);
+      } else {
+          swal2(result.msg, "error");
+      }
+    },
+    error: function (err, xhr) {
+        $('#loading-page').hide();
+    }
+  });
 }
 function getCookie(key) {
   var re = new RegExp(key + "=([^;]+)");

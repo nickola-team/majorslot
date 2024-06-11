@@ -35,6 +35,7 @@
 </head>
 <body class="">
 	<div id="app">
+		<div data-v-5be62694="" id="loading-page" class="loading-page" style="display:none"><div data-v-5be62694="" class="loading"></div></div>
 	<!---->
 		@if (empty($logo))
 		<?php $logo = 'dove'; ?>

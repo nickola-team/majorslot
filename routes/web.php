@@ -459,6 +459,10 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.last_bet',
         'uses' => 'ApiController@getLastBet',
     ]);
+    Route::post('api/mybethistory', [
+        'as' => 'frontend.api.mybethistory',
+        'uses' => 'ApiController@myBetHistory',
+    ]);
     //**************/
 });
 

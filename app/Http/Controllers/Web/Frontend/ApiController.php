@@ -2269,5 +2269,66 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             return response()->json(['error' => false, 'data'=>$data]);
         }
+        public function myBetHistory(\Illuminate\Http\Request $request)
+        {
+            if( !\Illuminate\Support\Facades\Auth::check() ) {
+                return response()->json(['error' => true, 'msg' => trans('app.site_is_turned_off'), 'code' => '001']);
+            }
+            $start_date = date("Y-m-d 0:0:0");
+            $user = auth()->user();
+            $type = 'live';
+            $pagecount = 20;
+            $pagenum = 1;
+            if($request->type)
+                $type = $request->type;
+            if($request->pagecount)
+                $pagecount = $request->pagecount;
+            if($request->pagenum)
+                $pagenum = $request->pagenum;
+            $stats = \VanguardLTE\StatGame::where(['user_id' => auth()->user()->id, 'type' => $type])->where('date_time', '>=', $start_date)->orderBy('stat_game.date_time', 'DESC');
+            $totalCount = (clone $stats)->count();
+            if($pagenum > 1){
+                $stats = $stats->skip(($pagenum - 1) * $pagecount);
+            }
+            $stats = $stats->take($pagecount)->get();
+            $paginationhtml = '';
+            $data = [];
+            foreach($stats as $stat)
+            {
+                $categorytitle = '';
+                if($stat->category){
+                    if($stat->category->trans){
+                        $categorytitle = $stat->category->trans->trans_title;
+                    }else{
+                        $categorytitle = $stat->category->title;
+                    }
+                }
+                $username = $stat->user->username;
+                $odd = 0;
+                if($stat->bet > 0 && $stat->win > 0){
+                    $odd = floor($stat->win / $stat->bet * 100) / 100;
+                }
+                $data[] = [
+                    'game' => $categorytitle,
+                    'time' => date("H:i:s", strtotime($stat->date_time)),
+                    'betamount' => number_format($stat->bet,0),
+                    'winamount' => number_format($stat->win,0),
+                    'odd' => $odd
+                ];
+            }
+            $first = 1;
+            $last = 1;
+            if($totalCount > 0){
+                $last = ceil($totalCount / $pagecount);
+            }
+            $current = (int)$pagenum;
+            $data = [
+                'stats' => $data,
+                'first' => $first,
+                'last' => $last,
+                'current' => $current
+            ];
+            return response()->json(['error' => false, 'data' => $data]);
+        }
     }
 }
