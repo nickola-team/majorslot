@@ -598,26 +598,10 @@ function openDepositModal(username){
 											</div> <div data-v-5290ad82="" class="deposit-method row" style="flex-direction: row; flex-shrink: 0;">
 												<div data-v-5290ad82="" dir="auto" class="v-select vs--single vs--unsearchable"> 
 													<div id="vs20__combobox" role="combobox" aria-expanded="false" aria-owns="vs20__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-                            <select class="vs__selected-options" value="현금" name="bank_name" id="reg-bankname">
-                              <option style="background-color: #2c303a;zoom:1.25;">현금</option>
+                            <select class="vs__selected-options" value="현금">
+                              <option class="vs__dropdown-option" value="1">현금</option>
                             </select>
-														<!--<div class="vs__selected-options">
-															<span class="vs__selected">현금</span> 
-															<input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs20__combobox" aria-controls="vs20__listbox" type="search" autocomplete="off" class="vs__search">
-														</div> 
-														<div class="vs__actions">
-															<button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
-																<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
-																	<path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
-																</svg>
-															</button> 
-															<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
-																<path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
-															</svg> 
-															<div class="vs__spinner" style="display: none;">Loading...</div>
-														</div>-->
 													</div> 
-													<ul id="vs20__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
 												</div> 
 												<div data-v-5290ad82="" class="detail-btn-wrap row" style="flex-direction: row;">
 													<button data-v-5290ad82="" class="detail-btn button" onclick="depositGuidePop();">
@@ -1640,19 +1624,18 @@ function openBetHistoryPanel(){
                           </table>
                         </div>
                         <div data-v-30f53f18="" data-v-db5cba90="" class="pagination row" style="flex-direction: row; align-items: center;">
-                          <div data-v-30f53f18="" class="row" style="flex-direction: row;">
+                          <div data-v-30f53f18="" class="column" style="flex-direction: row;">
                             <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
                               <div id="vs11__combobox" role="combobox" aria-expanded="false" aria-owns="vs11__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-                                <select class="vs__selected-options" name="bethistory_page_count" id="bethistory_page_count">
-                                  <option class="vs__dropdown-option" value="5">5</option>
-                                  <option class="vs__dropdown-option" value="10">10</option>
-                                  <option class="vs__dropdown-option" value="20">20</option>
-                                  <option class="vs__dropdown-option" value="50">50</option>
-                                  <option class="vs__dropdown-option" value="100">100</option>
-                                  <option class="vs__dropdown-option" value="200">200</option>
+                                <select class="vs__selected-options" name="bethistory_page_count" style="background-color:#22262e;" id="bethistory_page_count">
+                                  <option class="vs__dropdown-option" value="5" style="background-color:#22262e;">5</option>
+                                  <option class="vs__dropdown-option" value="10" style="background-color:#22262e;">10</option>
+                                  <option class="vs__dropdown-option" value="20" style="background-color:#22262e;">20</option>
+                                  <option class="vs__dropdown-option" value="50" style="background-color:#22262e;">50</option>
+                                  <option class="vs__dropdown-option" value="100" style="background-color:#22262e;">100</option>
+                                  <option class="vs__dropdown-option" value="200" style="background-color:#22262e;">200</option>
                                 </select>
                               </div>
-                              <ul id="vs11__listbox" role="listbox" style="display: none; visibility: hidden;"></ul>
                             </div>
                           </div>
                           <div data-v-30f53f18="" class="row" style="flex-direction: row; align-items: center;">
@@ -1662,7 +1645,7 @@ function openBetHistoryPanel(){
                           <div data-v-30f53f18="" class="row" style="flex-direction: row;">
                             <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
                               <div id="vs12__combobox" role="combobox" aria-expanded="false" aria-owns="vs12__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-                              <select class="vs__selected-options" name="bethistory_page_num" id="bethistory_page_num">
+                              <select class="vs__selected-options" name="bethistory_page_num" style="background-color:#22262e;" id="bethistory_page_num">
                                 
                               </select>
                               </div>
@@ -1770,7 +1753,7 @@ function getBetHistory(gametype, pagenum){
         }
         for(var i = 0; i < last; i++)
         {
-          htmlpagenumlist += `<option class="vs__dropdown-option" value="${(i+1)}">${(i+1)}</option>`;
+          htmlpagenumlist += `<option class="vs__dropdown-option" style="background-color:#22262e;" value="${(i+1)}">${(i+1)}</option>`;
         }
         if(current > first){
           htmlbeforepage = `<button data-v-30f53f18="" class="button icon" onclick="getBetHistory('${gametype}', ${(current - 1)});" style="background: #e3e3e3;">

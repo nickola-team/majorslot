@@ -41,7 +41,7 @@
                         "swal2('지원하지 않는 게임입니다.', 'warning');"
                     @endif
                 @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
-                <img data-v-556f8885="" src="/frontend/dove/assets/img/hotel-casino.d9f8c4a.svg" class="margin-right-10" style="width: 22px; height: 22px;"> 
+                <img data-v-556f8885="" src="/frontend/dove/assets/img/sports.png" class="margin-right-10" style="width: 22px; height: 22px;"> 
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">스포츠</span> 
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Sports</span>
@@ -70,7 +70,7 @@
                     "swal2('지원하지 않는 게임입니다.', 'warning');"
                 @endif
             @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
-                <img data-v-556f8885="" src="/frontend/dove/assets/img/holdem.4f9680f.svg" class="margin-right-10" style="width: 22px; height: 22px;">
+                <img data-v-556f8885="" src="/frontend/dove/assets/img/pball.png" class="margin-right-10" style="width: 22px; height: 22px;">
                 <div data-v-556f8885="" class="column">
                     <span data-v-556f8885="" class="text-level-7 title-text text">파워볼</span> 
                     <span data-v-556f8885="" class="text-level-11 text" style="opacity: 0.6;">Mini Game</span>
@@ -108,10 +108,7 @@
             </a> 
             <div data-v-556f8885="" class="division row" style="flex-direction: row; margin-bottom: 20px;"></div> 
         </div> <!----> 
-        <a data-v-556f8885="" href="//t.me/dove" target="_blank" class="telegram">
-            <img data-v-556f8885="" src="/frontend/dove/assets/img/telegram-2.c65ef36.gif">
-        </a> 
-        <a data-v-556f8885="" href="//t.me/dovecasinochannel" target="_blank" class="telegram" style="margin-top: 10px;">
+        <a data-v-556f8885="" href="{{ $telegram }}" target="_blank" class="telegram">
             <img data-v-556f8885="" src="/frontend/dove/assets/img/channel-2.ca0235a.gif">
         </a> 
     </div>

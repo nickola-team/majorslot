@@ -40,6 +40,9 @@
 		@if (empty($logo))
 		<?php $logo = 'dove'; ?>
 		@endif
+		@if (empty($telegram))
+		<?php $telegram = ''; ?>
+		@endif
 		<div id="__layout">
 			<div data-v-525011a5="" class="fill-height">
 				<div data-v-525011a5="" class="fill-height">
