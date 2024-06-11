@@ -60,6 +60,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'RngData', [0, 0, 0, 0, 0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempTotalWin', 0);
                 }else if($paramData['req'] == 2){
@@ -272,6 +273,10 @@ namespace VanguardLTE\Games\FlyOutCQ9
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $totalbet, $respinReelNo){
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
+            if($slotSettings->GetGameData($slotSettings->slotId . 'FreeBet') == 1){
+                $winType = 'bonus';
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
+            }
             $_winAvaliableMoney = $_spinSettings[1];
             if($winType != 'none' && mt_rand(0, 100) < 30){
                 $winType = 'none';
@@ -618,7 +623,11 @@ namespace VanguardLTE\Games\FlyOutCQ9
                 }
                 if($scatterReel[$k] == 0){
                     if($scatterReelCount == 4){                        
-                        $reelWins[$k] += floor($betline * 407 * ($scatterCount - 3)) + mt_rand(0,100);                     
+                        $reelWins[$k] += floor($betline * 407 * ($scatterCount - 3)) + mt_rand(0,100);  
+                        $randSpin = mt_rand(0,2);
+                        if($randSpin == 1){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 1);
+                        }                   
                     }
                 }else if($scatterReel[$k] == 1 && $scatterReelCount == 5){             
                     $reelWins[$k] += floor($betline * 407 * ($scatterCount - 3)) + mt_rand(0,100);              

@@ -25,6 +25,10 @@
 	<link rel="stylesheet" href="/frontend/dove/css/custom.css?v=202301301150">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.min.js"></script>
+	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.carousel.min.js"></script>
+	<link rel="stylesheet" href="/frontend/todayslot/jq/slideshow5/style.css">
+	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/m/jssor.slider-25.2.0.min.js"></script>
 	<meta data-n-head="1" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
 </head>
@@ -63,6 +67,8 @@
 						</div> 
 						<div data-v-525011a5="" id="main-modal" class="vue-portal-target">
 						</div>
+
+						<div id="pop-modal"></div>
 					</div>
 				</div>
 			</div>
