@@ -2253,14 +2253,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         $categorytitle = $stat->category->title;
                     }
                 }
-                $username = $stat->user->username;
+                $username = substr($stat->user->username, 0, 2);
                 $odd = 0;
                 if($stat->bet > 0 && $stat->win > 0){
                     $odd = floor($stat->win / $stat->bet * 100) / 100;
                 }
                 $data[] = [
                     'game' => $categorytitle,
-                    'username' => $username,
+                    'username' => $username . '**',
                     'time' => date("H:i:s", strtotime($stat->date_time)),
                     'betamount' => number_format($stat->bet,0),
                     'winamount' => number_format($stat->win,0),

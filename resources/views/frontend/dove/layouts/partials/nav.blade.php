@@ -108,7 +108,7 @@
             </a> 
             <div data-v-556f8885="" class="division row" style="flex-direction: row; margin-bottom: 20px;"></div> 
         </div> <!----> 
-        <a data-v-556f8885="" href="{{ $telegram }}" target="_blank" class="telegram">
-            <img data-v-556f8885="" src="/frontend/dove/assets/img/channel-2.ca0235a.gif">
+        <a data-v-556f8885="" href="{{ $telegram }}" target=@if($telegram=="#")""@else"_blank"@endif class="telegram">
+            <img data-v-556f8885="" src="/frontend/dove/assets/img/telegram.png">
         </a> 
     </div>
