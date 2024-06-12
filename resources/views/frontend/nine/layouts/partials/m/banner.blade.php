@@ -5,12 +5,25 @@
     <div class="main-banner-slider">
         <!-- <div aria-live="polite" class="slick-list draggable"> -->
         <!-- <div class="slick-track" style="opacity: 1; width: 1500px;" role="listbox"> -->
+        
         <div>
-            <img src="/frontend/boss/V/slider-mobile-1.png" style="width:100%">
+            <img src="/frontend/todayslot/images/m_slideshow1.png" style="width:100%">
         </div>
         <div>
-            <img src="/frontend/boss/V/slider-mobile-2.png" style="width:100%">
+            <img src="/frontend/todayslot/images/m_slideshow2.png" style="width:100%">
+        </div> 
+        <div>
+            <img src="/frontend/todayslot/images/m_slideshow3.png" style="width:100%">
         </div>
+        <div>
+            <img src="/frontend/todayslot/images/m_slideshow4.png" style="width:100%">
+        </div>
+        <div>
+            <img src="/frontend/todayslot/images/m_slideshow5.png" style="width:100%">
+        </div> 
+        <div>
+            <img src="/frontend/todayslot/images/m_slideshow6.png" style="width:100%">
+        </div> 
         <!-- <img src="/V/main-banner-mobile-5.jpg"> -->
         <!-- <img src="/V/main-banner-mobile-6.jpg"> -->
         <!-- </div> -->

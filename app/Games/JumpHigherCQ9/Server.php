@@ -65,6 +65,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempTotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'MaxRespinCount', 15);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinCount', 0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeReelCounts',0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -151,7 +152,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                                     $slotSettings->SetBalance(-1 * ($totalbet), $slotEvent['slotEvent']);
                                     $slotSettings->UpdateJackpots($totalbet);
                                     $_sum = $totalbet / 100 * $slotSettings->GetPercent();
-                                    $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
+                                    $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'],$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeReelCounts'));
                                 }else{
                                     $slotEvent['slotEvent'] = 'reel';
                                     $respinReels = $gameData->ReelSelected;
@@ -164,7 +165,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                                                 $slotSettings->SetBalance(-1 * ($totalbet), $slotEvent['slotEvent']);
                                                 $slotSettings->UpdateJackpots($totalbet);
                                                 $_sum = ($totalbet) / 100 * $slotSettings->GetPercent();
-                                                $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent']);
+                                                $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'],$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeReelCounts'));
                                                 $respinReelNo = $k + 1;
                                                 break;
                                             }
@@ -282,19 +283,25 @@ namespace VanguardLTE\Games\JumpHigherCQ9
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $totalbet, $respinReelNo){
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
+            $_winAvaliableMoney = $_spinSettings[1];
+            
+            if($slotEvent != 'freespin'){
+                if($winType != 'none' && mt_rand(0, 100) < 40){
+                    $winType = 'none';
+                    $_winAvaliableMoney = 0;
+                }
+            }
+            
             if($slotSettings->GetGameData($slotSettings->slotId . 'FreeBet') == 1){
                 $winType = 'bonus';
                 $randValue = mt_rand(15,30);
+                
                 $slotSettings->SetGameData($slotSettings->slotId . 'MaxRespinCount', $randValue);
                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinCount', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
                 
             }
-            $_winAvaliableMoney = $_spinSettings[1];
-            if($winType != 'none' && mt_rand(0, 100) < 40){
-                $winType = 'none';
-                $_winAvaliableMoney = 0;
-            }
+            //$winType = 'bonus';
             $defaultScatterCount = 0;
             if($winType == 'bonus'){
                 $defaultScatterCount = $slotSettings->getScatterCount($slotEvent);
@@ -374,6 +381,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                     $freespinNum = $freeNums[$scatterReelNumberCount];
                     if($scattersCount >4){
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusMul', $scattersCount - 4);
+                        $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',$scattersCount);
                     }
                 }
                 if( $i > 1000 ) 
@@ -421,7 +429,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
             }
             if($totalWin > 0){
                 $slotSettings->SetBalance($totalWin);
-                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin);
+                $slotSettings->SetBank((isset($slotEvent) ? $slotEvent : ''), -1 * $totalWin,'',$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeReelCounts'));
             }
             $result_val['Multiple'] = "1";
             $isEnd = true;
@@ -645,6 +653,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                         if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespinCount') >= $slotSettings->GetGameData($slotSettings->slotId . 'MaxRespinCount')){
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 1);
                         }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeReelCounts',$scatterReelCount);
                     }
                 }else if($scatterReel[$k] == 1 && $scatterReelCount == 5){             
                     $reelWins[$k] += floor($betline * 838 * ($scatterCount - 3)); 
