@@ -2235,7 +2235,17 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
         public function getLastBet(\Illuminate\Http\Request $request)
         {
-            $stats = \VanguardLTE\StatGame::orderBy('stat_game.date_time', 'DESC')->take(10)->get();
+            if (\Illuminate\Support\Facades\Auth::check())
+            {
+                $parent = auth()->user()->referral;                
+                while($parent!=null && !$parent->isInOutPartner())
+                {
+                    $parent = $parent->referral;
+                }
+                $stats = \VanguardLTE\StatGame::whereIn('user_id', $parent->availableUsers())->orderBy('stat_game.date_time', 'DESC')->take(10)->get();
+            }else{
+                $stats = \VanguardLTE\StatGame::orderBy('stat_game.date_time', 'DESC')->take(10)->get();
+            }
             $data = [];
             foreach($stats as $stat)
             {
