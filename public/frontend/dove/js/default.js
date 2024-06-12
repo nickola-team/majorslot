@@ -25,6 +25,9 @@ function closeNav() {
 function logOut() {
   top.location.href="/logout";
 }
+function updateRandomLastBet(){
+
+}
 function updateLastBet() {
   $.ajax({
     url: '/api/last_bet',
@@ -1081,7 +1084,7 @@ function depositRequest() {
   var x = 10000;
   var remainder = Math.floor(y % x);
   if (remainder != 0) {
-      alert('입금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.');
+      swal2('입금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.', "error");
       return false;
   }
   var conf = confirm('입금신청을 하시겠습니까?');
@@ -1089,7 +1092,7 @@ function depositRequest() {
       return false;
   }
   if (cmoney <= 0) {
-      alert('신청하실 충전금액을 입력해주세요.');
+      swal2('신청하실 충전금액을 입력해주세요.', "error");
       return false;
   }
   $('#loading-page').show();
