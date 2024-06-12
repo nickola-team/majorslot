@@ -25,6 +25,9 @@ function closeNav() {
 function logOut() {
   top.location.href="/logout";
 }
+function updateRandomLastBet(){
+
+}
 function updateLastBet() {
   $.ajax({
     url: '/api/last_bet',
