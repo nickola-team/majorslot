@@ -1,8 +1,12 @@
 <div data-v-525011a5="" id="main_content" class="content column">
     <div data-v-525011a5="" class="layout-spacing column">
         <div data-v-fad191c6="" data-v-525011a5="" class="main column">
-            @include('frontend.dove.layouts.partials.banner')
-            <div data-v-fad191c6="" class="top-games column">
+            @if( $detect->isMobile() || $detect->isTablet() ) 
+                @include('frontend.dove.layouts.partials.m.banner')
+            @else
+                @include('frontend.dove.layouts.partials.banner')
+            @endif  
+            <div data-v-fad191c6="" class="top-games column" style="padding-left: 10px; padding-right: 10px;">
                 <div data-v-fad191c6="" class="title row" style="flex-direction: row; margin-bottom: 0px;">
                     <span data-v-fad191c6="" class="text">
                         <img data-v-fad191c6="" src="/frontend/dove/assets/img/icon-6.d1b0eb3.svg" style="margin-right: 5px;">LIVE CASINO
@@ -32,7 +36,15 @@
                         @foreach($categories AS $index=>$category)
                             @if ($category->type =='live')
                                 <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                    <button data-v-fad191c6="" class="button" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+                                @auth
+                                    @if ($category->status == 0)
+                                    <button data-v-fad191c6="" class="zoomIn button" onclick="swal2('점검중입니다.', 'warning')">
+                                    @else
+                                    <button data-v-fad191c6="" class="zoomIn button" onclick="casinoGameStart('{{$category->href}}')">
+                                    @endif
+                                @else
+                                    <button data-v-fad191c6="" class="zoomIn button" onclick="swal2('로그인후 이용가능합니다.', 'error')">
+                                @endif
                                         <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png" class="list-6">
                                     </button>
                                 </div>
@@ -42,10 +54,10 @@
                     </div>
                 </div>
             </div> 
-            <div data-v-fad191c6="" class="top-games column">
+            <div data-v-fad191c6="" class="top-games column" style="padding-left: 10px; padding-right: 10px;">
                 <div data-v-fad191c6="" class="title row" style="flex-direction: row; margin-bottom: 0px;">
                     <span data-v-fad191c6="" class="text">
-                        <img data-v-fad191c6="" src="/frontend/dove/assets/img/icon-4.44b9a13.svg" style="margin-right: 5px;">TOP SLOT GAMES
+                        <img data-v-fad191c6="" src="/frontend/dove/assets/img/icon-4.44b9a13.svg" style="margin-right: 5px;">SLOT GAMES
                     </span> 
                     <div data-v-fad191c6="" class="spacer"></div> 
                     <div data-v-fad191c6="" class="carousel row" style="flex-direction: row;">
@@ -72,7 +84,15 @@
                             @foreach($categories AS $index=>$category)
                                 @if ($category->type =='slot')
                                     <div data-v-fad191c6="" class="top-game-event zoomIn column">
-                                        <button data-v-fad191c6="" class="button" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
+                                    @auth
+                                        @if ($category->status == 0)
+                                        <button data-v-fad191c6="" class="zoomIn button" onclick="swal2('점검중입니다.', 'warning')">
+                                        @else
+                                        <button data-v-fad191c6="" class="zoomIn button" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}')">
+                                        @endif
+                                    @else
+                                        <button data-v-fad191c6="" class="zoomIn button" onclick="swal2('로그인후 이용가능합니다.', 'error')">
+                                    @endif
                                             <img data-v-fad191c6="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png" class="list-6">
                                         </button>
                                     </div>
@@ -82,7 +102,7 @@
                     </div>
                 </div>
             </div> 
-            <div data-v-fad191c6="" class="providers column">
+            <div data-v-fad191c6="" class="providers column" style="padding-left: 10px; padding-right: 10px;">
                 <div data-v-fad191c6="" class="title row" style="flex-direction: row; margin-bottom: 0px;">
                     <span data-v-fad191c6="" class="text">
                         <img data-v-fad191c6="" src="/frontend/dove/assets/img/icon-2.3860d55.svg" style="margin-right: 5px;">GAME PROVIDERS
@@ -353,7 +373,7 @@
                     </div>
                 </div>
             </div> 
-            <div data-v-fad191c6="" class="latest-bets column">
+            <div data-v-fad191c6="" class="latest-bets column" style="padding-left: 10px; padding-right: 10px;">
                 <div data-v-fad191c6="" class="title row" style="flex-direction: row;">
                     <span data-v-fad191c6="" class="text">
                         <img data-v-fad191c6="" src="/frontend/dove/assets/img/icon-3.5602481.svg" style="margin-right: 5px; width: 19px;">LATEST BETS
@@ -381,27 +401,8 @@
                         </div>
                     </div> 
                     <div data-v-fad191c6="" class="fill-height">
-                        <div data-v-fad191c6="" class="lists column">
-                            <div data-v-fad191c6="" class="data row" style="flex-direction: row;">
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="game-name text">에볼루션</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">맥*</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">18:09:29</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">₩10,000</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="text">2x</span>
-                                </div> 
-                                <div data-v-fad191c6="" class="row" style="flex-direction: row;">
-                                    <span data-v-fad191c6="" class="win text">₩20,000</span>
-                                </div>
-                            </div>
+                        <div data-v-fad191c6="" class="lists column" id="last_bet_list">
+                            
                         </div>
                     </div>
                 </div>

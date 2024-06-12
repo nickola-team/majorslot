@@ -46,27 +46,29 @@
 </script>
     
 
-<div id="banner_wrap" class="column" style="display:block">
-    <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:1280px;height:285px;overflow:hidden;visibility:hidden;">
-        <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1280px;height:285px;overflow:hidden;">
+<div id="m_banner_wrap" class="mainboard" style="display:block">
+    <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:720px;height:330px;overflow:hidden;visibility:hidden;">
+        <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:720px;height:330px;overflow:hidden;">
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow1.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow1.png" />
             </div>
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow2.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow2.png" />
             </div> 
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow3.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow3.png" />
             </div>
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow4.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow4.png" />
             </div>
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow5.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow5.png" />
             </div> 
             <div>
-                <img data-u="image" src="/frontend/todayslot/images/slideshow6.png" />
+                <img data-u="image" src="/frontend/todayslot/images/m_slideshow6.png" />
             </div>     
+
+            <a data-u="any" href="https://www.jssor.com" style="display:none">slider bootstrap</a>
         </div>
         <!-- Bullet Navigator -->
         <div data-u="navigator" class="jssorb051" style="position:absolute;bottom:14px;right:12px;" data-autocenter="1" data-scale="0.5" data-scale-bottom="0.75">

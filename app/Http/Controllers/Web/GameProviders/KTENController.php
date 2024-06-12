@@ -1051,7 +1051,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $promo->racewinners = $response->body();
                 }
 
-                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/games?' . $mgckey );
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/common/games?' . $mgckey );
                 if ($response->ok())
                 {
                     $json_data = $response->json();

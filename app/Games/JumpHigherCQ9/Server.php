@@ -60,6 +60,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'RngData', [0, 0, 0, 0, 0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempTotalWin', 0);
                 }else if($paramData['req'] == 2){
@@ -272,6 +273,10 @@ namespace VanguardLTE\Games\JumpHigherCQ9
         public function generateResult($slotSettings, $result_val, $slotEvent, $betline, $lines, $totalbet, $respinReelNo){
             $_spinSettings = $slotSettings->GetSpinSettings($slotEvent, $betline * $lines, $lines);
             $winType = $_spinSettings[0];
+            if($slotSettings->GetGameData($slotSettings->slotId . 'FreeBet') == 1){
+                $winType = 'bonus';
+                $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
+            }
             $_winAvaliableMoney = $_spinSettings[1];
             if($winType != 'none' && mt_rand(0, 100) < 40){
                 $winType = 'none';
@@ -522,6 +527,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                 }
                 $slotSettings->SaveLogReport(json_encode($gamelog), $totalbet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $slotSettings->GetGameData($slotSettings->slotId . 'BaseWin'), $slotEvent, $result_val['GamePlaySerialNumber']);
                 $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',0);
+                
             }else{
                 if($scatterReelNumberCount >= 5){
                     $reelWins = [0,0,0,0,0];
@@ -621,7 +627,11 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                 }
                 if($scatterReel[$k] == 0){
                     if($scatterReelCount == 4){                        
-                        $reelWins[$k] += floor($betline * 838 * ($scatterCount - 3));                     
+                        $reelWins[$k] += floor($betline * 838 * ($scatterCount - 3));   
+                        $randSpin = mt_rand(0,2);
+                        if($randSpin == 1){
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 1);
+                        }
                     }
                 }else if($scatterReel[$k] == 1 && $scatterReelCount == 5){             
                     $reelWins[$k] += floor($betline * 838 * ($scatterCount - 3));              

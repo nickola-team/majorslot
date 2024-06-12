@@ -455,7 +455,14 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'as' => 'frontend.api.inoutlist',
         'uses' => 'ApiController@inoutList_json',
     ]);
-
+    Route::post('api/last_bet', [
+        'as' => 'frontend.api.last_bet',
+        'uses' => 'ApiController@getLastBet',
+    ]);
+    Route::post('api/mybethistory', [
+        'as' => 'frontend.api.mybethistory',
+        'uses' => 'ApiController@myBetHistory',
+    ]);
     //**************/
 });
 

@@ -14,9 +14,17 @@
       <div data-v-4f69ab08="" class="casino-list row list-4" style="flex-direction: row;">
         @foreach($categories AS $index=>$category)
             @if ($category->type =='live')
-                  <button data-v-4f69ab08="" class="zoomIn button" onclick=@auth "showContent('slot_content')" @else "swal2('로그인후 이용가능합니다.', 'error')" @endif>
-                      <img data-v-4f69ab08="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png">
-                  </button>
+              @auth
+                @if ($category->status == 0)
+                  <button data-v-4f69ab08="" class="zoomIn button" onclick="swal2('점검중입니다.', 'warning')">
+                @else
+                  <button data-v-4f69ab08="" class="zoomIn button" onclick="casinoGameStart('{{$category->href}}')">
+                @endif
+              @else
+                <button data-v-4f69ab08="" class="zoomIn button" onclick="swal2('로그인후 이용가능합니다.', 'error')">
+              @endif
+                  <img data-v-4f69ab08="" src="/frontend/dove/assets/img/category/{{strtoupper($category->title)}}.png">
+                </button>
             @endif
         @endforeach
       </div>
