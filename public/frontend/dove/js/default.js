@@ -2,8 +2,18 @@ var slot_games = [];
 $(document).ready(function(){
     setInterval(function () {
       updateLastBet();  
-    }, 5000);
+    }, 10000);
     updateLastBet();
+});
+$(document).mouseup(function(e) 
+{
+    var container = $("#profile-drop");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+    }
 });
 function openNav() {
     $('.slideout-wrapper').css('display', 'block');
@@ -14,6 +24,9 @@ function closeNav() {
 }
 function logOut() {
   top.location.href="/logout";
+}
+function updateRandomLastBet(){
+
 }
 function updateLastBet() {
   $.ajax({
@@ -55,7 +68,6 @@ function updateLastBet() {
   });
 }
 function PointToMoney() {
-  showProfile();
   Swal.fire({
     title: '',
     text: '모든 포인트를 머니로 변환하시겠습니까?',
@@ -274,6 +286,7 @@ function showContent(id) {
     $('#main_content').css('display', 'none');
     $('#live_content').css('display', 'none');
     $('#slot_content').css('display', 'none');
+    $('#notice_content').css('display', 'none');
 
     $('#' + id).css('display', 'flex');
     closeNav();
@@ -356,12 +369,14 @@ function loginx() {
       'username': sID,
       'password': sPASS,
     };
+    $('#loading-page').show();
     $.ajax({
       url: '/api/login',
       type: 'POST',
       data: data,
       dataType: "json",
       success: function(result) {
+        $('#loading-page').hide();
         $(".sbmt-login").removeClass('is-loading disabled');
         if (result.error==false) {
           if (isRemembered) {
@@ -381,6 +396,7 @@ function loginx() {
         ajaxStart = false;
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
+        $('#loading-page').hide();
         swal2("some error");
       }
     });
@@ -533,7 +549,7 @@ function submitRegister() {
     'tel1': $("#reg-phone").val(),
   };
 
-  $(this).addClass('is-loading disabled');
+  $('#loading-page').show();
   $.ajax({
     url: '/api/join',
     type: 'POST',
@@ -541,6 +557,7 @@ function submitRegister() {
     dataType: "json",
     async: false,
     success: function(result) {
+      $('#loading-page').hide();
       if (result.error == false) {
         $("#freg input").val('');
         swal2(result.msg);
@@ -549,6 +566,7 @@ function submitRegister() {
       }
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
+      $('#loading-page').hide();
       swal2(result.msg,"error");
     }
   });
@@ -583,23 +601,10 @@ function openDepositModal(username){
 											</div> <div data-v-5290ad82="" class="deposit-method row" style="flex-direction: row; flex-shrink: 0;">
 												<div data-v-5290ad82="" dir="auto" class="v-select vs--single vs--unsearchable"> 
 													<div id="vs20__combobox" role="combobox" aria-expanded="false" aria-owns="vs20__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-														<div class="vs__selected-options">
-															<span class="vs__selected">현금</span> 
-															<input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs20__combobox" aria-controls="vs20__listbox" type="search" autocomplete="off" class="vs__search">
-														</div> 
-														<div class="vs__actions">
-															<button type="button" title="Clear Selected" aria-label="Clear Selected" class="vs__clear" style="display: none;">
-																<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
-																	<path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path>
-																</svg>
-															</button> 
-															<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" role="presentation" class="vs__open-indicator">
-																<path d="M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"></path>
-															</svg> 
-															<div class="vs__spinner" style="display: none;">Loading...</div>
-														</div>
+                            <select class="vs__selected-options" value="현금">
+                              <option class="vs__dropdown-option" value="1">현금</option>
+                            </select>
 													</div> 
-													<ul id="vs20__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
 												</div> 
 												<div data-v-5290ad82="" class="detail-btn-wrap row" style="flex-direction: row;">
 													<button data-v-5290ad82="" class="detail-btn button" onclick="depositGuidePop();">
@@ -743,7 +748,7 @@ function addMoneyDeposit(money) {
   function depositHistoryPop(){    
     const div = document.getElementById('main-modal');
     var dehistorycontent= `<div class="dialog row" id="dehitory-modal" style="flex-direction: row; ">
-  <div class="container row" style="flex-direction: row; max-width: 450px;">
+  <div class="container row" style="flex-direction: row; max-width: 450px; min-height:250px">
     <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
       <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
     </button>  
@@ -759,6 +764,7 @@ function addMoneyDeposit(money) {
   }
 
   function mydepositlist() {
+    $('#loading-page').show();
     $.ajax({
       type: "POST",
       cache: false,
@@ -767,40 +773,42 @@ function addMoneyDeposit(money) {
       dataType: 'json',
       data : {type: 'add'},
       success: function(data) {
+        $('#loading-page').hide();
         if(data.error == false){
-			var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
-						<tr>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">충전금액</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
-							<th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
-						</tr>
-                        `;
-			if (data.data.length > 0) {
-				status_name = {
-					0 : '대기',
-					1 : '완료',
-					2 : '취소'
-				 };
-				for (var i = 0; i < data.data.length; i++) {
-					date = new Date(data.data[i].created_at);
-					html += `<tr>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
-						<td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
-						</tr>
-						</thead>`;
-				}
-				
-			}else{
-        html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
-      }
-			html += `</table>`;
-			$("#mydeposit").html(html);
-			
+          var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
+                <tr>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">번호</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">충전금액</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">신청날짜</td>
+                  <th style="padding: 5px;text-align: center;vertical-align: middle; width:10%">상태</td>
+                </tr>
+                            `;
+          if (data.data.length > 0) {
+            status_name = {
+              0 : '대기',
+              1 : '완료',
+              2 : '취소'
+            };
+            for (var i = 0; i < data.data.length; i++) {
+              date = new Date(data.data[i].created_at);
+              html += `<tr>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${i+1}</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${parseInt(data.data[i].sum).toLocaleString()}원</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
+                <td style="padding: 5px;text-align: center;vertical-align: middle;">${status_name[data.data[i].status]}</td>
+                </tr>
+                </thead>`;
+            }
+            
+          }else{
+            html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
+          }
+          html += `</table>`;
+          $("#mydeposit").html(html);
+          
         } else {
-            alert(data.msg);
+          $('#loading-page').hide();
+          swal2(data.msg, "error");
         }
       }
     });
@@ -846,12 +854,12 @@ function addMoneyDeposit(money) {
                 </div>
               </div>`;
     div.innerHTML = depositcontent;
-    showProfile();
   }
   function startGameByProvider(provider, gamecode,max = false) {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
+    $('#loading-page').show();
     $.ajax({
     type: "POST",
     url: "/api/getgamelink",
@@ -861,22 +869,27 @@ function addMoneyDeposit(money) {
     cache: false,
     async: false,
     success: function (data) {
+      $('#loading-page').hide();
       if (data.error) {
-        alert(data.msg);
+        swal2(data.msg, "error");
         return;
       }
-          if (max)
-         {
-           window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
-         }else{
-           window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
-         }
+      if (max)
+      {
+        window.open(data.data.url, "game", "width=" + screen.width + ", height=" + screen.height + ", left=100, top=50");
+      }else{
+        window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
+      }
+    },
+    complete: function() {
+      $('#loading-page').hide();
     }
     });
     
    }
   function slotGame(category, title){
     const div = document.getElementById('main-modal');
+    $('#loading-page').show();
     $.ajax({
       type: "POST",
       url: "/api/getgamelist",
@@ -940,14 +953,15 @@ function addMoneyDeposit(money) {
         {
           swal2("게임이 없습니다", "error");
         }
-         },
-             complete: function() {
-              $('.loading').hide();
-          }
+      },
+      complete: function() {
+        $('#loading-page').hide();
+      }
     });
     closeNav();
   }
   function casinoGameStart(category){
+    $('#loading-page').show();
     $.ajax({
        type: "POST",
        url: "/api/getgamelist",
@@ -955,6 +969,7 @@ function addMoneyDeposit(money) {
        cache: false,
        async: true,
        success: function (data, status) {
+        $('#loading-page').hide();
          if (data.error) {
           swal2(data.msg, "error");
            return;
@@ -966,6 +981,9 @@ function addMoneyDeposit(money) {
          {
           swal2("게임실행 오류", "error");
          }
+        },
+        complete: function() {
+          $('#loading-page').hide();
         }
        });
    }
@@ -974,6 +992,7 @@ function addMoneyDeposit(money) {
     var formData = new FormData();
     formData.append("provider", provider);
     formData.append("gamecode", gamecode);
+    $('#loading-page').show();
     $.ajax({
     type: "POST",
     url: "/api/getgamelink",
@@ -983,6 +1002,7 @@ function addMoneyDeposit(money) {
     cache: false,
     async: false,
     success: function (data) {
+      $('#loading-page').hide();
       if (data.error) {
         swal2(data.msg, "error");
         return;
@@ -993,6 +1013,9 @@ function addMoneyDeposit(money) {
          }else{
            window.open(data.data.url, "game", "width=1280, height=720, left=100, top=50");
          }
+    },
+    complete: function() {
+      $('#loading-page').hide();
     }
     });
     
@@ -1016,6 +1039,7 @@ function addMoneyDeposit(money) {
     if(!f){
         return false;
     }
+    $('#loading-page').show();
     $.ajax({
         type: "POST",
         url: "/api/depositAccount",
@@ -1023,8 +1047,9 @@ function addMoneyDeposit(money) {
         cache: false,
         async: false,
         success: function (data) {
+            $('#loading-page').hide();
             if (data.error) {
-                alert(data.msg);
+                swal2(data.msg, "error");
                 return;
             }
             if (data.url != null)
@@ -1041,12 +1066,13 @@ function addMoneyDeposit(money) {
             }
             else
             {
-                alert(data.msg);
+                swal2(data.msg, "error");
             }
             
         },
         error: function (err, xhr) {
-            alert(err.responseText);
+            $('#loading-page').hide();
+            
         },
     });
 }
@@ -1058,7 +1084,7 @@ function depositRequest() {
   var x = 10000;
   var remainder = Math.floor(y % x);
   if (remainder != 0) {
-      alert('입금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.');
+      swal2('입금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.', "error");
       return false;
   }
   var conf = confirm('입금신청을 하시겠습니까?');
@@ -1066,9 +1092,10 @@ function depositRequest() {
       return false;
   }
   if (cmoney <= 0) {
-      alert('신청하실 충전금액을 입력해주세요.');
+      swal2('신청하실 충전금액을 입력해주세요.', "error");
       return false;
   }
+  $('#loading-page').show();
   $.ajax({
       url: '/api/addbalance',
       type: 'POST',
@@ -1077,12 +1104,17 @@ function depositRequest() {
       money: cmoney,
       },
       success: function(result) {
-      if (result.error == false) {
-          $("#charge_money").val(0);
-          swal2('신청완료 되었습니다.');
-      } else {
-          swal2( result.msg);
-      }
+        $('#loading-page').hide();
+        if (result.error == false) {
+            $("#charge_money").val(0);
+            swal2('신청완료 되었습니다.');
+        } else {
+            swal2( result.msg);
+        }
+      },
+      error: function (err, xhr) {
+          $('#loading-page').hide();
+          
       }
   });
   $(".btn-pointr").on('click', function() {
@@ -1197,7 +1229,7 @@ div.innerHTML = wdguidecontent;
 function withdrawHistoryPop(){    
   const div = document.getElementById('main-modal');
   var wdhistorycontent= `<div class="dialog row" id="dehitory-modal" style="flex-direction: row; ">
-<div class="container row" style="flex-direction: row; max-width: 450px;">
+<div class="container row" style="flex-direction: row; max-width: 450px;min-height:250px">
   <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('dehitory-modal');">
     <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
   </button>  
@@ -1213,6 +1245,7 @@ function withdrawHistoryPop(){
 }
 
 function mywithdrawlist() {
+  $('#loading-page').show();
   $.ajax({
       type: "POST",
       cache: false,
@@ -1221,6 +1254,7 @@ function mywithdrawlist() {
       dataType: 'json',
       data : {type: 'out'},
       success: function(data) {
+        $('#loading-page').hide();
         if(data.error == false){
             var html = `<tbody style="width: 100%;max-width: 100%;margin-bottom: 20px;">
                         <tr>
@@ -1247,13 +1281,19 @@ function mywithdrawlist() {
                         </thead>`;
                 }
                 
+            }else{
+              html += `<tr><td colspan="12" style="text-align: center;padding-top: 20px;">데이터가 없습니다.</td></tr>`;
             }
             html += `</table>`;
             $("#mywithdraw").html(html);
             
         } else {
-            alert(data.msg);
+            swal2(data.msg, "error");
         }
+      },
+      error: function (err, xhr) {
+          $('#loading-page').hide();
+          
       }
     });
 }
@@ -1278,6 +1318,7 @@ function withdrawRequest() {
     swal2('정확한 금액을 입력해주세요');
     return false;
   }
+  $('#loading-page').show();
   $.ajax({
     url: '/api/outbalance',
     type: 'POST',
@@ -1286,12 +1327,17 @@ function withdrawRequest() {
       money: cmoney,
     },
     success: function(result) {
+      $('#loading-page').hide();
       if (result.error == false) {
         $("#exchange_money").val(0);
         swal2('신청완료 되었습니다.');
       } else {
           swal2(result.msg);
       }
+    },
+    error: function (err, xhr) {
+        $('#loading-page').hide();
+        
     }
   })
 }
@@ -1315,7 +1361,7 @@ function openRequestPop(){
         <div data-v-ca1f65a4="" class="fill-height">
           <div data-v-ca1f65a4="" class="list-wrap column">
             <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
-              <div data-v-ca1f65a4="" class="column" id="customerList" style="margin: auto; align-items: center;">
+              <div data-v-ca1f65a4="" class="column" id="customerList" style=" align-items: center;">
                 <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
                 
               </div>
@@ -1347,14 +1393,7 @@ function getCustomerPage() {
         dataType: 'json',
         success: function(data) {
         if(data.error == false){
-			var html = `<table class="history-table table">
-                  <tbody id="customerList" style="width: 100%;max-width: 100%;">
-                    <tr class="table-border">
-                            <th translate="" class="text-left ng-scope" style="padding-left: 20px">제목</th>
-                            <th translate="" width="20%" class=" text-center ng-scope">작성 일시</th>
-                            <th translate="" width="20%" class=" text-center ng-scope">수신 일시</th>
-                            <th translate="" width="10%" class=" text-center ng-scope">타입</th>
-                        </tr>`;
+      var html = ``;
 			if (data.data.length > 0) {
 				for (var i = 0; i < data.data.length; i++) {
 					date = new Date(data.data[i].created_at);
@@ -1367,20 +1406,25 @@ function getCustomerPage() {
 						date1 = new Date(data.data[i].read_at);
 						read = date1.toLocaleString();
 					}
-					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';
-					html += `                    
-          <tr>
-						<td class="text-left" style="padding: 5px;text-align: center;vertical-align: middle;"> <a href="#" onclick="showMsg('${data.data[i].id}')">${data.data[i].title}</a></td>
-						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${date.toLocaleString()}</td>
-						<td width="20%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${read}</td>
-						<td width="10%" class="text-center" style="padding: 5px;text-align: center;vertical-align: middle;">${type}</td>
-						</tr>
-						<tr id="msg${data.data[i].id}" style="display:none;">
-						<td colspan="4" class="ng-scope">${data.data[i].content}</td>
-						</tr>`;
+					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';				
+                html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
+              <div data-v-ca1f65a4="" class="inquiry column">
+                <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
+                  <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                </div> 
+                <div data-v-ca1f65a4="" class="row" style="flex-direction: row;">
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">${date.toLocaleString()}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${type} </span>
+                </div>
+              </div>
+            </button>
+          </div>`;
 				}
-        html +=`</tbody>
-                </table>`;
+        // html +=`</tbody>
+        //         </table>`;
 				
 			}else{
         html = `<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>`;
@@ -1389,7 +1433,7 @@ function getCustomerPage() {
             
 			
         } else {
-            alert(data.msg);
+            swal2(data.msg);
         }
     }
     });
@@ -1399,43 +1443,432 @@ function openWriteMsgPop(){
   const inqdiv = document.getElementById('inquiry-list');
   inqdiv.style.display="none";
   const reqdiv = document.getElementById('request-modal');
-  var reqcontent= `<div data-v-ca1f65a4="" class="column">
-  <div data-v-ca1f65a4="" class="write-form column">
-    <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
-      <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;">
-        <div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
-          <div id="vs18__combobox" role="combobox" aria-expanded="false" aria-owns="vs18__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
-            <div class="vs__selected-options">
-              <input readonly="readonly" aria-autocomplete="list" aria-labelledby="vs18__combobox" aria-controls="vs18__listbox" type="search" autocomplete="off" class="vs__search">
-            </div>             
-          </div>
-        </div> 
-        <input data-v-578d3222="" data-v-ca1f65a4="" type="text" placeholder="제목" inputmode="text" class="input">
-      </div> 
-      <div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
-        <div class="editr--toolbar">
-          <div title="이미지 첨부">
-            <a class="vw-btn-imageModule">
-              <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                <path d="M576 576q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm1024 384v448h-1408v-192l320-320 160 160 512-512zm96-704h-1600q-13 0-22.5 9.5t-9.5 22.5v1216q0 13 9.5 22.5t22.5 9.5h1600q13 0 22.5-9.5t9.5-22.5v-1216q0-13-9.5-22.5t-22.5-9.5zm160 32v1216q0 66-47 113t-113 47h-1600q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1600q66 0 113 47t47 113z"></path>
-              </svg>
-            </a>
-            <div class="dashboard" style="display: none;"><!----></div>
-          </div>
+  var reqcontent= `<div data-v-ca1f65a4="" class="column" id="requset-write">
+    <div data-v-ca1f65a4="" class="write-form column">
+        <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
+            <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;"><div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+            <ul id="vs13__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
         </div>
-        <div contenteditable="true" tabindex="1" placeholder="내용을 입력하세요." class="editr--content"></div>
-      </div> <!----> 
-      <div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
-        <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px;">
-          <span data-v-ca1f65a4="" class="text">작성취소</span>
-        </button> 
-        <div data-v-ca1f65a4="" class="spacer"></div> 
-        <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;">
-          <span data-v-ca1f65a4="" class="text">작성완료</span>
-        </button>
+    </div> 
+    <input data-v-578d3222="" data-v-ca1f65a4="" type="text" placeholder="제목" inputmode="text" id="txt_title" class="input">
+</div> 
+<div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
+    
+    <textarea contenteditable="true" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;"></textarea>
+</div> <!----> 
+<div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
+    <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">작성취소</span>
+    </button> 
+    <div data-v-ca1f65a4="" class="spacer"></div> 
+    <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;" onclick="send_text();">
+        <span data-v-ca1f65a4="" class="text">작성완료</span>
+    </button>
+</div>`;
+reqdiv.innerHTML += reqcontent;
+}
+
+
+function cancelWrite(){
+  const reqdiv = document.getElementById('requset-write');
+  reqdiv.remove();
+  const inqdiv = document.getElementById('inquiry-list');
+  inqdiv.style.display="block";
+ 
+}
+
+function send_text() {
+  var title = $("#txt_title").val();
+  var message = $('#content_txt').val();
+  if ((title == '') || (message == '')) 
+  {
+    swal2('제목과 내용을 입력해주세요', 'error');
+  } 
+  else 
+  {
+      $.ajax({
+          url: "/api/writeMsg",
+          type: "POST",
+          dataType: "json",
+          data: {
+            title: title,
+            content: message
+          },
+          success: function(result) {
+            if (result.error == false) {
+              swal2('저장 되었습니다');
+              $("#txt_title").val('');
+              $('#content_txt').val('');
+              getCustomerPage();
+              // },2000);
+            }
+            else 
+            {
+              swal2('Opps!', result.msg, "error");
+            }
+          }
+        });
+  }              
+}
+
+
+function showMsg(objId,objContent,objTitle){
+  $.post('/api/readMsg',{id : objId},function(data){
+  }); 
+            
+  const inqdiv = document.getElementById('inquiry-list');
+  inqdiv.style.display="none";
+  const reqdiv = document.getElementById('request-modal');
+  var reqcontent= `<div data-v-ca1f65a4="" class="column" id="requset-write">
+    <div data-v-ca1f65a4="" class="write-form column">
+        <div data-v-ca1f65a4="" class="row" style="flex-direction: row; border-bottom: 1px solid rgb(35, 38, 46);">
+            <div data-v-ca1f65a4="" class="category row" style="flex-direction: row;"><div data-v-ca1f65a4="" dir="auto" class="v-select vs--single vs--unsearchable"> 
+            <ul id="vs13__listbox" role="listbox" style="display: none; visibility: hidden;"></ul> 
+        </div>
+    </div> 
+    <input data-v-578d3222="" data-v-ca1f65a4="" type="text" value='${objTitle}' inputmode="text" id="txt_title" class="input" readonly>
+</div> 
+<div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
+    
+    <textarea contenteditable="false" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;" readonly>${objContent}</textarea>
+</div> <!----> 
+<div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
+    <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px; display:none;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">작성취소</span>
+    </button> 
+    <div data-v-ca1f65a4="" class="spacer"></div> 
+    <button data-v-ca1f65a4="" class="write-btn button" style="height: 30px;" onclick="cancelWrite();">
+        <span data-v-ca1f65a4="" class="text">완료</span>
+    </button>
+</div>`;
+
+reqdiv.innerHTML += reqcontent;
+
+}
+
+
+
+
+//Notice
+function openNoticePanel(){
+  const div = document.getElementById('main-modal');
+  var requestcontent= `<v class="dialog row" style="flex-direction: row;">
+  <div class="container row" style="flex-direction: row; max-width: 500px;">
+    <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+      <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+    </button>  
+    <div data-v-ca1f65a4="" class="container column" id="request-modal">
+      <div data-v-ca1f65a4="" class="dialog-title row" style="flex-direction: row;">
+        <span data-v-ca1f65a4="" class="text-level-7 text">
+          <img data-v-ca1f65a4="" src="/frontend/dove/assets/img/inquiry-icon.75f60ef.svg" class="margin-right-5" style="width: 20px; height: 20px;">공지사항
+        </span>
+      </div> 
+      <div data-v-ca1f65a4="" class="inquiry-list column" id="inquiry-list">
+        <div data-v-ca1f65a4="" class="fill-height">
+          <div data-v-ca1f65a4="" class="list-wrap column">
+            <div data-v-ca1f65a4="" class="list scrollable-auto column"> 
+              <div data-v-ca1f65a4="" class="column" id="noticeList" style=" align-items: center;">
+                <!--<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>-->
+                
+              </div>
+            </div> 
+            <div data-v-ca1f65a4="" class="margin-bottom-10 padding-horizontal-10 row" style="flex-direction: row;">
+              <button data-v-ca1f65a4="" class="remove-btn padding-horizontal-10 button" style="height: 30px; display:none;">
+                <span data-v-ca1f65a4="" class="text">선택내역삭제</span>
+              </button> <div data-v-ca1f65a4="" class="spacer">              
+            </div> 
+            <button data-v-ca1f65a4="" class="write-btn padding-horizontal-10 button" style="height: 30px; display:none;" onclick="openWriteMsgPop();">
+              <span data-v-ca1f65a4="" class="text"><i data-v-e56d064c="" data-v-ca1f65a4="" class="margin-right-5 fa-solid fa-pen-to-square" ></i>문의작성</span>
+            </button>
+          </div> 
+        </div>
       </div>
     </div>
   </div>
 </div>`;
-reqdiv.innerHTML += reqcontent;
+  div.innerHTML += requestcontent;
+  getNoticeList();
 }
+
+function openBetHistoryPanel(){
+  const div = document.getElementById('main-modal');
+  var requestcontent = `<div class="dialog row" style="flex-direction: row;">
+                <div class="container row" style="flex-direction: row; max-width: 600px;">
+                  <button class="close-button button" style="background: rgb(44, 48, 58);" onclick="closeModal('main-modal');">
+                    <i data-v-e56d064c="" class="fa-solid fa-times" style="color: rgb(255, 255, 255);"></i>
+                  </button>
+                  <div data-v-db5cba90="" class="container column">
+                    <div data-v-db5cba90="" class="dialog-title row" style="flex-direction: row;">
+                      <span data-v-db5cba90="" class="text-level-7 text">
+                        <img data-v-db5cba90="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 20px; height: 20px;">베팅로그 </span>
+                    </div>
+                    <div data-v-db5cba90="" class="fill-height">
+                      <div data-v-db5cba90="" class="mybet-list margin-top-10 column">
+                        <div data-v-db5cba90="" class="select-type row" style="flex-direction: row;">
+                          <button data-v-db5cba90="" id="btn_table" class="button active" onclick="getBetHistory('table');"> 라이브카지노 </button>
+                          <button data-v-db5cba90="" id="btn_slot" class="button" onclick="getBetHistory('slot');"> 슬롯머신 </button>
+                          <button data-v-db5cba90="" id="btn_sports" class="button" onclick="getBetHistory('sports');"> 스포츠 </button>
+                          <button data-v-db5cba90="" id="btn_pball" class="button" onclick="getBetHistory('pball');"> 파워볼 </button>
+                        </div>
+                        <div data-v-db5cba90="" id="bethistory_list" class="list scrollable-auto margin-bottom-10 column">
+                          <table data-v-db5cba90="">
+                            <thead data-v-db5cba90="">
+                              <tr data-v-db5cba90="">
+                                <th data-v-db5cba90="">게임명</th>
+                                <th data-v-db5cba90="">베팅시간</th>
+                                <th data-v-db5cba90="">베팅금액</th>
+                                <th data-v-db5cba90="">배당</th>
+                                <th data-v-db5cba90="">당첨금액</th>
+                              </tr>
+                            </thead>
+                            <tbody data-v-db5cba90="" id="bethistory_body">
+                              
+                            </tbody>
+                          </table>
+                        </div>
+                        <div data-v-30f53f18="" data-v-db5cba90="" class="pagination row" style="flex-direction: row; align-items: center;">
+                          <div data-v-30f53f18="" class="column" style="flex-direction: row;">
+                            <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
+                              <div id="vs11__combobox" role="combobox" aria-expanded="false" aria-owns="vs11__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                                <select class="vs__selected-options" name="bethistory_page_count" style="background-color:#22262e;" id="bethistory_page_count">
+                                  <option class="vs__dropdown-option" value="5" style="background-color:#22262e;">5</option>
+                                  <option class="vs__dropdown-option" value="10" style="background-color:#22262e;">10</option>
+                                  <option class="vs__dropdown-option" value="20" style="background-color:#22262e;">20</option>
+                                  <option class="vs__dropdown-option" value="50" style="background-color:#22262e;">50</option>
+                                  <option class="vs__dropdown-option" value="100" style="background-color:#22262e;">100</option>
+                                  <option class="vs__dropdown-option" value="200" style="background-color:#22262e;">200</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div data-v-30f53f18="" class="row" style="flex-direction: row; align-items: center;">
+                            <span data-v-30f53f18="" class="text" style="opacity: 0.6;"> 개 씩 표시 </span>
+                          </div>
+                          <div data-v-30f53f18="" class="spacer"></div>
+                          <div data-v-30f53f18="" class="row" style="flex-direction: row;">
+                            <div data-v-30f53f18="" dir="auto" class="v-select vs--single vs--unsearchable" style="margin-right: 5px;">
+                              <div id="vs12__combobox" role="combobox" aria-expanded="false" aria-owns="vs12__listbox" aria-label="Search for option" class="vs__dropdown-toggle">
+                              <select class="vs__selected-options" name="bethistory_page_num" style="background-color:#22262e;" id="bethistory_page_num">
+                                
+                              </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div data-v-30f53f18="" id="btn_bethistory_before_page" class="row" style="flex-direction: row;">
+                            
+                          </div>
+                          <div data-v-30f53f18="" id="btn_bethistory_next_page" class="row" style="flex-direction: row;">
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+  div.innerHTML += requestcontent;
+  $("#bethistory_page_count").val(10);
+  getBetHistory('table');
+}
+$(document).on('change', '#bethistory_page_count', function() {
+  var gametype = '';
+  if($('#btn_table').hasClass('active')){
+    gametype = 'table';
+  }else if($('#btn_slot').hasClass('active')){
+    gametype = 'slot';
+  }else if($('#btn_sports').hasClass('active')){
+    gametype = 'sports';
+  }else if($('#btn_pball').hasClass('active')){
+    gametype = 'pball';
+  }
+  getBetHistory(gametype, 1);
+})
+$(document).on('change', '#bethistory_page_num', function() {
+  var gametype = '';
+  if($('#btn_table').hasClass('active')){
+    gametype = 'table';
+  }else if($('#btn_slot').hasClass('active')){
+    gametype = 'slot';
+  }else if($('#btn_sports').hasClass('active')){
+    gametype = 'sports';
+  }else if($('#btn_pball').hasClass('active')){
+    gametype = 'pball';
+  }
+  getBetHistory(gametype, $("#bethistory_page_num").val());
+})
+function getBetHistory(gametype, pagenum){
+  $('#btn_table').removeClass('active');
+  $('#btn_slot').removeClass('active');
+  $('#btn_sports').removeClass('active');
+  $('#btn_pball').removeClass('active');
+  $('#btn_' + gametype).addClass('active');
+
+  $('#loading-page').show();
+  $.ajax({
+    url: '/api/mybethistory',
+    type: 'POST',
+    dataType: "json",
+    data: {
+      type: gametype,
+      pagecount:$("#bethistory_page_count").val(),
+      pagenum:pagenum
+    },
+    success: function(result) {
+      $('#loading-page').hide();
+      if (result.error == false) {
+        stats = result.data.stats;
+        var first = result.data.first;
+        var last = result.data.last;
+        var current = result.data.current;
+        pagination = result.data.pagination;
+        var htmlhistory = ``;
+        var htmlpagenumlist = ``;
+        var htmlbeforepage = ``;
+        var htmlnextpage = ``;
+        if(stats.length > 0){
+          for(var i = 0; i < stats.length; i++)
+          {
+            var color = `#22262e`
+            if(i % 2 == 0)
+            {
+              color = `rgb(41, 46, 56)`;
+            }
+            htmlhistory += `<tr><td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].game} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].time} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ₩${stats[i].betamount} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="text" style="justify-content: center;"> ${stats[i].odd} </span>
+                            </td>
+                            <td data-v-db5cba90="" colspan="1" style="background-color: ${color};">
+                              <span data-v-db5cba90="" class="win text" style="justify-content: center;"> ₩${stats[i].winamount} </span>
+                            </td></tr>`
+          }
+        }else{
+          htmlhistory =  `<td data-v-db5cba90="" colspan="5" style="background-color: rgb(41, 46, 56);">
+          <span data-v-db5cba90="" class="text" style="justify-content: center;"> 베팅내역이 없습니다 </span>
+        </td>`;
+        }
+        for(var i = 0; i < last; i++)
+        {
+          htmlpagenumlist += `<option class="vs__dropdown-option" style="background-color:#22262e;" value="${(i+1)}">${(i+1)}</option>`;
+        }
+        if(current > first){
+          htmlbeforepage = `<button data-v-30f53f18="" class="button icon" onclick="getBetHistory('${gametype}', ${(current - 1)});" style="background: #e3e3e3;">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i>
+                          </button>`;
+        }else{
+          htmlbeforepage = `<button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
+                              <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-left"></i>
+                            </button>`;
+        }
+        if(current < last){
+          htmlnextpage = `<button data-v-30f53f18="" class="button icon" onclick="getBetHistory('${gametype}', ${(current + 1)});"  style="background: #e3e3e3;">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i>
+                          </button>`;
+        }else{
+          htmlnextpage = `<button data-v-30f53f18="" class="button icon" disabled="disabled" style="background: rgb(34, 42, 51);">
+                            <i data-v-e56d064c="" data-v-30f53f18="" class="fa-solid fa-chevron-right"></i>
+                          </button>`;
+        }
+        document.getElementById('bethistory_body').innerHTML = htmlhistory;
+        document.getElementById('bethistory_page_num').innerHTML = htmlpagenumlist;
+        document.getElementById('btn_bethistory_before_page').innerHTML = htmlbeforepage;
+        document.getElementById('btn_bethistory_next_page').innerHTML = htmlnextpage;
+        $('#bethistory_page_num').val(current);
+      } else {
+          swal2(result.msg, "error");
+      }
+    },
+    error: function (err, xhr) {
+        $('#loading-page').hide();
+    }
+  });
+}
+function getNoticeList() {
+	$.ajax({
+        type: "POST",
+        cache: false,
+        async: true,
+        url: '/api/notices',
+        dataType: 'json',
+        success: function(data) {
+        if(data.error == false){
+      var html = ``;
+			if (data.data.length > 0) {
+				for (var i = 0; i < data.data.length; i++) {
+					date = new Date(data.data[i].date_time);
+					if (data.data[i].read_at == null)
+					{
+						read = '읽지 않음';
+					}
+					else
+					{
+						date1 = new Date(data.data[i].date_time);
+						read = date1.toLocaleString();
+					}
+					type = (data.data[i].writer_id!='popup')?'팝업':'일반';				
+                html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
+              <div data-v-ca1f65a4="" class="inquiry column">
+                <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
+                  <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                </div> 
+                <div data-v-ca1f65a4="" class="row" style="flex-direction: row;">
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">${date.toLocaleString()}</span> 
+                  <div data-v-ca1f65a4="" class="spacer"></div> 
+                  <span data-v-ca1f65a4="" class="text" style="opacity: 0.6;"> ${type} </span>
+                </div>
+              </div>
+            </button>
+          </div>`;
+				}
+        // html +=`</tbody>
+        //         </table>`;
+				
+			}else{
+        html = `<span data-v-ca1f65a4="" class="text" style="opacity: 0.6;">작성된 글이 없습니다</span>`;
+      }
+			$("#noticeList").html(html);
+            
+			
+        } else {
+            swal2(data.msg);
+        }
+    }
+    });
+}
+
+
+function getCookie(key) {
+  var re = new RegExp(key + "=([^;]+)");
+  var value = re.exec(document.cookie);
+  var tt = (value != null) ? unescape(value[1]) : null;
+  return tt;
+}
+
+function setCookie( name, value, expiredays ) { 
+  var todayDate = new Date(); 
+  todayDate.setDate( todayDate.getDate() + expiredays ); 
+  document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+  } 
+
+function closeWinpopDay(id) { 
+  setCookie( "pop" + id, "done" , 1 ); 
+
+  document.getElementById("pop" + id).style.visibility = "hidden"; 
+} 
+
+function closeWinpop(id) {
+  document.getElementById("pop" + id).style.visibility = "hidden"; 
+}
+
+
+
+

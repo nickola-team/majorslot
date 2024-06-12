@@ -29,7 +29,7 @@
         </div>
         <div data-v-e77ddfb0="" class="spacer"></div> 
         <div data-v-e77ddfb0="" class="account row" style="flex-direction: row;">
-            <button data-v-e77ddfb0="" class="button text row" style="background: transparent;" onclick="showProfile()">
+            <button data-v-e77ddfb0="" class="button text row" style="background: transparent;" onclick="openRequestPop()">
                 <span data-v-e77ddfb0="" class="text">
                     <img id="letterimg" src="/frontend/todayslot/images/letter_on.gif" width="18" height="18" border="0">
                 </span>
@@ -87,7 +87,7 @@
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-5290ad82="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
-                                                <button data-v-3b098160="" class="deposit button">
+                                                <button data-v-3b098160="" class="deposit button" onclick='openDepositModal(<?php echo json_encode(mb_substr(auth()->user()->recommender, 0, 2)); ?>);'>
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTkgOFY4QzIwLjEwNDYgOCAyMSA4Ljg5NTQzIDIxIDEwVjE4QzIxIDE5LjEwNDYgMjAuMTA0NiAyMCAxOSAyMEg2QzQuMzQzMTUgMjAgMyAxOC42NTY5IDMgMTdWN0MzIDUuMzQzMTUgNC4zNDMxNSA0IDYgNEgxN0MxOC4xMDQ2IDQgMTkgNC44OTU0MyAxOSA2VjhaTTE5IDhIN00xNyAxNEgxNiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=" class="margin-right-5" style="width: 16px; height: 16px;">입금신청
                                                     </span>
@@ -98,7 +98,7 @@
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-43e90682="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
-                                                <button data-v-3b098160="" class="withdrawal button">
+                                                <button data-v-3b098160="" class="withdrawal button" onclick='openWithdrawModal(<?php echo json_encode(number_format(auth()->user()->balance)); ?>);'>
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="/frontend/dove/assets/img/withdraw-icon.9e0a7e8.svg" class="margin-right-5" style="width: 16px; height: 16px;">출금신청
                                                     </span>
@@ -131,7 +131,7 @@
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-47d63ae2="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
-                                                <button data-v-3b098160="" class="message button">
+                                                <button data-v-3b098160="" class="message button" onclick="openRequestPop();">
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIGZpbGw9IiNmZmZmZmYiIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDE5MjAgMTkyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0wIDE2OTQuMjM1aDE5MjBWMjI2SDB2MTQ2OC4yMzVaTTExMi45NDEgMzc2LjY2NFYzMzguOTRIMTgwNy4wNnYzNy43MjNMOTYwIDExMTEuMjMzbC04NDcuMDU5LTczNC41N1pNMTgwNy4wNiA1MjYuMTk4djk1MC41MTNsLTM1MS4xMzQtNDM4Ljg5LTg4LjMyIDcwLjQ3NSAzNzguMzUzIDQ3Mi45OThIMTc0LjA0MmwzNzguMzUzLTQ3Mi45OTgtODguMzItNzAuNDc1LTM1MS4xMzQgNDM4Ljg5VjUyNi4xOThMOTYwIDEyNjAuNzY4bDg0Ny4wNTktNzM0LjU3WiIgZmlsbC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 16px; height: 16px;">메세지
                                                     
@@ -144,7 +144,7 @@
                                     <div data-v-3b098160="" class="row" style="flex-direction: row;">
                                         <div data-v-db5cba90="" data-v-3b098160="" class="row" style="flex-direction: row;">
                                             <div class="row" style="width: 100%; flex-direction: row;">
-                                                <button data-v-3b098160="">
+                                                <button data-v-3b098160="" onclick="openBetHistoryPanel();">
                                                     <span data-v-3b098160="" class="text" style="display: table-cell;">
                                                         <img data-v-3b098160="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPgo8c3ZnIHdpZHRoPSI2MHB4IiBoZWlnaHQ9IjYwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNzMgMTkuN0M3LjU1IDE4LjgyIDguOCAxOC44OSA5LjUyIDE5Ljg1TDEwLjUzIDIxLjJDMTEuMzQgMjIuMjcgMTIuNjUgMjIuMjcgMTMuNDYgMjEuMkwxNC40NyAxOS44NUMxNS4xOSAxOC44OSAxNi40NCAxOC44MiAxNy4yNiAxOS43QzE5LjA0IDIxLjYgMjAuNDkgMjAuOTcgMjAuNDkgMTguMzFWNy4wNEMyMC41IDMuMDEgMTkuNTYgMiAxNS43OCAySDguMjJDNC40NCAyIDMuNSAzLjAxIDMuNSA3LjA0VjE4LjNDMy41IDIwLjk3IDQuOTYgMjEuNTkgNi43MyAxOS43WiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" class="margin-right-5" style="width: 16px; height: 16px;">베팅로그
                                                     </span>

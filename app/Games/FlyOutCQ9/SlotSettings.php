@@ -570,7 +570,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
                 }
             }
             $_obf_bonus_systemmoney = 0;
-            if( $sum > 0 && $slotEvent == 'bet' ) 
+            if( $sum > 0 && ($slotEvent == 'bet' || $slotEvent == 'reel') ) 
             {
                 $this->toGameBanks = 0;
                 $this->toSlotJackBanks = 0;
