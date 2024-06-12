@@ -915,12 +915,14 @@ function addMoneyDeposit(money) {
             {
               htmgames += `<button data-v-4f69ab08="" id="slot_${i}" class="zoomIn button" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');">
                             <img data-v-4f69ab08="" src="${data.games[i].icon}">
+                            <span style="display:none"><p>${data.games[i].title}</p></span>
                           </button>`;
             }
             else
             {
               htmgames += `<button data-v-4f69ab08="" id="slot_${i}" class="zoomIn button" onclick="startGameByProvider(null, '${data.games[i].name}');">
                             <img data-v-4f69ab08="" src="/frontend/Default/ico/${data.games[i].name}.jpg">
+                            <span style="display:none"><p>${data.games[i].title}</p></span>
                           </button>`;
             }
           }
