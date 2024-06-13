@@ -533,7 +533,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             // exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '',$freeCounts)
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -578,6 +578,9 @@ namespace VanguardLTE\Games\FlyOutCQ9
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
                 $_obf_bonus_percent = 10;
+                if($freeCounts >= 4){
+                    $_obf_bonus_percent = 80;
+                }
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
