@@ -122,7 +122,6 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                             $result_val['FGContext'] = [["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"]];
                         }else if($packet_id == 31 || $packet_id == 42){
                             $respinReels = [0, 0, 0, 0, 0];
-                            $tempSpinNo = 0;
                             if($packet_id == 31){
                                 $betline = $gameData->PlayBet;// * $gameData->MiniBet;
                                 $lines = $gameData->PlayLine;
@@ -158,9 +157,6 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                                     $respinReels = $gameData->ReelSelected;
                                     for($k = 0; $k < 5; $k++){
                                         if($respinReels[$k] == 1 && $slotSettings->GetGameData($slotSettings->slotId . 'ReelPaies')[$k] == $gameData->ReelPay){
-                                        // if($respinReels[$k] == 1){
-                                            $tempSpinNo = $respinReels[$k];
-                                            if($slotSettings->GetGameData($slotSettings->slotId . 'ReelPaies')[$k] == $gameData->ReelPay){
                                                 $totalbet = $gameData->ReelPay;
                                                 $slotSettings->SetBalance(-1 * ($totalbet), $slotEvent['slotEvent']);
                                                 $slotSettings->UpdateJackpots($totalbet);
@@ -168,7 +164,6 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                                                 $slotSettings->SetBank($slotEvent['slotEvent'], $_sum, $slotEvent['slotEvent'],$slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeReelCounts'));
                                                 $respinReelNo = $k + 1;
                                                 break;
-                                            }
                                             
                                         }
                                     }
@@ -396,6 +391,7 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                 {
                 }
                 else if($respinReelNo > 0 && ($winType == 'win' || $winType == 'bonus') && $totalWin == 0 && $i > 50){
+                    
                     $winType = 'none';
                 }
                 else if( $totalWin <= $_winAvaliableMoney && $winType == 'bonus' ) 

@@ -60,10 +60,8 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitReelPaies', [0, 0, 0, 0, 0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RngData', [0, 0, 0, 0, 0]);
                     $slotSettings->SetGameData($slotSettings->slotId . 'InitFreeRngData', [0, 0, 0, 0, 0]);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBet', 0);
-                    $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TempTotalWin', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'MaxRespinCount', 15);
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespinCount', 0);
@@ -529,11 +527,6 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
             $gamelog = $this->parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines, $totalbet, $respinReelNo);
             if($isEnd == true){
                 if($slotEvent != 'freespin'){
-                    // if($respinReelNo == 0 || $totalWin > 0){
-                    //     $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings,$respinReelNo,$totalWin - $scatterWin);
-                    // }else{                        
-                    //     $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings,$respinReelNo,$slotSettings->GetGameData($slotSettings->slotId . 'TempRespinValue'));
-                    // }
                     $result_val['ReelPay'] = $this->getReelPay($reels, $betline, $slotSettings,$respinReelNo,$totalWin);
                 }else{
                     $result_val['ReelPay'] = $slotSettings->GetGameData($slotSettings->slotId . 'InitReelPaies');
@@ -636,12 +629,6 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
                     }
                 }
                 if($totalWin > 0){
-                    // if($respinNo > 0){
-                    //     $reelWins[$k] = floor($totalWin / $slotSettings->GetGameData($slotSettings->slotId . 'TempRespinValue')) + mt_rand(0, 8);
-                    // }else{
-                    //     $reelWins[$k] = floor($totalWin / $subIntArray[$subNumber]) + mt_rand(0, 8);
-                    //     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', $subIntArray[$subNumber]);
-                    // }
                     $reelWins[$k] = floor($totalWin / 10) + mt_rand(0, 8);
                     
                 }
@@ -664,10 +651,6 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
                     $reelWins[$k] = $reelWins[$k] * $betline;
                 }
                 
-            }
-            // if($reeltotalWin>0){
-            //     $slotSettings->SetGameData($slotSettings->slotId . 'TempRespinValue', $reeltotalWin);
-            // }
             return $reelWins;
         }
         public function parseLog($slotSettings, $slotEvent, $result_val, $betline, $lines, $totalbet, $respinReelNo){
