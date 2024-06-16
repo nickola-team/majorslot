@@ -88,8 +88,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">라이브카지노</p>
-                    <p class="ng-binding" style="font-size: 10px;">LIVE CASINO</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-size:20px;font-weight:bold;">라이브카지노</p>
+                    <p class="ng-binding" style="font-size: 10px; font-weight:bold;">LIVE CASINO</p>
                   </li>
 				          <li onclick=
                   @auth
@@ -101,8 +101,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">슬롯게임</p>
-                    <p class="ng-binding" style="font-size: 10px;">SLOT GAME</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-size:20px;font-weight:bold;">슬롯게임</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">SLOT GAME</p>
                   </li>                  
                   <!-- <li onclick=
                   @auth
@@ -143,8 +143,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">와일드 홀덤</p>
-                    <p class="ng-binding" style="font-size: 10px;">WILD HOLDEM</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-size:20px;font-weight:bold;">와일드 홀덤</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">WILD HOLDEM</p>
                   </li>
                 </ul>
               </div>
@@ -160,8 +160,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">마이페이지</p>
-                    <p class="ng-binding" style="font-size: 10px;">MY PAGE</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-weight:bold;">마이페이지</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">MY PAGE</p>
                   </li>
                   <li onclick="
                   @auth
@@ -173,8 +173,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">입금 신청</p>
-                    <p class="ng-binding" style="font-size: 10px;">DEPOSIT</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-weight:bold;">입금 신청</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">DEPOSIT</p>
                   </li>
                   <li onclick="
                   @auth
@@ -187,8 +187,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">출금 신청</p>
-                    <p class="ng-binding" style="font-size: 10px;">WITHDRAW</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-weight:bold;">출금 신청</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">WITHDRAW</p>
                   </li>
 			
                   <li onclick="
@@ -201,8 +201,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">공지사항</p>
-                    <p class="ng-binding" style="font-size: 10px;">NOTICE</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-weight:bold;">공지사항</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">NOTICE</p>
                   </li>
                   <li onclick="
                   @auth
@@ -214,8 +214,8 @@
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
                     </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">고객센터</p>
-                    <p class="ng-binding" style="font-size: 10px;">CUSTOMER</p>
+                    <p class="ng-binding" style="margin-bottom: 0px;font-weight:bold;">고객센터</p>
+                    <p class="ng-binding" style="font-size: 10px;font-weight:bold;">CUSTOMER</p>
                   </li>
                 </ul>
               </div>
