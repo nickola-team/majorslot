@@ -8,12 +8,12 @@
             @foreach($categories AS $index=>$category)
 						@if ($category->type =='live')
             @if ($category->status == 0)
-            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="javascript:swal('점검중입니다');">
+            <div class="game-buttons live" style="background:url('/frontend/nine/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:100% 100%;" onclick="javascript:swal('점검중입니다');">
             @else
-            <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="javascript:casinoGameStart('{{$category->href}}');">
+            <div class="game-buttons live" style="background:url('/frontend/nine/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:100% 100%;" onclick="javascript:casinoGameStart('{{$category->href}}');">
             @endif
-                <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
-                <button class="btn btn-yellow pull-right">플레이</button>
+                <!-- <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
+                <button class="btn btn-yellow pull-right">플레이</button> -->
             </div>
             @endif
             @endforeach

@@ -1,0 +1,36 @@
+.main-page .content .game-buttons.live{
+    background: url("/frontend/nine/images/category/casino.png") no-repeat;
+  }
+  
+  .main-page .content .game-buttons.others{
+    background: url("/frontend/nine/images/category/slot.png") no-repeat;
+  }
+  
+  .main-page .content .game-buttons.comming{
+      background: url("/frontend/nine/images/category/holdem.png") no-repeat;
+    }
+  
+
+  
+  .main-page .content .game-buttons.live:hover{
+    background: url("/frontend/nine/images/category/casino-hover.png") no-repeat;
+  }
+  
+  .main-page .content .game-buttons.others:hover{
+    background: url("/frontend/nine/images/category/slot-hover.png") no-repeat;
+  }
+  
+
+
+
+  .main-page .content .game-buttons.live_m{
+    background: url("/frontend/nine/images/category/casino_m.png") no-repeat;
+  }
+  
+  .main-page .content .game-buttons.others_m{
+    background: url("/frontend/nine/images/category/slot_m.png") no-repeat;
+  }
+  
+  .main-page .content .game-buttons.comming_m{
+      background: url("/frontend/nine/images/category/holdem_m.png") no-repeat;
+    }

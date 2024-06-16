@@ -1,11 +1,17 @@
 <div id="login-popup" class="ngdialog ngdialog-theme-default ngdialog-login ng-scope ng-hide">
     <div class="ngdialog-overlay"></div>
     <div class="ngdialog-content" role="document">
+    <div class="logo text-center">
+        <!-- @if( $detect->isMobile() || $detect->isTablet() ) 
+        <img src="/frontend/{{$logo??'boss'}}/LOGO.png" >
+        @else
+        <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="50%">
+        @endif -->
+        <img src="/frontend/{{$logo??'boss'}}/LOGO.png" style="width: 100px; margin-bottom: 10px;">
+        </div>
     <div class="ngdialog-login-page ng-scope" ng-controller="LoginController">
         <div class="ngdialog-login__content">
-        <div class="logo text-center">
-            <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="50%">
-        </div>
+        
         <form ng-submit="processForm()" class="ng-pristine ng-valid form-login">
             <input type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="loginForm.nickname" placeholder="아이디" id="sID">
             <input type="password" class="form-control ng-pristine ng-untouched ng-valid" autocomplete="new-password" ng-model="loginForm.password" placeholder="비밀번호" id="sPASS">

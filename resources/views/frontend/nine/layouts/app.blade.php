@@ -34,6 +34,9 @@
     <link rel="stylesheet" href="/frontend/boss/V/wallet.css">
     <link rel="stylesheet" href="/frontend/boss/V/pagination.css">
     <link rel="stylesheet" href="/frontend/boss/V/sweet-alert.css">
+
+    <link rel="stylesheet" href="/frontend/nine/custom.css">
+
     <link rel="shortcut icon" href="/frontend/boss/V/splash-icon.PNG" type="image/x-icon">
     <link rel="icon" href="/frontend/boss/V/splash-icon.PNG" type="image/x-icon">
     <link rel="stylesheet" href="/frontend/boss/V/responsive-themes.css">
@@ -80,6 +83,7 @@
   ?>
 @if( $detect->isMobile() || $detect->isTablet() ) 
   <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css">
+  <link rel="stylesheet" href="/frontend/nine/custom-mobile.css">
 @endif
   <body class="ng-scope bg-main">
     <div class="wrapper">

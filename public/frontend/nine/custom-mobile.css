@@ -1,0 +1,17 @@
+ .game-buttons.live_m{
+    background: url("/frontend/nine/images/category/casino_m.png") no-repeat;
+    background-size: 100% 100%;
+    min-height: 250px;
+  }
+  
+ .game-buttons.others_m{
+    background: url("/frontend/nine/images/category/slot_m.png") no-repeat;
+    background-size: 100% 100%;
+    min-height: 250px;
+  }
+  
+ .game-buttons.comming_m{
+      background: url("/frontend/nine/images/category/holdem_m.png") no-repeat;
+      background-size: 100% 100%;
+      min-height: 250px;
+    }

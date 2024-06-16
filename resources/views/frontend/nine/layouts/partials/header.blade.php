@@ -21,9 +21,9 @@
 <navigation-page>
         <div class="navigation-page">
           <div class="header-top">
-            <div class="logo-container" style="cursor: pointer;z-index: 999999;" onclick="window.location.href='/';">
+            <div class="logo-container" style="cursor: pointer;z-index: 999999; left:45%" onclick="window.location.href='/';">
               <div class="content">
-                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" width="260px">
+                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" style="width:85%;">
               </div>
             </div>
 

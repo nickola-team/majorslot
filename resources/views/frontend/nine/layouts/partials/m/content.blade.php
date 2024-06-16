@@ -20,13 +20,13 @@
 </div>
 
 <div class="game-buttons-container">
-    <div class="game-buttons ng-scope live" onclick=@auth "navClick('casino-popup')" @else "navClick('login-popup')"
+    <div class="game-buttons ng-scope live_m" onclick=@auth "navClick('casino-popup')" @else "navClick('login-popup')"
         @endif>
         <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">라이브 카지노</span>
         </div>
     </div>
-    <div class="game-buttons ng-scope others" onclick=@auth "navClick('slots-popup')" @else "navClick('login-popup')"
+    <div class="game-buttons ng-scope others_m" onclick=@auth "navClick('slots-popup')" @else "navClick('login-popup')"
         @endif>
         <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
@@ -62,7 +62,7 @@
     </div> -->
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->
       
-    <div class="game-buttons ng-scope comming" onclick=
+    <div class="game-buttons ng-scope comming_m" onclick=
         @auth 
             "swal('준비중입니다.')"
         @else
