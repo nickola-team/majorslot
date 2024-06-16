@@ -1,29 +1,23 @@
 <div class="banner-container">
     <div class="logo">
-        <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="120" onclick="window.location.href='/';">
+        <img src="/frontend/{{$logo??'boss'}}/LOGO_m.png" onclick="window.location.href='/';" style="width: 17%;">
     </div>
     <div class="main-banner-slider">
         <!-- <div aria-live="polite" class="slick-list draggable"> -->
         <!-- <div class="slick-track" style="opacity: 1; width: 1500px;" role="listbox"> -->
         
         <div>
-            <img src="/frontend/todayslot/images/m_slideshow1.png" style="width:100%">
+            <img src="/frontend/nine/images/mobile/slideshow1.png" style="width:100%">
         </div>
         <div>
-            <img src="/frontend/todayslot/images/m_slideshow2.png" style="width:100%">
+            <img src="/frontend/nine/images/mobile/slideshow2.png" style="width:100%">
         </div> 
         <div>
-            <img src="/frontend/todayslot/images/m_slideshow3.png" style="width:100%">
+            <img src="/frontend/nine/images/mobile/slideshow3.png" style="width:100%">
         </div>
         <div>
-            <img src="/frontend/todayslot/images/m_slideshow4.png" style="width:100%">
+            <img src="/frontend/nine/images/mobile/slideshow4.png" style="width:100%">
         </div>
-        <div>
-            <img src="/frontend/todayslot/images/m_slideshow5.png" style="width:100%">
-        </div> 
-        <div>
-            <img src="/frontend/todayslot/images/m_slideshow6.png" style="width:100%">
-        </div> 
         <!-- <img src="/V/main-banner-mobile-5.jpg"> -->
         <!-- <img src="/V/main-banner-mobile-6.jpg"> -->
         <!-- </div> -->
