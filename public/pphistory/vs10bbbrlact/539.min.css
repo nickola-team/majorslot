@@ -1,0 +1,146 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 60px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 1
+}
+
+.MoneyScatter__LabelWrap {
+    line-height: normal;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    opacity: .4
+}
+
+.FS-Level .MoneyScatter__LabelWrap {
+    opacity: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "feature     " "topProgress " "slot        "
+}
+
+.Spin .Feature {
+    grid-area: feature
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Progress {
+    grid-area: topProgress
+}
+
+.Feature {
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.FS-Level--2 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs10bbbrlact/multipliers/mult_2.png) 1x, url(./images/vs10bbbrlact/multipliers/mult_2@2x.png) 2x)
+}
+
+.FS-Level--2 .ReelsSlot__Item--2:after,
+.FS-Level--3 .ReelsSlot__Item--2:after {
+    content: "";
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top -15px left -5px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2
+}
+
+.FS-Level--3 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs10bbbrlact/multipliers/mult_3.png) 1x, url(./images/vs10bbbrlact/multipliers/mult_3@2x.png) 2x)
+}
+
+.FS-Level--10 .ReelsSlot__Item--2:after {
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10bbbrlact/multipliers/mult_10.png) 1x, url(./images/vs10bbbrlact/multipliers/mult_10@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top -15px left -5px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2
+}
+
+.Progress {
+    grid-area: topProgress;
+    display: flex;
+    flex-direction: row
+}
+
+.Progress__Level {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-between
+}
+
+.Progress__Item {
+    filter: grayscale(1);
+    opacity: .5;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center
+}
+
+.Progress__Item--active {
+    filter: grayscale(0);
+    opacity: 1
+}
+
+.Progress__Item img {
+    width: 23px;
+    height: auto
+}
+
+.Progress .LevelText {
+    min-width: 20px;
+    transform: rotate(-45deg);
+    font-weight: 700;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Progress .LevelText__Info {
+    font-size: 6px;
+    line-height: 5px
+}
+
+.Progress .LevelText__FsTitle {
+    width: 40px;
+    margin: 0 -5px;
+    line-height: normal;
+    font-size: .64rem
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
