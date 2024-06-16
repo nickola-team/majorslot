@@ -22,15 +22,15 @@
 <div class="game-buttons-container">
     <div class="game-buttons ng-scope live_m" onclick=@auth "navClick('casino-popup')" @else "navClick('login-popup')"
         @endif>
-        <div class="title-container">
+        <!-- <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">라이브 카지노</span>
-        </div>
+        </div> -->
     </div>
     <div class="game-buttons ng-scope others_m" onclick=@auth "navClick('slots-popup')" @else "navClick('login-popup')"
         @endif>
-        <div class="title-container">
+        <!-- <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
-        </div>
+        </div> -->
     </div>
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->
    
@@ -68,14 +68,14 @@
         @else
             "navClick('login-popup')"
         @endif>
-        <div class="title-container">
+        <!-- <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">와일드 홀덤</span>
-        </div>
+        </div> -->
     </div>
 </div>
 
 
-<div class="customercenter-container">
+<div class="customercenter-container" >
     <ul class="list-inline list-unstyled">
         <li onclick=@if (!Auth::check()) "navClick('login-popup')"
             @else "navClick('msg-popup');setTab('notice-set','#msg-popup > div.ngdialog-content > div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(1)');"
@@ -109,18 +109,23 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
 
 <div class="footer main">
-    <button class="pull-left btn footer-btn btn-primary btn-bottom-left btn-lg" style="width: 26%;"
+    <button class="pull-left btn footer-btn btn-primary btn-bottom-left btn-lg" style="width: 100%;"
         onclick="navClick('page-popup');mydepositlist();setTab('deposit-set','#page-popup > div.ngdialog-content > div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(1)')"><strong>입금
             신청</strong></button>
-    @if (isset($telegram) && $telegram!='')
+    <!-- @if (isset($telegram) && $telegram!='')
     <span class="btn btn-primary btn-live footer-btn live-chat" style="color: #ffffff; _opacity: 0;"
         onclick="window.open('https://t.me/{{$telegram??'Boss텔레'}}');"><img
             src="/frontend/boss/assets/images/telegram-logo.png" height="100%" border="0"
             alt=""><strong></strong></span>
-    @endif
-    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 26%;"
+    @endif -->
+    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px;"
         onclick="navClick('page-popup');setTab('withdraw-set','#page-popup &gt; div.ngdialog-content &gt; div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');mywithdrawlist();"><strong>출금
             신청</strong></button>
+    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px;"
+        onclick="PointToMoney();"><strong>수수료 전환</strong></button>
 </div>

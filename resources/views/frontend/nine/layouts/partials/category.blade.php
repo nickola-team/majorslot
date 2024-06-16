@@ -6,8 +6,8 @@
 "navClick('login-popup')"
 @endif
 >
-    <span ng-bind="mainButton.title" class="ng-binding">라이브 카지노</span>
-    <span ng-bind="mainButton.subTitle" class="ng-binding">세계 최고의 카지노 게임들을 만나보세요.</span>
+    <!-- <span ng-bind="mainButton.title" class="ng-binding">라이브 카지노</span>
+    <span ng-bind="mainButton.subTitle" class="ng-binding">세계 최고의 카지노 게임들을 만나보세요.</span> -->
 </div>
 <div class="game-buttons click-disable ng-scope others" onclick=
 @auth
@@ -16,8 +16,8 @@
 "navClick('login-popup')"
 @endif
 >
-    <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
-    <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 슬롯게임에서 잭팟을 도전하세요.</span>
+    <!-- <span ng-bind="mainButton.title" class="ng-binding">슬롯게임</span>
+    <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 슬롯게임에서 잭팟을 도전하세요.</span> -->
 </div>
 {{--
 <div class="game-buttons click-disable ng-scope mini" onclick=
@@ -82,8 +82,8 @@
                   @else
                     "navClick('login-popup')"
                   @endif >
-    <span ng-bind="mainButton.title" class="ng-binding">와일드 홀덤</span>
-    <span ng-bind="mainButton.subTitle" class="ng-binding">와일드 홀덤 기대해 주세요.</span>
+    <!-- <span ng-bind="mainButton.title" class="ng-binding">와일드 홀덤</span>
+    <span ng-bind="mainButton.subTitle" class="ng-binding">와일드 홀덤 기대해 주세요.</span> -->
 </div>
 
 
