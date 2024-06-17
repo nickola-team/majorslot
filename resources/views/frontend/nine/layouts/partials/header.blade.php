@@ -23,7 +23,7 @@
           <div class="header-top">
             <div class="logo-container" style="cursor: pointer;z-index: 999999; left:45%" onclick="window.location.href='/';">
               <div class="content">
-                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" style="width:85%;">
+                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" style="width:70%;padding-top:10px;">
               </div>
             </div>
 

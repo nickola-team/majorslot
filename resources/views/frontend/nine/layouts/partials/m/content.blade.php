@@ -114,7 +114,7 @@
 <br>
 
 <div class="footer main">
-    <button class="pull-left btn footer-btn btn-primary btn-bottom-left btn-lg" style="width: 100%;"
+    <button class="pull-left btn footer-btn btn-primary btn-bottom-left btn-lg" style="width: 100%;border: 3px solid #787164;padding:0;"
         onclick="navClick('page-popup');mydepositlist();setTab('deposit-set','#page-popup > div.ngdialog-content > div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope > ul > li:nth-child(1)')"><strong>입금
             신청</strong></button>
     <!-- @if (isset($telegram) && $telegram!='')
@@ -123,9 +123,9 @@
             src="/frontend/boss/assets/images/telegram-logo.png" height="100%" border="0"
             alt=""><strong></strong></span>
     @endif -->
-    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px;"
+    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px; border: 3px solid #787164;padding:0;"
         onclick="navClick('page-popup');setTab('withdraw-set','#page-popup &gt; div.ngdialog-content &gt; div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');mywithdrawlist();"><strong>출금
             신청</strong></button>
-    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px;"
+    <button class="pull-right btn footer-btn btn-primary btn-bottom-right btn-lg" style="width: 100%;margin-top:2px; border: 3px solid #787164;padding:0;"
         onclick="PointToMoney();"><strong>수수료 전환</strong></button>
 </div>
