@@ -1,6 +1,6 @@
 <style type="text/css">
 .notice_wrap {float:center; width:100%; height:45px; }
-.notice_box {margin:0px auto; width:1300px;}
+.notice_box {margin:0px auto;}
 .notice_text {float:center; width:100%; height:45px; line-height:45px; font-size:18px; letter-spacing:-1px; font-weight:900; color:#daa520;}
 </style>
 
