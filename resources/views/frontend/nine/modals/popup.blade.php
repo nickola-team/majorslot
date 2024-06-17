@@ -3,12 +3,12 @@
 <?php
 $width = '100vw'; $height = '100vh';
 ?>
-  style="position:absolute; left:0px; top:0px; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
+  style="position:fixed; left:0px; top:0px; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
 @else
 <?php
 $width = '330px'; $height = '400px';
 ?>
-    style="position:absolute; left:{{50+$loop->index * 350}}px; top:150px; z-index:200; width:{{$width}};height:{{$width}}; visibility:visible; display:table;border: 2px solid #d5a451;" 
+    style="position:absolute; left:{{275+floor($loop->index%3) * 350}}px; top:{{125+ floor($loop->index / 4) * 450}}px; z-index:200; width:{{$width}};height:{{$width}}; " 
 @endif
 >
 <form name="notice_formpop{{$notice->id}}">
@@ -33,3 +33,12 @@ $width = '330px'; $height = '400px';
   </table>
 </form>
   </div>
+
+  <script>
+
+window.addEventListener('scroll', () => {
+  const body = document.body;
+  const scrollY = body.style.top;
+  document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+});
+</script>
