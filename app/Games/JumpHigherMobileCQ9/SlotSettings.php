@@ -533,7 +533,7 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
             file_put_contents(storage_path('logs/') . $this->slotId . 'Internal.log', $_obf_strinternallog . $_obf_strlog);
             // exit( '{"responseEvent":"error","responseType":"' . $errcode . '","serverResponse":"InternalError"}' );
         }
-        public function SetBank($slotState = '', $sum, $slotEvent = '')
+        public function SetBank($slotState = '', $sum, $slotEvent = '',$freeCounts = '')
         {
             if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
@@ -577,7 +577,10 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $_obf_currentpercent = $this->GetPercent();
-                $_obf_bonus_percent = 10;
+                $_obf_bonus_percent = 30;
+                if($freeCounts >= 4){
+                    $_obf_bonus_percent = 80;
+                }
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 // if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -741,35 +744,7 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
 
         public function GetSpinSettings($garantType = 'bet', $bet, $lines)
         {
-            $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
+            $_obf_linecount = 10;        
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';
@@ -847,35 +822,7 @@ namespace VanguardLTE\Games\JumpHigherMobileCQ9
         }
         public function getNewSpin($game, $spinWin = 0, $bonusWin = 0, $lines, $garantType = 'bet')
         {
-            $_obf_linecount = 10;
-            switch( $lines ) 
-            {
-                case 10:
-                    $_obf_linecount = 10;
-                    break;
-                case 9:
-                case 8:
-                    $_obf_linecount = 9;
-                    break;
-                case 7:
-                case 6:
-                    $_obf_linecount = 7;
-                    break;
-                case 5:
-                case 4:
-                    $_obf_linecount = 5;
-                    break;
-                case 3:
-                case 2:
-                    $_obf_linecount = 3;
-                    break;
-                case 1:
-                    $_obf_linecount = 1;
-                    break;
-                default:
-                    $_obf_linecount = 10;
-                    break;
-            }
+            $_obf_linecount = 10;            
             if( $garantType != 'bet' ) 
             {
                 $_obf_granttype = '_bonus';

@@ -1241,6 +1241,8 @@ return [
         "RevengeofLokiMegaways" => "리벤지 오브 로키 메가웨이즈",
         "StarlightPrincessPachi" => "스타라이트 프린세스 파치",
         "Wildies" => "와일디즈",
+        "BigBassBonanzaReelAction" => "빅 배스 보난자 - 릴 액션",
+        "Devilicious" => "데빌리셔스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

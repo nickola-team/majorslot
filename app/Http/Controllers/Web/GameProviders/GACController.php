@@ -976,7 +976,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return ['error' => false, 'data' => ['url' => $url]];
             }
-            return ['error' => true, 'msg' => '로그인하세요'];
+            return ['error' => true, 'msg' => '게임실행 오류입니다'];
         }
 
         public function embedGACgame(\Illuminate\Http\Request $request)

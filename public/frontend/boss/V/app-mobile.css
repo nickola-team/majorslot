@@ -2373,6 +2373,9 @@ fieldset label span {
 .game-buttons.slot{
   background: url("/frontend/boss/V/mobile-slot-button.jpg") top center / 100% no-repeat;
 }
+.game-buttons.comming{
+  background: url("/frontend/boss/V/comming.png?ver=1.01") top center / 100% no-repeat;
+}
 
 .wallet-buttons-container{
   width: 100%;
