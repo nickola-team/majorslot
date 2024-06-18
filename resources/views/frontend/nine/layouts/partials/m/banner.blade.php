@@ -1,6 +1,6 @@
 <div class="banner-container">
     <div class="logo" style="text-align:left; top: 0px;padding:0px;">
-        <img src="/frontend/{{$logo??'boss'}}/LOGO_m.png" onclick="window.location.href='/';" style="width: 55px; height:55px;margin:0;">
+        <img src="/frontend/{{$logo??'boss'}}/LOGO_m.png" onclick="window.location.href='/';" style="width: 90px; height:90px;margin:0;">
     </div>
     <div class="main-banner-slider">
         <!-- <div aria-live="polite" class="slick-list draggable"> -->
