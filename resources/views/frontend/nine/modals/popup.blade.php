@@ -34,11 +34,3 @@ $width = '330px'; $height = '400px';
 </form>
   </div>
 
-  <script>
-
-window.addEventListener('scroll', () => {
-  const body = document.body;
-  const scrollY = body.style.top;
-  document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
-});
-</script>
