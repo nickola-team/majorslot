@@ -443,7 +443,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($round['status'] == 2)  // 취소처리된 경우
                     {
                         $gamename = $gameObj['name'] . '_gold[C'.$ctime.']_' . $gameObj['href'];
-                        $win = $bet;
                     }
                     \VanguardLTE\StatGame::create([
                         'user_id' => $userid, 
