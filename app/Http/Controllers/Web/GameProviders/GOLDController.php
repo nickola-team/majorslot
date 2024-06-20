@@ -141,7 +141,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if(isset($game['imageUrl']))
                     {
                         $icons = json_decode($game['imageUrl'], true);
-                        $icon = $icons['en'];
+                        $icon = isset($icons['en'])?$icons['en']:'';
                     }
                     array_push($gameList, [
                         'provider' => self::GOLD_PROVIDER,
