@@ -12,9 +12,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const GOLD_PROVIDER = 'gold';
         const GOLD_GAME_IDENTITY = [
             //==== CASINO ====
-            'gold-evo' => ['thirdname' =>'EVOLUTION','type' => 'casino'],
-            'gold-dg' => ['thirdname' =>'DREAMGAME','type' => 'casino'],
-            'gold-micro' => ['thirdname' =>'MICRO','type' => 'casino'],
+            'gold-evo' => ['thirdname' =>'Evolution_Casino','type' => 'casino'],
+            'gold-dg' => ['thirdname' =>'Dream_Casino','type' => 'casino'],
+            'gold-micro' => ['thirdname' =>'Micro_Casino','type' => 'casino'],
         ];
         public static function getGameObj($uuid)
         {
@@ -48,8 +48,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.gold_api') ;
             $op = config('app.gold_op');
             $token = config('app.gold_key');
-            $param['agent_code'] = $op;
-            $param['agent_token'] = $token;
+            $param['agentCode'] = $op;
+            $param['token'] = $token;
             try {       
                 $response = Http::withBody(json_encode($param),'application/json')->post($url);
                 
@@ -72,8 +72,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function moneyInfo($user_code) {
             
             $params = [
-                'method' => 'money_info',
-                'user_code' => $user_code,
+                'method' => 'GetUserInfo',
+                'userCode' => $user_code,
             ];
 
             $data = GOLDController::sendRequest($params);
@@ -83,12 +83,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserBalance($href, $user) {   
 
             $balance = -1;
+            $user_code = self::GOLD_PROVIDER  . sprintf("%04d",$user->id);
+            $data = GOLDController::moneyInfo($user_code);
 
-            $data = GOLDController::moneyInfo(self::GOLD_PROVIDER  . sprintf("%04d",$user->id));
-
-            if ($data && $data['status'] == 1)
+            if ($data && $data['status'] == 0)
             {
-                $balance = $data['user']['user_balance'];
+                $users = $data['users'];
+                foreach($users as $useritem)
+                {
+                    if($useritem['userCode'] == $user_code)
+                    {
+                        $balance = $useritem['balance'];
+                        break;
+                    }
+                }
             }
             return intval($balance);
         }
@@ -107,26 +115,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
 
             $params = [
-                'method' => 'game_list',
-                'provider_code' => $category['thirdname'],
+                'method' => 'GetVendorGames',
+                'vendorCode' => $category['thirdname'],
             ];
 
             $gameList = [];
             $data = GOLDController::sendRequest($params);
 
-            if ($data && $data['status'] == 1)
+            if ($data && $data['status'] == 0)
             {
-                foreach ($data['gameList'] as $game)
+                foreach ($data['vendorGames'] as $game)
                 {
+                    $gamename = 'Unknown';
+                    $gametitle = 'Unknown';
+                    if(isset($game['gameName']))
+                    {
+                        $gamenames = json_decode($game['gameName'], true);
+                        if($gamenames != null)
+                        {
+                            $gamename = isset($gamenames['ko'])?$gamenames['ko']:$gamenames['en'];
+                            $gametitle = $gamenames['en'];
+                        }
+                    }
+                    $icon = '';
+                    if(isset($game['imageUrl']))
+                    {
+                        $icons = json_decode($game['imageUrl'], true);
+                        $icon = $icons['en'];
+                    }
                     array_push($gameList, [
                         'provider' => self::GOLD_PROVIDER,
                         'href' => $href,
-                        'gamecode' => $game['table_code'],
-                        'symbol' => $game['table_code'],
-                        'name' => preg_replace('/\s+/', '', $game['table_name']),
-                        'title' => $game['table_name'],
+                        'gamecode' => $game['gameCode'],
+                        'symbol' => $game['gameCode'],
+                        'name' => preg_replace('/\s+/', '', $gamename),
+                        'title' => $gametitle,
                         'type' => 'table',
-                        'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
+                        'icon' => $icon,
                         'view' => 0
                     ]);
                 }
@@ -166,17 +191,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
 
             $params = [
-                'method' => 'game_launch',
-                'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
-                "provider_code" =>  $gamecode,
+                'method' => 'GetGameUrl',
+                'userCode' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
+                'nickname' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
+                "vendorCode" =>  $gamecode,
+                "language" =>  'ko'
             ];
 
             $data = GOLDController::sendRequest($params);
             $url = null;
 
-            if ($data && $data['status'] == 1)
+            if ($data && $data['status'] == 0)
             {
-                $url = $data['launch_url'];
+                $url = $data['launchUrl'];
             }
 
             return $url;
@@ -192,13 +219,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance > 0)
             {
                 $params = [
-                    'method' => 'user_withdraw',
-                    'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
+                    'method' => 'Withdraw',
+                    'userCode' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
                     "amount" =>  $balance,
                 ];
 
                 $data = GOLDController::sendRequest($params);
-                if ($data==null || $data['status'] != 1)
+                if ($data==null || $data['status'] != 0)
                 {
                     return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
                 }
@@ -221,24 +248,41 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('GOLDMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
+            $user_code = self::GOLD_PROVIDER  . sprintf("%04d",$user->id);
+            $balance = 0;
 
-            //create gold account
-            $params = [
-                'method' => 'user_create',
-                'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
-            ];
-
-            $data = GOLDController::sendRequest($params);
-            if ($data==null || ($data['msg'] != 'SUCCESS' && $data['msg'] != 'DUPLICATE_USER' && $data['msg'] != 'INVALID_USER'))
+            //유저정보 조회
+            $data = GOLDController::moneyInfo($user_code);
+            if($data == null || $data['status'] != 0)
             {
-                return null;
+                //새유저 창조
+                $params = [
+                    'method' => 'CreateUser',
+                    'userCode' => $user_code,
+                ];
+
+                $data = GOLDController::sendRequest($params);
+                if ($data==null || $data['status'] != 0)
+                {
+                    return null;
+                }
             }
-            
-            
-            $balance = GOLDController::getuserbalance($game['href'], $user);
-            if ($balance == -1)
+            else
             {
-                return null;
+                $balance = -1;
+                $users = $data['users'];
+                foreach($users as $useritem)
+                {
+                    if($useritem['userCode'] == $user_code)
+                    {
+                        $balance = intval($useritem['balance']);
+                        break;
+                    }
+                }
+                if ($balance == -1)
+                {
+                    return null;
+                }
             }
 
             if ($balance != $user->balance)
@@ -254,13 +298,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if ($user->balance > 0)
                 {
                     $params = [
-                        'method' => 'user_deposit',
-                        'user_code' => self::GOLD_PROVIDER  . sprintf("%04d",$user->id),
+                        'method' => 'Deposit',
+                        'userCode' => $user_code,
                         "amount" =>  intval($user->balance),
                     ];
     
                     $data = GOLDController::sendRequest($params);
-                    if ($data==null || $data['status'] != 1)
+                    if ($data==null || $data['status'] != 0)
                     {
                         Log::error('GOLDMakeLink : addMemberPoint result failed. ' . ($data==null?'null':json_encode($data)));
                         return null;
@@ -294,14 +338,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [GOLDController::GOLD_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($lastid, $pageIdx)
+        public static function gamerounds($lastid)
         {
             
             $params = [
-                'method' => 'transaction_no',
-                'txn_no' => $lastid,
-                'page_number' => $pageIdx,
-                'perPage_count' => 1000
+                'method' => 'ReportById',
+                'startWagerId' => $lastid,
+                'count' => 1000
             ];
 
             $data = GOLDController::sendRequest($params);
@@ -326,115 +369,107 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
             $count = 0;
-            $curPage = 0;
             $data = null;
             $newtimepoint = $timepoint;
             $totalCount = 0;
-            do
+            $data = GOLDController::gamerounds($timepoint);
+            if ($data == null || $data['status'] != 0)
             {
-                $data = GOLDController::gamerounds($timepoint, $curPage);
-                if ($data == null)
+                if ($frompoint == -1)
                 {
-                    if ($frompoint == -1)
+
+                    if ($tpoint)
                     {
-
-                        if ($tpoint)
-                        {
-                            $tpoint->update(['value' => $newtimepoint]);
-                        }
-                        else
-                        {
-                            \VanguardLTE\Settings::create(['key' => self::GOLD_PROVIDER .'timepoint', 'value' => $newtimepoint]);
-                        }
+                        $tpoint->update(['value' => $newtimepoint]);
                     }
-
-                    return [0,0];
+                    else
+                    {
+                        \VanguardLTE\Settings::create(['key' => self::GOLD_PROVIDER .'timepoint', 'value' => $newtimepoint]);
+                    }
                 }
 
-                if (isset($data['data']))
+                return [0,0];
+            }
+            $invalidRounds = [];
+            if (isset($data['wagers']))
+            {
+                foreach ($data['wagers'] as $round)
                 {
-                    foreach ($data['data'] as $round)
+                    // if ($round['txn_type'] != 'CREDIT')
+                    // {
+                    //     continue;
+                    // }
+
+                    $gameObj = self::getGameObj($round['gameCode']);
+                    
+                    if (!$gameObj)
                     {
-                        if ($round['txn_type'] != 'CREDIT')
+                        $gameObj = self::getGameObj($round['vendorCode']);
+                        if (!$gameObj)
+                        {
+                            Log::error('GOLD Game could not found : '. $round['gameCode']);
+                            continue;
+                        }
+                    }
+                    $bet = $round['betAmount'];
+                    $win = $round['payoutAmount'];
+                    $balance = $round['afterBalance'];
+                    
+                    $time = date('Y-m-d H:i:s',strtotime($round['createdOn'] . ' +9 hours'));
+
+                    $userid = intval(preg_replace('/'. self::GOLD_PROVIDER  .'(\d+)/', '$1', $round['userCode'])) ;
+                    if($userid == 0){
+                        $userid = intval(preg_replace('/'. self::GOLD_PROVIDER . 'user' .'(\d+)/', '$1', $round['userCode'])) ;
+                    }
+
+                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                    $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
+
+                    // if ($checkduplicate)
+                    // {
+                        $checkGameStat = \VanguardLTE\StatGame::where([
+                            'user_id' => $userid, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'date_time' => $time,
+                            'roundid' => $round['vendorCode'] . '#' . $round['gameCode'] . '#' . $round['wagerId'],
+                        ])->first();
+                        if ($checkGameStat)
                         {
                             continue;
                         }
-
-                        $gameObj = self::getGameObj($round['table_code']);
-                        
-                        if (!$gameObj)
-                        {
-                            $gameObj = self::getGameObj($round['provider_code']);
-                            if (!$gameObj)
-                            {
-                                Log::error('GOLD Game could not found : '. $round['table_code']);
-                                continue;
-                            }
-                        }
-                        $bet = $round['bet_money'];
-                        $win = $round['win_money'];
-                        $balance = $round['user_end_balance'];
-                        
-                        $time = date('Y-m-d H:i:s',strtotime($round['CreatedAt'] . ' +9 hours'));
-
-                        $userid = intval(preg_replace('/'. self::GOLD_PROVIDER  .'(\d+)/', '$1', $round['user_code'])) ;
-                        if($userid == 0){
-                            $userid = intval(preg_replace('/'. self::GOLD_PROVIDER . 'user' .'(\d+)/', '$1', $round['user_code'])) ;
-                        }
-
-                        $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
-                        $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
-
-                        // if ($checkduplicate)
-                        // {
-                            $checkGameStat = \VanguardLTE\StatGame::where([
-                                'user_id' => $userid, 
-                                'bet' => $bet, 
-                                'win' => $win, 
-                                'date_time' => $time,
-                                'roundid' => $round['table_code'] . '#' . $round['game_no'] . '#' . $round['txn_no'],
-                            ])->first();
-                            if ($checkGameStat)
-                            {
-                                continue;
-                            }
-                        // }
-                        
-                        \VanguardLTE\StatGame::create([
-                            'user_id' => $userid, 
-                            'balance' => $balance, 
-                            'bet' => $bet, 
-                            'win' => $win, 
-                            'game' =>$gameObj['name'] . '_gold', 
-                            'type' => 'table',
-                            'percent' => 0, 
-                            'percent_jps' => 0, 
-                            'percent_jpg' => 0, 
-                            'profit' => 0, 
-                            'denomination' => 0, 
-                            'date_time' => $time,
-                            'shop_id' => $shop?$shop->shop_id:-1,
-                            'category_id' => $category?$category->original_id:0,
-                            'game_id' =>  $gameObj['gamecode'],
-                            'roundid' => $round['table_code'] . '#' . $round['game_no'] . '#' . $round['txn_no'],
-                        ]);
-                        $count = $count + 1;
-                        if ($newtimepoint < $round['txn_no'])
-                        {
-                            $newtimepoint = $round['txn_no'] + 1;
-                        }
+                    // }
+                    $gamename = $gameObj['name'] . '_gold';
+                    if($round['status'] == 2)  // 취소처리된 경우
+                    {
+                        $gamename = $gameObj['name'] . '_gold[C'.$ctime.']_' . $gameObj['href'];
+                        $win = $bet;
                     }
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $userid, 
+                        'balance' => $balance, 
+                        'bet' => $bet, 
+                        'win' => $win, 
+                        'game' => $gamename, 
+                        'type' => 'table',
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'date_time' => $time,
+                        'shop_id' => $shop?$shop->shop_id:-1,
+                        'category_id' => $category?$category->original_id:0,
+                        'game_id' =>  $gameObj['gamecode'],
+                        // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
+                        'roundid' => $round['vendorCode'] . '#' . $round['gameCode'] . '#' . $round['wagerId'],
+                    ]);
+                    $count = $count + 1;
                 }
-                $curPage = $curPage + 1;
-                if (isset($data['data']) && count($data['data']) == 0)
-                {
-                    break;
-                }
-                $totalPage = intval($data['total_count'] / $data['perPage_count']);
             }
-            while ($curPage <= $totalPage);
-
-            $timepoint = $newtimepoint;
+            if($data['lastWagerId'] > -1){
+                $timepoint = $data['lastWagerId'] + 1;
+            }
 
             if ($frompoint == -1)
             {
@@ -459,10 +494,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $txn_no = $betrounds[2];
+            $wager_id = $betrounds[2];
             
-            $data = GOLDController::gamerounds($txn_no, 0);
-            if ($data==null || $data['status'] != 1)
+            $params = [
+                'method' => 'GetWagerInfo',
+                'wagerId' => $wager_id
+            ];
+
+            $data = GOLDController::sendRequest($params);
+            if ($data==null || $data['status'] != 0)
             {
                 return null;
             }
@@ -471,19 +511,34 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $betdetails = null;
             $gametype = 'gold';
             $result = null;
-            foreach ($data['data'] as $bet)
+            if($data['wager'])
             {
-                if ($bet['txn_type'] == 'CREDIT' && $bet['txn_no'] == $txn_no)
+                if($data['wager']['detail'])
                 {
-                    $gametype = $bet['type'];
                     $betdetails = json_decode($bet['detail'], true);
-                    $betdetails['betType'] = $bet['type'];
-                    $betdetails['bet_money'] = $bet['bet_money'];
-                    $betdetails['win_money'] = $bet['win_money'];
-                    $betdetails = json_encode($betdetails);
-                    break;
                 }
+                else
+                {
+                    $betdetails = [];
+                }
+                $betdetails['betType'] = ''; //$bet['type'];
+                $betdetails['bet_money'] = $bet['betAmount'];
+                $betdetails['win_money'] = $bet['payoutAmount'];
+                $betdetails = json_encode($betdetails);
             }
+            // foreach ($data['wager'] as $bet)
+            // {
+            //     if ($bet['txn_type'] == 'CREDIT' && $bet['txn_no'] == $txn_no)
+            //     {
+            //         $gametype = $bet['type'];
+            //         $betdetails = json_decode($bet['detail'], true);
+            //         $betdetails['betType'] = $bet['type'];
+            //         $betdetails['bet_money'] = $bet['bet_money'];
+            //         $betdetails['win_money'] = $bet['win_money'];
+            //         $betdetails = json_encode($betdetails);
+            //         break;
+            //     }
+            // }
 
             return [
                 'type' => $gametype,
@@ -499,11 +554,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $balance = -1;
 
-            $data = GOLDController::moneyInfo(null);
+            $params = [
+                'method' => 'GetAgentInfo'
+            ];
 
-            if ($data && $data['status'] == 1)
+            $data = GOLDController::sendRequest($params);
+            if ($data==null || $data['status'] != 0)
             {
-                $balance = $data['agent']['agent_balance'];
+                return null;
+            }
+            if ($data && $data['status'] == 0)
+            {
+                $balance = $data['balance'];
             }
             return intval($balance);
         }
