@@ -1,6 +1,6 @@
 
 <div data-v-fad191c6="" class="copyright column" style="margin-top: 30px;">
-    <span data-v-fad191c6="" class="text">Copyright © 2023 DOVE CASINO</span> <span data-v-fad191c6="" class="text" style="margin-bottom: 30px;">Casino accepts players only over 18 years of age.</span> <div data-v-fad191c6="" class="row" style="flex-direction: row;">
+    <span data-v-fad191c6="" class="text" style="text-transform: uppercase;">Copyright © 2023 {{$logo}} CASINO</span> <span data-v-fad191c6="" class="text" style="margin-bottom: 30px;">Casino accepts players only over 18 years of age.</span> <div data-v-fad191c6="" class="row" style="flex-direction: row;">
         <img data-v-fad191c6="" src="/frontend/dove/assets/img/copyright-1.37d1754.svg"> 
         <img data-v-fad191c6="" src="/frontend/dove/assets/img/copyright-2.01ed1d3.svg"> 
         <img data-v-fad191c6="" src="/frontend/dove/assets/img/copyright-3.9e212ae.svg"> 

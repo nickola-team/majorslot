@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="ko" class="">
 <head>
-    <title>DOVE CASINO</title>
+    <title style="text-transform: uppercase;">CASINO</title>
 	<meta data-n-head="1" charset="utf-8">
 	<meta data-n-head="1" data-hid="description" name="description" content="DOVE CASINO">
 	<meta data-n-head="1" name="format-detection" content="telephone=no">
@@ -31,7 +31,6 @@
 	<link rel="stylesheet" href="/frontend/todayslot/jq/slideshow5/style.css">
 	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/m/jssor.slider-25.2.0.min.js"></script>
 	<meta data-n-head="1" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-
 </head>
 <body class="">
 	<div id="app">
