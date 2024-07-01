@@ -1,0 +1,504 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+.Progress {
+    position: relative
+}
+
+.Progress,
+.Progress__Bg {
+    height: 100%
+}
+
+.Progress__ActiveWrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0
+}
+
+.Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+.Progress--hearts,
+.Progress--items {
+    align-self: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Progress--hearts .Progress__Bg,
+.Progress--items .Progress__Bg {
+    position: absolute
+}
+
+.Progress--hearts .Progress__Hearts,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Hearts,
+.Progress--items .Progress__Items {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%
+}
+
+.Progress--hearts .Progress__Heart,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Heart,
+.Progress--items .Progress__Items,
+.ProgressV2 {
+    position: relative
+}
+
+.ProgressV2__Bg {
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar {
+    overflow: hidden;
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar,
+.ProgressV2__ActiveImg {
+    position: absolute;
+    bottom: 0;
+    left: 0
+}
+
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 56px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto;
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 1
+}
+
+.MoneyScatter__LabelWrap {
+    line-height: normal;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    opacity: .4
+}
+
+.FS-Level .MoneyScatter__LabelWrap,
+.StackCashRespin .MoneyScatter__LabelWrap {
+    opacity: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "...      feature     " "...      topProgress " "fsPrizes slot        "
+}
+
+.Spin .Feature {
+    grid-area: feature
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .TopProgress {
+    grid-area: topProgress
+}
+
+.Spin .fsPrizes {
+    grid-area: fsPrizes
+}
+
+.Feature {
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.FS-Level--2 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs10bbfmission/mult_2.png) 1x, url(./images/vs10bbfmission/mult_2@2x.png) 2x)
+}
+
+.FS-Level--2 .ReelsSlot__Item--2:after,
+.FS-Level--3 .ReelsSlot__Item--2:after {
+    content: "";
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top -10px left -5px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2
+}
+
+.FS-Level--3 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs10bbfmission/mult_3.png) 1x, url(./images/vs10bbfmission/mult_3@2x.png) 2x)
+}
+
+.FS-Level--4 .ReelsSlot__Item--2:after {
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10bbfmission/mult_10.png) 1x, url(./images/vs10bbfmission/mult_10@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top -10px left -5px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2
+}
+
+.TopProgress {
+    grid-area: topProgress;
+    display: flex;
+    flex-direction: row
+}
+
+.TopProgress__Level {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-between
+}
+
+.TopProgress__Item {
+    filter: grayscale(1);
+    opacity: .5;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center
+}
+
+.TopProgress__Item--active {
+    filter: grayscale(0);
+    opacity: 1
+}
+
+.TopProgress__Item img {
+    max-width: 23px;
+    object-fit: none
+}
+
+.TopProgress .LevelText {
+    font-size: 6px;
+    line-height: 5px;
+    width: 20px;
+    transform: rotate(-45deg);
+    font-weight: 700;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.FsPrizes {
+    width: 100%;
+    height: auto;
+    display: flex
+}
+
+.FsPrizes .FsPrize {
+    filter: grayscale(1);
+    opacity: .5
+}
+
+.FsPrizes .FsPrize--active {
+    filter: unset;
+    opacity: unset
+}
+
+.FreeSpin .FsPrizes {
+    grid-area: fsPrizes;
+    height: 150px;
+    width: 30px;
+    margin: 5px 5px 5px 0;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start
+}
+
+.FreeSpin .FsPrizes .FsPrize {
+    width: 100%;
+    height: 100%
+}
+
+.FsOptions .FsPrizes .FsPrize {
+    display: none
+}
+
+.FsOptions .FsPrizes .FsPrize--active {
+    display: unset
+}
+
+.StackCashRespin .Spin {
+    grid-template-areas: "lives" "slot" "crabs"
+}
+
+.StackCashRespin .Spin .Lives {
+    grid-area: lives
+}
+
+.StackCashRespin .Spin .Carousel {
+    grid-area: slot
+}
+
+.StackCashRespin .Spin .Crabs {
+    grid-area: crabs
+}
+
+.StackCashRespin .MoneyScatter.Coin .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs10bbfmission/respinFish.png) 1x, url(./images/vs10bbfmission/respinFish@2x.png) 2x)
+}
+
+.StackCashRespin .Carousel__Controls {
+    margin-bottom: -48px
+}
+
+.StackCashRespin .ReelsSlot__Reel--bomb>.ReelsSlot__Item {
+    opacity: .1
+}
+
+.StackCashRespin .ReelsSlot__Reel--bomb .BombWrap {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 2
+}
+
+.Lives {
+    width: 74px;
+    height: 19px;
+    margin-left: auto;
+    background-image: -webkit-image-set(url(./images/vs10bbfmission/lives/bg.png) 1x, url(./images/vs10bbfmission/lives/bg@2x.png) 2x)
+}
+
+.Lives .Progress__Items {
+    justify-content: center
+}
+
+.Lives .Progress__Item--disabled {
+    opacity: .2
+}
+
+.Crabs {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly
+}
+
+.Bonus0 .PickOptions__Option-Image {
+    height: 112px;
+    object-fit: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
