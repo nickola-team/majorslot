@@ -35,7 +35,7 @@ document.location.href='../../';
 
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/GuGuGu3CQ9/180/?token={{ auth()->user()->api_token }}&language=ko&dollarsign=Y&app=N&detect=N&loadimg={{isset($cq_loadimg)?$cq_loadimg:""}}' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/GuGuGu3CQ9/180/index.html?token={{ auth()->user()->api_token }}&language=ko&dollarsign=Y&app=N&detect=N&loadimg={{isset($cq_loadimg)?$cq_loadimg:""}}' allowfullscreen>
 
 </iframe>
 
