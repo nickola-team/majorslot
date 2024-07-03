@@ -94,7 +94,7 @@ namespace VanguardLTE\Games\HotChilliPM
                 }
                 else
                 {
-                    $bet = '20.00';
+                    $bet = '100.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

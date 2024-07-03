@@ -34,7 +34,7 @@ document.location.href='../../';
 <body style="margin:0px;width:100%;background-color:black;overflow:hidden">
 
 
-<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/WildTarzanCQ9/4/?token={{ auth()->user()->api_token }}&language=ko&dollarsign=Y&app=N&detect=N&loadimg={{isset($cq_loadimg)?$cq_loadimg:""}}' allowfullscreen>
+<iframe id='game' style="margin:0px;border:0px;width:100%;height:100vh;" src='/games/WildTarzanCQ9/4/index.html?token={{ auth()->user()->api_token }}&language=ko&dollarsign=Y&app=N&detect=N&loadimg={{isset($cq_loadimg)?$cq_loadimg:""}}' allowfullscreen>
 </iframe>
 
 

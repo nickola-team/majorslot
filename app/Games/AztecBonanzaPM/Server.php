@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\AztecBonanzaPM
                 }
                 else
                 {
-                    $bet = '10.00';
+                    $bet = '30.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;
