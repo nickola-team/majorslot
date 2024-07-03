@@ -177,16 +177,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $safeAmount = $user->sessiondata()['safeAmount'];
             }
             $username = $user->username;
-            $op = config('app.holdem_opcode');            
+            $op = config('app.holdem_opcode');  
 
-            //test
-            $username = 'test0001';
-            $op = 'testopcode';
             $data = [
                 'userId' => $username,
                 'referenceId' => $userKey, 
                 'walletType' => 'board',
-                'amount' => $transferMethod . $user->balance,
+                'amount' => $transferMethod . ($user->balance - $safeAmount), // 다시 확인
                 'safeAmount' => $safeAmount,          
                 'date' => $date
             ];
@@ -228,16 +225,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserBalance($href, $user){
             $date = Carbon::now();
             $user = \VanguardLTE\User::where(['id'=> $user->id])->first();
-            $safeAmount = 0;
-            if(isset($user->sessiondata()['safeAmount']) && $user->sessiondata()['safeAmount'] != null){
-                $safeAmount = $user->sessiondata()['safeAmount'];
-            }
             $username = $user->username;
             $op = config('app.holdem_opcode');
-
-            //test
-            $username = 'test0001';
-            $op = 'testopcode';
             $data = [
                 'userId' => $username,        
                 'date' => $date
@@ -262,6 +251,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = $response->json();
                 if($data['error'] == 0){
                     $balance = $data['balance'] + $data['safeBalance'];
+                    $user->sessiondata()['safeAmount'] = $data['safeBalance'];
+                    $user->save();
                     return $balance;
                 }
             }catch(\Exception $ex){
@@ -275,7 +266,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function withdrawAll($href, $user)
         {
-            $balance = HOLDEMController::getuserbalance($href,$user);
+            $balance = HOLDEMController::getUserBalance($href,$user);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
@@ -339,7 +330,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function makegamelink($gamecode, $user){
             
-             $username = $user->username;
+            $username = $user->username;
             $parse = explode('#', $user->username);
             if (count($parse) > 1)
             {
@@ -348,9 +339,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $date = Carbon::now();
             $providerCode = '0101';
             $op = config('app.holdem_opcode');
-            //test
-            $username = 'test0001';
-            $op = 'testopcode';
             //////////////////////////////////
             $data = [
                 'userId' => strtoupper($username),
