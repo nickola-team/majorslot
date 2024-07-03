@@ -144,7 +144,7 @@ namespace VanguardLTE\Games\_5LionsPM
                 'wilds' => '2~0,0,0,0,0~1,1,1,1,1',
                 'bonuses' => '0',
                 'fsbonus' => '',
-                'c' => '50.0',
+                'c' => '20.0',
                 'sver' => '5',
                 'n_reel_set' => '0',
                 'counter' => ((int)$slotEvent['counter'] + 1),

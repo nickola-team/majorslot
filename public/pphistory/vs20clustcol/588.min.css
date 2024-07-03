@@ -1,0 +1,102 @@
+:root {
+    --slot-item-height: 43px;
+    --slot-item-width: 50px
+}
+
+.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg [alt="1"] {
+    z-index: 2
+}
+
+.MoneyScatter {
+    line-height: normal
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.MoneyScatter__Label {
+    font-size: 14px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20clustcol/slotBg.png) 1x, url(./images/vs20clustcol/slotBg@2x.png) 2x);
+    width: 360px;
+    height: 310px;
+    margin: -4px -5px;
+    background-repeat: no-repeat
+}
+
+.LifeSpan {
+    position: relative;
+    display: contents
+}
+
+.LifeSpan__Points {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    width: 20px;
+    height: 18px;
+    background-image: -webkit-image-set(url(./images/vs20clustcol/lifespan.png) 1x, url(./images/vs20clustcol/lifespan@2x.png) 2x)
+}
+
+.LifeSpan--0 .LifeSpan__Points,
+.LifeSpan--10 .LifeSpan__Points {
+    visibility: hidden
+}
+
+.LifeSpan--10 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs20clustcol/spin/10_1.png) 1x, url(./images/vs20clustcol/spin/10_1@2x.png) 2x)
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
