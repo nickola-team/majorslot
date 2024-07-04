@@ -139,21 +139,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     $data = $response->json();
                     if($data['error'] == 0){
-                        if(!isset($user->sessiondata()['PlayerId']) || $user->sessiondata()['PlayerId'] == null){
-                            $sessionData = [
-                                'PlayerId' => $data['playerId']
-                            ];
-                            $user->session = json_encode($sessionData);
-
-                            $user->save();
-                        }
                         return $data['playerId'];
-                    } else if($data['error'] == 11){
-                        if(!isset($user->sessiondata()['PlayerId'])){
-                            return -1;
-                        }else{
-                            return $user->sessiondata()['PlayerId'];
-                        }
+                    }else{
+                        return -1;
                     }
                 }else{
                     return -1;
@@ -167,7 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return -1;
         }
 
-        public static function transferMoney($userId,$userKey,$transferMethod){
+        public static function transferMoney($userId,$transferMethod){
             $date = Carbon::now();
             $user = \VanguardLTE\User::where(['id'=> $userId])->first();
             $safeAmount = 0;
@@ -180,7 +168,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
                 'userId' => strtoupper($prefix . sprintf("%04d",$user->id)),
-                'referenceId' => $userKey, 
+                'referenceId' => $user->generateCode(24),  //랜덤 문자열
                 'walletType' => 'board',
                 'amount' => $transferMethod . ($user->balance - $safeAmount), // 다시 확인
                 'safeAmount' => $safeAmount,          
@@ -213,8 +201,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ];
                     $responseValue = json_encode($responseValue);
                     return $responseValue;
-                }else if($data['error'] == 220){
-                    return 1;
+                }else{
+                    return null;
                 }
             }catch(\Exception $ex){
                 Log::error('Holdem TransferMoney Request :  Excpetion. exception= ' . $ex->getMessage());
@@ -249,16 +237,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$response->ok())
                 {
                     Log::error('Holdem ConfirmMoney Request :  Failed ');
-                    return null;
+                    return -1;
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
                     $balance = $data['balanceList'][0]['balance'] + $data['balanceList'][0]['safeBalance'];
-                    $sessionData = [
-                        'PlayerId' => $user->sessiondata()['PlayerId'],
-                        'safeAmount' => $data['balanceList'][0]['safeBalance']
-                    ];
-                    $user->session = json_encode($sessionData);
+                    $user->sessiondata()['safeAmount'] = $data['balanceList'][0]['safeBalance'];
                     $user->save();
                     return $balance;
                 }
@@ -267,7 +251,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('Holdem ConfirmMoney Request :  Excpetion. PARAMS= ' . json_encode($params));
             }
             
-            return null;
+            return -1;
         }
 
 
@@ -280,13 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($balance > 0)
             {
-                $alreadyUser = HoldemController::createPlayer($user->id);
-                if($alreadyUser == -1){
-                    Log::error('HoldemCreateUser : Does not find user ');
-                    return null;
-                }
-    
-                $moneyTrans = HoldemController::transferMoney($user->id,$alreadyUser,'-');
+                $moneyTrans = HoldemController::transferMoney($user->id, '-');
                 if ($moneyTrans==null)
                 {
                     return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
@@ -319,18 +297,51 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         public static function makelink($gamecode,$userid){
-            //Check User or Create User
-            $alreadyUser = HoldemController::createPlayer($userid);
-            if($alreadyUser == -1){
-                Log::error('HoldemCreateUser : Does not find user ');
+            //Check User 
+            $user = \VanguardLTE\User::where('id', $userid)->first();
+            if (!$user)
+            {
+                Log::error('HoldemMakeLink : Does not find user ' . $userid);
                 return null;
             }
 
-            $moneyTrans = HoldemController::transferMoney($userid,$alreadyUser,'+');
-            if($moneyTrans == null){
-                Log::error('HoldemTransferMoney : Can not Transfer money ' . $userid);
+            $game = HOLDEMController::getGameObj($gamecode);
+            if ($game == null)
+            {
+                Log::error('GOLDMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
+            $balance = HOLDEMController::getUserBalance($game['href'], $user);
+            if($balance < 0){
+                //Create User
+                $alreadyUser = HoldemController::createPlayer($userid);
+                if($alreadyUser == -1){
+                    Log::error('HoldemCreateUser : Does not find user ');
+                    return null;
+                }
+    
+            }
+            if ($balance != $user->balance)
+            {
+                //withdraw all balance
+                $data = HOLDEMController::withdrawAll($game['href'], $user);
+                if ($data['error'])
+                {
+                    return null;
+                }
+                //Add balance
+
+                if ($user->balance > 0)
+                {
+                    $moneyTrans = HoldemController::transferMoney($userid,'+');    
+                    if($moneyTrans == null){
+                        Log::error('HoldemTransferMoney : Can not Transfer money ' . $userid);
+                        return null;
+                    }    
+                }
+            }
+            
+            
 
             return '/followgame/holdem/'.$gamecode;
         }
@@ -348,11 +359,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $op = config('app.holdem_opcode');
             //////////////////////////////////
             $prefix = HOLDEMController::HOLDEM_PROVIDER;
+            $platform = 'WEB';
+            $detect = new \Detection\MobileDetect();
+            if( $detect->isMobile() || $detect->isTablet() ) 
+            {
+                $platform = 'Mobile';
+            }
             $data = [
                 'userId' => $prefix . sprintf("%04d",$user->id),
                 'providerCode' => $providerCode,
                 'gameCode' => $gamecode,   
-                'platform' => 'PC', 
+                'platform' => $platform, 
                 'date' => $date
             ];
             $data = json_encode($data,true);
@@ -379,7 +396,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gameUrl = $data['gameUrl'];
                 $token = $data['token'];
                 $userBalance = $user->balance;
-                $record = \VanguardLTE\HoldemTransaction::create(['error_code' => $data['error'],'gamename' => $gamecode,'amount' => 0,'balance' => $userBalance,'gamecode' => $gamecode, 'user_id' => $username,'data' => json_encode($data),'token'=>$token,'stats'=>0]);
+                // $record = \VanguardLTE\HoldemTransaction::create(['error_code' => $data['error'],'gamename' => $gamecode,'amount' => 0,'balance' => $userBalance,'gamecode' => $gamecode, 'user_id' => $username,'data' => json_encode($data),'token'=>$token,'stats'=>0]);
                 
                 return $gameUrl;
             }catch(\Exception $ex){
@@ -644,7 +661,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $balance = $data['balance'];
                     $safebalance = $data['safeBalance'];
                 }
-                $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'transactionId'=>$trId,'stats'=>0])->first();
+                // $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'transactionId'=>$trId,'stats'=>0])->first();
                 $user = \VanguardLTE\User::where(['username'=> $username])->first();
                 if(isset($user->sessiondata()['safeAmount'])){
                     if($user->sessiondata()['safeAmount'] == $safebalance){
@@ -658,8 +675,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 
                 $user->save();
-                $data = $preEventRecord->data . ' /' . $data; 
-                $preEventRecord->update(['data'=>$data,'balance'=>$balance,'safebalance'=>$safebalance,'stats'=>1]);
+                // $data = $preEventRecord->data . ' /' . $data; 
+                // $preEventRecord->update(['data'=>$data,'balance'=>$balance,'safebalance'=>$safebalance,'stats'=>1]);
             }catch(\Exception $ex){
                 Log::error('Holdem sessionCloseFinish Request :  Excpetion. exception= ' . $ex->getMessage());
                 Log::error('Holdem sessionCloseFinish Request :  Excpetion. PARAMS= ' . json_encode($params));
@@ -716,9 +733,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return [0,0];
             }
             $invalidRounds = [];
-            if (isset($data))
+            if (isset($data) && isset($data['roundList']))
             {
-                foreach ($data as $round)
+                foreach ($data['roundList'] as $round)
                 {
                     // if ($round['txn_type'] != 'CREDIT')
                     // {
@@ -786,8 +803,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $count = $count + 1;
                 }
             }
-            if($data['lastWagerId'] > -1){
-                $timepoint = $data['lastWagerId'] + 1;
+            if($data['listEndIndex'] > -1){
+                $timepoint = $data['listEndIndex']; // 다시 확인 +1;
             }
 
             if ($frompoint == -1)
@@ -841,16 +858,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
-                    return $data['roundList'];
+                    return $data;
                 }else{
                     Log::error('Holdem GetGameRounds Request Response Error ');
-                    return [];
+                    return null;
                 }
             }catch(\Exception $ex){
                 Log::error('Holdem MakeGameLink Request :  Excpetion. exception= ' . $ex->getMessage());
                 Log::error('Holdem MakeGameLink Request :  Excpetion. PARAMS= ' . json_encode($params));
             }
-            return [];
+            return null;
         }
     }
 }
