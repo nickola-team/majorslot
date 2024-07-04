@@ -19,7 +19,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             foreach (HOLDEMController::HOLDEM_GAME_IDENTITY as $ref => $value)
             {
-                $gamelist = GOLDController::getgamelist($ref);
+                $gamelist = HOLDEMController::getgamelist($ref);
                 if ($gamelist)
                 {
                     foreach($gamelist as $game)
@@ -117,12 +117,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $password = $user->password;
             $op = config('app.holdem_opcode');
 
-            //test
-            $username = 'test0001';
-            $op = 'testopcode';
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
-                'userId' => strtoupper($username),
-                'nickname' => $username,                
+                'userId' => $prefix . sprintf("%04d",$user->id),
+                'nickname' => $prefix . sprintf("%04d",$user->id),                
                 'date' => $date
             ];
             $data = json_encode($data,true);
@@ -179,15 +177,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $username = $user->username;
             $op = config('app.holdem_opcode');  
 
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
-                'userId' => $username,
+                'userId' => strtoupper($prefix . sprintf("%04d",$user->id)),
                 'referenceId' => $userKey, 
                 'walletType' => 'board',
                 'amount' => $transferMethod . ($user->balance - $safeAmount), // 다시 확인
                 'safeAmount' => $safeAmount,          
                 'date' => $date
             ];
-            $data = json_encode($data,true);
+            
+            $data = json_encode($data,JSON_UNESCAPED_UNICODE);
             $transfermoneyHash = HOLDEMController::generateHash($data);
             $baseData = base64_encode($data);
             $url = config('app.holdem_api') . '/player/balance/transfer';
@@ -199,11 +199,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
             try{
                 $response = Http::get($url, $params);
-                if (!$response->ok())
-                {
-                    Log::error('Holdem TransferMoney Request :  Failed ');
-                    return null;
-                }
+                // if (!$response->ok())
+                // {
+                //     Log::error('Holdem TransferMoney Request :  Failed ');
+                //     return null;
+                // }
                 $data = $response->json();
                 if($data['error'] == 0){
                     $responseValue = [
@@ -213,6 +213,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ];
                     $responseValue = json_encode($responseValue);
                     return $responseValue;
+                }else if($data['error'] == 220){
+                    return 1;
                 }
             }catch(\Exception $ex){
                 Log::error('Holdem TransferMoney Request :  Excpetion. exception= ' . $ex->getMessage());
@@ -227,8 +229,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user = \VanguardLTE\User::where(['id'=> $user->id])->first();
             $username = $user->username;
             $op = config('app.holdem_opcode');
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
-                'userId' => $username,        
+                'userId' => $prefix . sprintf("%04d",$user->id),        
                 'date' => $date
             ];
             $data = json_encode($data,true);
@@ -250,8 +253,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
-                    $balance = $data['balance'] + $data['safeBalance'];
-                    $user->sessiondata()['safeAmount'] = $data['safeBalance'];
+                    $balance = $data['balanceList'][0]['balance'] + $data['balanceList'][0]['safeBalance'];
+                    $sessionData = [
+                        'PlayerId' => $user->sessiondata()['PlayerId'],
+                        'safeAmount' => $data['balanceList'][0]['safeBalance']
+                    ];
+                    $user->session = json_encode($sessionData);
                     $user->save();
                     return $balance;
                 }
@@ -288,8 +295,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error'=>false, 'amount'=>$balance];
         }
         public static function generateHash($data){
-            $opKey = 'testopkey';
             //$opKey = 'f3fff4d3-cbf6-46ef-b710-eea686fad487';
+            $opKey = config('app.holdem_opkey');
             $baseData = base64_encode($data);
             $hashData = md5($baseData . $opKey);
             return $hashData;
@@ -340,10 +347,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $providerCode = '0101';
             $op = config('app.holdem_opcode');
             //////////////////////////////////
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
-                'userId' => strtoupper($username),
+                'userId' => $prefix . sprintf("%04d",$user->id),
                 'providerCode' => $providerCode,
-                'gameCode' => $gamecode,    
+                'gameCode' => $gamecode,   
+                'platform' => 'PC', 
                 'date' => $date
             ];
             $data = json_encode($data,true);
@@ -357,7 +366,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => $baseData
             ];
 
-            $url = config('app.holdem_api') . '/gameUrl';
+            $url = config('app.holdem_api') . '/gameStart';
             try
             {
                 $response = Http::get($url, $params);
@@ -384,214 +393,214 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
          //콜백
         //인증
         public static function authentication(\Illuminate\Http\Request $request){
-            $providerCode = '0101';
-            $data = json_decode($request->getContent(), true);
-            $hashData = $data['hash'];
-            $opKey = config('app.holdem_opcode');
-            $authData = $data['data'];
-            $authData = json_encode(base64_decode($authData),true);
-            $token = $authData['token'];
-            $gameCode = $authData['gameCode'];
-            $user = \VanguardLTE\User::where(['username'=> $data['userId']])->first();
-            $prevRecord = \VanguardLTE\HoldemTransaction::where(['gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
-            if(!isset($prevRecord)){
-                return response(HOLDEMController::toText([
-                    'error' => 3,
-                    'description' => 'Invalid  token'
-                ]))->header('Content-Type', 'text/plain');
-            }
-            $safeValue = 0;
-            $safeUse = false;
-            if(!isset($user->sessiondata()['safeAmount'])){
-                return response(HOLDEMController::toText([
-                    'error' => 0,
-                    'balance' => $user->balance,
-                    'safeBalance' => 0,
-                    'safeUse' => false
-                ]))->header('Content-Type', 'text/plain');
-            }else{
-                $safeValue = $user->sessiondata()['safeAmount'];
-                $safeUse = $user->sessiondata()['safeUse'];
-            }
-            return response(HOLDEMController::toText([
-                'error' => 0,
-                'balance' => $user->balance,
-                'safeBalance' => $safeValue,
-                'safeUse' => $safeUse
-            ]))->header('Content-Type', 'text/plain');
+            // $providerCode = '0101';
+            // $data = json_decode($request->getContent(), true);
+            // $hashData = $data['hash'];
+            // $opKey = config('app.holdem_opcode');
+            // $authData = $data['data'];
+            // $authData = json_encode(base64_decode($authData),true);
+            // $token = $authData['token'];
+            // $gameCode = $authData['gameCode'];
+            // $user = \VanguardLTE\User::where(['username'=> $data['userId']])->first();
+            // $prevRecord = \VanguardLTE\HoldemTransaction::where(['gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
+            // if(!isset($prevRecord)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 3,
+            //         'description' => 'Invalid  token'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
+            // $safeValue = 0;
+            // $safeUse = false;
+            // if(!isset($user->sessiondata()['safeAmount'])){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 0,
+            //         'balance' => $user->balance,
+            //         'safeBalance' => 0,
+            //         'safeUse' => false
+            //     ]))->header('Content-Type', 'text/plain');
+            // }else{
+            //     $safeValue = $user->sessiondata()['safeAmount'];
+            //     $safeUse = $user->sessiondata()['safeUse'];
+            // }
+            // return response(HOLDEMController::toText([
+            //     'error' => 0,
+            //     'balance' => $user->balance,
+            //     'safeBalance' => $safeValue,
+            //     'safeUse' => $safeUse
+            // ]))->header('Content-Type', 'text/plain');
         }
 
         public static function gameEvent(\Illuminate\Http\Request $request){
-            $data = json_decode($request->getContent(), true);
-            $authData = $data['data'];
-            $authData = json_encode(base64_decode($authData),true);
+            // $data = json_decode($request->getContent(), true);
+            // $authData = $data['data'];
+            // $authData = json_encode(base64_decode($authData),true);
 
-            $token = $authData['token'];
-            $gameCode = $authData['gameCode'];
-            $eventType = $authData['eventType'];
-            $amountMoney = $authData['amount'];
-            if(isset($authData['options'])){
-                $options = $authData['options'];
-            }
-            $transactionId = $authData['transactionId'];
-            $transactionDate = $authData['transactionDate'];
-            $user = \VanguardLTE\User::where(['username'=> $authData['userId']])->first();
-            if(!isset($user)){
-                return response(HOLDEMController::toText([
-                    'error' => 10,
-                    'description' => 'The user was not found'
-                ]))->header('Content-Type', 'text/plain');
-            }
+            // $token = $authData['token'];
+            // $gameCode = $authData['gameCode'];
+            // $eventType = $authData['eventType'];
+            // $amountMoney = $authData['amount'];
+            // if(isset($authData['options'])){
+            //     $options = $authData['options'];
+            // }
+            // $transactionId = $authData['transactionId'];
+            // $transactionDate = $authData['transactionDate'];
+            // $user = \VanguardLTE\User::where(['username'=> $authData['userId']])->first();
+            // if(!isset($user)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 10,
+            //         'description' => 'The user was not found'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
 
-            $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
-            if(!isset($prevRecord)){
-                return response(HOLDEMController::toText([
-                    'error' => 3,
-                    'description' => 'Invalid  token'
-                ]))->header('Content-Type', 'text/plain');
-            }            
+            // $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
+            // if(!isset($prevRecord)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 3,
+            //         'description' => 'Invalid  token'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }            
 
-            $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'transactionId'=>$transactionId,'stats'=>0])->first();
-            if(!isset($preEventRecord)){
-                \VanguardLTE\HoldemTransaction::create(['gamecode'=>$gameCode,'eventtype'=>$eventType,'eventmoney'=>$amountMoney,'transactionId'=>$transactionId,'data'=>$authData]);
-            }else{
-                $preEventRecord->update(['gamecode'=>$gameCode,'eventtype'=>$eventType,'eventmoney'=>$amountMoney,'transactionId'=>$transactionId,'data'=>$authData]);
-            }
-            return response(HOLDEMController::toText([
-                'error' => 0,
-                'description' => 'OK'
-            ]))->header('Content-Type', 'text/plain');
+            // $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'transactionId'=>$transactionId,'stats'=>0])->first();
+            // if(!isset($preEventRecord)){
+            //     \VanguardLTE\HoldemTransaction::create(['gamecode'=>$gameCode,'eventtype'=>$eventType,'eventmoney'=>$amountMoney,'transactionId'=>$transactionId,'data'=>$authData]);
+            // }else{
+            //     $preEventRecord->update(['gamecode'=>$gameCode,'eventtype'=>$eventType,'eventmoney'=>$amountMoney,'transactionId'=>$transactionId,'data'=>$authData]);
+            // }
+            // return response(HOLDEMController::toText([
+            //     'error' => 0,
+            //     'description' => 'OK'
+            // ]))->header('Content-Type', 'text/plain');
         }
 
 
         public static function gameResult(\Illuminate\Http\Request $request){            
-            $data = json_decode($request->getContent(), true);
-            $authData = $data['data'];
-            $authData = json_encode(base64_decode($authData),true);
+            // $data = json_decode($request->getContent(), true);
+            // $authData = $data['data'];
+            // $authData = json_encode(base64_decode($authData),true);
 
-            $username = $authData['userId'];
-            $token = $authData['token'];
-            $gameCode = $authData['gameCode'];
-            $gameName = $authData['gameName'];
-            $roundId = $authData['roundId'];
-            $amount = $authData['amount'];    //win+jackpot-bet+other
-            $betMoney = $authData['bet'];
-            $winMoney = $authData['win'];
-            $jackpotMoney = $authData['jackpot'];
-            $otherMoney = $authData['other'];
-            $startAmount = $authData['startAmount'];
-            $endAmount = $authData['endAmount'];
-            $balanceMoney = $authData['balance'];
-            $transactionId = $authData['transactionId'];
-            $transactionDate = $authData['transactionDate'];
+            // $username = $authData['userId'];
+            // $token = $authData['token'];
+            // $gameCode = $authData['gameCode'];
+            // $gameName = $authData['gameName'];
+            // $roundId = $authData['roundId'];
+            // $amount = $authData['amount'];    //win+jackpot-bet+other
+            // $betMoney = $authData['bet'];
+            // $winMoney = $authData['win'];
+            // $jackpotMoney = $authData['jackpot'];
+            // $otherMoney = $authData['other'];
+            // $startAmount = $authData['startAmount'];
+            // $endAmount = $authData['endAmount'];
+            // $balanceMoney = $authData['balance'];
+            // $transactionId = $authData['transactionId'];
+            // $transactionDate = $authData['transactionDate'];
 
-            $user = \VanguardLTE\User::where(['username'=> $authData['userId']])->first();
-            if(!isset($user)){
-                return response(HOLDEMController::toText([
-                    'error' => 10,
-                    'description' => 'The user was found'
-                ]))->header('Content-Type', 'text/plain');
-            }
+            // $user = \VanguardLTE\User::where(['username'=> $authData['userId']])->first();
+            // if(!isset($user)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 10,
+            //         'description' => 'The user was found'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
 
-            $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
-            if(!isset($prevRecord)){
-                return response(HOLDEMController::toText([
-                    'error' => 4,
-                    'description' => 'Invalid   operator code '
-                ]))->header('Content-Type', 'text/plain');
-            }
+            // $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
+            // if(!isset($prevRecord)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 4,
+            //         'description' => 'Invalid   operator code '
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
 
-            $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'transactionId'=>$transactionId,'stats'=>0])->first();
+            // $preEventRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$user->username,'gamecode' => $gameCode,'transactionId'=>$transactionId,'stats'=>0])->first();
 
-            $userbalance = $balanceMoney;
+            // $userbalance = $balanceMoney;
             
-            if(isset($user->sessiondata()['safeAmount'])){
-                $userbalance = $userbalance + $user->sessiondata()['safeAmount'];
-            }
-            if(!isset($preEventRecord)){
-                return response(HOLDEMController::toText([
-                    'error' => 404,
-                    'description' => 'Not Found'
-                ]))->header('Content-Type', 'text/plain');
-            }else{
-                $data = $preEventRecord->data . ' /' . $authData; 
-                $preEventRecord->update(['bet'=>$betMoney,'win'=>$amount,'data'=>$data,'balance'=>$userbalance,'stats'=>1]);
-            }
+            // if(isset($user->sessiondata()['safeAmount'])){
+            //     $userbalance = $userbalance + $user->sessiondata()['safeAmount'];
+            // }
+            // if(!isset($preEventRecord)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 404,
+            //         'description' => 'Not Found'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }else{
+            //     $data = $preEventRecord->data . ' /' . $authData; 
+            //     $preEventRecord->update(['bet'=>$betMoney,'win'=>$amount,'data'=>$data,'balance'=>$userbalance,'stats'=>1]);
+            // }
             
-            $user->balance = $userbalance;
-            $user->save();
+            // $user->balance = $userbalance;
+            // $user->save();
 
-            \VanguardLTE\StatGame::create([
-                'user_id' => $user->id, 
-                'balance' => $user->balance, 
-                'bet' => $betMoney, 
-                'win' => $amount,
-                'game' =>  $gameName, 
-                'type' => 'card',
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
-                'shop_id' => $user->shop_id,
-                'category_id' => 62,
-                'game_id' => $gameCode,
-                'roundid' =>  $roundId,
-                'date_time' => $transactionDate,
-                'status' => 1
-            ]);
-            return response(HOLDEMController::toText([
-                'error' => 0,
-                'description' => 'OK'
-            ]))->header('Content-Type', 'text/plain');
-            }
+            // \VanguardLTE\StatGame::create([
+            //     'user_id' => $user->id, 
+            //     'balance' => $user->balance, 
+            //     'bet' => $betMoney, 
+            //     'win' => $amount,
+            //     'game' =>  $gameName, 
+            //     'type' => 'card',
+            //     'percent' => 0, 
+            //     'percent_jps' => 0, 
+            //     'percent_jpg' => 0, 
+            //     'profit' => 0, 
+            //     'denomination' => 0, 
+            //     'shop_id' => $user->shop_id,
+            //     'category_id' => 62,
+            //     'game_id' => $gameCode,
+            //     'roundid' =>  $roundId,
+            //     'date_time' => $transactionDate,
+            //     'status' => 1
+            // ]);
+            // return response(HOLDEMController::toText([
+            //     'error' => 0,
+            //     'description' => 'OK'
+            // ]))->header('Content-Type', 'text/plain');
+        }
 
 
         public static function sessionClose(\Illuminate\Http\Request $request){            
-            $data = json_decode($request->getContent(), true);
-            $authData = $data['data'];
-            $authData = json_encode(base64_decode($authData),true);
+            // $data = json_decode($request->getContent(), true);
+            // $authData = $data['data'];
+            // $authData = json_encode(base64_decode($authData),true);
 
-            $username = $authData['userId'];
-            $token = $authData['token'];
-            $gameCode = $authData['gameCode'];
-            if(isset($authData['authenticatedState'])){
-                $authenState = $authData['authenticatedState'];
-            }
-            $reason = $authData['reason'];
-            $amountMoney = $authData['amount'];
-            $safeAmountMoney = $authData['safeAmount'];
-            $transactionId = $authData['transactionId'];
-            $transactionDate = $authData['transactionData'];
+            // $username = $authData['userId'];
+            // $token = $authData['token'];
+            // $gameCode = $authData['gameCode'];
+            // if(isset($authData['authenticatedState'])){
+            //     $authenState = $authData['authenticatedState'];
+            // }
+            // $reason = $authData['reason'];
+            // $amountMoney = $authData['amount'];
+            // $safeAmountMoney = $authData['safeAmount'];
+            // $transactionId = $authData['transactionId'];
+            // $transactionDate = $authData['transactionData'];
 
-            $user = \VanguardLTE\User::where(['username'=> $username])->first();
-            if(!isset($user)){
-                return response(HOLDEMController::toText([
-                    'error' => 10,
-                    'description' => 'The user was found'
-                ]))->header('Content-Type', 'text/plain');
-            }
+            // $user = \VanguardLTE\User::where(['username'=> $username])->first();
+            // if(!isset($user)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 10,
+            //         'description' => 'The user was found'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
 
-            $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
-            if(!isset($prevRecord)){
-                return response(HOLDEMController::toText([
-                    'error' => 4,
-                    'description' => 'Invalid   operator code'
-                ]))->header('Content-Type', 'text/plain');
-            }
+            // $prevRecord = \VanguardLTE\HoldemTransaction::where(['user_id'=>$username,'gamecode' => $gameCode,'token'=>$token,'stats'=>0])->first();
+            // if(!isset($prevRecord)){
+            //     return response(HOLDEMController::toText([
+            //         'error' => 4,
+            //         'description' => 'Invalid   operator code'
+            //     ]))->header('Content-Type', 'text/plain');
+            // }
             
-            $sessionData = [
-                'safeAmount' => 0,
-                'safeUse' => false
-            ];
-            $user->session = json_encode($sessionData);
-            $user->save();
+            // $sessionData = [
+            //     'safeAmount' => 0,
+            //     'safeUse' => false
+            // ];
+            // $user->session = json_encode($sessionData);
+            // $user->save();
 
-            HoldemController::sessionCloseFinish();
-            return response(HOLDEMController::toText([
-                'error' => 0,
-                'description' => 'OK'
-            ]))->header('Content-Type', 'text/plain');
+            // HoldemController::sessionCloseFinish();
+            // return response(HOLDEMController::toText([
+            //     'error' => 0,
+            //     'description' => 'OK'
+            // ]))->header('Content-Type', 'text/plain');
         }
 
         //세션 종료 완료 API
@@ -599,8 +608,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $user= auth()->user();
             $username = $user->username;
             $date = Carbon::now();
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data= [
-                'userId' => $username,
+                'userId' => $prefix . sprintf("%04d",$user->id),
                 'date' => $date
             ];
             $data = json_encode($data,true);
@@ -665,6 +675,182 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
             }
             return trim($response, "\r\n");
+        }
+
+        public static function processGameRound($frompoint=-1, $checkduplicate=false)
+        {
+            $timepoint = 0;
+            if ($frompoint == -1)
+            {
+                $tpoint = \VanguardLTE\Settings::where('key', self::HOLDEM_PROVIDER . 'timepoint')->first();
+                if ($tpoint)
+                {
+                    $timepoint = $tpoint->value;
+                }
+            }
+            else
+            {
+                $timepoint = $frompoint;
+            }
+
+            $count = 0;
+            $data = null;
+            $newtimepoint = $timepoint;
+            $totalCount = 0;
+            $data = HOLDEMController::gamerounds($timepoint);
+            if ($data == null)
+            {
+                if ($frompoint == -1)
+                {
+
+                    if ($tpoint)
+                    {
+                        $tpoint->update(['value' => $newtimepoint]);
+                    }
+                    else
+                    {
+                        \VanguardLTE\Settings::create(['key' => self::HOLDEM_PROVIDER .'timepoint', 'value' => $newtimepoint]);
+                    }
+                }
+
+                return [0,0];
+            }
+            $invalidRounds = [];
+            if (isset($data))
+            {
+                foreach ($data as $round)
+                {
+                    // if ($round['txn_type'] != 'CREDIT')
+                    // {
+                    //     continue;
+                    // }
+
+                    $gameObj = self::getGameObj($round['gameCode']);
+                    
+                    if (!$gameObj)
+                    {
+                        Log::error('HOLDEM Game could not found : '. $round['gameCode']);
+                            continue;
+                    }
+                    $bet = $round['bet'];
+                    $win = $round['win'];
+                    $balance = $round['balance'];
+                    
+                    $time = $round['date'];
+
+                    $userid = intval(preg_replace('/'. self::HOLDEM_PROVIDER .'(\d+)/', '$1', $round['userId'])) ;
+                    if ($userid == 0)
+                    {
+                        $userid = intval(preg_replace('/'. self::HOLDEM_PROVIDER .'(\d+)/', '$1', $round['userId'])) ;
+                        continue;
+                    }
+
+                    $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+                    $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
+
+                    // if ($checkduplicate)
+                    // {
+                        $checkGameStat = \VanguardLTE\StatGame::where([
+                            'user_id' => $userid, 
+                            'bet' => $bet, 
+                            'win' => $win, 
+                            'date_time' => $time,
+                            'roundid' => $round['providerCode'] . '#' . $round['gameCode'] . '#' . $round['roundId'],
+                        ])->first();
+                        if ($checkGameStat)
+                        {
+                            continue;
+                        }
+                    // }
+                    $gamename = $gameObj['name'] . '_holdem';
+                   
+                    \VanguardLTE\StatGame::create([
+                        'user_id' => $userid, 
+                        'balance' => $balance, 
+                        'bet' => $bet, 
+                        'win' => $win, 
+                        'game' => $gamename, 
+                        'type' => 'card',
+                        'percent' => 0, 
+                        'percent_jps' => 0, 
+                        'percent_jpg' => 0, 
+                        'profit' => 0, 
+                        'denomination' => 0, 
+                        'date_time' => $time,
+                        'shop_id' => $shop?$shop->shop_id:-1,
+                        'category_id' => $category?$category->original_id:0,
+                        'game_id' =>  $gameObj['gamecode'],
+                        // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
+                        'roundid' => $round['providerCode'] . '#' . $round['gameCode'] . '#' . $round['roundId'],
+                    ]);
+                    $count = $count + 1;
+                }
+            }
+            if($data['lastWagerId'] > -1){
+                $timepoint = $data['lastWagerId'] + 1;
+            }
+
+            if ($frompoint == -1)
+            {
+
+                if ($tpoint)
+                {
+                    $tpoint->update(['value' => $timepoint]);
+                }
+                else
+                {
+                    \VanguardLTE\Settings::create(['key' => self::HOLDEM_PROVIDER .'timepoint', 'value' => $timepoint]);
+                }
+            }
+           
+            return [$count, $timepoint];
+        }
+
+
+        public static function gamerounds($lastid)
+        {
+            $date = Carbon::now();
+            $providerCode = '0101';
+            $op = config('app.holdem_opcode');
+            //////////////////////////////////
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
+            $data = [
+                'walletType' => 'board',
+                'listIndex' => $lastid,
+                'date' => $date
+            ];
+            $data = json_encode($data,true);
+            $baseData = base64_encode($data);
+            $gameRoundHash = HOLDEMController::generateHash($data);
+            
+
+            $params = [
+                'opCode' => $op,
+                'hash' => $gameRoundHash,
+                'data' => $baseData
+            ];
+            
+            $url = config('app.holdem_api') . '/history/DataFeeds/gamerounds';
+            try
+            {
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('Holdem GetGameRounds Request Response Failed ');
+                    return [];
+                }
+                $data = $response->json();
+                if($data['error'] == 0){
+                    return $data['roundList'];
+                }else{
+                    Log::error('Holdem GetGameRounds Request Response Error ');
+                    return [];
+                }
+            }catch(\Exception $ex){
+                Log::error('Holdem MakeGameLink Request :  Excpetion. exception= ' . $ex->getMessage());
+                Log::error('Holdem MakeGameLink Request :  Excpetion. PARAMS= ' . json_encode($params));
+            }
+            return [];
         }
     }
 }

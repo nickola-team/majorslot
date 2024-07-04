@@ -32,7 +32,8 @@ class GameLaunchCommand extends Command
         'HONOR',
         'GOLD',
         'BABYLON',
-        'KTEN'
+        'KTEN',
+        'HOLDEM'
     ];
 
     /**
