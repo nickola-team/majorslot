@@ -713,7 +713,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $count = 0;
             $data = null;
             $newtimepoint = $timepoint;
-            $totalCount = 0;
+            $totalCount = 0;      
             $data = HOLDEMController::gamerounds($timepoint);
             if ($data == null)
             {
@@ -827,10 +827,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function gamerounds($lastid)
         {
             $date = Carbon::now();
-            $providerCode = '0101';
             $op = config('app.holdem_opcode');
-            //////////////////////////////////
-            $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
                 'walletType' => 'board',
                 'listIndex' => $lastid,
@@ -868,6 +865,44 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('Holdem MakeGameLink Request :  Excpetion. PARAMS= ' . json_encode($params));
             }
             return null;
+        }
+
+        public static function getAgentBalance(){
+            $date = Carbon::now();
+            $op = config('app.holdem_opcode');
+            $data = [
+                'date' => $date
+            ];
+            $data = json_encode($data,true);
+            $baseData = base64_encode($data);
+            $agentBalanceHash = HOLDEMController::generateHash($data);
+
+            $params = [
+                'opCode' => $op,
+                'hash' => $agentBalanceHash,
+                'data' => $baseData
+            ];
+
+            $url = config('app.holdem_api') . '/operator/balance/current';
+
+            try{
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('Holdem GetAgentBalance Request Response Failed ');
+                    return [];
+                }
+                $data = $response->json();
+                if($data['error'] == 0){
+                    return $data;   //data는 balanceList[], error,description형식
+                }else{
+                    Log::error('Holdem GetAgentBalance Request Response Error ');
+                    return null;
+                }
+            }catch(\Exception $ex){
+                Log::error('Holdem GetAgentBalance Request :  Excpetion. exception= ' . $ex->getMessage());
+                Log::error('Holdem GetAgentBalance Request :  Excpetion. PARAMS= ' . json_encode($params));
+            }
         }
     }
 }
