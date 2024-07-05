@@ -851,7 +851,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$response->ok())
                 {
                     Log::error('Holdem GetGameRounds Request Response Failed ');
-                    return [];
+                    return null;
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
@@ -890,7 +890,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$response->ok())
                 {
                     Log::error('Holdem GetAgentBalance Request Response Failed ');
-                    return [];
+                    return null;
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
