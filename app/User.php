@@ -45,6 +45,7 @@ namespace VanguardLTE
             'pball_single_percent', 
             'pball_comb_percent',
             'sports_deal_percent',
+            'card_deal_percent',
             'deal_balance', 
             'deal_percent',
             'table_deal_percent',

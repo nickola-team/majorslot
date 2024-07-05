@@ -27,12 +27,12 @@ class GameLaunchCommand extends Command
     protected $description = 'Command description';
 
     const GAME_PROVIDERS = [
-        'XMX',
-        'TAISHAN',
-        'HONOR',
-        'GOLD',
-        'BABYLON',
-        'KTEN',
+        // 'XMX',
+        // 'TAISHAN',
+        // 'HONOR',
+        // 'GOLD',
+        // 'BABYLON',
+        // 'KTEN',
         'HOLDEM'
     ];
 

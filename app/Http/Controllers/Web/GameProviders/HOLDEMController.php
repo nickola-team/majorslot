@@ -803,7 +803,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $count = $count + 1;
                 }
             }
-            if($data['listEndIndex'] > -1){
+            if(isset($data['listEndIndex']) && $data['listEndIndex'] > -1){
                 $timepoint = $data['listEndIndex']; // 다시 확인 +1;
             }
 
@@ -847,7 +847,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => $baseData
             ];
             
-            $url = config('app.holdem_api') . '/history/getPlayedGameRounds';
+            $url = config('app.holdem_api') . '/history/DataFeeds/gamerounds';
             try
             {
                 $response = Http::get($url, $params);
