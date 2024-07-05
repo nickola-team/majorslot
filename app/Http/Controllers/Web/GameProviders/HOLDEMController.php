@@ -118,7 +118,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $prefix = HOLDEMController::HOLDEM_PROVIDER;
             $data = [
                 'userId' => $prefix . sprintf("%04d",$user->id),
-                'nickname' => $prefix . sprintf("%04d",$user->id),                
+                'nickname' => $user->username,                
                 'date' => $date
             ];
             $data = json_encode($data,true);
