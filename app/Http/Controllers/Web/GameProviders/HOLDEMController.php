@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
     {
         const HOLDEM_GAME_IDENTITY = [
             //==== holdem ====
-            'card' => ['thirdname' =>'WildGames','type' => 'card']
+            'holdem-card' => ['thirdname' =>'WildGames','type' => 'card']
         ];
         const HOLDEM_PROVIDER = 'holdem';
 
