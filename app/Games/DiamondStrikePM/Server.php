@@ -99,7 +99,7 @@ namespace VanguardLTE\Games\DiamondStrikePM
                 }
                 else
                 {
-                    $bet = '100.00';
+                    $bet = '60.00';
                 }
                 $currentReelSet = 0;
                 $spinType = 's';

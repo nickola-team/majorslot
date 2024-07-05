@@ -101,7 +101,7 @@ namespace VanguardLTE\Games\Fire88PM
                 }
                 else
                 {
-                    $bet = '30.00';
+                    $bet = '150.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));

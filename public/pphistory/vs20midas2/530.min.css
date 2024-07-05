@@ -1,0 +1,87 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 55px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20midas2/bg.png) 1x, url(./images/vs20midas2/bg@2x.png) 2x);
+    width: 313px;
+    height: 175px;
+    margin: -11px -19px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs20midas2/bgFs.png) 1x, url(./images/vs20midas2/bgFs@2x.png) 2x)
+}
+
+.Spin {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row-reverse;
+    padding-left: 15px
+}
+
+.Spin .Multiplier {
+    width: 52px;
+    height: 130px;
+    margin-left: 20px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .Multiplier .Image__Children {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start
+}
+
+.Spin .Multiplier__Value {
+    width: 30px;
+    text-align: center;
+    margin: 12px 0 0 7px
+}
+
+.Carousel__Controls {
+    bottom: -30px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

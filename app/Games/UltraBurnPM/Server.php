@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\UltraBurnPM
                 }
                 else
                 {
-                    $bet = '250.00';
+                    $bet = '200.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;

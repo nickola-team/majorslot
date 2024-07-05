@@ -256,6 +256,13 @@ return [
     'checkadmip' => env('CHECKADMIP', false),
 
 
+    /*
+    Holdem API
+    */
+    'holdem_api' => env('HOLDEM_API', ''),
+    'holdem_opcode' => env('HOLDEM_OP', ''),
+    'holdem_opkey' => env('HOLDEM_KEY', ''),
+
 
     /*
     |--------------------------------------------------------------------------
