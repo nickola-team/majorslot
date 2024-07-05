@@ -3,10 +3,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
 
     use Carbon\Carbon;
-    use DateTimeZone;
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Facades\Log;
-    use DateTime;
     class HOLDEMController extends \VanguardLTE\Http\Controllers\Controller
     {
         const HOLDEM_GAME_IDENTITY = [
@@ -890,19 +888,26 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if (!$response->ok())
                 {
                     Log::error('Holdem GetAgentBalance Request Response Failed ');
-                    return null;
+                    return -1;
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
-                    return $data;   //data는 balanceList[], error,description형식
+                    if(isset($data['balanceList'])){
+                        for($k = 0; $k < count($data['balanceList']); $k++){
+                            if($data['balanceList'][$k]['walletType'] == 'board'){
+                                return intval($data['balanceList'][$k]['balance']);
+                            }
+                        }
+                    }
                 }else{
                     Log::error('Holdem GetAgentBalance Request Response Error ');
-                    return null;
+                    return -1;
                 }
             }catch(\Exception $ex){
                 Log::error('Holdem GetAgentBalance Request :  Excpetion. exception= ' . $ex->getMessage());
                 Log::error('Holdem GetAgentBalance Request :  Excpetion. PARAMS= ' . json_encode($params));
             }
+            return -1;
         }
     }
 }
