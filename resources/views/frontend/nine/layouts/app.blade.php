@@ -132,7 +132,7 @@
       @include('frontend.nine.modals.casino')
       @include('frontend.nine.modals.slot')
       @include('frontend.nine.modals.minis')
-      
+      @include('frontend.nine.modals.holdem')
     @endif
     @foreach ($noticelist as $ntc)
       @if ($ntc->popup == 'popup')
