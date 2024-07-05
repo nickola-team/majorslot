@@ -139,9 +139,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     if($data['error'] == 0){
                         return $data['playerId'];
                     }else{
+                        Log::error('Holdem: CreateUser result failed. ' . ($data==null?'null':json_encode($data)));
                         return -1;
                     }
                 }else{
+                    Log::error('Holdem: CreateUser result failed. ===body==' . $response->body());
                     return -1;
                 }                
             }
@@ -185,11 +187,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ];
             try{
                 $response = Http::get($url, $params);
-                // if (!$response->ok())
-                // {
-                //     Log::error('Holdem TransferMoney Request :  Failed ');
-                //     return null;
-                // }
+                if (!$response->ok())
+                {
+                    Log::error('Holdem TransferMoney Request :  ===body==' . $response->body());
+                    return null;
+                }
                 $data = $response->json();
                 if($data['error'] == 0){
                     $responseValue = [
@@ -200,6 +202,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $responseValue = json_encode($responseValue);
                     return $responseValue;
                 }else{
+                    Log::error('Holdem: TransferMoney result failed. ' . ($data==null?'null':json_encode($data)));
                     return null;
                 }
             }catch(\Exception $ex){
@@ -234,7 +237,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('Holdem ConfirmMoney Request :  Failed ');
+                    Log::error('Holdem ConfirmMoney Request :  Failed  ===body==' . $response->body());
                     return -1;
                 }
                 $data = $response->json();
@@ -243,6 +246,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $user->sessiondata()['safeAmount'] = $data['balanceList'][0]['safeBalance'];
                     $user->save();
                     return $balance;
+                }else{
+                    Log::error('Holdem: ConfirmMoney result failed. ' . ($data==null?'null':json_encode($data)));
+                    return -1;
                 }
             }catch(\Exception $ex){
                 Log::error('Holdem ConfirmMoney Request :  Excpetion. exception= ' . $ex->getMessage());
@@ -265,6 +271,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $moneyTrans = HoldemController::transferMoney($user->id, '-');
                 if ($moneyTrans==null)
                 {
+                    Log::error('Holdem withdrawAll Result :  Failed');
                     return ['error'=>true, 'amount'=>0, 'msg'=>'data not ok'];
                 }
             }
@@ -306,7 +313,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $game = HOLDEMController::getGameObj($gamecode);
             if ($game == null)
             {
-                Log::error('GOLDMakeLink : Game not find  ' . $gamecode);
+                Log::error('HoldemMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
             $balance = HOLDEMController::getUserBalance($game['href'], $user);
@@ -314,7 +321,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 //Create User
                 $alreadyUser = HoldemController::createPlayer($userid);
                 if($alreadyUser == -1){
-                    Log::error('HoldemCreateUser : Does not find user ');
+                    Log::error('HoldemMakeLink : Does not find user ');
                     return null;
                 }
     
@@ -325,6 +332,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = HOLDEMController::withdrawAll($game['href'], $user);
                 if ($data['error'])
                 {
+                    Log::error('Holdem withdrawAll Result :  Failed msg=' . $data['msg']);
                     return null;
                 }
                 //Add balance
@@ -384,7 +392,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('Holdem MakeGameLink Request Response Failed ');
+                    Log::error('Holdem MakeGameLink Request Response Failed  ===body==' . $response->body());
                     return null;
                 }
                 $data = $response->json();
@@ -845,19 +853,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('Holdem GetGameRounds Request Response Failed ');
+                    Log::error('Holdem GetGameRounds Request Response Failed  ===body==' . $response->body());
                     return null;
                 }
                 $data = $response->json();
                 if($data['error'] == 0){
                     return $data;
                 }else{
-                    Log::error('Holdem GetGameRounds Request Response Error ');
+                    Log::error('Holdem GetGameRounds Request Response Error =>' . ($data==null?'null':json_encode($data)));
                     return null;
                 }
             }catch(\Exception $ex){
-                Log::error('Holdem MakeGameLink Request :  Excpetion. exception= ' . $ex->getMessage());
-                Log::error('Holdem MakeGameLink Request :  Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('Holdem GetGameRounds Request :  Excpetion. exception= ' . $ex->getMessage());
+                Log::error('Holdem GetGameRounds Request :  Excpetion. PARAMS= ' . json_encode($params));
             }
             return null;
         }
@@ -884,7 +892,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('Holdem GetAgentBalance Request Response Failed ');
+                    Log::error('Holdem GetAgentBalance Request Response Failed ===body==' . $response->body());
                     return -1;
                 }
                 $data = $response->json();
@@ -897,7 +905,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         }
                     }
                 }else{
-                    Log::error('Holdem GetAgentBalance Request Response Error ');
+                    Log::error('Holdem GetAgentBalance Request Response Error =>' . ($data==null?'null':json_encode($data)));
                     return -1;
                 }
             }catch(\Exception $ex){
@@ -930,7 +938,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $response = Http::get($url, $params);
                 if (!$response->ok())
                 {
-                    Log::error('Holdem Terminate Request Response Failed ');
+                    Log::error('Holdem Terminate Request Response Failed ===body==' . $response->body());
                     return ['error' => '-1', 'description' => '제공사응답 오류'];
                 }
                 $data = $response->json();
@@ -938,7 +946,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $data = $response->json();
                     return $data;
                 }else{
-                    Log::error('Holdem Terminate Request Response Error ');
+                    Log::error('Holdem Terminate Request Response Error =>' . ($data==null?'null':json_encode($data)));
                     return ['error' => '-1', 'description' => '제공사응답 오류'];
                 }
             }catch(\Exception $ex){
