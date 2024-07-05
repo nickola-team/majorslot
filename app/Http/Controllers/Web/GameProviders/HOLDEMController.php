@@ -847,7 +847,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'data' => $baseData
             ];
             
-            $url = config('app.holdem_api') . '/history/DataFeeds/gamerounds';
+            $url = config('app.holdem_api') . '/history/getPlayedGameRounds';
             try
             {
                 $response = Http::get($url, $params);
