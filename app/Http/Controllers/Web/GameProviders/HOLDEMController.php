@@ -909,6 +909,47 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return -1;
         }
+
+
+        public static function terminate($userId){
+            $date = Carbon::now();
+            $op = config('app.holdem_opcode');
+            $prefix = HOLDEMController::HOLDEM_PROVIDER;
+            $data= [
+                'userId' => $prefix . sprintf("%04d",$userId),
+                'date' => $date
+            ];
+            $data = json_encode($data,true);
+            $baseData = base64_encode($data);
+            $agentBalanceHash = HOLDEMController::generateHash($data);
+
+            $params = [
+                'opCode' => $op,
+                'hash' => $agentBalanceHash,
+                'data' => $baseData
+            ];
+            $url = config('app.holdem_api') . '/game/session/terminate';
+            try{
+                $response = Http::get($url, $params);
+                if (!$response->ok())
+                {
+                    Log::error('Holdem Terminate Request Response Failed ');
+                    return ['error' => '-1', 'description' => '제공사응답 오류'];
+                }
+                $data = $response->json();
+                if($data['error'] == 0){
+                    $data = $response->json();
+                    return $data;
+                }else{
+                    Log::error('Holdem Terminate Request Response Error ');
+                    return ['error' => '-1', 'description' => '제공사응답 오류'];
+                }
+            }catch(\Exception $ex){
+                Log::error('Holdem Terminate Request :  Excpetion. exception= ' . $ex->getMessage());
+                Log::error('Holdem Terminate Request :  Excpetion. PARAMS= ' . json_encode($params));
+            }
+            return ['error' => '-1', 'description' => '제공사응답 오류'];
+        }
     }
 }
 

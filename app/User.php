@@ -1424,6 +1424,10 @@ namespace VanguardLTE
                 $ct = \VanguardLTE\Category::where('href', $lockUser->playing_game)->first();
                 if ($ct != null && $ct->provider != null)
                 {
+                    if($ct->provider == 'holdem')
+                    {
+                        $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::terminate', $this->id);    
+                    }
                     $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $lockUser->playing_game, $this);
                     if ($data['error'] == false){
                         Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider . ' | reason = ' . $reason);
