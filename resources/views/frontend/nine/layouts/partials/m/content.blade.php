@@ -63,11 +63,28 @@
     <!-- <div class="game-buttons ng-scope poker" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">IDN 포커</span></div></div><div class="game-buttons ng-scope slot" ng-click="displayGames(mainButton.category, mainButton.title)"><div class="title-container"><span ng-bind="mainButton.title" class="ng-binding">슬롯</span></div></div> -->
       
     <div class="game-buttons ng-scope comming_m" onclick=
-        @auth 
-            "swal('준비중입니다.')"
-        @else
-            "navClick('login-popup')"
-        @endif>
+    @auth
+                  {{$isCard = false}}
+                    @foreach($categories AS $index=>$category)
+                      @if ($category->type =='card')
+                        @if ($category->view == 0)
+                            "swal('지원하지 않는 게임입니다.');"
+                        @elseif ($category->status == 0)
+                            "swal('점검중입니다');"
+                        @else
+                        "holdemOpen('holdem-popup')" 
+                        @endif
+                        {{$isCard = true}}
+                        @break
+                      @endif
+                    @endforeach
+                    @if(!$isCard)
+                      "swal('지원하지 않는 게임입니다.');"
+                    @endif
+                                     
+                  @else
+                    "navClick('login-popup')"
+                  @endif>
         <!-- <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">와일드 홀덤</span>
         </div> -->

@@ -77,11 +77,28 @@
     <span ng-bind="mainButton.subTitle" class="ng-binding">최고의 스포츠게임에서 행운에 도전하세요.</span>
 </div> -->
 <div class="game-buttons click-disable ng-scope comming" onclick=
-                @auth
-                "swal('준비중입니다.')"
+@auth
+                  {{$isCard = false}}
+                    @foreach($categories AS $index=>$category)
+                      @if ($category->type =='card')
+                        @if ($category->view == 0)
+                            "swal('지원하지 않는 게임입니다.');"
+                        @elseif ($category->status == 0)
+                            "swal('점검중입니다');"
+                        @else
+                        "holdemOpen('holdem-popup')" 
+                        @endif
+                        {{$isCard = true}}
+                        @break
+                      @endif
+                    @endforeach
+                    @if(!$isCard)
+                      "swal('지원하지 않는 게임입니다.');"
+                    @endif
+                                     
                   @else
                     "navClick('login-popup')"
-                  @endif >
+                  @endif>
     <!-- <span ng-bind="mainButton.title" class="ng-binding">와일드 홀덤</span>
     <span ng-bind="mainButton.subTitle" class="ng-binding">와일드 홀덤 기대해 주세요.</span> -->
 </div>
