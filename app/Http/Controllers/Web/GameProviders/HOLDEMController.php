@@ -338,9 +338,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }    
                 }
             }
-            
-            
-
             return '/followgame/holdem/'.$gamecode;
         }
 
