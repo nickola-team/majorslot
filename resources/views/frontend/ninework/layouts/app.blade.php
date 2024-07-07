@@ -70,7 +70,7 @@
     <script type="text/javascript" src="/frontend/boss/V/jquery-jOdometer.min.js"></script>
     <!--  -->
     <!-- <script language="javascript" type="text/javascript" src="/frontend/boss/V/socket.io.js"></script> -->
-    <script language="javascript" type="text/javascript" src="/frontend/boss/V/customFunc.js?version=1"></script>
+    <script language="javascript" type="text/javascript" src="/frontend/boss/V/customFunc.js"></script>
     <style>
       .ng-hide {
         display: none !important;
@@ -89,7 +89,7 @@
     <div class="wrapper">
       @if( $detect->isMobile() || $detect->isTablet() ) 
       @else
-      @include('frontend.nine.layouts.partials.header')
+      @include('frontend.ninework.layouts.partials.header')
       @endif
       
       <div ng-view="" class="ng-scope">
@@ -104,7 +104,7 @@
             @include('frontend.nine.layouts.partials.linenotice')
 
             @if( $detect->isMobile() || $detect->isTablet() ) 
-              @include('frontend.nine.layouts.partials.m.content')
+              @include('frontend.ninework.layouts.partials.m.content')
             @else
             <div class="main-container games">
                 <div class="content">
@@ -132,7 +132,7 @@
       @include('frontend.nine.modals.casino')
       @include('frontend.nine.modals.slot')
       @include('frontend.nine.modals.minis')
-      @include('frontend.nine.modals.holdem')
+      @include('frontend.ninework.modals.holdem')
     @endif
     @foreach ($noticelist as $ntc)
       @if ($ntc->popup == 'popup')

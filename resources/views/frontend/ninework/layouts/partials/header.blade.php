@@ -135,24 +135,7 @@
                   </li> -->
                   <li onclick=
                   @auth
-                  {{$isCard = false}}
-                    @foreach($categories AS $index=>$category)
-                      @if ($category->type =='card')
-                        @if ($category->view == 0)
-                            "swal('지원하지 않는 게임입니다.');"
-                        @elseif ($category->status == 0)
-                            "swal('점검중입니다');"
-                        @else
-                        "holdemOpen('holdem-popup')" 
-                        @endif
-                        {{$isCard = true}}
-                        @break
-                      @endif
-                    @endforeach
-                    @if(!$isCard)
-                      "swal('지원하지 않는 게임입니다.');"
-                    @endif
-                                     
+                  "holdemOpen('holdem-popup')"                    
                   @else
                     "navClick('login-popup')"
                   @endif
@@ -242,3 +225,50 @@
         </div>
       </navigation-page>
 
+<script>
+  function holdemOpen(id){
+    $("#" + id).removeClass('ng-hide');
+
+      $.ajax({
+      type: "POST",
+      url: "/api/getgamelist",
+      data: {category : 'card'},
+      cache: false,
+      async: true,
+      success: function (data, status) {
+        if (data.error) {
+          alert(data.msg);
+          return;
+        }
+        if (data.games.length > 0) {
+          var htmldoc = ``;
+          for (i=0;i<data.games.length;i++)
+          {
+            if (data.games[i].provider)
+            {
+              htmldoc += `<a href="#" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');" class="hg-btn"><div class="img-cont"><img class="main-img" src="${data.games[i].icon}" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+            }
+            else
+            {
+              htmldoc += `<a href="#" onclick="startGameByProvider(null, '${data.games[i].name}');"  class="hg-btn"><div class="img-cont"><img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+            }
+                      htmldoc += `<div class="overlay">
+                              <p><i class="glyphicon glyphicon-log-in"></i> 게임하기</p>
+                          </div></a>`;
+          }
+                  
+          $('#holdemprovider-title').html('와일드 홀덤');
+          $('#holdemgame-list-area').html(htmldoc);
+        }
+        else
+        {
+          alert('게임이 없습니다');
+        }
+        },
+            complete: function() {
+              $('.loading').hide();
+              navClick('holdem-popup');
+          }
+    });
+  }
+</script>

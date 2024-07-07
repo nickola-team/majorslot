@@ -117,6 +117,52 @@ function casinoGameStart(category){
 	   });
  }
 
+ function holdemOpen(id){
+    $("#" + id).removeClass('ng-hide');
+
+      $.ajax({
+      type: "POST",
+      url: "/api/getgamelist",
+      data: {category : 'holdem-card'},
+      cache: false,
+      async: true,
+      success: function (data, status) {
+        if (data.error) {
+          alert(data.msg);
+          return;
+        }
+        if (data.games.length > 0) {
+          var htmldoc = ``;
+          for (i=0;i<data.games.length;i++)
+          {
+            if (data.games[i].provider)
+            {
+              htmldoc += `<a href="#" onclick="startGameByProvider('${data.games[i].provider}', '${data.games[i].gamecode}');" class="hg-btn"><div class="img-cont"><img class="main-img" src="${data.games[i].icon}" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+            }
+            else
+            {
+              htmldoc += `<a href="#" onclick="startGameByProvider(null, '${data.games[i].name}');"  class="hg-btn"><div class="img-cont"><img class="main-img" src="/frontend/Default/ico/${data.games[i].name}.jpg" alt="" style="height: 135px;width: 155px;"></div><div class="foot"><p>${data.games[i].title}</p></div>`;
+            }
+                      htmldoc += `<div class="overlay">
+                              <p><i class="glyphicon glyphicon-log-in"></i> 게임하기</p>
+                          </div></a>`;
+          }
+                  
+          $('#holdemprovider-title').html('와일드 홀덤');
+          $('#holdemgame-list-area').html(htmldoc);
+        }
+        else
+        {
+          alert('게임이 없습니다');
+        }
+        },
+            complete: function() {
+              $('.loading').hide();
+              navClick('holdem-popup');
+          }
+    });
+  }
+
 function startGameByProvider(provider, gamecode,max = false) {
 	var formData = new FormData();
 	formData.append("provider", provider);
