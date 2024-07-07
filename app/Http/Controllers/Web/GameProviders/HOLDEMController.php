@@ -286,7 +286,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function getgamelink($gamecode)
         {
-            $gamelist = HOLDEMController::getgamelist('card');
+            $gamelist = HOLDEMController::getgamelist('holdem-card');
             if (count($gamelist) > 0)
             {
                 foreach ($gamelist as $g)
