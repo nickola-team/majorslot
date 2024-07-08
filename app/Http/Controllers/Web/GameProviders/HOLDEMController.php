@@ -76,7 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $data = $response->json();
                     foreach ($data['gameList'] as $game)
                     {
-                        if (strtolower($game['gameSort']) == $type && strtolower($game['gameType']) == 'holdem') 
+                        if (strtolower($game['gameSort']) == $type && strtolower($game['gameType']) == 'holdem' && strpos(strtolower($game['gameCode']), 'wild_webholdem') !== false) 
                         {
                             $view = 1;
                             array_push($gameList, [
@@ -155,7 +155,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return -1;
         }
 
-        public static function transferMoney($userId,$transferMethod){
+        public static function transferMoney($userId, $amount,$transferMethod){
             $date = Carbon::now();
             $user = \VanguardLTE\User::where(['id'=> $userId])->first();
             $safeAmount = 0;
@@ -170,7 +170,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'userId' => strtoupper($prefix . sprintf("%04d",$user->id)),
                 'referenceId' => $user->generateCode(24),  //랜덤 문자열
                 'walletType' => 'board',
-                'amount' => $transferMethod . ($user->balance - $safeAmount), // 다시 확인
+                'amount' => $transferMethod . ($amount - $safeAmount), // 다시 확인
                 'safeAmount' => $safeAmount,          
                 'date' => $date
             ];
@@ -268,7 +268,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($balance > 0)
             {
-                $moneyTrans = HoldemController::transferMoney($user->id, '-');
+                $moneyTrans = HoldemController::transferMoney($user->id, $balance, '-');
                 if ($moneyTrans==null)
                 {
                     Log::error('Holdem withdrawAll Result :  Failed');
@@ -286,7 +286,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function getgamelink($gamecode)
         {
-            $gamelist = HOLDEMController::getgamelist('card');
+            $gamelist = HOLDEMController::getgamelist('holdem-card');
             if (count($gamelist) > 0)
             {
                 foreach ($gamelist as $g)
@@ -339,7 +339,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
                 if ($user->balance > 0)
                 {
-                    $moneyTrans = HoldemController::transferMoney($userid,'+');    
+                    $moneyTrans = HoldemController::transferMoney($userid, $user->balance, '+');    
                     if($moneyTrans == null){
                         Log::error('HoldemTransferMoney : Can not Transfer money ' . $userid);
                         return null;
