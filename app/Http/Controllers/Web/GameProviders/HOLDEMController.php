@@ -76,7 +76,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $data = $response->json();
                     foreach ($data['gameList'] as $game)
                     {
-                        if (strtolower($game['gameSort']) == $type && strtolower($game['gameType']) == 'holdem') 
+                        if (strtolower($game['gameSort']) == $type && strtolower($game['gameType']) == 'holdem' && strpos(strtolower($game['gameCode']), 'wild_webholdem') !== false) 
                         {
                             $view = 1;
                             array_push($gameList, [
