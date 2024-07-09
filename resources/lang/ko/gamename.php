@@ -1245,6 +1245,8 @@ return [
         "Devilicious" => "데빌리셔스",
         "BigBassMissionFishin" => "빅 배스 미션 피쉰",
         "BuffaloKingUntamedMegaways" => "버팔로 킹 언테임드",
+        "HandofMidas2" => "핸드 오브 마이다스",
+        "SweetKingdom" => "스위트 킹덤",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
