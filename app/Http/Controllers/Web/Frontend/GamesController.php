@@ -637,6 +637,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "clock"=>"0",
                 "mgckey"=>"AUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467",
                 "gameService"=> $url . "/game/". $game->name . "/gameService",
+                "brandRequirements" => "COINS_V2",
                 "gameVerificationURL"=>"/gs2c/session/verify/" . $game->label,
                 "RELOAD_BALANCE"=>"/gs2c/". $game->name . "/reloadBalance.do",
                 "currencyOriginal"=>"KRW",
