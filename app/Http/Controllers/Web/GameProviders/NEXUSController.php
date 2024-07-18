@@ -429,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     // }
                     if($round['_id'] == $lastObjectId)
                     {
-                        $timepoint = strtotime($round['createdAt']) + 1 -  - 9 * 60 * 60;
+                        $timepoint = strtotime($round['createdAt']) + 1 - 9 * 60 * 60;
                     }
                     $gameObj = self::getGameObj($round['gameId']);
                     
@@ -564,7 +564,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         if($transaction['detail'])
                         {
-                            $betdetails = json_decode($transaction['detail'], true);
+                            $betdetails = $transaction['detail'];
                         }
                         else
                         {
