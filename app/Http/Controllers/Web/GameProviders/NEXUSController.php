@@ -232,6 +232,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $url = $data['url'];
             }
+            else
+            {
+                Log::error('NEXUSMakeLink : geturl, msg=  ' . $data['msg']);
+            }
 
             return $url;
         }
@@ -292,6 +296,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = NEXUSController::sendRequest('/register', $params);
                 if ($data==null || $data['code'] != 0)
                 {
+                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
                     return null;
                 }
             }
