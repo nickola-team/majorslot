@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GodOfWarCQ9
+namespace VanguardLTE\Games\GodofWarCQ9
 {
 
     use Dotenv\Loader\Value;
