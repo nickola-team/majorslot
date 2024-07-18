@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GodOfWarMCQ9
+namespace VanguardLTE\Games\AllStarTeamCQ9
 {
     class SlotSettings
     {
@@ -736,7 +736,7 @@ namespace VanguardLTE\Games\GodOfWarMCQ9
         {
             //$winType = 'bonus';
             // if($winType == 'bonus'){
-                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameGodOfWarStack::where('id', 37520)->first(); //619504, 173071
+                    // $stack = \VanguardLTE\CQ9GameStackModel\CQ9GameAllStarTeamStack::where('id', 37520)->first(); //619504, 173071
                     // return json_decode($stack->spin_stack, true);      
             // }
             if($selId > -1){
@@ -779,11 +779,11 @@ namespace VanguardLTE\Games\GodOfWarMCQ9
                 ])->pluck('freestack_id');
             while(true){
                 if($selId > -1){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGodOfWarStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameAllStarTeamStack::where(['spin_type' => 1, 'free_count' => $selId])->whereNotIn('id', $existIds);
                 }else if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGodOfWarStack::where(['spin_type' => 2,'pur_level' => $pur])->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameAllStarTeamStack::where(['spin_type' => 2,'pur_level' => $pur])->whereNotIn('id', $existIds);
                 }else{
-                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameGodOfWarStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\CQ9GameStackModel\CQ9GameAllStarTeamStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
 
                 $index =  mt_rand(0, 48000);

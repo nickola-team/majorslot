@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\GodOfWarMCQ9
+namespace VanguardLTE\Games\GodOfWarCQ9
 {
     class SlotSettings
     {
