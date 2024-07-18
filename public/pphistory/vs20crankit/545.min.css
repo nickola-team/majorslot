@@ -1,0 +1,61 @@
+:root {
+    --slot-item-height: 60px;
+    --slot-item-width: 50px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1,
+.LinesSlot .ReelsSlot__Item--2 {
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.MoneyScatter__Label {
+    font-size: 14px;
+    filter: drop-shadow(3px 5px 4px black) drop-shadow(2px -5px 4px black) drop-shadow(-8px 2px 4px black);
+    margin-bottom: 20px
+}
+
+.Frame {
+    bottom: 0;
+    left: 0;
+    background-image: -webkit-image-set(url(./images/vs20crankit/frame.png) 1x, url(./images/vs20crankit/frame@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Frame,
+.Multiplier {
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
+.Multiplier {
+    width: 25px;
+    height: 25px;
+    background-image: -webkit-image-set(url(./images/vs20crankit/mult.png) 1x, url(./images/vs20crankit/mult@2x.png) 2x);
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
