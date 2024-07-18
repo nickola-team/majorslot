@@ -429,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     // }
                     if($round['_id'] == $lastObjectId)
                     {
-                        $timepoint = strtotime($round['utcCreatedAt']) + 1;
+                        $timepoint = strtotime($round['createdAt']) + 1 -  - 9 * 60 * 60;
                     }
                     $gameObj = self::getGameObj($round['gameId']);
                     
@@ -481,9 +481,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'date_time' => $time,
                             'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
                         ])->first();
-                        if ($checkGameStat && $round['type'] == 'turn_adjust')
+                        if ($checkGameStat)
                         {
-                            $checkGameStat->update(['win' => $win]);
+                            if($round['type'] == 'turn_adjust')
+                            {
+                                $checkGameStat->update(['win' => $win]);
+                            }
                             continue;
                         }
                     // }
