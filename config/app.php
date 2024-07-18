@@ -263,6 +263,13 @@ return [
     'holdem_opcode' => env('HOLDEM_OP', ''),
     'holdem_opkey' => env('HOLDEM_KEY', ''),
 
+    /*
+    Nexus API
+    */
+    'nexus_api' => env('NEXUS_API', ''),
+    'nexus_agent' => env('NEXUS_AGENT', ''),
+    'nexus_secretkey' => env('NEXUS_SECRETKEY', ''),
+
 
     /*
     |--------------------------------------------------------------------------

@@ -1,0 +1,156 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.SlotWrap__Field {
+    margin-top: 44px
+}
+
+.ReelsSlot .ReelsSlot__Reel {
+    position: relative
+}
+
+.ReelsSlot .ReelsSlot__Reel:after {
+    top: 0;
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_empty.png) 1x, url(./images/vs5magicdoor/jokers/joker_empty@2x.png) 2x);
+    height: 43px;
+    width: 42px;
+    top: -44px;
+    margin: 0 auto
+}
+
+.ReelsSlot .ReelsSlot__Reel:after,
+.ReelsSlot .ReelsSlot__Reel__Door:before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door:before {
+    top: 0;
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/reelDoorBg.png) 1x, url(./images/vs5magicdoor/reelDoorBg@2x.png) 2x);
+    height: 225px;
+    width: 45px;
+    z-index: 1
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door .ReelsSlot__ItemImg {
+    z-index: 2
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--0.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_0.png) 1x, url(./images/vs5magicdoor/jokers/joker_0@2x.png) 2x)
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--0.ReelsSlot__Reel:after,
+.ReelsSlot .ReelsSlot__Reel__Door--1.ReelsSlot__Reel:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: -44px
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--1.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_1.png) 1x, url(./images/vs5magicdoor/jokers/joker_1@2x.png) 2x)
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--2.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_2.png) 1x, url(./images/vs5magicdoor/jokers/joker_2@2x.png) 2x)
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--2.ReelsSlot__Reel:after,
+.ReelsSlot .ReelsSlot__Reel__Door--3.ReelsSlot__Reel:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: -44px
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--3.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_3.png) 1x, url(./images/vs5magicdoor/jokers/joker_3@2x.png) 2x)
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--4.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_4.png) 1x, url(./images/vs5magicdoor/jokers/joker_4@2x.png) 2x)
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--4.ReelsSlot__Reel:after,
+.ReelsSlot .ReelsSlot__Reel__Door--5.ReelsSlot__Reel:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    top: -44px
+}
+
+.ReelsSlot .ReelsSlot__Reel__Door--5.ReelsSlot__Reel:after {
+    background-image: -webkit-image-set(url(./images/vs5magicdoor/jokers/joker_5.png) 1x, url(./images/vs5magicdoor/jokers/joker_5@2x.png) 2x)
+}
+
+.Multiplier .MoneyScatter__Label {
+    z-index: 2;
+    margin-top: 5px
+}
+
+.WinLines-Group .SlotWrap__Field {
+    margin-top: 5px
+}
+
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel:before,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--0.ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--1.ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--2.ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--3.ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--4.ReelsSlot__Reel:after,
+.WinLines-Group .SlotWrap__Field .ReelsSlot__Reel__Door--5.ReelsSlot__Reel:after {
+    content: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.Action__Labels .MiniLabel__AnteBet {
+    display: none !important
+}
