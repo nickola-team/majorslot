@@ -429,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     // }
                     if($round['_id'] == $lastObjectId)
                     {
-                        $timepoint = strtotime(date('Y-m-d H:i:s',strtotime($round['utcCreatedAt']))) + 1;
+                        $timepoint = strtotime($round['utcCreatedAt']) + 1;
                     }
                     $gameObj = self::getGameObj($round['gameId']);
                     
