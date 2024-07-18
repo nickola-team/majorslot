@@ -347,6 +347,7 @@ namespace VanguardLTE\Games\_777fruityclassicbng
                     if($winType == 'bonus'){
                         $winType = 'win';
                     }
+                    
                     // $_winAvaliableMoney = 1000;
                     $isDoubleScatter = false;
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
