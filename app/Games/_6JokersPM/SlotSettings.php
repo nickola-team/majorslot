@@ -711,7 +711,7 @@ namespace VanguardLTE\Games\_6JokersPM
         public function GetReelStrips($winType, $bet, $pur)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGame6JokersStack::where('id', 4)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGame6JokersStack::where('id', 77063)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -741,10 +741,10 @@ namespace VanguardLTE\Games\_6JokersPM
                 ])->pluck('freestack_id');
             while(true){
                 $stacks = \VanguardLTE\PPGameStackModel\PPGame6JokersStack::where(['spin_type' => $spintype, 'pur_level' => $pur])->whereNotIn('id', $existIds);
-                $index = 0; //mt_rand(0, 29000);
+                $index = mt_rand(0, 75000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index =  mt_rand(0, 90000);
+                    $index =  mt_rand(0, 110000);
                 }
                 if($isLowBank == true){
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
