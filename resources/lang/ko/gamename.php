@@ -1247,6 +1247,10 @@ return [
         "BuffaloKingUntamedMegaways" => "버팔로 킹 언테임드",
         "HandofMidas2" => "핸드 오브 마이다스",
         "SweetKingdom" => "스위트 킹덤",
+        "CrankitUp" => "크랭크 잇 업",
+        "SamuraiCode" => "사무라이코드",
+        "HottoBurnMultiplier" => "핫 투 번 멀티플라이어",
+        "_6Jokers" => "6 조커즈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

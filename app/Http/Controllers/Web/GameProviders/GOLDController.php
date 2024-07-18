@@ -442,7 +442,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $gamename = $gameObj['name'] . '_gold';
                     if($round['status'] == 2)  // 취소처리된 경우
                     {
-                        $gamename = $gameObj['name'] . '_gold[C'.$ctime.']_' . $gameObj['href'];
+                        $gamename = $gameObj['name'] . '_gold[C'.$time.']_' . $gameObj['href'];
                     }
                     \VanguardLTE\StatGame::create([
                         'user_id' => $userid, 

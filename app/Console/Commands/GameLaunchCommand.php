@@ -30,7 +30,7 @@ class GameLaunchCommand extends Command
         'XMX',
         'TAISHAN',
         'HONOR',
-        'GOLD',
+        'NEXUS',
         'BABYLON',
         'KTEN',
         'HOLDEM'
