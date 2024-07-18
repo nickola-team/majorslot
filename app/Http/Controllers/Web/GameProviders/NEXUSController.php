@@ -289,7 +289,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 //새유저 창조
                 $params = [
                     'username' => $user_code,
-                    'nickname' => $user->username,
+                    'nickname' => $user_code,
                     'siteUsername' => $user_code,
                 ];
 
