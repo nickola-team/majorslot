@@ -284,12 +284,12 @@ namespace VanguardLTE\Games\JumpHigherCQ9
             $winType = $_spinSettings[0];
             $_winAvaliableMoney = $_spinSettings[1];
             
-            if($slotEvent != 'freespin'){
-                if($winType != 'none' && mt_rand(0, 100) < 40){
-                    $winType = 'none';
-                    $_winAvaliableMoney = 0;
-                }
-            }
+            // if($slotEvent != 'freespin'){
+            //     if($winType != 'none' && mt_rand(0, 100) < 40){
+            //         $winType = 'none';
+            //         $_winAvaliableMoney = 0;
+            //     }
+            // }
             
             if($slotSettings->GetGameData($slotSettings->slotId . 'FreeBet') == 1){
                 $winType = 'bonus';

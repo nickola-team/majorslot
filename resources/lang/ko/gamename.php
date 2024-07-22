@@ -1351,6 +1351,8 @@ return [
         "_3chinapots" => "3 차이나 팟스",
         "fishingbear" => "피신 베어",
         "superstickypiggy" => "슈퍼 스티키 피기",
+        "superhotchilli" => "슈퍼 핫 칠리",
+        "_777fruityclassic" => "777 후루티 클래식",
 
         // CQ9
         "Double Fly" => "더블 플라이",

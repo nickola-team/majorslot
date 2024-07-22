@@ -1,9 +1,9 @@
 <?php 
 namespace VanguardLTE\CQ9GameStackModel;
 {
-    class CQ9GameGodofWarStack extends \Illuminate\Database\Eloquent\Model
+    class CQ9GameAllStarTeamStack extends \Illuminate\Database\Eloquent\Model
     {
-        protected $table = 'cqgame_godofwar_stack';
+        protected $table = 'cqgame_allstarteam_stack';
         protected $fillable = [
             'id', 
             'game_id', 
