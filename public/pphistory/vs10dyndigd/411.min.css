@@ -1,0 +1,542 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 50px;
+    --slot-respin-width: 52px;
+    --slot-respin-height: 42px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--15,
+.LinesSlot .ReelsSlot__Item--16 {
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.WinTable {
+    position: absolute;
+    z-index: 1
+}
+
+.WinTable .WinTable__Items {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    margin-top: -6px
+}
+
+.WinTable .WinTable__Items:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/winTable/numbers.png) 1x, url(./images/vs10dyndigd/winTable/numbers@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    left: -23px;
+    right: auto;
+    width: 30px;
+    height: 160px;
+    z-index: 2
+}
+
+.WinTable .WinTable__Item {
+    height: 20px;
+    width: 60px;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.WinTable .WinTable__ItemValue {
+    width: 40px;
+    margin-right: 7px;
+    opacity: .7;
+    white-space: nowrap
+}
+
+.WinTable .WinTable__Item--active .Image__Source {
+    display: none
+}
+
+.WinTable .WinTable__Item--active .WinTable__ItemValue {
+    opacity: 1
+}
+
+div:not(.WinLines-Group)>.LinesSlot .ReelsSlot {
+    margin-left: 79px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/spinBg.png) 1x, url(./images/vs10dyndigd/spinBg@2x.png) 2x);
+    width: 358px;
+    height: 180px;
+    margin: -22px -10px;
+    background-repeat: no-repeat
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end;
+    line-height: normal
+}
+
+.Respin .MultiplierMs>.MoneyScatter__LabelWrap {
+    align-items: flex-end;
+    justify-content: space-between
+}
+
+.Respin .MultiplierMs>.MoneyScatter__LabelWrap .MoneyScatter__Money {
+    align-self: center
+}
+
+.Respin .Carousel__Slides {
+    height: calc(var(--slot-item-height)*5)
+}
+
+.Respin .Carousel__Slide--1 .ReelsSlot__Item:last-child.ReelsSlot__Item--17 {
+    visibility: hidden
+}
+
+.Respin .Carousel--Slides1 .Carousel__Slides,
+.Respin .Carousel--Slides2 .Carousel__Slides {
+    height: auto
+}
+
+.Respin .Carousel--Slides1 .Carousel__Slide--1 .ReelsSlot__Item:last-child.ReelsSlot__Item--17,
+.Respin .Carousel--Slides2 .Carousel__Slide--1 .ReelsSlot__Item:last-child.ReelsSlot__Item--17 {
+    visibility: initial
+}
+
+.Respin .ReelsSlot__Reel {
+    width: var(--slot-respin-width);
+    height: auto
+}
+
+.Respin .ReelsSlot__Reel .ReelsSlot__Item {
+    width: var(--slot-respin-width);
+    height: var(--slot-respin-height);
+    flex-basis: auto
+}
+
+.Respin .Action__Footer .WinLines__DlgLink--paylines {
+    display: none
+}
+
+.Respin .Spin {
+    display: grid;
+    grid-template-areas: "lifes .." "slot multipliers" "slot respinsWin"
+}
+
+.Respin .RespinsWin {
+    grid-area: respinsWin;
+    width: 70px;
+    height: 32px;
+    margin-top: 13px
+}
+
+.Respin .RespinsWin .Image__Children {
+    width: 60px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center
+}
+
+.Respin .RespinsWin__Title {
+    white-space: nowrap;
+    line-height: normal;
+    position: absolute;
+    bottom: 100%
+}
+
+.Respin .RespinsWin__Value {
+    white-space: nowrap;
+    line-height: normal;
+    font-size: .79rem
+}
+
+.Respin .Multiplier,
+.Respin .RespinsWin__Value {
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Respin .Multiplier {
+    z-index: 1;
+    width: 70px;
+    height: 62px;
+    align-self: flex-start;
+    margin-top: 138px;
+    grid-area: multipliers
+}
+
+.Respin .Multiplier .Image__Source {
+    z-index: 2
+}
+
+.Respin .Multiplier .Image__Children {
+    z-index: 2;
+    width: 56px;
+    height: 100%;
+    display: flex;
+    margin-top: -10px;
+    align-items: center;
+    white-space: nowrap;
+    line-height: normal;
+    flex-direction: column;
+    justify-content: space-around
+}
+
+.Respin .Multiplier__Type,
+.Respin .Multiplier__Value {
+    font-size: 14px
+}
+
+.Respin .Multiplier__Title {
+    font-size: .79rem
+}
+
+.Respin .Multiplier.Multiplier--Win {
+    position: relative
+}
+
+.Respin .Multiplier.Multiplier--Win--0:before {
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/multiplier/bombRope0.png) 1x, url(./images/vs10dyndigd/multiplier/bombRope0@2x.png) 2x);
+    height: 150px
+}
+
+.Respin .Multiplier.Multiplier--Win--0:before,
+.Respin .Multiplier.Multiplier--Win--1:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Respin .Multiplier.Multiplier--Win--1:before {
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/multiplier/bombRope1.png) 1x, url(./images/vs10dyndigd/multiplier/bombRope1@2x.png) 2x);
+    height: 118px
+}
+
+.Respin .Multiplier.Multiplier--Win--2:before {
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/multiplier/bombRope2.png) 1x, url(./images/vs10dyndigd/multiplier/bombRope2@2x.png) 2x);
+    height: 91px
+}
+
+.Respin .Multiplier.Multiplier--Win--2:before,
+.Respin .Multiplier.Multiplier--Win--3:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Respin .Multiplier.Multiplier--Win--3:before {
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/multiplier/bombRope3.png) 1x, url(./images/vs10dyndigd/multiplier/bombRope3@2x.png) 2x);
+    height: 69px
+}
+
+.Respin .Multiplier.Multiplier--Win--4:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/multiplier/bombRope4.png) 1x, url(./images/vs10dyndigd/multiplier/bombRope4@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    height: 37px
+}
+
+.Respin .Multiplier.Multiplier--Win:before {
+    bottom: 40px;
+    z-index: 1;
+    top: auto;
+    margin: 0 auto;
+    width: 43px
+}
+
+.Respin .Lifes {
+    z-index: 1;
+    height: 31px;
+    width: 100px;
+    grid-area: lifes;
+    margin: 0 auto -15px
+}
+
+.Respin .Lifes .Image__Children {
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.Respin .Lifes .Life--disabled {
+    opacity: .4
+}
+
+.Respin .Carousel {
+    grid-area: slot;
+    margin-right: 26px
+}
+
+.Respin .Carousel .Carousel__Controls {
+    bottom: auto;
+    margin-top: 5px
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10dyndigd/respins/respinsBg.png) 1x, url(./images/vs10dyndigd/respins/respinsBg@2x.png) 2x);
+    width: 388px;
+    height: 220px;
+    margin: -25px 0;
+    background-repeat: no-repeat
+}
+
+.Respin div:not(.WinLines-Group)>.LinesSlot .ReelsSlot {
+    margin: 7px 0 15px 24px
+}

@@ -93,7 +93,7 @@ namespace VanguardLTE\Games\wolfnightbng
                         'spins' => [
                             'bet_per_line' => $bets[6],
                             'board' => [[11, 3, 9], [9, 9, 4], [9, 9, 3], [9, 1, 1], [11, 11, 11]],
-                            'bs_v' => [["minor", 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [30000 * $DENOMINATOR, "mini", 15000 * $DENOMINATOR]],
+                            'bs_v' => [["minor", 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [10 * $bets[6] * $LINES, "mini", 5 * $bets[6] * $LINES]],
                             'bs_values' => [[50, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [10, 20, 5]],
                             'lines' => $LINES,
                             'round_bet' => $bets[6] * $LINES,

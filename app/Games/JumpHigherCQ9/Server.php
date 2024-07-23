@@ -382,18 +382,18 @@ namespace VanguardLTE\Games\JumpHigherCQ9
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeScatterCount',$scattersCount);
                     }
                 }
-                if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'IsFreeWin') == 0 && $slotSettings->GetGameData($slotSettings->slotId . 'NoWinSpinMaxCount') <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'))
-                {
-                    if($totalWin > 0){
-                        if($totalWin < $betline * $lines * 10){
-                            break;
-                        }else{
-                            continue;
-                        }
-                    }else{
-                        continue;
-                    }
-                }
+                // if($slotEvent == 'freespin' && $slotSettings->GetGameData($slotSettings->slotId . 'IsFreeWin') == 0 && $slotSettings->GetGameData($slotSettings->slotId . 'NoWinSpinMaxCount') <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame'))
+                // {
+                //     if($totalWin > 0){
+                //         if($totalWin < $betline * $lines * 10){
+                //             break;
+                //         }else{
+                //             continue;
+                //         }
+                //     }else{
+                //         continue;
+                //     }
+                // }
                 if( $i > 1000 ) 
                 {
                     $winType = 'none';
