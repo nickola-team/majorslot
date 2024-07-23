@@ -78,7 +78,7 @@
                             <div id="contract_wrap" class="contract_wrap">
                                 <div class="contract_game_wrap">
                                     <div id="game_player" class="contract_game" style="display:none;">
-                                        <div class="target0" o_width="830" o_height="640">
+                                        <div class="target0" o_width="900" o_height="640">
                                             <div class="target1" o_margin_left="0" o_margin_top="0">
                                                 <iframe class="target2" scrolling="no" frameborder="0"
                                                     src="{{$gameInfo->VIDEO_URL}}"
