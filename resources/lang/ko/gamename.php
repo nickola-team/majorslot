@@ -799,6 +799,7 @@ return [
     "EOS5min" => "EOS 5분파워볼",
     "EOS3min" => "EOS 3분파워볼",
     "Ntry5minPB" => "엔트리 5분파워볼",
+    "PH5min" => "동행복권 파워볼",
     "Pow8885minPB" => "파워888 5분파워볼",
 
         //pragmatic
@@ -1351,6 +1352,8 @@ return [
         "_3chinapots" => "3 차이나 팟스",
         "fishingbear" => "피신 베어",
         "superstickypiggy" => "슈퍼 스티키 피기",
+        "superhotchilli" => "슈퍼 핫 칠리",
+        "_777fruityclassic" => "777 후루티 클래식",
 
         // CQ9
         "Double Fly" => "더블 플라이",
