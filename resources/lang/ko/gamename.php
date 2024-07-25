@@ -799,6 +799,7 @@ return [
     "EOS5min" => "EOS 5분파워볼",
     "EOS3min" => "EOS 3분파워볼",
     "Ntry5minPB" => "엔트리 5분파워볼",
+    "PH5min" => "동행복권 파워볼",
     "Pow8885minPB" => "파워888 5분파워볼",
 
         //pragmatic

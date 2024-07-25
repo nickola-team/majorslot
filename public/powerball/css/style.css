@@ -2691,15 +2691,15 @@ button {
 }
 
 .contract_wrap .contract_game .target0 {
-    width: 840px;
+    width: 910px;
     margin: 0 auto;
-    border: solid 5px #6d6e71
+    border: solid 0px #6d6e71
 }
 
 .contract_wrap .contract_game .target2 {
     border: 0;
-    width: 830px;
-    height: 646px
+    width: 900px;
+    height: 640px
 }
 
 .contract_wrap .contract_game .chat_hidden_power {
@@ -15406,7 +15406,7 @@ button {
     }
     .contract_wrap .contract_game .target2 {
         border: 0;
-        width: 830px;
+        width: 900px;
         height: 646px;
         -webkit-transform: scale(1);
         -webkit-transform-origin: top left
