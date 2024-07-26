@@ -81,31 +81,28 @@ namespace VanguardLTE\Games\ladyfortunebng
                 $objRes = [
                     'command' => $slotEvent['command'],
                     'context' => [
-                        'actions' => ['spin'],
+                        'actions' => ['spin', 'buy_spin'],
                         'current' => 'spins',
                         'last_action' => 'init',
-                        'last_args' => [
-                            'bet_per_line' => $bets[9],
-                            'lines' => 20,
-                        ],
+                        'last_args' => [],
                         'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                         'math_version' => 'a',
                         'round_finished' => true,
                         'spins' => [
                             'bet_per_line' => $bets[9],
                             'board' => [[9,4,4,2,2],[11,1,12,6,6],[8,5,5,3,3],[2,2,10,6,6],[3,11,5,12,4],[5,5,9,9,9]],
-                            'lines' => 20,
+                            'lines' => $LINES,
                             'mult_values' => [[0,0,0,0,0],[0,0,3,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,50,0],[0,0,0,0,0]],
-                            "paid" => false,
+                            'paid' => false,
                             'round_bet' => $bets[9] * $LINES,
                             'round_win' => 0,
+                            'sac' => [1,0],
+                            'total_mult' => 0,
                             'total_win' => 0,
-                            "sac" => [1, 0],
-                            "total_mult" => 0
                         ],
-                        'version' => 1
+                        'version' => 2
                     ],
-                    'modes' => ['auto', 'play',"freebet"],
+                    'modes' => ['auto', 'play', "freebet"],
                     'origin_data' => [
                         'data' => [
                             'quick_spin' => false
@@ -114,7 +111,7 @@ namespace VanguardLTE\Games\ladyfortunebng
                     ],
                     'request_id' => $slotEvent['request_id'],
                     'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
-                    'settings' => json_decode('{"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","ante_bet":[1.25],"bet_factor":[20],"bets":['. implode(',', $bets) .'],"big_win":[20,50,70,100],"cols":6,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"freespins_buying_price":100,"freespins_buying_price_by_scatters_count":{"4":100,"5":200,"6":300},"fs_retrigger":5,"lines":[20],"paytable":{"1":[{"multiplier":5,"occurrences":8,"type":"lb"},{"multiplier":10,"occurrences":10,"type":"lb"},{"multiplier":30,"occurrences":12,"type":"lb"}],"2":[{"multiplier":7,"occurrences":8,"type":"lb"},{"multiplier":15,"occurrences":10,"type":"lb"},{"multiplier":50,"occurrences":12,"type":"lb"}],"3":[{"multiplier":10,"occurrences":8,"type":"lb"},{"multiplier":20,"occurrences":10,"type":"lb"},{"multiplier":80,"occurrences":12,"type":"lb"}],"4":[{"multiplier":12,"occurrences":8,"type":"lb"},{"multiplier":25,"occurrences":10,"type":"lb"},{"multiplier":100,"occurrences":12,"type":"lb"}],"5":[{"multiplier":15,"occurrences":8,"type":"lb"},{"multiplier":30,"occurrences":10,"type":"lb"},{"multiplier":150,"occurrences":12,"type":"lb"}],"6":[{"multiplier":25,"occurrences":8,"type":"lb"},{"multiplier":50,"occurrences":10,"type":"lb"},{"multiplier":250,"occurrences":12,"type":"lb"}],"7":[{"multiplier":30,"occurrences":8,"type":"lb"},{"multiplier":100,"occurrences":10,"type":"lb"},{"multiplier":300,"occurrences":12,"type":"lb"}],"8":[{"multiplier":50,"occurrences":8,"type":"lb"},{"multiplier":150,"occurrences":10,"type":"lb"},{"multiplier":400,"occurrences":12,"type":"lb"}],"9":[{"multiplier":100,"occurrences":8,"type":"lb"},{"multiplier":400,"occurrences":10,"type":"lb"},{"multiplier":1000,"occurrences":12,"type":"lb"}],"11":[{"freespins":15,"multiplier":0,"occurrences":4,"trigger":"freespins","type":"tb"},{"freespins":20,"multiplier":0,"occurrences":5,"trigger":"freespins","type":"tb"},{"freespins":25,"multiplier":0,"occurrences":6,"trigger":"freespins","type":"tb"}]},"reelsamples":{"freespins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12]],"spins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12]]},"rows":5,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_09","type":"line"},{"id":10,"name":"el_wild","type":"wild"},{"id":11,"name":"el_scatter","type":"scat"},{"id":12,"name":"el_multiplier","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8,9],"symbols_scat":[11,12],"symbols_wild":[10]}'),
+                    'settings' => json_decode('{"ante_bet":[1.25],"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","bet_factor":[20],"bets":['. implode(',', $bets) .'],"big_win":[20,50,70,100],"cols":6,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"freespins_buying_price":100,"freespins_buying_price_by_scatters_count":{"4":100,"5":200,"6":300},"fs_retrigger":5,"lines":[20],"paytable":{"1":[{"multiplier":5,"occurrences":8,"type":"lb"},{"multiplier":10,"occurrences":10,"type":"lb"},{"multiplier":30,"occurrences":12,"type":"lb"}],"2":[{"multiplier":7,"occurrences":8,"type":"lb"},{"multiplier":15,"occurrences":10,"type":"lb"},{"multiplier":50,"occurrences":12,"type":"lb"}],"3":[{"multiplier":10,"occurrences":8,"type":"lb"},{"multiplier":20,"occurrences":10,"type":"lb"},{"multiplier":80,"occurrences":12,"type":"lb"}],"4":[{"multiplier":12,"occurrences":8,"type":"lb"},{"multiplier":25,"occurrences":10,"type":"lb"},{"multiplier":100,"occurrences":12,"type":"lb"}],"5":[{"multiplier":15,"occurrences":8,"type":"lb"},{"multiplier":30,"occurrences":10,"type":"lb"},{"multiplier":150,"occurrences":12,"type":"lb"}],"6":[{"multiplier":25,"occurrences":8,"type":"lb"},{"multiplier":50,"occurrences":10,"type":"lb"},{"multiplier":250,"occurrences":12,"type":"lb"}],"7":[{"multiplier":30,"occurrences":8,"type":"lb"},{"multiplier":100,"occurrences":10,"type":"lb"},{"multiplier":300,"occurrences":12,"type":"lb"}],"8":[{"multiplier":50,"occurrences":8,"type":"lb"},{"multiplier":150,"occurrences":10,"type":"lb"},{"multiplier":400,"occurrences":12,"type":"lb"}],"9":[{"multiplier":100,"occurrences":8,"type":"lb"},{"multiplier":400,"occurrences":10,"type":"lb"},{"multiplier":1000,"occurrences":12,"type":"lb"}],"11":[{"freespins":15,"multiplier":0,"occurrences":4,"trigger":"freespins","type":"tb"},{"freespins":20,"multiplier":0,"occurrences":5,"trigger":"freespins","type":"tb"},{"freespins":25,"multiplier":0,"occurrences":6,"trigger":"freespins","type":"tb"}]},"reelsamples":{"freespins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12]],"spins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,11,12]]},"rows":5,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_09","type":"line"},{"id":10,"name":"el_wild","type":"wild"},{"id":11,"name":"el_scatter","type":"scat"},{"id":12,"name":"el_multiplier","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8,9],"symbols_scat":[11,12],"symbols_wild":[10]}'),
                     'status' => [
                         'code' => 'OK'
                     ],
@@ -139,7 +136,7 @@ namespace VanguardLTE\Games\ladyfortunebng
             }else if($slotEvent['command'] == 'sync'){
                 $objRes = [
                     'command' => $slotEvent['command'],
-                    'modes' => ['auto', 'play'],
+                    'modes' => ['auto', 'play', "freebet"],
                     'request_id' => $slotEvent['request_id'],
                     'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
                     'status' => [
@@ -165,39 +162,39 @@ namespace VanguardLTE\Games\ladyfortunebng
                 $mobile = $slotEvent['mobile'];
                 $portrait = $slotEvent['portrait'];
                 // $prev_client_command_time = $slotEvent['prev_client_command_time'];
+                
+                $currentFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') ?? 0;
+                $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
+                $totalFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') ?? 0;
+                $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
+                $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
                 $isDouble = 0;
                 if(isset($action['params']['ante_bet']) && $action['params']['ante_bet'] > 1){
                     $isDouble = 1;
                 }
-                $pur_muls = [100, 200, 300];
-                $pur_level = -1;
-                if(isset($action['params']['buy_spin_scatters_count']) && $action['params']['buy_spin_scatters_count'] >= 4){
-                    $pur_level = $action['params']['buy_spin_scatters_count'] - 4;
-                }
                 $totalWin = 0;
                 if($action['name'] == 'spin' || $action['name'] == 'buy_spin'){
+                    
                     $betline = $action['params']['bet_per_line'] / $DENOMINATOR;
                     $slotEvent['slotEvent'] = 'bet';
                 }else if($action['name'] == 'freespin_init' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop'){
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[9];
                     $slotEvent['slotEvent'] = 'freespin';
-                }else if($action['name'] == 'bonus_init' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
+                }else if($action['name'] == 'respin'){
                     $betline = $slotSettings->GetGameData($slotSettings->slotId . 'Bet') ?? $slotSettings->Bet[9];
-                    $slotEvent['slotEvent'] = 'respin';
+                    $slotEvent['slotEvent'] = 'bet';
+                    if($totalFreeGames > 0 && $currentFreeGames > 0){
+                        $slotEvent['slotEvent'] = 'freespin';
+                    }
                 }else{
                     // throw error
                     return '';
                 }
 
-                $currentFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') ?? 0;
-                $totalFreeGames = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') ?? 0;
-                $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
-                $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
-                $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
-                if($action['name'] == 'freespin_init' || $action['name'] == 'freespin_stop' || $action['name'] == 'bonus_init' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
+                if($action['name'] == 'freespin_init' || $action['name'] == 'freespin_stop'){
                     if(count($tumbAndFreeStacks) > 0 && isset($tumbAndFreeStacks[$totalSpinCount])){
                         $stack = $tumbAndFreeStacks[$totalSpinCount];
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $totalSpinCount + 1);
@@ -205,43 +202,58 @@ namespace VanguardLTE\Games\ladyfortunebng
                         return '';
                     }
                     $Counter = 0;
-                    $spin_types = ['spins', 'freespins', 'bonus'];
-                    for($k = 0; $k < 3; $k++){
+                    // $stack['spins']['bet_per_line'] = $betline * $DENOMINATOR;
+                    $spin_types = ['spins', 'freespins'];
+                    for($k = 0; $k < 2; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
-                            if($stack[$spin_type] != ''){
-                                $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
-                                $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
-                                if(isset($stack[$spin_type]['round_win'])){
-                                    $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['total_win'])){
-                                    $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['win'])){
-                                    $stack[$spin_type]['win'] = str_replace(',', '', $stack[$spin_type]['win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['fs_win'])){
-                                    $stack[$spin_type]['fs_win'] = str_replace(',', '', $stack[$spin_type]['fs_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['freespins_win'])){
-                                    $stack[$spin_type]['freespins_win'] = str_replace(',', '', $stack[$spin_type]['freespins_win']) * $betline * $DENOMINATOR;
-                                }
-                                if(isset($stack[$spin_type]['avalanche'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['avalanche']); $i++){
-                                        if(isset($stack[$spin_type]['avalanche'][$i]['round_win'])){
-                                            $stack[$spin_type]['avalanche'][$i]['round_win'] = str_replace(',', '', $stack[$spin_type]['avalanche'][$i]['round_win']) * $betline * $DENOMINATOR;
-                                        }
-                                        if(isset($stack[$spin_type]['avalanche'][$i]['win'])){
-                                            $stack[$spin_type]['avalanche'][$i]['win'] = str_replace(',', '', $stack[$spin_type]['avalanche'][$i]['win']) * $betline * $DENOMINATOR;
-                                        }
-                                        if(isset($stack[$spin_type]['avalanche'][$i]['winlines']) && count($stack[$spin_type]['avalanche'][$i]['winlines']) > 0){
-                                            foreach( $stack[$spin_type]['avalanche'][$i]['winlines'] as $index => $value ){
-                                                if(isset($value['amount']) && $value['amount'] > 0){
-                                                    $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
-                                                    $stack[$spin_type]['avalanche'][$i]['winlines'][$index] = $value;
-                                                }
+                            $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
+                            $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
+                            if(isset($stack[$spin_type]['round_win'])){
+                                $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['total_win'])){
+                                $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['fs_win'])){
+                                $stack[$spin_type]['fs_win'] = str_replace(',', '', $stack[$spin_type]['fs_win']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['avalanche'])){
+                                for($i = 0; $i < count($stack[$spin_type]['avalanche']); $i++){
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['round_win'])){
+                                        $stack[$spin_type]['avalanche'][$i]['round_win'] = $stack[$spin_type]['avalanche'][$i]['round_win'] * $betline * $DENOMINATOR;
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['win'])){
+                                        $stack[$spin_type]['avalanche'][$i]['win'] = $stack[$spin_type]['avalanche'][$i]['win'] * $betline * $DENOMINATOR;
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['round_win_without_mult'])){
+                                        $stack[$spin_type]['avalanche'][$i]['round_win_without_mult'] = $stack[$spin_type]['avalanche'][$i]['round_win_without_mult'] * $betline * $DENOMINATOR;
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['winlines']) && count($stack[$spin_type]['avalanche'][$i]['winlines']) > 0){
+                                        foreach( $stack[$spin_type]['avalanche'][$i]['winlines'] as $index => $value ){
+                                            if(isset($value['amount']) && $value['amount'] > 0){
+                                                $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                                $stack[$spin_type]['avalanche'][$i]['winlines'][$index] = $value;
                                             }
+                                        }
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['round_win_without_mp'])){
+                                        $stack[$spin_type]['avalanche'][$i]['round_win_without_mp'] = $stack[$spin_type]['avalanche'][$i]['round_win_without_mp'] * $betline * $DENOMINATOR;
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['trg_spin_winlines']) && count($stack[$spin_type]['avalanche'][$i]['trg_spin_winlines']) > 0){
+                                        foreach( $stack[$spin_type]['avalanche'][$i]['trg_spin_winlines'] as $index => $value ){
+                                            if(isset($value['amount']) && $value['amount'] > 0){
+                                                $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                                $stack[$spin_type]['avalanche'][$i]['trg_spin_winlines'][$index] = $value;
+                                            }
+                                        }
+                                    }
+                                    if(isset($stack[$spin_type]['avalanche'][$i]['winscatters']) && count($stack[$spin_type]['avalanche'][$i]['winscatters']) > 0){
+                                        foreach( $stack[$spin_type]['avalanche'][$i]['winscatters'] as $index => $value ){
+                                            if(isset($value['amount']) && $value['amount'] > 0){
+                                                $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                            }
+                                            $stack[$spin_type]['avalanche'][$i]['winscatters'][$index] = $value;
                                         }
                                     }
                                 }
@@ -256,9 +268,9 @@ namespace VanguardLTE\Games\ladyfortunebng
                             'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                             'math_version' => 'a',
                             'round_finished' => false,
-                            'version' => 1
+                            'version' => 2
                         ],
-                        'modes' => ['auto', 'play'],
+                        'modes' => ['auto', 'play', "freebet"],
                         'origin_data' => [
                             'autogame' => $autogame,
                             'data' => [
@@ -283,9 +295,6 @@ namespace VanguardLTE\Games\ladyfortunebng
                             'show_balance' => true
                         ]
                     ];
-                    if($stack['bonus'] != ''){
-                        $objRes['context']['bonus'] = $stack['bonus'];
-                    }
                     if($stack['freespins'] != ''){
                         $objRes['context']['freespins'] = $stack['freespins'];
                     }
@@ -298,30 +307,16 @@ namespace VanguardLTE\Games\ladyfortunebng
                     }else if($action['name'] == 'freespin_stop'){
                         $objRes['context']['actions'] = ['spin', 'buy_spin'];
                         $objRes['context']['current'] = 'spins';
-                    }else if($action['name'] == 'bonus_init'){
-                        $objRes['context']['actions'] = ['respin'];
-                        $objRes['context']['current'] = 'bonus';
-                    }else if($action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 0);
-                        if($totalFreeGames <= 0){
-                            $objRes['context']['actions'] = ['spin', 'buy_spin'];
-                            $objRes['context']['current'] = 'spins';
-                        }else if($totalFreeGames - $currentFreeGames <= 0){
-                            $objRes['context']['actions'] = ['freespin_stop'];
-                            $objRes['context']['current'] = 'freespins';
-                        }else{
-                            $objRes['context']['actions'] = ['freespin'];
-                            $objRes['context']['current'] = 'freespins';
-                        }
                     }
                 }else{
                     if($slotEvent['slotEvent'] == 'bet' && $betline * $LINES > $BALANCE){
                         // throw error
                         $objRes = [
-                            'command' => $slotEvent['command'],
+                            'command' => $slotEvent['command'],                            
                             'context' => [
-                                'actions' => ['spin'],
+                                'actions' => ['spin', 'buy_spin'],
                                 'current' => 'spins',
+                                'last_action' => 'init',
                                 'last_args' => [],
                                 'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                                 'math_version' => 'a',
@@ -329,14 +324,13 @@ namespace VanguardLTE\Games\ladyfortunebng
                                 'spins' => [
                                     'bet_per_line' => $betline * $DENOMINATOR,
                                     'board' => [[9,4,4,2,2],[11,1,12,6,6],[8,5,5,3,3],[2,2,10,6,6],[3,11,5,12,4],[5,5,9,9,9]],
-                                    'lines' => 20,
+                                    'lines' => $LINES,
                                     'mult_values' => [[0,0,0,0,0],[0,0,3,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,50,0],[0,0,0,0,0]],
-                                    "paid" => false,
+                                    'paid' => false,
                                     'round_bet' => $betline * $DENOMINATOR * $LINES,
                                     'round_win' => 0,
+                                    'total_mult' => 0,
                                     'total_win' => 0,
-                                    "sac" => [1, 0],
-                                    "total_mult" => 0
                                 ],
                                 'version' => 2
                             ],
@@ -368,13 +362,15 @@ namespace VanguardLTE\Games\ladyfortunebng
                         }
                         return json_encode($objRes);
                     }else if($slotEvent['slotEvent'] == 'freespin'){
-                        if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
-                        {
-                            // throw error
-                            return '';
+                        if($action['name'] != 'respin'){
+                            if($totalFreeGames <= 0 || ($currentFreeGames >= $totalFreeGames)) 
+                            {
+                                // throw error
+                                return '';
+                            }
+                            $currentFreeGames++;
+                            $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $currentFreeGames);
                         }
-                        $currentFreeGames++;
-                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', $currentFreeGames);
                     }
                     $_spinSettings = $slotSettings->GetSpinSettings($slotEvent['slotEvent'], $betline * $LINES, $LINES);
                     $winType = $_spinSettings[0];
@@ -382,20 +378,30 @@ namespace VanguardLTE\Games\ladyfortunebng
                     // $winType = 'win';
                     // $_winAvaliableMoney = 1000;
                     $isBuyFreeSpin = false;
-                    if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
+                    if($slotEvent['slotEvent'] != 'freespin' && $action['name'] != 'respin'){
                         $allBet = $betline * $LINES;                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', -1);
                         if($action['name'] == 'buy_spin'){
-                            $allBet = $allBet * $pur_muls[$pur_level];
+                            if($action['params']['buy_spin_scatters_count'] == 4){
+                                $allBet = $allBet * 100;
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
+                            }else if($action['params']['buy_spin_scatters_count'] == 5){
+                                $allBet = $allBet * 200;
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 1);
+                            }else if($action['params']['buy_spin_scatters_count'] == 6){
+                                $allBet = $allBet * 300;
+                                $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 2);
+                            }
+                            
                             $isBuyFreeSpin = true;
-                            $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', $pur_level);
+                            
                             $winType = 'bonus';
                         }else if($isDouble == true){
                             $allBet = $betline * 25;
                         }
                         $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
-                        $_sum = $allBet / 100 * $slotSettings->GetPercent();
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $betline);  
+                        $_sum = $allBet / 100 * $slotSettings->GetPercent();                                          
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $betline); 
                         $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $LINES);             
                         $slotSettings->SetBet();
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], $isBuyFreeSpin);
@@ -407,7 +413,7 @@ namespace VanguardLTE\Games\ladyfortunebng
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'idDouble', $isDouble);
 
-                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, ($betline * $LINES), $pur_level);
+                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, ($betline * $LINES),$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin'));
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
 
                         $totalSpinCount = 0;
@@ -423,9 +429,11 @@ namespace VanguardLTE\Games\ladyfortunebng
                     }else{
                         return '';
                     }
+
                     $freeSpinNum = 0;
-                    $spin_types = ['spins', 'freespins', 'bonus'];
-                    for($k = 0; $k < 3; $k++){
+                    $spin_types = ['spins', 'freespins'];
+                    $totalWin = 0;
+                    for($k = 0; $k < 2; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
                             $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
@@ -444,26 +452,11 @@ namespace VanguardLTE\Games\ladyfortunebng
                             if(isset($stack[$spin_type]['fs_win'])){
                                 $stack[$spin_type]['fs_win'] = str_replace(',', '', $stack[$spin_type]['fs_win']) * $betline * $DENOMINATOR;
                             }
-                            if(isset($stack[$spin_type]['freespins_win'])){
-                                $stack[$spin_type]['freespins_win'] = str_replace(',', '', $stack[$spin_type]['freespins_win']) * $betline * $DENOMINATOR;
+                            if(isset($stack[$spin_type]['round_win_without_mult'])){
+                                $stack[$spin_type]['round_win_without_mult'] = str_replace(',', '', $stack[$spin_type]['round_win_without_mult']) * $betline * $DENOMINATOR;
                             }
-                            if(isset($stack[$spin_type]['avalanche'])){
-                                for($i = 0; $i < count($stack[$spin_type]['avalanche']); $i++){
-                                    if(isset($stack[$spin_type]['avalanche'][$i]['round_win'])){
-                                        $stack[$spin_type]['avalanche'][$i]['round_win'] = str_replace(',', '', $stack[$spin_type]['avalanche'][$i]['round_win']) * $betline * $DENOMINATOR;
-                                    }
-                                    if(isset($stack[$spin_type]['avalanche'][$i]['win'])){
-                                        $stack[$spin_type]['avalanche'][$i]['win'] = str_replace(',', '', $stack[$spin_type]['avalanche'][$i]['win']) * $betline * $DENOMINATOR;
-                                    }
-                                    if(isset($stack[$spin_type]['avalanche'][$i]['winlines']) && count($stack[$spin_type]['avalanche'][$i]['winlines']) > 0){
-                                        foreach( $stack[$spin_type]['avalanche'][$i]['winlines'] as $index => $value ){
-                                            if(isset($value['amount']) && $value['amount'] > 0){
-                                                $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
-                                                $stack[$spin_type]['avalanche'][$i]['winlines'][$index] = $value;
-                                            }
-                                        }
-                                    }
-                                }
+                            if(isset($stack[$spin_type]['round_win_without_mp'])){
+                                $stack[$spin_type]['round_win_without_mp'] = str_replace(',', '', $stack[$spin_type]['round_win_without_mp']) * $betline * $DENOMINATOR;
                             }
                             if($spin_type != 'bonus'){
                                 if(isset($stack[$spin_type]['winlines']) && count($stack[$spin_type]['winlines']) > 0){
@@ -474,12 +467,20 @@ namespace VanguardLTE\Games\ladyfortunebng
                                         }
                                     }
                                 }
+                                if(isset($stack[$spin_type]['trg_spin_winlines']) && count($stack[$spin_type]['trg_spin_winlines']) > 0){
+                                    foreach( $stack[$spin_type]['trg_spin_winlines'] as $index => $value ){
+                                        if(isset($value['amount']) && $value['amount'] > 0){
+                                            $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                            $stack[$spin_type]['trg_spin_winlines'][$index] = $value;
+                                        }
+                                    }
+                                }
                                 if(isset($stack[$spin_type]['winscatters']) && count($stack[$spin_type]['winscatters']) > 0){
                                     foreach( $stack[$spin_type]['winscatters'] as $index => $value ){
                                         if(isset($value['freespins'])){
-                                            if(($slotEvent['slotEvent'] == 'bet' || $slotEvent['slotEvent'] == 'respin') && $spin_type == 'spins'){
+                                            if($slotEvent['slotEvent'] == 'bet' && $spin_type == 'spins'){
                                                 $freeSpinNum = $value['freespins'];
-                                            }else if(($slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin') && $spin_type == 'freespins'){
+                                            }else if($slotEvent['slotEvent'] == 'freespin' && $spin_type == 'freespins'){
                                                 $freeSpinNum = $value['freespins'];
                                             }   
                                         }  
@@ -489,9 +490,58 @@ namespace VanguardLTE\Games\ladyfortunebng
                                         $stack[$spin_type]['winscatters'][$index] = $value;
                                     }
                                 }
+                                if(isset($stack[$spin_type]['avalanche'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['avalanche']); $i++){
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['round_win'])){
+                                            $stack[$spin_type]['avalanche'][$i]['round_win'] = $stack[$spin_type]['avalanche'][$i]['round_win'] * $betline * $DENOMINATOR;
+                                        }
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['win'])){
+                                            $stack[$spin_type]['avalanche'][$i]['win'] = $stack[$spin_type]['avalanche'][$i]['win'] * $betline * $DENOMINATOR;
+                                        }
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['round_win_without_mult'])){
+                                            $stack[$spin_type]['avalanche'][$i]['round_win_without_mult'] = $stack[$spin_type]['avalanche'][$i]['round_win_without_mult'] * $betline * $DENOMINATOR;
+                                        }
+                                        
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['round_win_without_mp'])){
+                                            $stack[$spin_type]['avalanche'][$i]['round_win_without_mp'] = $stack[$spin_type]['avalanche'][$i]['round_win_without_mp'] * $betline * $DENOMINATOR;
+                                        }
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['trg_spin_winlines']) && count($stack[$spin_type]['avalanche'][$i]['trg_spin_winlines']) > 0){
+                                            foreach( $stack[$spin_type]['avalanche'][$i]['trg_spin_winlines'] as $index => $value ){
+                                                if(isset($value['amount']) && $value['amount'] > 0){
+                                                    $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                                    $stack[$spin_type]['avalanche'][$i]['trg_spin_winlines'][$index] = $value;
+                                                }
+                                            }
+                                        }
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['winlines']) && count($stack[$spin_type]['avalanche'][$i]['winlines']) > 0){
+                                            foreach( $stack[$spin_type]['avalanche'][$i]['winlines'] as $index => $value ){
+                                                if(isset($value['amount']) && $value['amount'] > 0){
+                                                    $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                                    $stack[$spin_type]['avalanche'][$i]['winlines'][$index] = $value;
+                                                }
+                                            }
+                                        }
+                                        if(isset($stack[$spin_type]['avalanche'][$i]['winscatters']) && count($stack[$spin_type]['avalanche'][$i]['winscatters']) > 0){
+                                            foreach( $stack[$spin_type]['avalanche'][$i]['winscatters'] as $index => $value ){
+                                                if(isset($value['freespins'])){
+                                                    if($slotEvent['slotEvent'] == 'bet' && $spin_type == 'spins'){
+                                                        $freeSpinNum = $value['freespins'];
+                                                    }else if($slotEvent['slotEvent'] == 'freespin' && $spin_type == 'freespins'){
+                                                        $freeSpinNum = $value['freespins'];
+                                                    }   
+                                                }
+                                                if(isset($value['amount']) && $value['amount'] > 0){
+                                                    $value['amount'] = str_replace(',', '', $value['amount']) * $betline * $DENOMINATOR;
+                                                }
+                                                $stack[$spin_type]['avalanche'][$i]['winscatters'][$index] = $value;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
+                    
                     if( $totalWin > 0) 
                     {
                         $spinType = 'c';
@@ -512,8 +562,6 @@ namespace VanguardLTE\Games\ladyfortunebng
                         {
                             $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + $freeSpinNum);
                         }
-                    }else if($stack['actions'] && $stack['actions'][0] == 'bonus_init'){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 3);
                     }
                     $objRes = [
                         'command' => $slotEvent['command'],
@@ -522,7 +570,7 @@ namespace VanguardLTE\Games\ladyfortunebng
                             'current' => 'spins',
                             'last_args' => [
                                 'bet_per_line' => $betline * $DENOMINATOR,
-                                'lines' => 20
+                                'lines' => $LINES
                             ],
                             'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                             'math_version' => 'a',
@@ -556,9 +604,6 @@ namespace VanguardLTE\Games\ladyfortunebng
                     ];
                     $isEndFreeSpin = false;
                     $isState = true;
-                    if($stack['bonus'] != ''){
-                        $objRes['context']['bonus'] = $stack['bonus'];
-                    }
                     if($stack['freespins'] != ''){
                         $objRes['context']['freespins'] = $stack['freespins'];
                     }
@@ -566,77 +611,65 @@ namespace VanguardLTE\Games\ladyfortunebng
                         $objRes['context']['spins'] = $stack['spins'];
                     }
                     $objRes['context']['actions'] = $stack['actions'];
-                    if( $slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin') 
+                    if( $slotEvent['slotEvent'] == 'freespin') 
                     {
                         $isState = false;
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') + $totalWin);
-                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);
-                        $rounds_left = 0;
-                        if(isset($stack['freespins']) && isset($stack['freespins']['rounds_left'])){
-                            $rounds_left = $stack['freespins']['rounds_left'];
-                        }
-                        if($slotEvent['slotEvent'] == 'freespin'){
-                            $objRes['context']['current'] = 'freespins';
-                            $objRes['context']['round_finished'] = false;
-                            $objRes['context']['last_args'] = [];  
-                            if($rounds_left == 0 && $stack['actions'][0] != 'respin') 
-                            {
-                                $isEndFreeSpin = true;
-                                $isState = true;
-                            }
-                        }else{
-                            if($stack['spins'] != ''){
-                                $objRes['context']['current'] = 'spins';
-                            }else{
-                                $objRes['context']['current'] = 'freespins';
-                            }
-                            
-                            if($stack['actions'][0] != 'respin' && $stack['actions'][0] != 'freespin_init'){
-                                $isState = true;
-                                if($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0 && $rounds_left > 0){
-                                    $isState = false;
-                                }
-                            }
-                            // $objRes['context']['current'] = 'bonus';
-                            // $objRes['context']['round_finished'] = false;
-                            // $objRes['context']['last_args'] = [];
-                            // if($rounds_left == 0) 
-                            // {
-                            //     if($totalFreeGames <= 0 || $totalFreeGames == $currentFreeGames){
-                            //         $isEndFreeSpin = true;
-                            //         $isState = true;
-                            //     }
-                            // }
+                        $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') + $totalWin);                        
+                        $objRes['context']['current'] = 'freespins';
+                        $objRes['context']['round_finished'] = false;
+                        $objRes['context']['last_args'] = []; 
+                        if($stack['actions'][0] == 'freespin_stop') 
+                        {
+                            $isEndFreeSpin = true;
+                            $isState = true;
                         }
                     }else
                     {
                         // $_obf_0D5C3B1F210914123C222630290E271410213E320B0A11 = $totalWin;
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', $totalWin);
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', $totalWin);
-                        
-                        if($stack['actions'][0] == 'freespin_init' || $stack['actions'][0] == 'respin'){
+                        if($freeSpinNum > 0 ){
                             $objRes['context']['round_finished'] = false;
                             $isState = false;
                         }
                     }
-                    if($isState == true && ($slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin')){
+                    if($stack['actions'][0] == 'respin'){
+                        $isState = false;
+                        $objRes['context']['round_finished'] = false;
+                    }
+                    if($isState == true && $slotEvent['slotEvent'] == 'freespin'){
                         if($slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') > 0){
                             $slotSettings->SetGameData($slotSettings->slotId . 'LastWin', $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'));
                             $objRes['last_win'] = ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR;
                         }
                     }
                 }
+                
                 $objRes['context']['last_action'] = $action['name'];
                 $allBet = $betline * $LINES;
                 if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') >= 0){
-                    $allBet = $allBet * $pur_muls[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin')];
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 0){
+                        $allBet = $allBet * 100;
+                    }else if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){
+                        $allBet = $allBet * 200;
+                    }else if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 2){
+                        $allBet = $allBet * 300;
+                    }
+                    
                 }else if($slotSettings->GetGameData($slotSettings->slotId . 'idDouble') == 1){
                     $allBet = $betline * 25;
                 }
                 $slotSettings->SaveLogReport(json_encode($objRes), $allBet, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
-                if($action['name'] == 'spin' || $action['name'] == 'freespin' || $action['name'] == 'respin' || $action['name'] == 'buy_spin'){
-                    if($action['name'] == 'spin' || $action['name'] == 'buy_spin'){
-                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $allBet, $totalWin, $objRes, $slotSettings);
+                if($action['name'] == 'spin' || $action['name'] == 'respin' || $action['name'] == 'freespin' || $action['name'] == 'buy_spin' || $action['name'] == 'freespin_pick'){
+                    if($action['name'] == 'spin'){
+                        if($isDouble == 1){
+                            $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * 25, $totalWin, $objRes, $slotSettings);
+                        }else{
+                            $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES, $totalWin, $objRes, $slotSettings);
+                        }
+                    }else if($action['name'] == 'buy_spin'){
+                        $this->SaveBNGLogParse($beforeBalance, $BALANCE, $betline * $LINES * 100, $totalWin, $objRes, $slotSettings);
                     }else{
                         $this->SaveBNGLogParse($beforeBalance, $BALANCE, NULL, $totalWin, $objRes, $slotSettings);
                     }
@@ -651,10 +684,7 @@ namespace VanguardLTE\Games\ladyfortunebng
             
             $profit = ($allBet ?? 0) - $win;
             $context = $objRes['context'];
-            if(isset($context['bonus'])){
-                $spins = $context['bonus'];
-                $state = 'bonus';
-            }else if(isset($context['freespins'])){
+            if(isset($context['freespins'])){
                 $spins = $context['freespins'];
                 $state = 'freespins';
             }else if(isset($context['spins'])){

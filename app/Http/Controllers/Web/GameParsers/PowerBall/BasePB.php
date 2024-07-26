@@ -214,7 +214,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
         public function getRoundInfo()
         {
             try {
-                $response = Http::get($this->ROUND_URL);
+                $response = Http::get($this->ROUND_URL . '&_=' . \Illuminate\Support\Carbon::now()->timestamp);
                 if ($response->ok()) {
                     $data = $response->json();
                     if ($data != null)

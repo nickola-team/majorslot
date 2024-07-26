@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\DynamiteDigginDougPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameDynamiteDigginDougStack::where('id', 1)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameDynamiteDigginDougStack::where('id', 12878)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -771,7 +771,7 @@ namespace VanguardLTE\Games\DynamiteDigginDougPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameDynamiteDigginDougStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 28000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
