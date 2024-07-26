@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameParsers\PowerBall
         public  $GAME_TIME = 300;
         public  $GAME_PERIOD = 300;
         public  $LAST_LIMIT_TIME = 31;
-        public  $VIDEO_URL = 'https://dhpowerball.net/rpowerball/live.php';
+        public  $VIDEO_URL = 'https://dhpowerball.net/powerball/live.php';
 
         public function __construct($gameid){
             $this->game = $gameid;
