@@ -1252,6 +1252,10 @@ return [
         "SamuraiCode" => "사무라이코드",
         "HottoBurnMultiplier" => "핫 투 번 멀티플라이어",
         "_6Jokers" => "6 조커즈",
+        "DynamiteDigginDoug" => "다이너마이트 디긴 더그",
+        "JokersJewelsHot" => "조커스 주얼스 핫",
+        "SumoSupremeMegaways" => "스모 슈프림 메가웨이즈",
+        "BowofArtemis" => "보우 오브 아르테미스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
