@@ -31,7 +31,7 @@ class GameLaunchCommand extends Command
         'TAISHAN',
         'HONOR',
         'NEXUS',
-        'BABYLON',
+        'HDLIVE',
         'KTEN',
         'HOLDEM'
     ];
