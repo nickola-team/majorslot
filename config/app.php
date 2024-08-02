@@ -270,6 +270,12 @@ return [
     'nexus_agent' => env('NEXUS_AGENT', ''),
     'nexus_secretkey' => env('NEXUS_SECRETKEY', ''),
 
+    /*
+    HDLIVE API
+    */
+    'hdlive_api' => env('HDLIVE_API', ''),
+    'hdlive_agent' => env('HDLIVE_AGENT', ''),
+
 
     /*
     |--------------------------------------------------------------------------

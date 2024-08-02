@@ -1,0 +1,247 @@
+:root {
+    --slot-item-height: 42px;
+    --slot-item-width: 42px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none;
+    z-index: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: ".. feature lvl" "multiplier slot fever"
+}
+
+.Spin .Carousel,
+.Spin .Slot {
+    grid-area: slot;
+    margin: 0 auto
+}
+
+.Spin .LevelImg {
+    grid-area: lvl;
+    width: 80px;
+    height: 22px;
+    position: absolute;
+    bottom: -90px;
+    left: 13px
+}
+
+.Spin .Feature {
+    grid-area: feature;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.Spin .Multiplier {
+    width: 84px;
+    height: 84px;
+    align-self: center;
+    margin-right: 5px;
+    grid-area: multiplier
+}
+
+.Spin .Multiplier .Image__Children {
+    width: 60px;
+    height: 100%;
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    justify-content: space-between;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .Multiplier__Title {
+    height: 35px;
+    white-space: nowrap;
+    font-size: .79rem
+}
+
+.Spin .Multiplier__Title,
+.Spin .Multiplier__Value {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Spin .Multiplier__Value {
+    flex: 1;
+    font-size: 14px
+}
+
+.Spin .FeverProgressBg {
+    grid-area: fever;
+    height: 250px;
+    width: 97px;
+    align-self: flex-end
+}
+
+.Spin .FeverProgressBg .FeverProgress {
+    width: 48px;
+    height: 220px;
+    display: flex;
+    margin: 0 0 4px 1px;
+    align-items: center;
+    flex-direction: column-reverse
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item {
+    width: 48px;
+    height: 61px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:not(:first-child) {
+    width: 44px;
+    height: 57.5px
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:last-child {
+    height: 42.5px;
+    overflow: hidden
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:last-child .ProgressActive__Image {
+    object-fit: cover;
+    object-position: bottom
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item .ProgressActive__ImageWrapper {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item .ProgressActive__ImageWrapper .ProgressActive__Image {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item--disabled {
+    visibility: hidden
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item--fulfilled .ProgressActive__Image {
+    height: 100%
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:first-child.ProgressActive__Item--fulfilled .ProgressActive__Image {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverActiveFulfilled1.png) 1x, url(./images/vs20gembondx/progress/feverActiveFulfilled1@2x.png) 2x)
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:nth-child(2).ProgressActive__Item--fulfilled .ProgressActive__Image {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverActiveFulfilled2.png) 1x, url(./images/vs20gembondx/progress/feverActiveFulfilled2@2x.png) 2x)
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:nth-child(3).ProgressActive__Item--fulfilled .ProgressActive__Image {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverActiveFulfilled3.png) 1x, url(./images/vs20gembondx/progress/feverActiveFulfilled3@2x.png) 2x)
+}
+
+.Spin .FeverProgressBg .FeverProgress .ProgressActive__Item:nth-child(4).ProgressActive__Item--fulfilled .ProgressActive__Image {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverActiveFulfilled4.png) 1x, url(./images/vs20gembondx/progress/feverActiveFulfilled4@2x.png) 2x)
+}
+
+.Spin .FeverProgressBg .FeaturesPending,
+.Spin .FeverProgressBg .FeaturesPending__Item {
+    position: absolute
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--1 {
+    top: -7px;
+    right: -6px
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--2 {
+    top: -32.5px;
+    right: 3.5px
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--3 {
+    top: -56px;
+    right: -6px
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--4 {
+    top: -56px;
+    right: -56px
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--5 {
+    top: -33px;
+    right: -65px
+}
+
+.Spin .FeverProgressBg .FeaturesPending__Item--6 {
+    top: -7px;
+    right: -56px
+}
+
+.FeverProgressBg.FeverProgressBg--Hunt .Image__Source {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverLvl.png) 1x, url(./images/vs20gembondx/progress/feverLvl@2x.png) 2x)
+}
+
+.FeverProgressBg.FeverProgressBg--Hunt .FeverProgress .ProgressActive__Item:first-child.ProgressActive__Item--fulfilled .ProgressActive__Image {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverActiveFulfilledFs1.png) 1x, url(./images/vs20gembondx/progress/feverActiveFulfilledFs1@2x.png) 2x)
+}
+
+.FeverProgressBg.FeverProgressBg--Lvl5 .Image__Source {
+    content: -webkit-image-set(url(./images/vs20gembondx/progress/feverLvl5.png) 1x, url(./images/vs20gembondx/progress/feverLvl5@2x.png) 2x)
+}
+
+.FeverProgressBg.FeverProgressBg--Lvl5 .FeverProgress {
+    visibility: hidden
+}
+
+.Colossal,
+.OverlayBg {
+    position: absolute
+}
+
+.Colossal {
+    z-index: 2;
+    top: 0;
+    left: 0;
+    background-color: #20272b
+}
+
+.Colossal__2 {
+    width: calc(var(--slot-item-width)*2 - 2px);
+    height: calc(var(--slot-item-height)*2 - 2px)
+}
+
+.Colossal__3 {
+    width: calc(var(--slot-item-width)*3 - 2px);
+    height: calc(var(--slot-item-height)*3 - 2px)
+}
+
+.Colossal__4 {
+    width: calc(var(--slot-item-width)*4 - 2px);
+    height: calc(var(--slot-item-height)*4 - 2px)
+}
+
+.Colossal__5 {
+    width: calc(var(--slot-item-width)*5 - 2px);
+    height: calc(var(--slot-item-height)*5 - 2px)
+}
+
+.WinLines-Block .Colossal,
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
