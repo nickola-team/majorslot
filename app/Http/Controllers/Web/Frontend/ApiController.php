@@ -386,7 +386,14 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if (!$b)
             {
-                return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
+                if($user->playing_game == 'hdlive')
+                {
+                    return response()->json(['error' => true, 'msg' => '2분30초 후 다시 시도해 주십시요', 'code' => '002']);
+                }
+                else
+                {
+                    return response()->json(['error' => true, 'msg' => '잠시후 다시 시도하세요', 'code' => '002']);
+                }
             }
             $api_token = $user->generateCode(36);
             $user->update([
