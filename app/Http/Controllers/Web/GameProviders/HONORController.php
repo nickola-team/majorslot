@@ -222,9 +222,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $data = $response->json();
             $gameList = [];
 
+            $view = 1;
+            if($href == 'honor-evol')
+            {
+                $view = 0;
+            }
             foreach ($data as $game)
             {
-                $view = 1;
 
                 $korname = '';
                 if(isset($game['langs']) && isset($game['langs']['ko'])){
@@ -232,7 +236,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }else{
                     $korname = $game['title'];
                 }
-
                 array_push($gameList, [
                     'provider' => self::HONOR_PROVIDER,
                     'href' => $href,
@@ -246,12 +249,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'view' => $view
                 ]);
             }
+            if($href == 'honor-evol')
+            {
+                array_push($gameList, [
+                    'provider' => self::HONOR_PROVIDER,
+                    'href' => $href,
+                    'symbol' => 'evolution_baccarat_sicbo',
+                    'gamecode' => 'honor_baccarat_sicbo',
+                    'enname' => 'Baccarat Lobby',
+                    'name' => 'BaccaratLobby',
+                    'title' => '바카라로비',
+                    'icon' => '',
+                    'type' => 'table',
+                    'view' => 1
+                ]);
+            }
 
             //add Unknown Game item
             array_push($gameList, [
                 'provider' => self::HONOR_PROVIDER,
                 'href' => $href,
-                'symbol' => 'Unknown',
+                'symbol' => $href,
                 'gamecode' => $href,
                 'enname' => 'UnknownGame',
                 'name' => 'UnknownGame',
@@ -279,7 +297,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $usertoken = HONORController::getUserToken($game['href'], $user, $prefix);
             //Create Game link
             $category = HONORController::HONOR_GAME_IDENTITY[$game['href']];
-            $real_code = explode('_', $game['gamecode'])[1];
+            // $real_code = explode('_', $game['gamecode'])[1];
+            $real_code = $game['symbol'];
             $param = [
                 'game_id' => $real_code,
                 'token' => $usertoken,

@@ -1771,6 +1771,46 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return response()->json($data);
             
         }
+        public function children_v3(\Illuminate\Http\Request $request)
+        {
+            $id = $request->id;
+            $token = $request->token;
+            $symbol = $request->symbol;
+            $tokens = explode('-', $token);
+            $gameid = -1;
+            $user = null;
+            if (count($tokens) > 1)
+            {
+                $userid = $tokens[0];
+                $gameid = $tokens[1];
+                $user = \VanguardLTE\User::where('id', $userid)->first();
+            }
+            else
+            {
+                $user = \VanguardLTE\User::where('api_token', $token)->first();
+            }
+            
+            if (!$user )
+            {
+                return response()->json([ ]);
+            }
+
+            $logdata = \VanguardLTE\PPGameLog::where(['roundid'=>$id, 'user_id'=>$user->id])->orderBy('time')->get();
+            if (!$logdata)
+            {
+                return response()->json([ ]);
+            }
+            $data = [];
+            foreach ($logdata as $log)
+            {
+                $data[] = json_decode($log->str);
+            }
+
+            // $data = '[{"roundId":2753568256,"request":{"symbol":"vs20hburnhs","c":"100","repeat":"0","action":"doSpin","index":"4","counter":"7","l":"20"},"response":{"mo":"0,0,0,20,20,0,0,0,0,20,0,0,0,0,0","tw":"0.00","c":"100.00","mo_t":"r,r,r,v,v,r,r,r,r,v,r,r,r,r,r","sver":"5","index":"4","balance_cash":"48,778,643.00","stime":"1634565943531","counter":"8","l":"20","reel_set":"0","sa":"10,10,1,11,8","sb":"8,11,10,10,9","balance_bonus":"0.00","na":"s","s":"10,3,9,13,13,4,4,9,10,13,8,8,9,10,1","balance":"48,778,643.00","sh":"3","w":"0.00"},"currency":"KRW","currencySymbol":"₩","configHash":"02344a56ed9f75a6ddaab07eb01abc54"}]';
+            // return response($data, 200)->header('Content-Type', 'application/json');
+            return response()->json(['error'=>0, 'description'=>'OK', 'data'=>$data]);
+            
+        }
         
         public function verify($gamecode, \Illuminate\Http\Request $request){
             $failed_url = "http://404.pragmaticplay.com";
