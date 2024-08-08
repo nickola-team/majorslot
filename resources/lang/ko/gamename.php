@@ -1358,6 +1358,8 @@ return [
         "superstickypiggy" => "슈퍼 스티키 피기",
         "superhotchilli" => "슈퍼 핫 칠리",
         "_777fruityclassic" => "777 후루티 클래식",
+        "luckypenny" => "럭키 페니",
+        "amazoniaspirit" => "아마조니아 스피릿",
 
         // CQ9
         "Double Fly" => "더블 플라이",

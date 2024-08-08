@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_3chinapotsbng
+namespace VanguardLTE\Games\amazoniaspiritbng
 {
     class Server
     {
@@ -43,7 +43,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
             $LASTSPIN = $slotSettings->GetHistory();
             $BALANCE = $slotSettings->GetBalance();
             $DENOMINATOR = 100;
-            $LINES = 25;
+            $LINES = 20;
             
             $WILD = 12;
             $SCATTER = 13;
@@ -84,24 +84,18 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         'actions' => ['spin'],
                         'current' => 'spins',
                         'last_args' => [
-                            'bet_per_line' => $bets[9],
-                            'lines' => 25,
                         ],
                         'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
-                        'math_version' => 'a',
+                        //'math_version' => 'a',
                         'round_finished' => true,
                         'spins' => [
-                            'bac' => [
-                                '1' => [0, 0],
-                                '2' => [0, 0],
-                                '3' => [0, 0]
-                            ],
+                            'bac' => [0,0],
+                            'bac_win' => false,
                             'bet_per_line' => $bets[9],
-                            'board' => [[2,2,1],[3,6,6],[9,9,9],[2,8,8],[5,2,2]],
-                            'bs_count' => 0,
-                            'bs_v' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                            'bs_values' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                            'lines' => 25,
+                            'board' => [[11,12,11,11],[9,9,9,9],[5,10,5,7],[1,8,8,3],[2,4,6,6]],
+                            'bs_v' => [[1 * $bets[9] * $LINES,0,5 * $bets[9] * $LINES,8 * $bets[9] * $LINES],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]],
+                            'bs_values' => [[1,0,5,8],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]],
+                            'lines' => 20,
                             'round_bet' => $bets[9] * $LINES,
                             'round_win' => 0,
                             'total_win' => 0,
@@ -116,8 +110,8 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         'quick_spin' => false
                     ],
                     'request_id' => $slotEvent['request_id'],
-                    'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
-                    'settings' => json_decode('{"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","bet_factor":[25],"bets":['. implode(',', $bets) .'],"big_win":[15,25,50,70],"bonus_symbols":[1,2,3,5,8,10,"mini","minor","major"],"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"default_multiplier":4,"jackpots":{"grand":2000,"major":100,"mini":15,"minor":30},"lines":[25],"multiplier_values":[2,3,4,5,8,10],"paylines":[[1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],[1,0,0,0,1],[1,2,2,2,1],[0,0,1,2,2],[2,2,1,0,0],[1,2,1,0,1],[1,0,1,2,1],[0,1,1,1,0],[2,1,1,1,2],[0,1,0,1,0],[2,1,2,1,2],[1,1,0,1,1],[1,1,2,1,1],[0,0,2,0,0],[2,2,0,2,2],[0,2,2,2,0],[2,0,0,0,2],[1,2,0,2,1],[1,0,2,0,1],[0,2,0,2,0],[2,0,2,0,2]],"paytable":{"1":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"2":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"3":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"4":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"5":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":125,"occurrences":5,"type":"lb"}],"6":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":125,"occurrences":5,"type":"lb"}],"7":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":25,"occurrences":4,"type":"lb"},{"multiplier":125,"occurrences":5,"type":"lb"}],"8":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":50,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"9":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":75,"occurrences":4,"type":"lb"},{"multiplier":250,"occurrences":5,"type":"lb"}]},"reelsamples":{"spins":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]],"spins_1":[[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11]],"spins_2":[[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]]},"respins_granted":3,"rows":3,"small_win":5,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_wild","type":"wild"},{"id":10,"name":"el_bonus_progress_1","type":"scat"},{"id":11,"name":"el_bonus_progress_2","type":"scat"},{"id":12,"name":"el_bonus_progress_3","type":"scat"},{"id":13,"name":"el_bonus","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8],"symbols_scat":[10,11,12,13],"symbols_wild":[9]}'),
+                    'session_id' => '7e3c4b4b87614074b61607b08805c1bc',
+                    'settings' => json_decode('{"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","bet_factor": [20], "bets": ['. implode(',', $bets) .'], "big_win":[15,25,50],"bonus_symbols":[1,1.5,2,2.5,3,5,8,10,"mini","minor","midi","major"],"boost_bagvalue":[1,2,3,5],"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"fs_retrigger":8,"jackpots":{"grand":1000,"major":100,"midi":50,"mini":15,"minor":25,"royal":10000},"lines":[20],"paylines":[[0,0,0,0,0],[3,3,3,3,3],[1,1,1,1,1],[2,2,2,2,2],[0,1,2,1,0],[3,2,1,2,3],[2,1,0,1,2],[1,2,3,2,1],[0,1,0,1,0],[3,2,3,2,3],[1,0,1,0,1],[2,3,2,3,2],[1,2,1,2,1],[2,1,2,1,2],[0,1,1,1,0],[3,2,2,2,3],[1,0,0,0,1],[2,3,3,3,2],[1,2,2,2,1],[2,1,1,1,2]],"paytable":{"1":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"2":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"3":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"4":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"5":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":15,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"6":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":15,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"7":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":30,"occurrences":4,"type":"lb"},{"multiplier":150,"occurrences":5,"type":"lb"}],"8":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":30,"occurrences":4,"type":"lb"},{"multiplier":150,"occurrences":5,"type":"lb"}],"9":[{"multiplier":20,"occurrences":3,"type":"lb"},{"multiplier":50,"occurrences":4,"type":"lb"},{"multiplier":200,"occurrences":5,"type":"lb"}],"10":[{"freespins":8,"multiplier":0,"occurrences":3,"trigger":"freespins","type":"tb"}]},"reelsamples":{"freespins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12]],"spins":[[1,2,3,4,5,6,7,8,9,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,11,12]]},"respins_granted":3,"rows":4,"symbols":[{"id":1,"name":"el_01","type":"line"},{"id":2,"name":"el_02","type":"line"},{"id":3,"name":"el_03","type":"line"},{"id":4,"name":"el_04","type":"line"},{"id":5,"name":"el_05","type":"line"},{"id":6,"name":"el_06","type":"line"},{"id":7,"name":"el_07","type":"line"},{"id":8,"name":"el_08","type":"line"},{"id":9,"name":"el_wild","type":"wild"},{"id":10,"name":"el_scatter","type":"scat"},{"id":11,"name":"el_bonus","type":"scat"},{"id":12,"name":"el_bonus_mystery","type":"scat"},{"id":13,"name":"el_boost","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8],"symbols_scat":[10,11,12,13],"symbols_wild":[9]}'),
                     'status' => [
                         'code' => 'OK'
                     ],
@@ -125,17 +119,12 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         'balance' => $BALANCE * 100,
                         'balance_version' => $slotSettings->GetGameData($slotSettings->slotId . 'BalanceVersion'),
                         'currency' => 'KRW',
-                        'huid' => '969:major:17390:rKRW',
+                        'huid' => '1204:major:17390:rKRW',
                         'show_balance' => true
                     ]
                 ];
                 if( $LASTSPIN !== NULL ) {
                     if(isset($LASTSPIN->context)){
-                        // if(isset($LASTSPIN->context->spins)){
-                        //     $LASTSPIN->context->spins->board = $LASTSPIN->context->spins->feature_board;
-                        // }else if(isset($LASTSPIN->context->freespins)){
-                        //     $LASTSPIN->context->freespins->board = $LASTSPIN->context->freespins->feature_board;
-                        // }
                         $objRes['context'] = $LASTSPIN->context;
                     }
                 }
@@ -189,7 +178,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
                 $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
                 $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
-                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? ['1' => [0, 0],'2' => [0, 0],'3' => [0, 0]];
+                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? [2, 0];
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
@@ -208,75 +197,35 @@ namespace VanguardLTE\Games\_3chinapotsbng
                             if($stack[$spin_type] != ''){
                                 $stack[$spin_type]['bet_per_line'] = $betline * $DENOMINATOR;
                                 $stack[$spin_type]['round_bet'] = $betline * $DENOMINATOR * $LINES;
+                                $stack[$spin_type]['bac'] = $currentHill;
                                 if(isset($stack[$spin_type]['round_win'])){
+                                    $totalWin = $stack[$spin_type]['round_win'] * $betline;
                                     $stack[$spin_type]['round_win'] = str_replace(',', '', $stack[$spin_type]['round_win']) * $betline * $DENOMINATOR;
                                 }
                                 if(isset($stack[$spin_type]['total_win'])){
                                     $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
                                 }
-                                if($spin_type == 'spins' && $action['name'] == 'bonus_init'){       
-                                    for($i = 0; $i < count($stack[$spin_type]['bonus_mechanic']); $i++){
-                                        $currentHill[$stack[$spin_type]['bonus_mechanic'][$i]] = [0, 0];
-                                    }
-                                    $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
+                                if(isset($stack[$spin_type]['boost_pay'])){
+                                    $stack[$spin_type]['boost_pay'] = str_replace(',', '', $stack[$spin_type]['boost_pay']) * $betline * $DENOMINATOR;
                                 }
-                                $stack[$spin_type]['bac'] = $currentHill;
+                                if(isset($stack[$spin_type]['total_boost_pay'])){
+                                    $stack[$spin_type]['total_boost_pay'] = str_replace(',', '', $stack[$spin_type]['total_boost_pay']) * $betline * $DENOMINATOR;
+                                }
+                                if(isset($stack[$spin_type]['bs_v'])){
+                                    for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
+                                        for($j = 0; $j < 4; $j++){
+                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
+                                                $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
+                                            }
+                                        }
+                                    }
+                                }
                                 if(isset($stack[$spin_type]['new_bs']) && count($stack[$spin_type]['new_bs']) > 0){
                                     foreach( $stack[$spin_type]['new_bs'] as $index => $value ){
                                         if(isset($value['value']) && $value['value'] > 0){
                                             $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
                                             $stack[$spin_type]['new_bs'][$index] = $value;
                                         }
-                                    }
-                                }
-                                if(isset($stack[$spin_type]['new_bs_2']) && count($stack[$spin_type]['new_bs_2']) > 0){
-                                    foreach( $stack[$spin_type]['new_bs_2'] as $index => $value ){
-                                        if(isset($value['value']) && $value['value'] > 0){
-                                            $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
-                                            $stack[$spin_type]['new_bs_2'][$index] = $value;
-                                        }
-                                    }
-                                }
-                                if(isset($stack[$spin_type]['bs_v'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
-                                        for($j = 0; $j < 3; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
-                                                $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
-                                            if(isset($stack[$spin_type]['old_bs_v'])){
-                                                if(is_numeric(str_replace(',', '', $stack[$spin_type]['old_bs_v'][$i][$j]))){
-                                                    $stack[$spin_type]['old_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['old_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if(isset($stack[$spin_type]['bs_v_2'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
-                                        for($j = 0; $j < 3; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
-                                                $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
-                                            if(isset($stack[$spin_type]['old_bs_v_2'])){
-                                                if(is_numeric(str_replace(',', '', $stack[$spin_type]['old_bs_v_2'][$i][$j]))){
-                                                    $stack[$spin_type]['old_bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['old_bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if(isset($stack[$spin_type]['us_orig_bs_v'])){
-                                    for($i = 0; $i < count($stack[$spin_type]['us_orig_bs_v']); $i++){
-                                        for($j = 0; $j < 3; $j++){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_orig_bs_v'][$i][$j]))){
-                                                $stack[$spin_type]['us_orig_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['us_orig_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
-                                        }
-                                    }
-                                }
-                                if(isset($stack[$spin_type]['us_win']) && isset($stack[$spin_type]['us_win']['v'])){
-                                    if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_win']['v']))){
-                                        $stack[$spin_type]['us_win']['v'] = str_replace(',', '', $stack[$spin_type]['us_win']['v']) * $betline * $DENOMINATOR;
                                     }
                                 }
                             }
@@ -356,23 +305,20 @@ namespace VanguardLTE\Games\_3chinapotsbng
                             'context' => [
                                 'actions' => ['spin'],
                                 'current' => 'spins',
-                                'last_args' => [],
+                                'last_args' => [
+                                ],
                                 'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
-                                'math_version' => 'a',
+                                //'math_version' => 'a',
                                 'round_finished' => true,
                                 'spins' => [
-                                    'bac' => [
-                                        '1' => [0, 0],
-                                        '2' => [0, 0],
-                                        '3' => [0, 0]
-                                    ],
-                                    'bet_per_line' => $betline * $DENOMINATOR,
-                                    'board' => [[2,2,1],[3,6,6],[9,9,9],[2,8,8],[5,2,2]],
-                                    'bs_count' => 0,
-                                    'bs_v' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                                    'bs_values' => [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-                                    'lines' => 25,
-                                    'round_bet' => $betline * $DENOMINATOR * $LINES,
+                                    'bac' => [0,0],
+                                    'bac_win' => false,
+                                    'bet_per_line' => $betline,
+                                    'board' => [[11,12,11,11],[9,9,9,9],[5,10,5,7],[1,8,8,3],[2,4,6,6]],
+                                    'bs_v' => [[1 * $betline * $LINES,0,5 * $betline * $LINES,8 * $betline * $LINES],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]],
+                                    'bs_values' => [[1,0,5,8],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]],
+                                    'lines' => 20,
+                                    'round_bet' => $betline * $LINES,
                                     'round_win' => 0,
                                     'total_win' => 0,
                                 ],
@@ -447,7 +393,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         
                         $roundstr = sprintf('%.4f', microtime(TRUE));
                         $roundstr = str_replace('.', '', $roundstr);
-                        $roundstr = '513' . substr($roundstr, 4, 10) . '001';
+                        $roundstr = '715' . substr($roundstr, 4, 10) . '001';
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);
                     }
                     if(count($tumbAndFreeStacks) > 0 && isset($tumbAndFreeStacks[$totalSpinCount])){
@@ -459,7 +405,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
                     $freeSpinNum = 0;
                     $spin_types = ['spins', 'freespins', 'bonus'];
                     $totalWin = 0;
-                    $moneyCounts = [0,0,0];
+                    $moneyCount = 0;
                     for($k = 0; $k < 3; $k++){
                         $spin_type = $spin_types[$k];
                         if($stack[$spin_type] != ''){
@@ -472,21 +418,22 @@ namespace VanguardLTE\Games\_3chinapotsbng
                             }
                             if(isset($stack[$spin_type]['total_win'])){
                                 $stack[$spin_type]['total_win'] = str_replace(',', '', $stack[$spin_type]['total_win']) * $betline * $DENOMINATOR;
-                            }    
-                            if($slotEvent['slotEvent'] != 'respin' && $spin_types[$k] != 'bonus' && isset($stack[$spin_type]['board'])){
-                                $moneyCounts = [0,0,0];
-                                for($i = 0; $i < 5; $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if($stack[$spin_type]['board'][$i][$j] == 10){
-                                            $moneyCounts[0]++;
-                                        }else if($stack[$spin_type]['board'][$i][$j] == 11){
-                                            $moneyCounts[1]++;
-                                        }else if($stack[$spin_type]['board'][$i][$j] == 12){
-                                            $moneyCounts[2]++;
+                            }
+                            if(isset($stack[$spin_type]['boost_pay'])){
+                                $stack[$spin_type]['boost_pay'] = str_replace(',', '', $stack[$spin_type]['boost_pay']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['total_boost_pay'])){
+                                $stack[$spin_type]['total_boost_pay'] = str_replace(',', '', $stack[$spin_type]['total_boost_pay']) * $betline * $DENOMINATOR;
+                            }
+                            if(isset($stack[$spin_type]['bs_v'])){
+                                for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
+                                    for($j = 0; $j < 4; $j++){
+                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
+                                            $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
                                         }
                                     }
                                 }
-                            }   
+                            }
                             if(isset($stack[$spin_type]['new_bs']) && count($stack[$spin_type]['new_bs']) > 0){
                                 foreach( $stack[$spin_type]['new_bs'] as $index => $value ){
                                     if(isset($value['value']) && $value['value'] > 0){
@@ -495,70 +442,16 @@ namespace VanguardLTE\Games\_3chinapotsbng
                                     }
                                 }
                             }
-                            if(isset($stack[$spin_type]['new_bs_2']) && count($stack[$spin_type]['new_bs_2']) > 0){
-                                foreach( $stack[$spin_type]['new_bs_2'] as $index => $value ){
-                                    if(isset($value['value']) && $value['value'] > 0){
-                                        $value['value'] = str_replace(',', '', $value['value']) * $betline * $DENOMINATOR;
-                                        $stack[$spin_type]['new_bs_2'][$index] = $value;
-                                    }
-                                }
-                            }
-                            if(isset($stack[$spin_type]['bs_v'])){
-                                for($i = 0; $i < count($stack[$spin_type]['bs_v']); $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]))){
-                                            $stack[$spin_type]['bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
-                                        if(isset($stack[$spin_type]['old_bs_v'])){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['old_bs_v'][$i][$j]))){
-                                                $stack[$spin_type]['old_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['old_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
+                            if($slotEvent['slotEvent'] != 'respin' && $spin_types[$k] != 'bonus' && isset($stack[$spin_type]['board'])){
+                                $moneyCount = 0;
+                                for($i = 0; $i < 5; $i++){
+                                    for($j = 0; $j < 4; $j++){
+                                        if($stack[$spin_type]['board'][$i][$j] == 11){
+                                            $moneyCount++;
                                         }
                                     }
                                 }
-                            }
-                            if(isset($stack[$spin_type]['bs_v_2'])){
-                                for($i = 0; $i < count($stack[$spin_type]['bs_v_2']); $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]))){
-                                            $stack[$spin_type]['bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
-                                        if(isset($stack[$spin_type]['old_bs_v_2'])){
-                                            if(is_numeric(str_replace(',', '', $stack[$spin_type]['old_bs_v_2'][$i][$j]))){
-                                                $stack[$spin_type]['old_bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['old_bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if(isset($stack[$spin_type]['us_orig_bs_v'])){
-                                for($i = 0; $i < count($stack[$spin_type]['us_orig_bs_v']); $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_orig_bs_v'][$i][$j]))){
-                                            $stack[$spin_type]['us_orig_bs_v'][$i][$j] = str_replace(',', '', $stack[$spin_type]['us_orig_bs_v'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
-                                    }
-                                }
-                            }
-                            if(isset($stack[$spin_type]['us_orig_bs_v_2'])){
-                                for($i = 0; $i < count($stack[$spin_type]['us_orig_bs_v_2']); $i++){
-                                    for($j = 0; $j < 3; $j++){
-                                        if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_orig_bs_v_2'][$i][$j]))){
-                                            $stack[$spin_type]['us_orig_bs_v_2'][$i][$j] = str_replace(',', '', $stack[$spin_type]['us_orig_bs_v_2'][$i][$j]) * $betline * $DENOMINATOR;
-                                        }
-                                    }
-                                }
-                            }
-                            if(isset($stack[$spin_type]['us_win']) && isset($stack[$spin_type]['us_win']['v'])){
-                                if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_win']['v']))){
-                                    $stack[$spin_type]['us_win']['v'] = str_replace(',', '', $stack[$spin_type]['us_win']['v']) * $betline * $DENOMINATOR;
-                                }
-                            }
-                            if(isset($stack[$spin_type]['us_win_2']) && isset($stack[$spin_type]['us_win_2']['v'])){
-                                if(is_numeric(str_replace(',', '', $stack[$spin_type]['us_win_2']['v']))){
-                                    $stack[$spin_type]['us_win_2']['v'] = str_replace(',', '', $stack[$spin_type]['us_win_2']['v']) * $betline * $DENOMINATOR;
-                                }
-                            }
+                            }  
                             if($spin_type != 'bonus'){
                                 if(isset($stack[$spin_type]['winlines']) && count($stack[$spin_type]['winlines']) > 0){
                                     foreach( $stack[$spin_type]['winlines'] as $index => $value ){
@@ -586,27 +479,6 @@ namespace VanguardLTE\Games\_3chinapotsbng
                             }
                         }
                     }
-                    $subHill = [0, 7, 9, 14, 24, 34, 44, 0];
-                    for($k = 0; $k < 3; $k++){
-                        if($moneyCounts[$k] > 0){
-                            $currentHill['' . ($k + 1)][1]++;
-                            if($currentHill['' . ($k + 1)][0]<=2 && $currentHill['' . ($k + 1)][1] > 2){
-                                $currentHill['' . ($k + 1)][0]++;
-                                $currentHill['' . ($k + 1)][1] = 0;
-                            }else if($currentHill['' . ($k + 1)][0]<=4 && $currentHill['' . ($k + 1)][1] > 7){
-                                $currentHill['' . ($k + 1)][0]++;
-                                $currentHill['' . ($k + 1)][1] = 0;
-                            }else if($currentHill['' . ($k + 1)][0]<=7 && $currentHill['' . ($k + 1)][1] >= 12){
-                                $currentHill['' . ($k + 1)][0]++;
-                                $currentHill['' . ($k + 1)][1] = 0;
-                            }else if($currentHill['' . ($k + 1)][0]==8 && $currentHill['' . ($k + 1)][1] >= 20){
-                                $currentHill['' . ($k + 1)][0] = 8;
-                                $currentHill['' . ($k + 1)][1] = 0;
-                            }
-                        }
-                    }
-                    
-                    $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
                     if( $totalWin > 0) 
                     {
                         $spinType = 'c';
@@ -614,6 +486,20 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
                         $slotSettings->SetGameData($slotSettings->slotId . 'LastWin', $totalWin);
                     }
+                    if($moneyCount > 0){
+                        $currentHill[1]++;
+                        if($currentHill[0] <= 1 && $currentHill[1] >= ($currentHill[0] * 5 + 2)){
+                            $currentHill[0]++;
+                            $currentHill[1] = 0;
+                        }else if($currentHill[0] <= 8 && $currentHill[1] >= ($currentHill[0] * 5 + 2)){
+                            $currentHill[0]++;
+                            $currentHill[1] = 0;
+                        }else if($currentHill[0] >= 9){
+                            $currentHill[0] = 9;
+                            $currentHill[1] = 0;
+                        }
+                    }
+                    $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
                     $BALANCE = $slotSettings->GetBalance();
                     if( $freeSpinNum > 0 ) 
                     {
@@ -630,6 +516,9 @@ namespace VanguardLTE\Games\_3chinapotsbng
                     }else if($stack['actions'] && $stack['actions'][0] == 'bonus_init'){
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentRespin', 3);
                     }
+                    if($stack['actions'][0] == 'bonus_init' && $stack['spins'] != '' && ((isset($stack['freespins']['bac_win']) && $stack['freespins']['bac_win']== true) || (isset($stack['spins']['bac_win']) && $stack['spins']['bac_win']== true))){
+                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', [0, 0]);
+                    }
                     $objRes = [
                         'command' => $slotEvent['command'],
                         'context' => [
@@ -637,7 +526,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
                             'current' => 'spins',
                             'last_args' => [
                                 'bet_per_line' => $betline * $DENOMINATOR,
-                                'lines' => 25
+                                'lines' => $LINES
                             ],
                             'last_win' => ($slotSettings->GetGameData($slotSettings->slotId . 'LastWin') ?? 0) * $DENOMINATOR,
                             'math_version' => 'a',
@@ -671,9 +560,6 @@ namespace VanguardLTE\Games\_3chinapotsbng
                     ];
                     $isEndFreeSpin = false;
                     $isState = true;
-                    if($stack['actions'][0] == 'bonus_init'){
-                        $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
-                    }
                     if($stack['bonus'] != ''){
                         $objRes['context']['bonus'] = $stack['bonus'];
                         $objRes['context']['bonus']['bac'] = $currentHill;
