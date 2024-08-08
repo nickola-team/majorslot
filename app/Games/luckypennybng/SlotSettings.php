@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\_3chinapotsbng
+namespace VanguardLTE\Games\luckypennybng
 {
     class SlotSettings
     {
@@ -304,6 +304,10 @@ namespace VanguardLTE\Games\_3chinapotsbng
                     $this->happyhouruser->save();
                     return $game;
                 }
+                $_allBets = $sum / $this->GetPercent() * 100;
+                $normal_sum = $_allBets * 10 / 100;
+                $game->set_gamebank($normal_sum, 'inc', '');
+                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -338,7 +342,7 @@ namespace VanguardLTE\Games\_3chinapotsbng
                 $this->toSysJackBanks = 0;
                 $this->betProfit = 0;
                 $currentpercent = $this->GetPercent();
-                $bonus_percent = 10;
+                $bonus_percent = $currentpercent / 3;
                 $count_balance = $this->GetCountBalanceUser();
                 $_allBets = $sum / $this->GetPercent() * 100;
                 /*if( $count_balance < $_allBets && $count_balance > 0 ) 
@@ -647,14 +651,14 @@ namespace VanguardLTE\Games\_3chinapotsbng
         } 
 
 
-        public function GetReelStrips($winType, $bet)
+        public function GetReelStrips($winType, $bet,$pur)
         {
+            // $winType = 'bonus';
             // if($winType == 'bonus'){
-                //$stack = \VanguardLTE\BNGGameStackModel\BNGGame3ChinaPotsStack::where('id', 12)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGameLuckyPennyStack::where('id', 16780)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            //$winType = 'bonus';
-            $spintype = 0;
+            $spintype = 0;            
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
                 $spintype = 1;
@@ -680,19 +684,19 @@ namespace VanguardLTE\Games\_3chinapotsbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    // $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
-                    // if($currentHill[0] >= 8 && $currentHill[1] >= 10){
-                    //     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3ChinaPotsStack::where('spin_type', 2);
-                    // }else{
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3ChinaPotsStack::where('spin_type','>', 0);
-                    // }
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLuckyPennyStack::where('spin_type', 1);
+                    if($pur >= 0){
+                        $stacks = $stacks->where('pur_level', $pur);
+                    }else{
+                        $stacks = $stacks->where('pur_level', '<', 1);
+                    }
                 }else{
-                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3ChinaPotsStack::where('spin_type', 0);
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGameLuckyPennyStack::where('spin_type', 0);
                 }
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 68000);
+                    // $index = mt_rand(0, 75000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
@@ -708,6 +712,13 @@ namespace VanguardLTE\Games\_3chinapotsbng
                         $this->game->save();
                     }else{
                         if($winType == 'bonus'){
+                            if($this->GetGameData($this->slotId . 'BuyFreespin') > 0){
+                                $miniOdd = $limitOdd / mt_rand(2,4);
+                                if($miniOdd > 30){
+                                    $miniOdd = 30;
+                                }
+                                // $stacks = $stacks->where('odd', '>=', $miniOdd);
+                            }
                             if ($this->happyhouruser)
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(3)->get();
