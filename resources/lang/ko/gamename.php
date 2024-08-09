@@ -1256,6 +1256,8 @@ return [
         "JokersJewelsHot" => "조커스 주얼스 핫",
         "SumoSupremeMegaways" => "스모 슈프림 메가웨이즈",
         "BowofArtemis" => "보우 오브 아르테미스",
+        "MoneyStacks" => "머니 스택스",
+        "RunningSushi" => "러닝 스시",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
