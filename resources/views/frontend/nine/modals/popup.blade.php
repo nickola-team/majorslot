@@ -1,9 +1,9 @@
 <div id="pop{{$notice->id}}" 
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <?php
-$width = '100vw'; $height = '100vh';
+$width = '100vw'; $height = '90vh';
 ?>
-  style="position:fixed; left:0px; top:0px; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
+  style="position:fixed; left:0px; top:5vh; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
 @else
 <?php
 $width = '330px'; $height = '400px';
