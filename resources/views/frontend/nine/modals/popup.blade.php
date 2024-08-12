@@ -1,9 +1,9 @@
 <div id="pop{{$notice->id}}" 
 @if( $detect->isMobile() || $detect->isTablet() ) 
 <?php
-$width = '100vw'; $height = '100vh';
+$width = '90vw'; $height = '85vh';
 ?>
-  style="position:fixed; left:0px; top:0px; z-index:200; width:100vw;height:100vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
+  style="position:fixed; left:5vw; top:5vh; z-index:200; width:90vw;height:85vh; visibility:visible; display:table;border: 2px solid #d5a451;" 
 @else
 <?php
 $width = '330px'; $height = '400px';
@@ -25,8 +25,8 @@ $width = '330px'; $height = '400px';
       </td>
     </tr>
     <tr>
-      <td bgcolor="#d5a451" height="30" valign="bottom" align="right">
-      <input type="checkbox" name="chkbox" value="checkbox" id="notice_chk{{$notice->id}}" onclick="closeWinpopDay({{$notice->id}})"><b>하루 동안 이 창을 열지 않음</b> <a href="javascript:closeWinpop({{$notice->id}});"><span class="navi_name">[닫기]</span></a>&nbsp;
+      <td bgcolor="#d5a451" height="40" valign="bottom" align="right">
+      <input type="checkbox" name="chkbox" value="checkbox" id="notice_chk{{$notice->id}}" onclick="closeWinpopDay({{$notice->id}})" ><b style="font-size:17px;">하루 동안 이 창을 열지 않음</b> <a href="javascript:closeWinpop({{$notice->id}});"><span class="navi_name" style="font-size:20px;">[닫기]</span></a>&nbsp;
       </td>
     </tr>
   </tbody>
