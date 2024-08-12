@@ -734,7 +734,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 return response()->json(['error' => true, 'msg' => '카테고리ID 에러', 'code' => '002']);
             }
-
+            if($shop_id != ''){
+                $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
+                if($unreadmsg > 0){
+                    return response()->json(['error' => true, 'msg' => '읽지 않은 쪽지가 있습니다.', 'code' => '002']);
+                }
+            }
             $cat1 = \VanguardLTE\Category::where([
                 'href' => $category, 
                 'shop_id' => $shop_id
