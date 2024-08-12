@@ -1,0 +1,130 @@
+:root {
+    --slot-item-height: 50px;
+    --slot-item-width: 46px
+}
+
+.LinesSlot .ReelsSlot {
+    margin: 41px 70px 25px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1,
+.LinesSlot .ReelsSlot__Item--13,
+.LinesSlot .ReelsSlot__Item--14,
+.LinesSlot .ReelsSlot__Item--15 {
+    z-index: 1;
+    align-items: flex-end;
+    justify-content: center
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "allSushi slot" "..       sushi"
+}
+
+.Spin .SushiSet {
+    grid-area: sushi
+}
+
+.Spin .AllSushi {
+    grid-area: allSushi
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.AllSushi {
+    width: 69px;
+    height: 55px;
+    align-self: center;
+    margin-right: -45px
+}
+
+.AllSushi__Value {
+    width: 60px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.SushiSet {
+    gap: 3px;
+    z-index: 1;
+    margin-top: -10px;
+    display: flex;
+    align-self: center;
+    justify-content: center
+}
+
+.SushiSet__Item {
+    width: 35px;
+    height: 25px;
+    align-items: flex-end
+}
+
+.SushiSet__Item--3,
+.SushiSet__Item--4 {
+    width: 30px
+}
+
+.SushiSet__Item .MoneyScatter__LabelWrap {
+    top: -10px;
+    justify-content: flex-start
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vswayscashconv/slotBg.png) 1x, url(./images/vswayscashconv/slotBg@2x.png) 2x);
+    width: 380px;
+    height: 274px;
+    margin: -2px -5px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vswayscashconv/slotBgFs.png) 1x, url(./images/vswayscashconv/slotBgFs@2x.png) 2x)
+}
+
+.WinLines-Block .ReelsSlot {
+    margin: 0
+}
+
+.WinLines-Group .Footer-direction {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
