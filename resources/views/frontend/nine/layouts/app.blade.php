@@ -134,6 +134,7 @@
       @include('frontend.nine.modals.minis')
       @include('frontend.nine.modals.holdem')
     @endif
+    @if(Auth::check())
     @foreach ($noticelist as $ntc)
       @if ($ntc->popup == 'popup')
         @include('frontend.nine.modals.popup',  ['notice' => $ntc])
@@ -144,6 +145,7 @@
         </script>
       @endif
     @endforeach
+    @endif
     </div>
 @if( $detect->isMobile() || $detect->isTablet() ) 
 @elseif (isset($telegram) && $telegram!='')
