@@ -565,7 +565,11 @@ namespace VanguardLTE\Games\BigBassMissionFishinPM
                 {
                     $spinType = 'c';
                     $slotSettings->SetBalance($totalWin);
-                    $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    if($slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
+                        $slotSettings->SetBank('bonus', -1 * $totalWin);
+                    }else{
+                        $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), -1 * $totalWin);
+                    }
                 }
 
                 $_obf_totalWin = $totalWin;
@@ -756,7 +760,7 @@ namespace VanguardLTE\Games\BigBassMissionFishinPM
                 $_GameLog = '{"responseEvent":"spin","responseType":"' . $slotEvent['slotEvent'] . '","serverResponse":{"BonusMpl":' . 
                     $slotSettings->GetGameData($slotSettings->slotId . 'BonusMpl') . ',"lines":' . $lines . ',"bet":' . $betline . ',"totalFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') . ',"currentFreeGames":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') . ',"CurrentRespin":' . $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') . ',"Balance":' . $Balance . ',"ReplayGameLogs":'.json_encode($replayLog).',"afterBalance":' . $slotSettings->GetBalance() . ',"totalWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . ',"bonusWin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusWin') . ',"ScatterCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'ScatterCount') . ',"RoundID":' . $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') . ',"BuyFreeSpin":' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin'). ',"BonusStep":' . $slotSettings->GetGameData($slotSettings->slotId . 'BonusStep'). ',"Bl":' . $slotSettings->GetGameData($slotSettings->slotId . 'Bl'). ',"G":' . json_encode($slotSettings->GetGameData($slotSettings->slotId . 'G')) . ',"TotalSpinCount":' . $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') . ',"TumbAndFreeStacks":'.json_encode($slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks')) . ',"winLines":[],"Jackpots":""' . ',"LastReel":'.json_encode($lastReel).'}}';//ReplayLog, FreeStack
                 if($str_rs == 'stack_the_cash' && $isState == true){
-                    $slotEvent['slotEvent'] == 'respin';
+                    $slotEvent['slotEvent'] = 'respin';
                 }
                 $allBet = $betline * $lines;
                 if(($slotEvent['slotEvent'] == 'freespin' || $slotEvent['slotEvent'] == 'respin') && $isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
@@ -771,6 +775,11 @@ namespace VanguardLTE\Games\BigBassMissionFishinPM
                 $lastReel = $lastEvent->serverResponse->LastReel;
                 $lines = 10;
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BonusStep') == -1)
+                {
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $ind = $slotEvent['ind'];
                 $strOtherResponse = '';
                 $spinType = 'b';
