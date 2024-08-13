@@ -775,6 +775,11 @@ namespace VanguardLTE\Games\BigBassMissionFishinPM
                 $lastReel = $lastEvent->serverResponse->LastReel;
                 $lines = 10;
                 $Balance = $slotSettings->GetGameData($slotSettings->slotId . 'FreeBalance');
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BonusStep') == -1)
+                {
+                    $response = 'unlogged';
+                    exit( $response );
+                }
                 $ind = $slotEvent['ind'];
                 $strOtherResponse = '';
                 $spinType = 'b';
