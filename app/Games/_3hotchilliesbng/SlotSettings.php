@@ -679,7 +679,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type','>', 0);
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 2);
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 0);
                 }
