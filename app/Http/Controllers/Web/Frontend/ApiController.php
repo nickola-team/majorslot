@@ -1448,6 +1448,59 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     'url' => $url
                 ], 200);
             }
+            else if ($master->bank_name == '나인가상계좌') //경남 가상계좌
+            {
+                if ($amount == 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '충전금액을 입력하세요',
+                        'code' => '002'
+                    ], 200);
+                }
+
+                if ($amount % 10000 != 0)
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '1만원 단위로 입금하세요',
+                        'code' => '001'
+                    ], 200);
+                }
+                $data = [
+                    "depositAmount" => $amount,
+                    "depositName" => $user->recommender,
+                    "siteUserId" => $user->username
+                ];
+                $response = Http::withHeaders([
+                    'API-KEY' => 'C9RAZ9C73CXEM0WN'
+                    ])->post('https://xk94rw26.com/v1/diposit/register', $data);
+                if (!$response->ok())
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+                $data = $response->json();
+                if($data['code'] != 'GOOD')
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+                else
+                {
+                    return response()->json([
+                        'error' => false, 
+                        'msg' => '입금신청이 등록되었습니다. 등록번호는 ' . $data['depositApplyNo'] . '입니다',
+                        'url' => null
+                    ], 200);
+                }
+            }
             else if ($master->bank_name == 'VirtualAcc') //버철가상계좌
             {
                 // $url = 'https://jun-200.com/sign-up-process-api?uid='.$master->account_no. '@'.$user->id.'&site='.$master->recommender.'&p='.($amount/10000).'&rec_name=' . $account;
