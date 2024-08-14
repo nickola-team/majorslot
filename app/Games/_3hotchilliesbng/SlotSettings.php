@@ -679,13 +679,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
-                    // $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
-                    // if($currentHill[0] >= 8 && $currentHill[1] >= 10){
-                    //     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameForestSpiritStack::where('spin_type', 2);
-                    // }else{
                         $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type','>', 0);
-                        //$stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type','>', 0)->where('pur_level', $pur);
-                    // }
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 0);
                 }
