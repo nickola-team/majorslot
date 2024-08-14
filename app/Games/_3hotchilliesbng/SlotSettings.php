@@ -653,7 +653,6 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('id', 261859)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            $winType = 'bonus';
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
