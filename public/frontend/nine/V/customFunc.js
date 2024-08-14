@@ -477,11 +477,10 @@ function autorequest(){
     if(!f){
         return false;
     }
-    var cmoney = $('.money').val();
     $.ajax({
         type: "POST",
         url: "/api/depositAccount",
-        data: {'money':parseNumberToInt(cmoney)},
+        data: null,
         cache: false,
         async: false,
         success: function (data) {
@@ -586,9 +585,26 @@ function depositRequest() {
         money: cmoney,
         },
         success: function(result) {
-        if (result.error == false) {
-            $("#charge_money").val(0);
-            swal('신청완료 되었습니다.');
+          if (result.error == false) {
+            // 가상계좌
+            $.ajax({
+              type: "POST",
+              url: "/api/depositAccount",
+              data: {money:parseNumberToInt(cmoney)},
+              cache: false,
+              async: false,
+              success: function (data) {
+                  if (data.error) {
+                      swal(data.msg);
+                      return;
+                  }
+                  $("#charge_money").val(0);
+                  swal('신청완료 되었습니다.');
+              },
+              error: function (err, xhr) {
+                  alert(err.responseText);
+              },
+          });
         } else {
             swal('Oops!', result.msg, 'error');
         }
