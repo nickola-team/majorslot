@@ -1467,6 +1467,27 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '001'
                     ], 200);
                 }
+                $response = Http::withHeaders([
+                    'API-KEY' => 'C9RAZ9C73CXEM0WN'
+                    ])->get('https://xk94rw26.com/v1/diposit/accountInfo');
+                if (!$response->ok())
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+                $data = $response->json();
+                if($data['code'] != 'GOOD')
+                {
+                    return response()->json([
+                        'error' => true, 
+                        'msg' => '계좌요청이 실패하였습니다. 다시 시도해주세요',
+                        'code' => 001
+                    ], 200);
+                }
+                $accountInfo = $data['message'];
                 $data = [
                     "depositAmount" => $amount,
                     "depositName" => $user->recommender,
@@ -1496,7 +1517,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 {
                     return response()->json([
                         'error' => false, 
-                        'msg' => '입금신청이 등록되었습니다. 등록번호는 ' . $data['depositApplyNo'] . '입니다',
+                        'msg' => '입금신청이 등록되었습니다. 계좌번호 --> '. $accountInfo .', 등록번호 --> ' . $data['depositApplyNo'] . '입니다',
                         'url' => null
                     ], 200);
                 }
