@@ -123,7 +123,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     ],
                     'request_id' => $slotEvent['request_id'],
                     'session_id' => '68939e9a5d134e78bfd9993d4a2cc34e',
-                    'settings' => json_decode('{"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","bet_factor":[50],"bets":['. implode(',', $bets) .'],"big_win":[15,20,30,50,70],"bs_values_reels":{"1":360,"2":320,"3":200,"4":40,"5":40,"8":40,"10":40,"15":188,"30":120,"100":7},"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"freespins_buying_price":70,"jackpots":{"15":"mini","30":"minor","100":"major","1000":"grand"},"lines":[25],"paylines":[[1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],[1,0,0,0,1],[1,2,2,2,1],[0,0,1,2,2],[2,2,1,0,0],[1,2,1,0,1],[1,0,1,2,1],[0,1,1,1,0],[2,1,1,1,2],[0,1,0,1,0],[2,1,2,1,2],[1,1,0,1,1],[1,1,2,1,1],[0,0,2,0,0],[2,2,0,2,2],[0,2,2,2,0],[2,0,0,0,2],[1,2,0,2,1],[1,0,2,0,1],[0,2,0,2,0],[2,0,2,0,2]],"paytable":{"1":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"2":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"3":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"4":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"5":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"6":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":20,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"7":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":20,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"8":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"9":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"10":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"11":[{"multiplier":5,"occurrences":2,"type":"lb"},{"multiplier":25,"occurrences":3,"type":"lb"},{"multiplier":100,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}],"12":[{"multiplier":5,"occurrences":2,"type":"lb"},{"multiplier":25,"occurrences":3,"type":"lb"},{"multiplier":100,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}]},"reelsamples":{"bf":[[1,2,3,4,13],[2,3,4,5,13],[1,2,3,4,13],[2,3,4,5,6,8],[1,2,3,4,7,9]],"spins":[[1,2,3,4,5,6,7,8,9,10,11,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13]]},"respins_granted":3,"rows":3,"symbols":[{"id":1,"name":"10","type":"line"},{"id":2,"name":"J","type":"line"},{"id":3,"name":"Q","type":"line"},{"id":4,"name":"K","type":"line"},{"id":5,"name":"A","type":"line"},{"id":6,"name":"L1","type":"line"},{"id":7,"name":"L2","type":"line"},{"id":8,"name":"M1","type":"line"},{"id":9,"name":"M2","type":"line"},{"id":10,"name":"M3","type":"line"},{"id":11,"name":"H1","type":"line"},{"id":12,"name":"wild","type":"wild"},{"id":13,"name":"bonus","type":"scat"},{"id":14,"name":"hidden","type":"hide"},{"id":15,"name":"el_bonus_progress_1","type":"scat"},{"id":16,"name":"el_bonus_progress_2","type":"scat"},{"id":17,"name":"el_bonus_progress_3","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8,9,10,11],"symbols_scat":[13,15,16,17],"symbols_wild":[12],"transitions":[{"act":{"bet":false,"cheat":false,"name":"init","win":false},"dst":"spins","src":"none"},{"act":{"args":["bet_per_line","lines"],"bet":true,"cheat":true,"name":"spin","win":true},"dst":"spins","src":"spins"},{"act":{"bet":false,"cheat":true,"name":"bonus_init","win":false},"dst":"bonus","src":"spins"},{"act":{"args":["bet_per_line","lines"],"bet":true,"cheat":true,"name":"buy_spin","win":true},"dst":"spins","src":"spins"},{"act":{"bet":false,"cheat":true,"name":"respin","win":true},"dst":"bonus","src":"bonus"},{"act":{"bet":false,"cheat":false,"name":"bonus_spins_stop","win":false},"dst":"spins","src":"bonus"}]}'),
+                    'settings' => json_decode('{"authenticity_link": "/booongo/verify?game_id='. $slotSettings->game->label .'","bet_factor":[50],"bets":['. implode(',', $bets) .'],"big_win":[15,20,30,50,70],"bs_values_reels":{"1":360,"2":320,"3":200,"4":40,"5":40,"8":40,"10":40,"15":188,"30":120,"100":7},"cols":5,"currency_format":{"currency_style":"symbol","denominator":100,"style":"money"},"freespins_buying_price":70,"jackpots":{"15":"mini","30":"minor","100":"major","1000":"grand"},"lines":[25],"paylines":[[1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],[1,0,0,0,1],[1,2,2,2,1],[0,0,1,2,2],[2,2,1,0,0],[1,2,1,0,1],[1,0,1,2,1],[0,1,1,1,0],[2,1,1,1,2],[0,1,0,1,0],[2,1,2,1,2],[1,1,0,1,1],[1,1,2,1,1],[0,0,2,0,0],[2,2,0,2,2],[0,2,2,2,0],[2,0,0,0,2],[1,2,0,2,1],[1,0,2,0,1],[0,2,0,2,0],[2,0,2,0,2]],"paytable":{"1":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"2":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"3":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"4":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"5":[{"multiplier":5,"occurrences":3,"type":"lb"},{"multiplier":10,"occurrences":4,"type":"lb"},{"multiplier":50,"occurrences":5,"type":"lb"}],"6":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":20,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"7":[{"multiplier":10,"occurrences":3,"type":"lb"},{"multiplier":20,"occurrences":4,"type":"lb"},{"multiplier":75,"occurrences":5,"type":"lb"}],"8":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"9":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"10":[{"multiplier":15,"occurrences":3,"type":"lb"},{"multiplier":40,"occurrences":4,"type":"lb"},{"multiplier":100,"occurrences":5,"type":"lb"}],"11":[{"multiplier":5,"occurrences":2,"type":"lb"},{"multiplier":25,"occurrences":3,"type":"lb"},{"multiplier":100,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}],"12":[{"multiplier":5,"occurrences":2,"type":"lb"},{"multiplier":25,"occurrences":3,"type":"lb"},{"multiplier":100,"occurrences":4,"type":"lb"},{"multiplier":300,"occurrences":5,"type":"lb"}]},"reelsamples":{"bf":[[1,2,3,4,13],[2,3,4,5,13],[1,2,3,4,13],[2,3,4,5,6,8],[1,2,3,4,7,9]],"spins":[[1,2,3,4,5,6,7,8,9,10,11,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13],[1,2,3,4,5,6,7,8,9,10,11,12,13]]},"respins_granted":3,"rows":3,"symbols":[{"id":1,"name":"10","type":"line"},{"id":2,"name":"J","type":"line"},{"id":3,"name":"Q","type":"line"},{"id":4,"name":"K","type":"line"},{"id":5,"name":"A","type":"line"},{"id":6,"name":"L1","type":"line"},{"id":7,"name":"L2","type":"line"},{"id":8,"name":"M1","type":"line"},{"id":9,"name":"M2","type":"line"},{"id":10,"name":"M3","type":"line"},{"id":11,"name":"H1","type":"line"},{"id":12,"name":"wild","type":"wild"},{"id":13,"name":"bonus","type":"scat"},{"id":14,"name":"hidden","type":"hide"},{"id":15,"name":"el_bonus_progress_1","type":"scat"},{"id":16,"name":"el_bonus_progress_2","type":"scat"},{"id":17,"name":"el_bonus_progress_3","type":"scat"}],"symbols_line":[1,2,3,4,5,6,7,8,9,10,11],"symbols_scat":[13,15,16,17],"symbols_wild":[12]}'),
                     'status' => [
                         'code' => 'OK'
                     ],
@@ -195,7 +195,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 $currentRespin = $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') ?? 0;
                 $totalSpinCount = $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') ?? 0;
                 $tumbAndFreeStacks = $slotSettings->GetGameData($slotSettings->slotId . 'TumbAndFreeStacks') ?? [];
-                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? ['15' => [0, 0],'16' => [0, 0],'17' => [0, 0]];
+                $currentHill = $slotSettings->GetGameData($slotSettings->slotId . 'Hill') ?? ['15' => [4, 0],'16' => [4, 0],'17' => [4, 0]];
                 $stack = null;
                 $isState = false;
                 $is_extra_feature = false;
@@ -475,7 +475,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
 
-                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, ($betline * $LINES), $pur);
+                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, ($betline * $LINES));
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
 
                         $totalSpinCount = 0;
@@ -622,16 +622,16 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         }
                     }
                     $subHill0 = [4, 7, 9, 11, 13, 15];
-                    $subHill1 = [1, 4, 8, 12, 17, 22];
+                    $subHill1 = [1, 3, 7, 11, 16, 21];
                     for($k = 0; $k < 3; $k++){
                         if($moneyCounts[$k] > 0){
                             $currentHill['' . ($k + 15)][1] += $moneyCounts[$k];
-                            if($currentHill['' . ($k + 15)][1] > 84){
-                                $currentHill['' . ($k + 15)][1] = 84;
+                            if($currentHill['' . ($k + 15)][1] > 86){
+                                $currentHill['' . ($k + 15)][1] = 86;
                                 $currentHill['' . ($k + 15)][0] = 24;
                             }else if($currentHill['' . ($k + 15)][1] < $subHill1[5]){
-                                for($i = 4; $i >= 0; $i--){
-                                    if($currentHill['' . ($k + 15)][1] >= $subHill1[$i]){
+                                for($i = 0; $i <= 4; $i++){
+                                    if($currentHill['' . ($k + 15)][1] > $subHill1[$i]){
                                         $currentHill['' . ($k + 15)][0] = $subHill0[$i];
                                     }
                                 }
@@ -710,11 +710,28 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     $isEndFreeSpin = false;
                     $isState = true;
                     if($stack['actions'][0] == 'bonus_init' && $isBuyFreeSpin == false){
+                        $bonusList = ['Ultra','Double','Extra','DoubleUltra','ExtraUltra','ExtraDouble','ExtraDoubleUltra'];
+                        $hillList = [
+                            ['15' => [4, 0], '16' => $currentHill['16'], '17' => $currentHill['17']],
+                            ['15' => $currentHill['15'], '16' => [4, 0], '17' => $currentHill['17']],
+                            ['15' => $currentHill['15'], '16' => $currentHill['16'], '17' => [4, 0]],
+                            ['15' => [4, 0], '16' => [4, 0], '17' => $currentHill['17']],
+                            ['15' => [4, 0], '16' => $currentHill['16'], '17' => [4, 0]],
+                            ['15' => $currentHill['15'], '16' =>[ 4, 0], '17' => [4, 0]],
+                            ['15' => [4, 0], '16' => [4, 0], '17' => [4, 0]],
+                        ];
                         for($k = 0; $k < 3; $k++){
-                            if($moneyCounts[$k] > 0){
-                                $currentHill['' . ($k + 15)] = [0, 0];
+                            $spin_type = $spin_types[$k];
+                            for($j = 0; $j < count($bonusList); $j++){
+                                if(isset($stack[$spin_type]['bg_type'])){
+                                    if($stack[$spin_type]['bg_type'] == $bonusList[$j]){
+                                        $currentHill = $hillList[$j];
+                                    }
+                                }
+                                
                             }
                         }
+                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'Hill', $currentHill);
                     }
                     if($stack['bonus'] != ''){
