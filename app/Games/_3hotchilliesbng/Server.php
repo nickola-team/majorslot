@@ -455,6 +455,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
                         $allBet = $betline * $LINES;                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
+                        $action['name'] = 'buy_spin';
                         if($action['name'] == 'buy_spin'){
                             $allBet = $allBet * 70;
                             $isBuyFreeSpin = true;
