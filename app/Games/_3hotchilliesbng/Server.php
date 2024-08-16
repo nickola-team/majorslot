@@ -451,13 +451,15 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     // $_winAvaliableMoney = 1000;
                     $isDoubleScatter = false;
                     $isBuyFreeSpin = false;
-                    
+                    $pur = -1;
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
                         $allBet = $betline * $LINES;                        
-                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);                       
+                        $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
+                       
                         if($action['name'] == 'buy_spin'){
                             $allBet = $allBet * 70;
                             $isBuyFreeSpin = true;
+                            $pur = 0;
                             $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 1);
                             $winType = 'bonus';
                         }
