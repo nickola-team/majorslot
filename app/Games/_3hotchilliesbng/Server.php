@@ -476,7 +476,8 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         $slotSettings->SetGameData($slotSettings->slotId . 'BonusWin', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
 
-                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, ($betline * $LINES));
+                        $betmoney = $betline * $LINES;
+                        $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, $betmoney);
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
 
                         $totalSpinCount = 0;
