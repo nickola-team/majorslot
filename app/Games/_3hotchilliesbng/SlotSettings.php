@@ -681,7 +681,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             while(true){
                 if($winType == 'bonus'){
                     Log::info('bonus');
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 2);
+                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', '>', 0);
                         if(!isset($stacks)){
                             Log::info('spin_type');
                         }
