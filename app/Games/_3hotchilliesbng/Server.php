@@ -803,9 +803,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     }
                 }
                 $allBet = $betline * $LINES;
-                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){{
+                if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreespin') == 1){
                     $allBet = $allBet * 70;
-                }}
+                }
                 $objRes['context']['last_action'] = $action['name'];
                 $slotSettings->SaveLogReport(json_encode($objRes), $allBet, $LINES, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
                 if($action['name'] == 'spin' || $action['name'] == 'buy_spin' || $action['name'] == 'freespin' || $action['name'] == 'freespin_stop' || $action['name'] == 'respin' || $action['name'] == 'bonus_spins_stop' || $action['name'] == 'bonus_freespins_stop'){
