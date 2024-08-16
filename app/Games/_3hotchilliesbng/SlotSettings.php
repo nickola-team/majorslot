@@ -651,7 +651,6 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('id', 189492)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
-            $winType = 'bonus';
             Log::info('GetReelStrips' . $winType);
             $spintype = 0;
             if($winType == 'bonus'){
