@@ -688,7 +688,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 0);
                 }
-                
+                Log::info('spin_type ****');
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
