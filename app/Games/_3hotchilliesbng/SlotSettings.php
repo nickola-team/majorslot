@@ -718,7 +718,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             }
                             else
                             {
-                                Log::info('limitodd %%%% ' . $limitOdd);
+                                Log::info('limitodd %%%% ' . $limitOdd . ' stack ' . $stacks->count());
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                                 Log::info('stacks %%%%');
                             }
