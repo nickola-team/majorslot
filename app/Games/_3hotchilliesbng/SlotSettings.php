@@ -663,9 +663,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             }
             $limitOdd = 0;
             if($winType != 'none'){
-                
+                Log::info('bonus limitodd ' . $limitOdd);
                 $limitOdd = floor($winAvaliableMoney / $bet);
-                
+                Log::info('bonus limitodd *  ' . $limitOdd);
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
@@ -703,6 +703,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
+                        Log::info('limitodd ####');
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         Log::info('stacks ####');
                         $this->game->garant_special_winbonus = 0;
@@ -717,10 +718,12 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             }
                             else
                             {
+                                Log::info('limitodd %%%% ' . $limitOdd);
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
                                 Log::info('stacks %%%%');
                             }
                         }else{
+                            Log::info('limitodd @@@@');
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
                             Log::info('stacks @@@@');
                         }
