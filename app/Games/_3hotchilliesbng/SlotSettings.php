@@ -282,9 +282,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
-
-
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
             }
@@ -300,7 +298,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 {
                     if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
-                }
+                    }
                     $this->happyhouruser->save();
                     return $game;
                 }

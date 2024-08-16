@@ -1,6 +1,7 @@
 <?php 
 namespace VanguardLTE\Games\_3hotchilliesbng
 {
+    use Illuminate\Support\Facades\Log;
     class Server
     {
         public function get($request, $game, $userId) // changed by game developer
@@ -451,7 +452,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     // $_winAvaliableMoney = 1000;
                     $isDoubleScatter = false;
                     $isBuyFreeSpin = false;
-                    $pur = -1;
+                    
                     if($slotEvent['slotEvent'] != 'freespin' && $slotEvent['slotEvent'] != 'respin'){
                         $allBet = $betline * $LINES;                        
                         $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 0);
@@ -459,16 +460,19 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         if($action['name'] == 'buy_spin'){
                             $allBet = $allBet * 70;
                             $isBuyFreeSpin = true;
-                            $pur = 0;
+                            Log::info('isBuyFreeSpin');
                             $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreespin', 1);
                             $winType = 'bonus';
                         }
+                        Log::info('buy freespin');
                         $slotSettings->SetBalance(-1 * $allBet, $slotEvent['slotEvent']);
                         $_sum = $allBet / 100 * $slotSettings->GetPercent();
                         $slotSettings->SetGameData($slotSettings->slotId . 'Bet', $betline);  
                         $slotSettings->SetGameData($slotSettings->slotId . 'Lines', $LINES);             
                         $slotSettings->SetBet();
+                        Log::info('SetBet');
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], $isBuyFreeSpin);
+                        Log::info('SetBank');
                         $bonusMpl = 1;
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeGames', 0);
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeGame', 0);
@@ -477,7 +481,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                         $slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
 
                         $betmoney = $betline * $LINES;
+                        Log::info('betmoney');
                         $tumbAndFreeStacks = $slotSettings->GetReelStrips($winType, $betmoney);
+                        Log::info('GetReelStrips');
                         $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', $tumbAndFreeStacks);
 
                         $totalSpinCount = 0;
