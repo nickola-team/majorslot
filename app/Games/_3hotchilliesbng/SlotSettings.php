@@ -302,10 +302,6 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                     $this->happyhouruser->save();
                     return $game;
                 }
-                $_allBets = $sum / $this->GetPercent() * 100;
-                $normal_sum = $_allBets * 10 / 100;
-                $game->set_gamebank($normal_sum, 'inc', '');
-                $sum = $sum - $normal_sum;
                 $game->set_gamebank($sum, 'inc', 'bonus');
                 $game->save();
                 return $game;
@@ -723,7 +719,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             else
                             {
                                 Log::info('limitodd %%%% ' . $limitOdd . ' stack ' . $stacks->where('odd', '<=', $limitOdd)->count());
-                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->take(100)->get();
                                 Log::info('text %%%% ' . $stacks->count());
                                 // $stacks = $stacks->where('odd', '<=', 169)->get();
                                 Log::info('stacks %%%%');
