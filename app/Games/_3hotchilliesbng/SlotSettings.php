@@ -1,6 +1,6 @@
 <?php 
 namespace VanguardLTE\Games\_3hotchilliesbng
-{
+{use Illuminate\Support\Facades\Log;
     class SlotSettings
     {
         public $playerId = null;
@@ -651,6 +651,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('id', 189492)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
+            Log::info('GetReelStrips' . $winType);
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
@@ -662,7 +663,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             }
             $limitOdd = 0;
             if($winType != 'none'){
+                Log::info('winType' . $limitOdd);
                 $limitOdd = floor($winAvaliableMoney / $bet);
+                Log::info('limitOdd' . $limitOdd);
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
