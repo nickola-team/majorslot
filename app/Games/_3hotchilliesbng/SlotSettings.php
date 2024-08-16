@@ -663,9 +663,9 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             }
             $limitOdd = 0;
             if($winType != 'none'){
-                Log::info('winType' . $limitOdd);
+                
                 $limitOdd = floor($winAvaliableMoney / $bet);
-                Log::info('limitOdd' . $limitOdd);
+                
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
@@ -680,10 +680,12 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             $isLowBank = false;
             while(true){
                 if($winType == 'bonus'){
+                    Log::info('bonus');
                         $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 2);
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 0);
                 }
+                
                 $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
@@ -691,12 +693,15 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
+                        Log::info('stacks');
                         $stacks = $stacks->where('odd', '<=', 18);    
+                        Log::info('stacks ****');
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
+                        Log::info('stacks ####');
                         $this->game->garant_special_winbonus = 0;
                         $win = explode(',', $this->game->game_win->special_winbonus);
                         $this->game->special_winbonus = $win[rand(0, count($win) - 1)];
@@ -710,9 +715,11 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             else
                             {
                                 $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                                Log::info('stacks %%%%');
                             }
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();
+                            Log::info('stacks @@@@');
                         }
                     }
                 }
