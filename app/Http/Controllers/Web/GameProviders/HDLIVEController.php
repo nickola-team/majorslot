@@ -38,17 +38,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         /*
         * CLEINT IP
         */
-        public static function getIp(){
-            foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
-                if (array_key_exists($key, $_SERVER) === true){
-                    foreach (explode(',', $_SERVER[$key]) as $ip){
-                        $ip = trim($ip); // just to be safe
-                        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
-                            return $ip;
-                        }
-                    }
-                }
-            }
+        public static function getIp($userid){
+            $activity = \VanguardLTE\UserActivity::where('user_id', $userid)->orderby('created_at', 'desc')->first();
+            return $activity->ip_address;
         }
 
         /*
@@ -103,10 +95,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return null;
         }
-        public static function moneyInfo($user_code) {
+        public static function moneyInfo($userid) {
             
             $params = [
-                'username' => $user_code
+                'username' => self::HDLIVE_PROVIDER  . sprintf("%04d",$userid),
+                'ipAddress' => HDLIVEController::getIp($userid)
             ];
 
             $data = HDLIVEController::sendRequest('/balance', $params);
@@ -116,12 +109,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getUserBalance($href, $user) {   
 
             $balance = -1;
-            $user_code = self::HDLIVE_PROVIDER  . sprintf("%04d",$user->id);
-            $data = HDLIVEController::moneyInfo($user_code);
+            $data = HDLIVEController::moneyInfo($user->id);
 
             if ($data && $data['code'] == 0)
             {
-                $balance = $data['balance'];
+                $balance = $data['balance_holdem'];
             }
             return intval($balance);
         }
@@ -227,8 +219,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'siteUsername' => $user_code,
                 'nickname' => $user->username,
                 'platform' => 'web',
-                'amount' => $user->balance,
-                'ipAddress' => '127.0.0.1',
+                'amount' => (float)$user->balance,
+                'ipAddress' => HDLIVEController::getIp($user->id),
                 'requestKey' => $user->generateCode(24)
             ];
 
@@ -258,7 +250,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $params = [
                     'username' => self::HDLIVE_PROVIDER  . sprintf("%04d",$user->id),
-                    'ipAddress' => '127.0.0.1',
+                    'ipAddress' => HDLIVEController::getIp($user->id),
                     'requestKey' => $user->generateCode(24)
                 ];
 
@@ -290,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $balance = 0;
 
             //유저정보 조회
-            $data = HDLIVEController::moneyInfo($user_code);
+            $data = HDLIVEController::moneyInfo($user->id);
             if($data == null || $data['code'] != 0)
             {
                 //새유저 창조
@@ -298,7 +290,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'username' => $user_code,
                     'nickname' => $user_code,
                     'siteUsername' => $user_code,
-                    'ipAddress' => '127.0.0.1',
+                    'ipAddress' => HDLIVEController::getIp($user->id),
                     'requestKey' => $user->generateCode(24)
                 ];
 
@@ -311,7 +303,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             else
             {
-                $balance = $data['balance'];
+                $balance = $data['balance_holdem'];
             }
 
             if ($balance != $user->balance)
@@ -324,23 +316,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 //Add balance
 
-                if ($user->balance > 0)
-                {
-                    $params = [
-                        'username' => $user_code,
-                        "amount" =>  intval($user->balance),
-                        'ipAddress' => '127.0.0.1',
-                        "requestKey" => $user->generateCode(24)
-                    ];
+                // if ($user->balance > 0)
+                // {
+                //     $params = [
+                //         'username' => $user_code,
+                //         "amount" =>  intval($user->balance),
+                //         'ipAddress' => HDLIVEController::getIp($user->id),
+                //         "requestKey" => $user->generateCode(24)
+                //     ];
     
-                    $data = HDLIVEController::sendRequest('/deposit', $params);
-                    if ($data==null || $data['code'] != 0)
-                    {
-                        Log::error('HDLIVEMakeLink : addMemberPoint result failed. ' . ($data==null?'null':json_encode($data)));
-                        return null;
-                    }
+                //     $data = HDLIVEController::sendRequest('/deposit', $params);
+                //     if ($data==null || $data['code'] != 0)
+                //     {
+                //         Log::error('HDLIVEMakeLink : addMemberPoint result failed. ' . ($data==null?'null':json_encode($data)));
+                //         return null;
+                //     }
                     
-                }
+                // }
             }
             
             return '/followgame/hdlive/'.$gamecode;
@@ -352,13 +344,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [HDLIVEController::HDLIVE_PROVIDER, $gamecode])]];
         }
 
-        public static function gamerounds($fromtimepoint, $totimepoint)
+        public static function gamerounds($nIdx)
         {
-            $sdate = date('Y-m-d H:i:s', $fromtimepoint);
-            $edate = date('Y-m-d H:i:s', $totimepoint);
             $params = [
-                'beginDate' => $sdate,
-                'start_idx' => 0,
+                'beginDate' => date('Y-m-d H:i:s'),
+                'start_idx' => $nIdx,
                 'limit' => 2000
             ];
 
@@ -366,14 +356,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             return $data;
         }
-
         public static function processGameRound($frompoint=-1, $checkduplicate=false)
         {
-            $timepoint = strtotime(date('Y-m-d H:i:s',strtotime('-2 hours'))) - 9 * 60 * 60;
-            $totimepoint = strtotime(date('Y-m-d H:i:s')) - 9 * 60 * 60;
+            $count = 0;
+
+            $timepoint = 0;
             if ($frompoint == -1)
             {
-                $tpoint = \VanguardLTE\Settings::where('key', self::HDLIVE_PROVIDER . 'timepoint')->first();
+                $tpoint = \VanguardLTE\Settings::where('key', HDLIVEController::HDLIVE_PROVIDER . 'timepoint')->first();
                 if ($tpoint)
                 {
                     $timepoint = $tpoint->value;
@@ -383,44 +373,39 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $timepoint = $frompoint;
             }
-            if($timepoint > $totimepoint)
-            {
-                $totimepoint = $timepoint + 2 * 60 * 60;
-            }
+
             $count = 0;
             $data = null;
             $newtimepoint = $timepoint;
             $totalCount = 0;
-            $data = HDLIVEController::gamerounds($timepoint, $totimepoint);
+            $data = HDLIVEController::gamerounds($timepoint + 1);
             if ($data == null || $data['code'] != 0 || $data['count'] == 0)
             {
-                if ($frompoint == -1)
-                {
-
-                    if ($tpoint)
-                    {
-                        $tpoint->update(['value' => $newtimepoint]);
-                    }
-                    else
-                    {
-                        \VanguardLTE\Settings::create(['key' => self::HDLIVE_PROVIDER .'timepoint', 'value' => $newtimepoint]);
-                    }
-                }
-
-                return [0,0];
+                Log::error('HDLIVE gamerounds failed : Start_Idx : ' . $timepoint);
+                return [$count,0];
             }
-            $timepoint = strtotime($data['beginDate']);
-            $invalidRounds = [];
-            if (isset($data['data']))
+            
+            if (isset($data['data']) && count($data['data']) > 0)
             {
                 foreach ($data['data'] as $round)
                 {
-                    // if ($round['txn_type'] != 'CREDIT')
-                    // {
-                    //     continue;
-                    // }
-                    $gameObj = self::getGameObj($round['pGame']);
+                    $bet = $round['BetMoney'];
+                    $win = $round['WinMoney'];
+                    if($bet == 0 && $win == 0)
+                    {
+                        continue;
+                    }
+                    $balance = $round['STMoney'] - $bet + $win;
                     
+                    $time = date('Y-m-d H:i:s',strtotime($round['StartTime']));
+
+                    $userid = intval(preg_replace('/'. self::HDLIVE_PROVIDER  .'(\d+)/', '$1', $round['user_id'])) ;
+                    if($userid == 0){
+                        $userid = intval(preg_replace('/'. self::HDLIVE_PROVIDER . 'user' .'(\d+)/', '$1', $round['user_id'])) ;
+                    }
+
+                    $gameObj = self::getGameObj($round['pGame']);
+            
                     if (!$gameObj)
                     {
                         $gameObj = self::getGameObj($round['nGame']);
@@ -430,24 +415,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             continue;
                         }
                     }
-                    $bet = $round['WinMoney'];
-                    $win = $round['EtcMoney'];
-                    if($bet == 0 && $win == 0)
-                    {
-                        continue;
-                    }
-                    $balance = $round['STMoney'] - $bet + $win;
                     
-                    $time = date('Y-m-d H:i:s',strtotime($round['createdAt']));
-
-                    $userid = intval(preg_replace('/'. self::HDLIVE_PROVIDER  .'(\d+)/', '$1', $round['user_id'])) ;
-                    if($userid == 0){
-                        $userid = intval(preg_replace('/'. self::HDLIVE_PROVIDER . 'user' .'(\d+)/', '$1', $round['user_id'])) ;
-                    }
-
                     $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
                     $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
 
+                    if($round['nIdx'] > $timepoint){
+                        $timepoint = $round['nIdx'];
+                    }
                     // if ($checkduplicate)
                     // {
                         $checkGameStat = \VanguardLTE\StatGame::where([
@@ -455,7 +429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                             'bet' => $bet, 
                             'win' => $win, 
                             'date_time' => $time,
-                            'roundid' => $round['pGame'] . '#' . $round['game_idx'] . '#' . $round['transactionKey'],
+                            'roundid' => $round['pGame'] . '#' . $round['game_idx'] . '#' . $round['nIdx'],
                         ])->first();
                         if ($checkGameStat)
                         {
@@ -480,10 +454,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'category_id' => $category?$category->original_id:0,
                         'game_id' =>  $gameObj['gamecode'],
                         // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
-                        'roundid' => $round['pGame'] . '#' . $round['game_idx'] . '#' . $round['transactionKey'],
+                        'roundid' => $round['pGame'] . '#' . $round['game_idx'] . '#' . $round['nIdx'],
                     ]);
                     $count = $count + 1;
-                }
+                }   
             }
             if ($frompoint == -1)
             {
@@ -494,7 +468,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 }
                 else
                 {
-                    \VanguardLTE\Settings::create(['key' => self::HDLIVE_PROVIDER .'timepoint', 'value' => $timepoint]);
+                    \VanguardLTE\Settings::create(['key' => HDLIVEController::HDLIVE_PROVIDER .'timepoint', 'value' => $timepoint]);
                 }
             }
            
@@ -508,67 +482,41 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-            $transactionKey = $betrounds[2];
-            
+            $game_idx = $betrounds[1];
+            $user = \VanguardLTE\User::where('id', $stat->user_id)->first();
             $params = [
-                'id' => $transactionKey
+                'game_idx' => $game_idx,
+                'requestKey' => $user->generateCode(24),
+                'game' => 'holdem'
             ];
 
-            $data = HDLIVEController::sendRequest('/transaction_one', $params);
-            if ($data==null || $data['code'] != 0)
+            $data = HDLIVEController::sendRequest('/logdetail', $params);
+            if ($data==null || $data['gamelog'] == null)
             {
                 return null;
             }
-
+            $user_code = self::HDLIVE_PROVIDER  . sprintf("%04d",$user->id);
 
             $betdetails = null;
             $gametype = 'hdlive';
-            $result = null;
-            if($data['transactions'])
+            $result = $data['gamelog'];
+            $betdetails = null;
+            if($data['gamelog_detail'])
             {
-                foreach($data['transactions'] as $transaction)
+                $details = [];
+                foreach($data['gamelog_detail'] as $transaction)
                 {
-                    if($transaction['transactionKey'] == $transactionKey)
+                    if($transaction['siteUsername'] == $user_code)
                     {
-                        if($transaction['detail'])
-                        {
-                            $betdetails = $transaction['detail'];
-                        }
-                        else
-                        {
-                            $betdetails = [];
-                        }
-                        $betdetails['betType'] = '';
-                        $bet = 0;
-                        $win = 0;
-                        if($transaction['type'] == 'turn_bet')
-                        {
-                            $bet = $transaction['cash'];
-                        }
-                        else
-                        {
-                            $win = $transaction['cash'];
-                        }
-                        $betdetails['bet_money'] = $bet;
-                        $betdetails['win_money'] = $win;
-                        $betdetails = json_encode($betdetails);
+                        $details['bet_money'] = $transaction['BetMoney'];
+                        $details['win_money'] = $transaction['WinMoney'];
                         break;
                     }
                 }
+                $details['detail'] = $data['gamelog_detail'];
             }
-            // foreach ($data['wager'] as $bet)
-            // {
-            //     if ($bet['txn_type'] == 'CREDIT' && $bet['txn_no'] == $txn_no)
-            //     {
-            //         $gametype = $bet['type'];
-            //         $betdetails = json_decode($bet['detail'], true);
-            //         $betdetails['betType'] = $bet['type'];
-            //         $betdetails['bet_money'] = $bet['bet_money'];
-            //         $betdetails['win_money'] = $bet['win_money'];
-            //         $betdetails = json_encode($betdetails);
-            //         break;
-            //     }
-            // }
+                    
+            $betdetails = $details;// json_encode($details);
 
             return [
                 'type' => $gametype,

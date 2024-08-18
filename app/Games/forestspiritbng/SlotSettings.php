@@ -652,7 +652,7 @@ namespace VanguardLTE\Games\forestspiritbng
             // if($winType == 'bonus'){
                 // $stack = \VanguardLTE\BNGGameStackModel\BNGGameForestSpiritStack::where('id', 1643)->first();
                 // return json_decode($stack->spin_stack, true);
-            // }
+            // }            
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');

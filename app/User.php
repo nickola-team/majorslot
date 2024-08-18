@@ -129,6 +129,7 @@ namespace VanguardLTE
                 'WORLDPAY',
                 'OSSCOIN',
                 '경남가상계좌',
+                '나인가상계좌',
                 'VirtualAcc',
                 '효원라이프',
                 'MESSAGE'
