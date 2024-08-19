@@ -185,11 +185,14 @@ namespace VanguardLTE\Games\MammothGoldMegawaysPM
                             if($end == 0){
                                 $arr_g['bg_1']['ask'] = '0';
                             }
+                            if($end == 1){
+                                $arr_g['bg_0']['end'] = '1';
+                            }
                             $whvs = $arr_g['bg_0']['whvs'];
                             $arr_freespins = explode(',', $whvs);
                             $fsmax = $arr_freespins[$slotSettings->GetGameData($slotSettings->slotId . 'BonusIndex')] + $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                             if($end == 1){
-                                $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
+                                $strOtherResponse = $strOtherResponse . '&bw=1&trail=fs_n~' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
                             }else{
                                 $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $fsmax;
                             }
