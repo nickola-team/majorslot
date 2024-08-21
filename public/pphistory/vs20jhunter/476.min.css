@@ -1,0 +1,544 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 52px;
+    --slot-item-width: 52px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"],
+.LinesSlot .ReelsSlot__ItemImg[alt="2"],
+.LinesSlot .ReelsSlot__ItemImg[alt="13"] {
+    z-index: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "slot jp";
+    gap: 20px
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .JackpotWheel {
+    grid-area: jp
+}
+
+.JackpotWheel {
+    align-self: center;
+    width: 100px;
+    height: 113px;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    background-image: -webkit-image-set(url(./images/vs20jhunter/jpWheel.png) 1x, url(./images/vs20jhunter/jpWheel@2x.png) 2x);
+    background-size: contain;
+    background-repeat: no-repeat
+}
+
+.JackpotWheel__Text {
+    line-height: normal;
+    margin: 20px auto
+}
+
+.BonusGame .JackpotWheel {
+    position: absolute;
+    right: -110px;
+    top: 100px
+}
+
+.BonusGame {
+    position: relative;
+    width: 615px;
+    height: 350px;
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/bg.png) 1x, url(./images/vs20jhunter/bonus/bg@2x.png) 2x);
+    transform: scale(.9);
+    transform-origin: bottom left
+}
+
+.BonusGame .Box {
+    width: 30px;
+    height: 21px;
+    position: absolute;
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/box.png) 1x, url(./images/vs20jhunter/bonus/box@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%
+}
+
+.BonusGame .Box__Text {
+    position: absolute;
+    z-index: 1;
+    line-height: normal;
+    top: -10px;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    filter: unset
+}
+
+.BonusGame .Box--active {
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/boxActive.png) 1x, url(./images/vs20jhunter/bonus/boxActive@2x.png) 2x)
+}
+
+.BonusGame .Box:first-child {
+    top: 53px;
+    right: 296px
+}
+
+.BonusGame .Box:nth-child(2) {
+    top: 59px;
+    right: 269px
+}
+
+.BonusGame .Box:nth-child(3) {
+    top: 59px;
+    right: 241px
+}
+
+.BonusGame .Box:nth-child(4) {
+    top: 56px;
+    right: 212px
+}
+
+.BonusGame .Box:nth-child(5) {
+    top: 59px;
+    right: 185px
+}
+
+.BonusGame .Box:nth-child(6) {
+    top: 66px;
+    right: 159px
+}
+
+.BonusGame .Box:nth-child(7) {
+    top: 83px;
+    right: 134px
+}
+
+.BonusGame .Box:nth-child(8) {
+    top: 105px;
+    right: 126px
+}
+
+.BonusGame .Box:nth-child(9) {
+    top: 126px;
+    right: 138px
+}
+
+.BonusGame .Box:nth-child(10) {
+    top: 141px;
+    right: 159px
+}
+
+.BonusGame .Box:nth-child(11) {
+    top: 151px;
+    right: 186px
+}
+
+.BonusGame .Box:nth-child(12) {
+    top: 157px;
+    right: 213px
+}
+
+.BonusGame .Box:nth-child(13) {
+    top: 143px;
+    right: 236px
+}
+
+.BonusGame .Box:nth-child(14) {
+    top: 132px;
+    right: 263px
+}
+
+.BonusGame .Box:nth-child(15) {
+    top: 124px;
+    right: 290px
+}
+
+.BonusGame .Box:nth-child(16) {
+    top: 113px;
+    right: 313px
+}
+
+.BonusGame .Box:nth-child(17) {
+    top: 113px;
+    right: 340px
+}
+
+.BonusGame .Box:nth-child(18) {
+    top: 121px;
+    right: 364px
+}
+
+.BonusGame .Box:nth-child(19) {
+    top: 141px;
+    right: 371px
+}
+
+.BonusGame .Box:nth-child(20) {
+    top: 159px;
+    right: 360px
+}
+
+.BonusGame .Box:nth-child(21) {
+    top: 171px;
+    right: 335px
+}
+
+.BonusGame .Box:nth-child(22) {
+    top: 187px;
+    right: 315px
+}
+
+.BonusGame .Box:nth-child(23) {
+    top: 209px;
+    right: 296px
+}
+
+.BonusGame .Box:nth-child(24) {
+    top: 229px;
+    right: 277px
+}
+
+.BonusGame .Box:nth-child(25) {
+    top: 248px;
+    right: 258px
+}
+
+.BonusGame .Box:nth-child(26) {
+    top: 269px;
+    right: 271px
+}
+
+.BonusGame .Box:nth-child(27) {
+    top: 284px;
+    right: 296px
+}
+
+.BonusGame .Box:nth-child(28) {
+    top: 293px;
+    right: 323px
+}
+
+.BonusGame .Box:nth-child(29) {
+    top: 300px;
+    right: 353px
+}
+
+.BonusGame .Box:nth-child(30) {
+    top: 302px;
+    right: 383px
+}
+
+.BonusGame .Box:nth-child(31) {
+    top: 298px;
+    right: 413px
+}
+
+.BonusGame .Box:nth-child(32) {
+    top: 289px;
+    right: 441px
+}
+
+.BonusGame .Box:nth-child(33) {
+    top: 280px;
+    right: 466px
+}
+
+.BonusGame .Box:nth-child(34) {
+    top: 261px;
+    right: 483px
+}
+
+.BonusGame .Box:nth-child(35) {
+    top: 240px;
+    right: 490px
+}
+
+.BonusGame .Box:nth-child(36) {
+    top: 219px;
+    right: 493px
+}
+
+.BonusGame .Box:nth-child(37) {
+    top: 196px;
+    right: 495px
+}
+
+.BonusGame .Box:nth-child(38) {
+    top: 174px;
+    right: 500px
+}
+
+.BonusGame .Box:nth-child(39) {
+    top: 153px;
+    right: 508px
+}
+
+.BonusGame .Box:nth-child(40) {
+    top: 132px;
+    right: 519px
+}
+
+.BonusGame .Box:nth-child(41) {
+    top: 110px;
+    right: 533px
+}
+
+.BonusSpinsLeft {
+    width: 64px;
+    height: 80px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/spinsLeftBg.png) 1x, url(./images/vs20jhunter/bonus/spinsLeftBg@2x.png) 2x);
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.BonusSpinsLeft__Count {
+    position: absolute;
+    margin: 14px auto;
+    width: 100%;
+    font-size: 14px
+}
+
+.BonusSpinsLeft__Text {
+    position: absolute;
+    margin: 0 auto;
+    font-size: .79rem;
+    width: 100%;
+    bottom: 14px
+}
+
+.BonusWinTable {
+    width: 71px;
+    height: 97px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 8px 7px 7px 6px;
+    box-sizing: border-box;
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/winTable.png) 1x, url(./images/vs20jhunter/bonus/winTable@2x.png) 2x);
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    font-size: .79rem
+}
+
+.BonusWinTable__Item {
+    line-height: 12px;
+    white-space: nowrap
+}
+
+.BonusWheel {
+    width: 97px;
+    height: 106px;
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    padding: 8px 7px 7px 6px;
+    box-sizing: border-box;
+    background-image: -webkit-image-set(url(./images/vs20jhunter/bonus/bonusWheel.png) 1x, url(./images/vs20jhunter/bonus/bonusWheel@2x.png) 2x);
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.BonusWheel__Text {
+    margin-top: 15px
+}

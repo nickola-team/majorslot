@@ -1,0 +1,74 @@
+:root {
+    --slot-item-height: 75px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__Item--2 {
+    align-items: flex-end;
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Multiplier {
+    position: absolute;
+    align-items: flex-end;
+    line-height: normal;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    font-size: .79rem
+}
+
+.Multiplier .Image__Children {
+    margin-bottom: 2px
+}
+
+.SlotWrap__Field {
+    margin-left: 30px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20mesmult/bg.png) 1x, url(./images/vs20mesmult/bg@2x.png) 2x);
+    width: 295px;
+    height: 235px;
+    margin: -5px -35px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs20mesmult/bgFs.png) 1x, url(./images/vs20mesmult/bgFs@2x.png) 2x)
+}
