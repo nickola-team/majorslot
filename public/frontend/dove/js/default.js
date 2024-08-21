@@ -1532,7 +1532,9 @@ function showMsg(objId,objContent,objTitle){
 </div> 
 <div data-v-63cabf15="" data-v-ca1f65a4="" class="editr">
     
-    <textarea contenteditable="false" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;" readonly>${objContent}</textarea>
+    <div contenteditable="false" tabindex="1" placeholder="내용을 입력하세요." id="content_txt" class="editr--content" style="resize:none;" readonly>`;
+    reqcontent += objContent;
+    reqcontent += `</div>
 </div> <!----> 
 <div data-v-ca1f65a4="" class="row" style="flex-direction: row; margin-top: 10px; margin-bottom: 10px;">
     <button data-v-ca1f65a4="" class="cancel-btn button" style="height: 30px; display:none;" onclick="cancelWrite();">
