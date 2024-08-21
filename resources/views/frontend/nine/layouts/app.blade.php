@@ -70,7 +70,7 @@
     <script type="text/javascript" src="/frontend/boss/V/jquery-jOdometer.min.js"></script>
     <!--  -->
     <!-- <script language="javascript" type="text/javascript" src="/frontend/boss/V/socket.io.js"></script> -->
-    <script language="javascript" type="text/javascript" src="/frontend/boss/V/customFunc.js?version=1"></script>
+    <script language="javascript" type="text/javascript" src="/frontend/nine/V/customFunc.js?version=3"></script>
     <style>
       .ng-hide {
         display: none !important;

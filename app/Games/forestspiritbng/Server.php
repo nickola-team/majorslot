@@ -586,17 +586,17 @@ namespace VanguardLTE\Games\forestspiritbng
                             }
                         }
                     }
-                    $subHill = [0, 7, 9, 14, 24, 34, 44, 0];
+                    $subHill = [0, 7, 9, 14, 24, 39, 44, 0];
                     for($k = 0; $k < 3; $k++){
                         if($moneyCounts[$k] > 0){
                             $currentHill['' . ($k + 1)][1]++;
                             if($currentHill['' . ($k + 1)][1] >=$subHill[$currentHill['' . ($k + 1)][0]]){
-                                if($currentHill['' . ($k + 1)][0] < 7){
+                                if($currentHill['' . ($k + 1)][0] < 6){
                                     $currentHill['' . ($k + 1)][0]++;
                                     $currentHill['' . ($k + 1)][1] = 0;
                                 }else{
-                                    $currentHill['' . ($k + 1)][0] = 7;
-                                    $currentHill['' . ($k + 1)][1] = 0;
+                                    $currentHill['' . ($k + 1)][0] = 6;
+                                    //$currentHill['' . ($k + 1)][1] = 0;
                                 }
                             }
                         }

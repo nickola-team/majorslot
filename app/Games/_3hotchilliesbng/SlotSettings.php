@@ -282,9 +282,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
         }
         public function SetBank($slotState = '', $sum, $slotEvent = '', $isFreeSpin = false)
         {
-        if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
-
-
+            if( $this->isBonusStart || $slotState == 'bonus' || $slotState == 'doBonus' || $slotState == 'freespin' || $slotState == 'respin' ) 
             {
                 $slotState = 'bonus';
             }
@@ -300,7 +298,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                 {
                     if($sum > 0){
                     $this->happyhouruser->increment('current_bank', $sum);
-                }
+                    }
                     $this->happyhouruser->save();
                     return $game;
                 }
@@ -647,10 +645,10 @@ namespace VanguardLTE\Games\_3hotchilliesbng
         } 
 
 
-        public function GetReelStrips($winType, $bet, $pur)
+        public function GetReelStrips($winType, $bet)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('id', 30874)->first();
+                // $stack = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('id', 189492)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -678,28 +676,25 @@ namespace VanguardLTE\Games\_3hotchilliesbng
             }
             $isLowBank = false;
             while(true){
-                if($winType == 'bonus'){
-                    // $currentHill = $this->GetGameData($this->slotId . 'Hill') ?? [0, 0];
-                    // if($currentHill[0] >= 8 && $currentHill[1] >= 10){
-                    //     $stacks = \VanguardLTE\BNGGameStackModel\BNGGameForestSpiritStack::where('spin_type', 2);
-                    // }else{
-                        $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type','>', 0)->where('pur_level', $pur);
-                    // }
+                if($winType == 'bonus'){                    
+                    $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', '>', 0);
                 }else{
                     $stacks = \VanguardLTE\BNGGameStackModel\BNGGame3HotChilliesStack::where('spin_type', 0);
                 }
-                $index = mt_rand(0, 38000);
+                
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 68000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 20);    
+                        $stacks = $stacks->where('odd', '<=', 18);    
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
                     if($bet > $this->game->special_limitmoney && $limitOdd > 10 && $this->game->garant_special_winbonus >= $this->game->special_winbonus){
+                        
                         $stacks = $stacks->where('odd', '<=', $limitOdd)->orderby('odd', 'desc')->take(100)->get();
                         $this->game->garant_special_winbonus = 0;
                         $win = explode(',', $this->game->game_win->special_winbonus);
@@ -713,7 +708,7 @@ namespace VanguardLTE\Games\_3hotchilliesbng
                             }
                             else
                             {
-                                $stacks = $stacks->where('odd', '<=', $limitOdd)->get();
+                                $stacks = $stacks->where('odd', '<=', $limitOdd)->take(500)->get();
                             }
                         }else{
                             $stacks = $stacks->where('odd', '<=', $limitOdd)->where('id', '>=', $index)->take(100)->get();

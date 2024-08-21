@@ -1494,13 +1494,14 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('api/history/v3/action/children', 'GameProviders\PPController@children_v3');    
     Route::post('api/history/v3/action/children', 'GameProviders\PPController@children_v3');  
     Route::get('session/play-verify/{gamecode}', 'GameProviders\PPController@verify');    
-    Route::get('session/verify/{gamecode}', 'GameProviders\KTENController@ppverify'); 
+    Route::get('session/verify/{gamecode}', 'GameProviders\HONORController@ppverify'); 
     Route::get('{game}/reloadBalance.do', 'GameProviders\PPController@pp_update'); 
     Route::post('{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
     Route::post('stats.do', 'GameProviders\PPController@pp_stats');
 });
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
 Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
+Route::get('games/{game}/common/v5/games-html5/operator_logos/logo_info.js', 'GameProviders\PPController@logoinfojs');
 
 Route::post('games/{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
 

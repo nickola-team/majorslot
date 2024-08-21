@@ -1652,6 +1652,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $js = preg_replace('/f2e3afd2/', $hash, $js);
             return response($js, 200)->header('Content-Type', 'application/javascript');
         }
+        public function logoinfojs($game, \Illuminate\Http\Request $request)
+        {
+            $js = file_get_contents(public_path('pphistory/operator_logos/logo_info.js'), true);
+            return response($js, 200)->header('Content-Type', 'application/javascript');
+        }
         public function general(\Illuminate\Http\Request $request)
         {
             return response()->json([

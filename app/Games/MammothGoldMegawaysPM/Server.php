@@ -185,11 +185,14 @@ namespace VanguardLTE\Games\MammothGoldMegawaysPM
                             if($end == 0){
                                 $arr_g['bg_1']['ask'] = '0';
                             }
+                            if($end == 1){
+                                $arr_g['bg_0']['end'] = '1';
+                            }
                             $whvs = $arr_g['bg_0']['whvs'];
                             $arr_freespins = explode(',', $whvs);
                             $fsmax = $arr_freespins[$slotSettings->GetGameData($slotSettings->slotId . 'BonusIndex')] + $slotSettings->GetGameData($slotSettings->slotId . 'Level');
                             if($end == 1){
-                                $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
+                                $strOtherResponse = $strOtherResponse . '&bw=1&trail=fs_n~' . $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
                             }else{
                                 $strOtherResponse = $strOtherResponse . '&trail=fs_n~' . $fsmax;
                             }
@@ -361,7 +364,7 @@ namespace VanguardLTE\Games\MammothGoldMegawaysPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $roundstr = sprintf('%.4f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '561' . substr($roundstr, 4, 10);
+                    $roundstr = '4174458' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
