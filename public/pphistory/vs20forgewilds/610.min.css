@@ -1,0 +1,109 @@
+:root {
+    --slot-item-height: 55px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    flex-direction: row-reverse;
+    align-items: center
+}
+
+.Spin .WildsReserve {
+    width: 55px;
+    height: 165px;
+    margin-left: 15px
+}
+
+.Spin .WildsReserve .Image__Children {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start
+}
+
+.Spin .WildsReserve__Value {
+    margin-top: 9px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .WildsReserve__Wilds {
+    gap: 4px;
+    flex-grow: 1;
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 20px
+}
+
+.Spin .WildsReserve__WildItem {
+    width: 28px
+}
+
+.MoneyScatter__LabelWrap {
+    margin-top: 7px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20forgewilds/bg.png) 1x, url(./images/vs20forgewilds/bg@2x.png) 2x);
+    width: 274px;
+    height: 193px;
+    margin: -15px -26px;
+    background-repeat: no-repeat
+}
+
+div:not(.WinLines-Group)>.LinesSlot {
+    margin-left: 10px
+}
+
+.Carousel__Controls {
+    bottom: -30px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
