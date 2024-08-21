@@ -650,11 +650,11 @@ function mydepositlist() {
 						<td class="ng-binding">${status_name[data.data[i].status]}</td>
 						</tr>
 						</thead>`;
-				}
-				
+				}				
 			}
 			html += `</table>`;
 			$("#mydeposit").html(html);
+      
 			
         } else {
             alert(data.msg);
@@ -692,11 +692,11 @@ function mywithdrawlist() {
                           <td class="ng-binding">${i+1}</td>
                           <td class="ng-binding">${parseInt(data.data[i].sum).toLocaleString()}원</td>
                           <td class="ng-binding">${date.toLocaleString()}</td>
-                          <td class="ng-binding">${status_name[data.data[i].status]}</td>
+                          <td class="ng-binding">${status_name[data.data[i].status]}</td>                          
                           </tr>
                           </thead>`;
                   }
-                  
+                  $("#lastwithdraw").val(new Date(data.data[0].created_at));
               }
               html += `</table>`;
               $("#mywithdraw").html(html);
@@ -900,6 +900,17 @@ function withdrawRequest() {
       alert('출금신청은 만원단위로 가능합니다. 만원단위로 신청해주시기 바랍니다.');
       return false;
     }
+
+    var withdrawTime = new Date($('#lastwithdraw').val());
+    var curTime = new Date();
+    var diffTime = curTime.getTime() - withdrawTime.getTime();
+    var resultTime = diffTime / (1000 * 60);
+    if(resultTime < 60){
+      var targetTime = 60 - resultTime;
+      alert('출금신청은 ' + parseInt(targetTime) + '분후에 가능합니다.');
+      return false;
+    }
+
     var conf = confirm('출금신청을 하시겠습니까?');
     if (!conf) {
       return false;
@@ -921,6 +932,7 @@ function withdrawRequest() {
           $("#exchange_money").val(0);
           $("#expassword").val('');
           swal('신청완료 되었습니다.');
+          $("#lastwithdraw").val(curTime);
         } else {
             swal('Oops!', result.msg, 'error');
         }

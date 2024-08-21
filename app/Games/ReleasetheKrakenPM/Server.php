@@ -352,7 +352,7 @@ namespace VanguardLTE\Games\ReleasetheKrakenPM
                         $slotSettings->SetBank((isset($slotEvent['slotEvent']) ? $slotEvent['slotEvent'] : ''), $_sum, $slotEvent['slotEvent'], $isBuyFreeSpin);
                         $roundstr = sprintf('%.4f', microtime(TRUE));
                         $roundstr = str_replace('.', '', $roundstr);
-                        $roundstr = '561' . substr($roundstr, 4, 10);
+                        $roundstr = '4174458' . substr($roundstr, 4, 10);
                         $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                         $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
                         $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog

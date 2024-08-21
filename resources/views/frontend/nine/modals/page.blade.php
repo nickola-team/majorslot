@@ -201,6 +201,9 @@
                     </p>
                   </div>
                   <div class="text-center">
+                    @if($logo == 'nine')
+                    <input type="hidden" id="lastwithdraw" value="0">
+                    @endif
                     <button type="button" class="btn btn-theme btn-yellow btn-block processBtn ng-scope btn-exchange" onclick="withdrawRequest();">출금하기</button>
                   </div>
                 </form>

@@ -96,7 +96,7 @@ namespace VanguardLTE
             //         $attributes['bet'] = 0;
             //     }
             // }
-
+            $gamecode = '';
             if (empty($attributes['category_id']) || empty($attributes['game_id']))
             {
                 //search manually category_id and game_id
@@ -110,6 +110,7 @@ namespace VanguardLTE
                     {
                         $attributes['category_id'] = $category->category_id;
                     }
+                    $gamecode = $game->label;
                 }
                 else
                 {
@@ -134,6 +135,39 @@ namespace VanguardLTE
                 $user = \VanguardLTE\User::where('id',$model->user_id)->first();
                 if ($user){
                     $user->processBetDealerMoney_Queue($model);
+                }
+                if($model->category_id == 14)
+                {
+                    \VanguardLTE\PPGameVerifyLog::updateOrCreate([
+                        'user_id'=>$model->user_id, 
+                        'game_id'=>$model->game_id
+                    ],[
+                        'game_id' => $model->game_id, 
+                        'user_id' => $model->user_id, 
+                        'bet' => $model->bet, 
+                        'label' => $gamecode,
+                        'crid' => '',
+                        'rid' => $model->roundid
+                    ]);
+                    // $ppverify = \VanguardLTE\PPGameVerifyLog::where(['user_id'=>$model->user_id, 'game_id'=>$model->game_id])->first();
+                    // if(isset($ppverify))
+                    // {
+                    //     // $ppverify->update(['bet'=>$model->bet, 'rid'=>$model->roundid, 'crid'=>'']);
+                    //     $ppverify->bet = $model->bet;
+                    //     $ppverify->rid = $model->roundid;
+                    //     $ppverify->crid = '1';
+                    //     $ppverify->save();
+                    // }
+                    // else
+                    // {
+                    //     \VanguardLTE\PPGameVerifyLog::create([
+                    //         'game_id' => $model->game_id, 
+                    //         'user_id' => $model->user_id, 
+                    //         'bet' => $model->bet, 
+                    //         'label' => $gamecode,
+                    //         'rid' => $model->roundid
+                    //     ]);
+                    // }
                 }
             // }
             return $model;
