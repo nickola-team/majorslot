@@ -637,7 +637,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "clock"=>"0",
                 "mgckey"=>"AUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467",
                 "gameService"=> $url . "/game/". $game->name . "/gameService",
-                "brandRequirements" => "COINS_V2",
+                "brandRequirements" => "COINS_V2,VAPP",
                 "gameVerificationURL"=>"/gs2c/session/verify/" . $game->label,
                 "RELOAD_BALANCE"=>"/gs2c/". $game->name . "/reloadBalance.do",
                 "currencyOriginal"=>"KRW",
@@ -645,6 +645,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "sessionTimeout"=>"30",
                 "CLOSE_GAME"=>"/gs2c/closeGame.do?symbol\u003d" . $game->label,
                 "region"=>"Asia",
+                "ISVAPP"=>"TRUE",
                 "sessionKeyV2"=>["jbiB0Ul8cCVfgJtaiVvXtOCEyAISsPWXfaiMQ7hA7YA8lNcmcKbtIG4rCzqPj3QQ5Yviw+EyCZcnhAMA80Ao6GDfIvLQN+vE4exoUdB/ojDyT7OFeZhD8FGMit2Uoz3yhPf0PfZtFl3Y6rsbtwQNDke8jtPhWG6hHV0S5g5QOfc\u003d",
                 "Ve+/3hr3rhy+2g1zcD2DJt19d0lZWrPDqVUjwDgKjgvxE687aZVY8Ca4+4bAhiVhyO2VwJsTr7J3mn7P+RiRu/qxh3SX342OrQabjlIjBSAl13h/ik/mcWvxP1BQM0as1Mq+ttaCGdej0DK3nB9fAOkchUqkIy6MqPWu/cFrtng\u003d"],
                 "HISTORY"=>"/gs2c/lastGameHistory.do?symbol\u003d" . $game->label . "\u0026mgckey\u003dAUTHTOKEN@". $userId ."~stylename@". $styleName ."~SESSION@db375e96-102f-4b36-abe0-f9ef4a784819~SN@3f756467"
