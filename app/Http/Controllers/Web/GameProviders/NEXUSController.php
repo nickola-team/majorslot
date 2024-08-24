@@ -13,7 +13,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_GAMEKEY = 'B';
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
-            'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino'],
+            'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'skin'=>'B'],
+            'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
@@ -25,6 +26,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     foreach($gamelist as $game)
                     {
                         if ($game['gamecode'] == $uuid)
+                        {
+                            return $game;
+                            break;
+                        }
+                        if ($game['gameid'] == $uuid)
                         {
                             return $game;
                             break;
@@ -144,15 +150,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $category = NEXUSController::NEXUS_GAME_IDENTITY[$href];
             
-
+            $skin = $category['skin'];
+            $vendorKey = $category['thirdname'];
             $params = [
-                'vendorKey' => $category['thirdname'],
-                'skin' => NEXUSController::NEXUS_GAMEKEY,
+                'vendorKey' => $vendorKey,
+                'skin' => $skin,
             ];
 
             $gameList = [];
             $data = NEXUSController::sendRequest('/games', $params);
-
+            $view = 1;
+            if($href == 'nexus-evo'){
+                $view = 0;
+            }
             if ($data && $data['code'] == 0)
             {
                 foreach ($data['games'] as $game)
@@ -161,8 +171,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $gametitle = 'Unknown';
                     if(isset($game['names']))
                     {
-                        $gamename = isset($game['names']['ko'])?$game['names']['ko']:$game['names']['en'];
-                        $gametitle = $game['names']['en'];
+                        $gametitle = isset($game['names']['ko'])?$game['names']['ko']:$game['names']['en'];
+                        $gamename = $game['names']['en'];
                     }
                     $icon = '';
                     if(isset($game['image']))
@@ -171,41 +181,52 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     array_push($gameList, [
                         'provider' => self::NEXUS_PROVIDER,
+                        'vendorKey' => $vendorKey, 
                         'href' => $href,
-                        'gamecode' => $game['id'],
+                        'gameid' => $game['id'],
+                        'gamecode' => $vendorKey.'_'.$game['key'],
                         'symbol' => $game['key'],
                         'name' => preg_replace('/\s+/', '', $gamename),
                         'title' => $gametitle,
-                        'type' => 'table',
+                        'type' => ($category['type']=='slot')?'slot':'table',
+                        'skin' => $skin,
                         'icon' => $icon,
-                        'view' => 0
+                        'view' => $view
                     ]);
                 }
                 //add casino lobby
-                array_push($gameList, [
-                    'provider' => self::NEXUS_PROVIDER,
-                    'href' => $href,
-                    'gamecode' => $category['thirdname'],
-                    'symbol' => 'gclobby',
-                    'name' => 'Lobby',
-                    'title' => 'Lobby',
-                    'type' => 'table',
-                    'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
-                    'view' => 1
-                ]);
+                if($href == 'nexus-evo'){
+                    array_push($gameList, [
+                        'provider' => self::NEXUS_PROVIDER,
+                        'vendorKey' => $vendorKey, 
+                        'gameid' => 'evo',
+                        'href' => $href,
+                        'gamecode' => $vendorKey,
+                        'symbol' => $skin,
+                        'name' => 'Lobby',
+                        'title' => 'Lobby',
+                        'skin' => $skin,
+                        'type' => 'table',
+                        'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
+                        'view' => 1
+                    ]);
+                }
             }
 
             //add Unknown Game item
             array_push($gameList, [
                 'provider' => self::NEXUS_PROVIDER,
+                'vendorKey' => $vendorKey, 
                 'href' => $href,
+                'gameid' => 'Unknown',
                 'symbol' => 'Unknown',
                 'gamecode' => 'Unknown',
                 'enname' => 'UnknownGame',
                 'name' => 'UnknownGame',
                 'title' => 'UnknownGame',
+                'skin' => $skin,
                 'icon' => '',
-                'type' => 'table',
+                'type' => ($category['type']=='slot')?'slot':'table',
                 'view' => 0
             ]);
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
@@ -216,9 +237,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function makegamelink($gamecode, $user) 
         {
             $user_code = self::NEXUS_PROVIDER  . sprintf("%04d",$user->id);
+            $game = NEXUSController::getGameObj($gamecode);
+            if (!$game)
+            {
+                return null;
+            }
             $params = [
-                'vendorKey' => $gamecode,
-                'gameKey' => NEXUSController::NEXUS_GAMEKEY,
+                'vendorKey' => $game['vendorKey'],
+                'gameKey' => $game['symbol'],
                 'siteUsername' => $user_code,
                 'ip' => '',
                 'language' => 'ko',
@@ -364,7 +390,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $sdate = date('Y-m-d H:i:s', $fromtimepoint);
             $edate = date('Y-m-d H:i:s', $totimepoint);
             $params = [
-                'vendorKey' => 'evolution_casino',
                 'sdate' => $sdate,
                 'edate' => $edate,
                 'limit' => 4000
