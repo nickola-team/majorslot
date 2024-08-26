@@ -1258,6 +1258,10 @@ return [
         "BowofArtemis" => "보우 오브 아르테미스",
         "MoneyStacks" => "머니 스택스",
         "RunningSushi" => "러닝 스시",
+        "YetiQuest" => "예티 퀘스트",
+        "JackpotHunter" => "잭팟 헌터",
+        "ForgingWilds" => "포징 와일드",
+        "HottoBurn7DeadlyFreeSpin" => "핫 투 번 7 데들리 프리스핀",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
