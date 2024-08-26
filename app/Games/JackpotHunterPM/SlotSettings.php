@@ -774,14 +774,18 @@ namespace VanguardLTE\Games\JackpotHunterPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameJackpotHunterStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 60000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                 }
                 if($isLowBank == true){
                     $scatterCount = $this->GetGameData($this->slotId . 'ScatterCount');
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        if($pur == 1){
+                            $stacks = $stacks->where('odd', '<=', 20);    
+                        }else{
+                            $stacks = $stacks->where('odd', '<=', 15);    
+                        }
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

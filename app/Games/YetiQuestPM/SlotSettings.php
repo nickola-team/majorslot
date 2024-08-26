@@ -771,21 +771,14 @@ namespace VanguardLTE\Games\YetiQuestPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameYetiQuestStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; // mt_rand(0, 43000);
+                $index = mt_rand(0, 43000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur <= 0)
-                        {
-                            $stacks = $stacks->where('odd', '<=', 15);  
-                        }
-                        else
-                        {
-                            $stacks = $stacks->where('odd', '<=', 35);  
-                        }  
+                        $stacks = $stacks->where('odd', '<=', 15);
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
