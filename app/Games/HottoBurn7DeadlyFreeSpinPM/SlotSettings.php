@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\ForgingWildsPM
+namespace VanguardLTE\Games\HottoBurn7DeadlyFreeSpinPM
 {
     class SlotSettings
     {
@@ -648,7 +648,7 @@ namespace VanguardLTE\Games\ForgingWildsPM
                     'bonus', 
                     $currentbank
                 ];
-                if( $currentbank < ($this->CheckBonusWin() * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
+                if( $currentbank < (30 * $bet) && $this->GetGameData($this->slotId . 'RegularSpinCount') < 450) 
                 {
                     $return = [
                         'none', 
@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\ForgingWildsPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameForgingWildsStack::where('id', 39272)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameHottoBurn7DeadlyFreeSpinStack::where('id', 233669)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -762,30 +762,23 @@ namespace VanguardLTE\Games\ForgingWildsPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameForgingWildsStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameHottoBurn7DeadlyFreeSpinStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                     if($pur >= 0){
                         $stacks = $stacks->where('pur_level', $pur);
                     }else{
                         $stacks = $stacks->where('pur_level', '<=', 0);
                     }
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameForgingWildsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameHottoBurn7DeadlyFreeSpinStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 43000);
+                $index = mt_rand(0, 28000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 65000);
+                    $index = mt_rand(0, 70000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur == 1)
-                        {
-                            $stacks = $stacks->where('odd', '<=', 100);  
-                        }
-                        else
-                        {
-                            $stacks = $stacks->where('odd', '<=', 15);  
-                        }  
+                        $stacks = $stacks->where('odd', '<=', 35);  
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

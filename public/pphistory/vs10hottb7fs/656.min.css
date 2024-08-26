@@ -1,0 +1,155 @@
+:root {
+    --slot-item-width: 58px;
+    --slot-item-height: 50px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"] {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="2"],
+.LinesSlot .ReelsSlot__ItemImg[alt="3"] {
+    z-index: 1
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "slot progress";
+    gap: 10px
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Progress {
+    grid-area: progress
+}
+
+.Progress {
+    width: 100px;
+    position: relative;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end
+}
+
+.Progress__Text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    z-index: 2;
+    margin-bottom: 17px;
+    margin-right: 15px
+}
+
+.Progress__Img {
+    width: 68px;
+    height: 155px;
+    position: relative
+}
+
+.Progress__Img--bg {
+    top: 0;
+    background-image: -webkit-image-set(url(./images/vs10hottb7fs/progress/prBg.png) 1x, url(./images/vs10hottb7fs/progress/prBg@2x.png) 2x);
+    z-index: 1;
+    opacity: .5
+}
+
+.Progress__Img--active,
+.Progress__Img--bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Progress__Img--active {
+    top: 0;
+    background-image: -webkit-image-set(url(./images/vs10hottb7fs/progress/prActive.png) 1x, url(./images/vs10hottb7fs/progress/prActive@2x.png) 2x);
+    top: unset;
+    background-position: bottom
+}
+
+.Progress--cp-1 .Progress__Img--active {
+    height: 45px
+}
+
+.Progress--cp-2 .Progress__Img--active {
+    height: 65px
+}
+
+.Progress--cp-3 .Progress__Img--active {
+    height: 80px
+}
+
+.Progress--cp-4 .Progress__Img--active {
+    height: 95px
+}
+
+.Progress--cp-5 .Progress__Img--active {
+    height: 110px
+}
+
+.Progress--cp-6 .Progress__Img--active {
+    height: 125px
+}
+
+.Progress--cp-7 .Progress__Img--active {
+    height: 137px
+}
+
+.Progress--cp-8 .Progress__Img--active {
+    height: 100%
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10hottb7fs/bg.png) 1x, url(./images/vs10hottb7fs/bg@2x.png) 2x);
+    width: 310px;
+    height: 192px;
+    margin: -18px -10px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs10hottb7fs/bgFs.png) 1x, url(./images/vs10hottb7fs/bgFs@2x.png) 2x)
+}
