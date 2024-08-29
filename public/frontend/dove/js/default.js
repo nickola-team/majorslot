@@ -1870,12 +1870,13 @@ function setCookie( name, value, expiredays ) {
 
 function closeWinpopDay(id) { 
   setCookie( "pop" + id, "done" , 1 ); 
-
-  document.getElementById("pop" + id).style.visibility = "hidden"; 
+  document.getElementById("pop" + id).remove();
+  // document.getElementById("pop" + id).style.visibility = "hidden"; 
 } 
 
 function closeWinpop(id) {
-  document.getElementById("pop" + id).style.visibility = "hidden"; 
+  document.getElementById("pop" + id).remove();
+  // document.getElementById("pop" + id).style.visibility = "hidden"; 
 }
 
 

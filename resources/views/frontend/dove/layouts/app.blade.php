@@ -56,16 +56,21 @@
 								@include('frontend.dove.layouts.partials.content')	
 								@include('frontend.dove.layouts.partials.live_content')	
 								@include('frontend.dove.layouts.partials.slot_content')
-								@foreach ($noticelist as $ntc)
-								@if ($ntc->popup == 'popup')
-									@include('frontend.dove.layouts.partials.notice',  ['notice' => $ntc])
-									<script>
-										if (getCookie('pop{{$ntc->id}}') === "done") {
-												closeWinpop({{$ntc->id}});
-											}
-									</script>
-								@endif
-								@endforeach								
+								<div style="display:flex; position:absolute; width:fit-content; height:fit-content; flex-wrap:wrap; margin-top:100px;" >
+									@foreach ($noticelist as $ntc)
+										@if ($ntc->popup == 'popup')
+											@include('frontend.dove.layouts.partials.notice',  ['notice' => $ntc])
+											<script>
+												if (getCookie('pop{{$ntc->id}}') === "done") {
+														closeWinpop({{$ntc->id}});
+													}
+											</script>
+										@endif
+									@endforeach	
+								</div>								
+									
+								
+															
 							</div>
 						</div> <!----> 
 						<div data-v-47d63ae2="" data-v-525011a5="" class="row" style="flex-direction: row;">
