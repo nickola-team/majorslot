@@ -15,6 +15,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //==== CASINO ====
             'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'skin'=>'B'],
             'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'skin'=>'SLOT'],
+            'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
@@ -456,11 +457,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $timepoint = strtotime($round['createdAt']) + 1 - 9 * 60 * 60;
                     }
-                    $gameObj = self::getGameObj($round['gameId']);
+                    $gameObj = NEXUSController::getGameObj($round['gameId']);
                     
                     if (!$gameObj)
                     {
-                        $gameObj = self::getGameObj($round['vendorKey']);
+                        $gameObj = NEXUSController::getGameObj($round['vendorKey']);
                         if (!$gameObj)
                         {
                             Log::error('NEXUS Game could not found : '. $round['gameId']);
@@ -526,7 +527,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'bet' => $bet, 
                         'win' => $win, 
                         'game' => $gamename, 
-                        'type' => 'table',
+                        'type' => $gameObj['type'],
                         'percent' => 0, 
                         'percent_jps' => 0, 
                         'percent_jpg' => 0, 
