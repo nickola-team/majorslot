@@ -1410,7 +1410,7 @@ function getCustomerPage() {
 					}
 					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';				
                 html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
-            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick='showMsg("${data.data[i].id}","${data.data[i].content}","${data.data[i].title}");'>
               <div data-v-ca1f65a4="" class="inquiry column">
                 <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
                   <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
@@ -1818,7 +1818,7 @@ function getNoticeList() {
 					}
 					type = (data.data[i].writer_id!='popup')?'팝업':'일반';				
                 html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
-            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg('${data.data[i].id}','${data.data[i].content}','${data.data[i].title}');">
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick='showMsg("${data.data[i].id}","${data.data[i].content}","${data.data[i].title}");'>
               <div data-v-ca1f65a4="" class="inquiry column">
                 <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
                   <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
