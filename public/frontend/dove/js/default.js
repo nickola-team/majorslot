@@ -1385,7 +1385,7 @@ function openRequestPop(){
   div.innerHTML += requestcontent;
   getCustomerPage();
 }
-
+var msg_data = null;
 function getCustomerPage() {
 	$.ajax({
         type: "POST",
@@ -1397,6 +1397,7 @@ function getCustomerPage() {
         if(data.error == false){
       var html = ``;
 			if (data.data.length > 0) {
+        msg_data = data.data;
 				for (var i = 0; i < data.data.length; i++) {
 					date = new Date(data.data[i].created_at);
 					if (data.data[i].read_at == null)
@@ -1410,7 +1411,7 @@ function getCustomerPage() {
 					}
 					type = (data.user_id!=data.data[i].writer_id)?'수신':'발신';				
                 html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
-            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick='showMsg("${data.data[i].id}","${data.data[i].content}","${data.data[i].title}");'>
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg(${i});">
               <div data-v-ca1f65a4="" class="inquiry column">
                 <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
                   <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
@@ -1514,7 +1515,10 @@ function send_text() {
 }
 
 
-function showMsg(objId,objContent,objTitle){
+function showMsg(id){
+  var objId = msg_data[id].id;
+  var objContent = msg_data[id].content;
+  var objTitle = msg_data[id].title;
   $.post('/api/readMsg',{id : objId},function(data){
   }); 
             
@@ -1805,6 +1809,7 @@ function getNoticeList() {
         if(data.error == false){
       var html = ``;
 			if (data.data.length > 0) {
+        msg_data = data.data;
 				for (var i = 0; i < data.data.length; i++) {
 					date = new Date(data.data[i].date_time);
 					if (data.data[i].read_at == null)
@@ -1818,7 +1823,7 @@ function getNoticeList() {
 					}
 					type = (data.data[i].writer_id!='popup')?'팝업':'일반';				
                 html += `<div data-v-ca1f65a4="" class="list column" style="height:60px;width:100%">
-            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick='showMsg("${data.data[i].id}","${data.data[i].content}","${data.data[i].title}");'>
+            <button data-v-ca1f65a4="" class="button text" style="background: transparent;" onclick="showMsg(${i});">
               <div data-v-ca1f65a4="" class="inquiry column">
                 <div data-v-ca1f65a4="" class="margin-bottom-5 row" style="flex-direction: row; align-items: center;">
                   <span data-v-ca1f65a4="" class="text-ellipsis text" style="display: inline-block;">${data.data[i].title}</span> 
@@ -1865,12 +1870,13 @@ function setCookie( name, value, expiredays ) {
 
 function closeWinpopDay(id) { 
   setCookie( "pop" + id, "done" , 1 ); 
-
-  document.getElementById("pop" + id).style.visibility = "hidden"; 
+  document.getElementById("pop" + id).remove();
+  // document.getElementById("pop" + id).style.visibility = "hidden"; 
 } 
 
 function closeWinpop(id) {
-  document.getElementById("pop" + id).style.visibility = "hidden"; 
+  document.getElementById("pop" + id).remove();
+  // document.getElementById("pop" + id).style.visibility = "hidden"; 
 }
 
 

@@ -6,9 +6,9 @@ $width = '100vw'; $height = '100vh';
   style="position:absolute; left:0px; top:0px; z-index:200; width:100vw;height:100vh;" 
 @else
 <?php
-$width = '330px'; $height = '400px';
+$width = '500px'; $height = '400px';
 ?>
-    style="position:absolute; left:{{275+floor($loop->index%4) * 350}}px; top:{{125+ floor($loop->index / 4) * 375}}px; z-index:200; width:{{$width}};height:{{$width}}; " 
+    style="width:{{$width}};height:{{$width}};padding:30px;" 
             @endif>
   <div class="dialog row" style="flex-direction: row; position:relative;">
     <div class="container row" style="flex-direction: row; width: 100%;  margin: unset;">
