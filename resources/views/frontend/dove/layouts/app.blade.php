@@ -56,7 +56,12 @@
 								@include('frontend.dove.layouts.partials.content')	
 								@include('frontend.dove.layouts.partials.live_content')	
 								@include('frontend.dove.layouts.partials.slot_content')
+								@if( $detect->isMobile() || $detect->isTablet() ) 
+								<div style="display:flex; position:absolute; width:fit-content; height:fit-content; flex-wrap:wrap;" >
+								@else
 								<div style="display:flex; position:absolute; width:fit-content; height:fit-content; flex-wrap:wrap; margin-top:100px;" >
+								@endif
+								
 									@foreach ($noticelist as $ntc)
 										@if ($ntc->popup == 'popup')
 											@include('frontend.dove.layouts.partials.notice',  ['notice' => $ntc])
