@@ -1857,12 +1857,15 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             else {
-                $user->update(
+                \DB::beginTransaction();
+                $lockUser = \VanguardLTE\User::lockForUpdate()->find($user->id);
+                $lockUser->update(
                     [
-                        'balance' => $user->balance - $money,
-                        'total_out' => $user->total_out + $money,
+                        'balance' => $lockUser->balance - $money,
+                        'total_out' => $lockUser->total_out + $money,
                     ]
                 );
+                \DB::commit();
                 $master = $user->referral;
                 while ($master!=null && !$master->isInoutPartner())
                 {
