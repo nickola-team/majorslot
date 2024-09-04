@@ -1783,6 +1783,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user'))
             {
+                $user->refresh();
                 $b = $user->withdrawAll('withdrawRequest');
                 if (!$b)
                 {
