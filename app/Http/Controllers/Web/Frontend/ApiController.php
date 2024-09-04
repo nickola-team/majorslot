@@ -1671,7 +1671,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                \VanguardLTE\WithdrawDeposit::create([
+                \VanguardLTE\WithdrawDeposit::firstOrCreate([
+                    'user_id' => $user->id,
+                    'created_at' => \Carbon\Carbon::now()
+                ],[
                     'user_id' => $user->id,
                     'payeer_id' => $master->id,
                     'type' => 'add',
@@ -1873,7 +1876,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                \VanguardLTE\WithdrawDeposit::create([
+                \VanguardLTE\WithdrawDeposit::firstOrCreate([
+                    'user_id' => $user->id,
+                    'created_at' => \Carbon\Carbon::now()
+                ],[
                     'user_id' => $user->id,
                     'payeer_id' => $master->id,
                     'type' => 'out',
