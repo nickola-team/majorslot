@@ -1857,15 +1857,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             else {
-                \DB::beginTransaction();
-                $lockUser = \VanguardLTE\User::lockForUpdate()->find($user->id);
-                $lockUser->update(
+                $user->refresh();
+                $user->update(
                     [
-                        'balance' => $lockUser->balance - $money,
-                        'total_out' => $lockUser->total_out + $money,
+                        'balance' => $user->balance - $money,
+                        'total_out' => $user->total_out + $money,
                     ]
                 );
-                \DB::commit();
                 $master = $user->referral;
                 while ($master!=null && !$master->isInoutPartner())
                 {
@@ -1879,10 +1877,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                \VanguardLTE\WithdrawDeposit::firstOrCreate([
-                    'user_id' => $user->id,
-                    'created_at' => \Carbon\Carbon::now()
-                ],[
+                \VanguardLTE\WithdrawDeposit::create([
                     'user_id' => $user->id,
                     'payeer_id' => $master->id,
                     'type' => 'out',
