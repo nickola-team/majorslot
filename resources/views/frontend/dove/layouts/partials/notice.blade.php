@@ -6,9 +6,9 @@ $width = '100vw'; $height = '100vh';
   style="position:absolute; left:0px; top:0px; z-index:200; width:100vw;height:100vh;" 
 @else
 <?php
-$width = '330px'; $height = '400px';
+$width = '500px'; $height = '400px';
 ?>
-    style="position:absolute; left:{{275+floor($loop->index%4) * 350}}px; top:{{125+ floor($loop->index / 4) * 375}}px; z-index:200; width:{{$width}};height:{{$width}}; " 
+    style="width:{{$width}};height:{{$width}};padding:30px;" 
             @endif>
   <div class="dialog row" style="flex-direction: row; position:relative;">
     <div class="container row" style="flex-direction: row; width: 100%;  margin: unset;">
@@ -20,9 +20,9 @@ $width = '330px'; $height = '400px';
           <div data-v-5290ad82="" class="dialog-title row" >
             <span data-v-5290ad82="" class="text-level-7 text" maxlength="10" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><img data-v-5290ad82="" src="/frontend/dove/assets/img/notice.d792102.svg" class="margin-right-5" style="width: 20px; height: 20px; "><p style="width:220px;">{{$ntc->title}}</p></span>
           </div> 
-          <div data-v-5290ad82="" class="margin-bottom-10 column">
+          <div data-v-5290ad82="" class="column" style="margin: bottom 50px;">
             <div data-v-5290ad82="" class="title scrollable-atuo row" style="flex-direction: row;">
-              <span data-v-5290ad82="" style="overflow: auto !important;text-overflow: ellipsis;white-space: normal;line-height: 1.2;height: 200px;text-align: left;   word-wrap: break-word;"><?php echo $ntc->content; ?></span>
+              <span data-v-5290ad82="" style="overflow: auto !important;text-overflow: ellipsis;white-space: normal;line-height: 1.2;height: 300px;text-align: left;   word-wrap: break-word; min-width:420px;"><?php echo $ntc->content; ?></span>
             </div>
           </div> 
           <div data-v-5290ad82="" class="margin-bottom-10 column" style="position: absolute;bottom: 0;width: 100%;">

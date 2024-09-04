@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="/frontend/dove/css/custom.css?v=202301301150">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-	<script type="text/javascript" src="/frontend/dove/js/default.js"></script>
+	<script type="text/javascript" src="/frontend/dove/js/default.js?v=2"></script>
 	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.min.js"></script>
 	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.carousel.min.js"></script>
 	<link rel="stylesheet" href="/frontend/todayslot/jq/slideshow5/style.css">
@@ -56,16 +56,26 @@
 								@include('frontend.dove.layouts.partials.content')	
 								@include('frontend.dove.layouts.partials.live_content')	
 								@include('frontend.dove.layouts.partials.slot_content')
-								@foreach ($noticelist as $ntc)
-								@if ($ntc->popup == 'popup')
-									@include('frontend.dove.layouts.partials.notice',  ['notice' => $ntc])
-									<script>
-										if (getCookie('pop{{$ntc->id}}') === "done") {
-												closeWinpop({{$ntc->id}});
-											}
-									</script>
+								@if( $detect->isMobile() || $detect->isTablet() ) 
+								<div style="display:flex; position:absolute; width:fit-content; height:fit-content; flex-wrap:wrap;" >
+								@else
+								<div style="display:flex; position:absolute; width:fit-content; height:fit-content; flex-wrap:wrap; margin-top:100px;" >
 								@endif
-								@endforeach								
+								
+									@foreach ($noticelist as $ntc)
+										@if ($ntc->popup == 'popup')
+											@include('frontend.dove.layouts.partials.notice',  ['notice' => $ntc])
+											<script>
+												if (getCookie('pop{{$ntc->id}}') === "done") {
+														closeWinpop({{$ntc->id}});
+													}
+											</script>
+										@endif
+									@endforeach	
+								</div>								
+									
+								
+															
 							</div>
 						</div> <!----> 
 						<div data-v-47d63ae2="" data-v-525011a5="" class="row" style="flex-direction: row;">
