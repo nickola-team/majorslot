@@ -1783,6 +1783,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             if ($user->hasRole('user'))
             {
+                $user->refresh();
                 $b = $user->withdrawAll('withdrawRequest');
                 if (!$b)
                 {
@@ -1857,6 +1858,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 }
             }
             else {
+                $user->refresh();
                 $user->update(
                     [
                         'balance' => $user->balance - $money,
@@ -1876,10 +1878,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                         'code' => '002'
                     ], 200);
                 }
-                \VanguardLTE\WithdrawDeposit::firstOrCreate([
-                    'user_id' => $user->id,
-                    'created_at' => \Carbon\Carbon::now()
-                ],[
+                \VanguardLTE\WithdrawDeposit::create([
                     'user_id' => $user->id,
                     'payeer_id' => $master->id,
                     'type' => 'out',
