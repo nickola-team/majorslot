@@ -883,29 +883,43 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $gIds = $ownCats->games->pluck('game_id')->toArray();
                     $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
 
-                    $lobbyCats = $json_data['lobbyCategories'];
-                    $filteredCats = [];
-                    foreach ($lobbyCats as $cat)
+                    $multiLobby = 0;
+                    if(isset($json_data['lobbyCategories']) || isset($json_data['gameLaunchURL']))
                     {
-                        $lobbyGames = $cat['lobbyGames'];
-                        $filteredGames = [];
-                        foreach ($lobbyGames as $game)
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat)
                         {
-                            foreach ($ownGames as $og)
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game)
                             {
-                                if ($og->label == $game['symbol'])
+                                foreach ($ownGames as $og)
                                 {
-                                    $filteredGames[] = $game;
-                                    break;
+                                    if ($og->label == $game['symbol'])
+                                    {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
                                 }
                             }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
                         }
-                        $cat['lobbyGames'] = $filteredGames;
-                        $filteredCats[] = $cat;
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
                     }
-                    $json_data['lobbyCategories'] = $filteredCats;
-                    $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    else if(isset($json_data['data']) && count($json_data['data']) > 0)
+                    {
+                        $multiLobby = 1;
+                        $multi_json = $json_data['data'][0];
+                        if(isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL']))
+                        {
+                            $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                        }
+                    }   
                     $promo->games = json_encode($json_data);
+                    $promo->multiminilobby = $multiLobby;
                 }
 
                 $promo->save();
@@ -1083,7 +1097,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 //     return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$verify_log->rid, 'bet'=>$verify_log->bet, 'verifyurl'=>$verifyurl]); 
                 // }
                 $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vs10bbextreme','vs10bbfmission'];
-                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10txbigbass','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10txbigbass','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
                 $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
 
                 $cver = 99951;

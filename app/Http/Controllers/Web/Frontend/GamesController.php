@@ -593,7 +593,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             {
                 $url = str_replace('http://', 'https://', $url);
             }
-            $resource_type = '/v5';
+            $resource_type = '/v4';
             // if(!file_exists(public_path() . '/games/_'. preg_replace('/^[_]/', '', $game->name) . '/common/games-html5/'))
             // {
             //     for($k = 1; $k < 10; $k++)
