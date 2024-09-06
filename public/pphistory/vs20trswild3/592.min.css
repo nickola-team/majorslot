@@ -1,0 +1,100 @@
+:root {
+    --slot-item-width: 56px;
+    --slot-item-height: 78px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "slot treasure";
+    column-gap: 30px;
+    margin-left: 25px
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .TreasureBox {
+    grid-area: treasure
+}
+
+.TreasureBox {
+    width: 65px;
+    height: 84px;
+    align-self: flex-end;
+    background-image: -webkit-image-set(url(./images/vs20trswild3/box.png) 1x, url(./images/vs20trswild3/box@2x.png) 2x)
+}
+
+.TreasureBox__Text {
+    margin: -18px auto;
+    white-space: nowrap
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20trswild3/bg.png) 1x, url(./images/vs20trswild3/bg@2x.png) 2x);
+    width: 347px;
+    height: 245px;
+    margin: -8px -34px;
+    background-repeat: no-repeat
+}
+
+.Wild .MoneyScatter {
+    line-height: normal
+}
+
+.Wild .MoneyScatter__Label {
+    position: absolute;
+    top: 36px;
+    font-size: 14px
+}
+
+.Wild .MoneyScatter__Money {
+    position: absolute;
+    bottom: 2px;
+    line-height: 20px
+}
+
+.MoneyScatter {
+    line-height: normal
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    white-space: nowrap;
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
