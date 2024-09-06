@@ -1,0 +1,125 @@
+:root {
+    --slot-item-height: 44px;
+    --slot-item-width: 43px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__Item--1 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "lights .." "tmbWin .." "slot feature"
+}
+
+.Spin .TmbWin {
+    grid-area: tmbWin
+}
+
+.Spin .Lights {
+    grid-area: lights
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .ElevatorFeature {
+    grid-area: feature
+}
+
+.Spin .Lights {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 0 -5px 10px;
+    z-index: 1;
+    gap: 3px
+}
+
+.Spin .ElevatorFeature {
+    align-self: flex-end;
+    margin-left: 25px
+}
+
+.Spin .TmbWin {
+    position: absolute;
+    z-index: 2;
+    height: 13px;
+    top: -7px;
+    margin: 0 0 -5px 10px
+}
+
+.Spin .TmbWin .Image__Children {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Spin .TmbWin__Value {
+    width: 75px;
+    line-height: normal;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Carousel__Controls {
+    bottom: -35px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20elevclust/slotBg.png) 1x, url(./images/vs20elevclust/slotBg@2x.png) 2x);
+    width: 337px;
+    height: 265px;
+    margin: -24px -21px;
+    background-repeat: no-repeat
+}
+
+div:not(.WinLines-Group)>.LinesSlot .ReelsSlot {
+    margin-left: 20px
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
