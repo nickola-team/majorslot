@@ -974,7 +974,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$embed || $detect->isiOS() || $detect->isiPadOS())
             {
                 $url = GACController::makegamelink($gamecode);
-                Log::error('GAC1 : getLobbyUrl . ' . $response->body());
+                Log::error('GAC1 : getLobbyUrl . ' . $url);
             }
             else
             {
