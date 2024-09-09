@@ -956,6 +956,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
+            Log::error('GAC1 : getgamelink . ' . $response->body());
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
