@@ -875,14 +875,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function makegamelink($gamecode)
         {
+            Log::error('GAC : makegamelink . ' . $gamecode);
             $user = auth()->user();
             if ($user == null)
             {
+                Log::error('GAC : makegamelink auth error. ');
                 return null;
             }
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
+                Log::error('GAC : makegamelink no gameobj. ');
                 return null;
             }
             $username = $user->username;
@@ -906,7 +909,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
-
+            Log::error('GAC : makegamelink no gac_key. ');
             $recommend = config('app.gac_key');
             $agentinfo = \VanguardLTE\ProviderInfo::where('user_id', $master->id)->where('provider', 'gacagent')->first();
             if ($agentinfo)
@@ -922,7 +925,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $recommend = $agentinfo->config;
                 }
             }
-            
+            Log::error('GAC : makegamelink no gac. ');
             $data = [
                 'userId' => strval($user->id),
                 'userName' => $username,
@@ -935,15 +938,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $url = null;
             try {
+                Log::error('GAC : makegamelink start getLobbyUrl. ');
                 $response = Http::timeout(20)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
                 if (!$response->ok())
                 {
                     Log::error('GAC : getLobbyUrl response failed. ' . $response->body());
                     return null;
                 }
+                Log::error('GAC : makegamelink end getLobbyUrl. ');
                 $data = $response->json();
                 if (isset($data['lobbyUrl'])){
                     $url = $data['lobbyUrl'];
+                    Log::error('GAC : makegamelink end url. ');
                 }
             }
             catch (\Exception $ex)
