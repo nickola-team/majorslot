@@ -962,7 +962,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         public static function getgamelink($gamecode)
         {
-            Log::error('GAC1 : getgamelink . ' . $response->body());
+            Log::error('GAC1 : getgamelink . ' . $gamecode);
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
@@ -982,10 +982,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($url)
             {
-                Log::error('GAC2 : getLobbyUrl . ' . $response->body());
+                Log::error('GAC2 : getLobbyUrl . ' . $url);
                 return ['error' => false, 'data' => ['url' => $url]];
             }
-            Log::error('GAC3 : getLobbyUrl . ' . $response->body());
+            Log::error('GAC3 : getLobbyUrl . ' . $url);
             return ['error' => true, 'msg' => '게임실행 오류입니다'];
         }
 
