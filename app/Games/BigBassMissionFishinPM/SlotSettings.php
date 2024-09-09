@@ -751,7 +751,7 @@ namespace VanguardLTE\Games\BigBassMissionFishinPM
             }
             if($this->happyhouruser){
                 $limitOdd = $this->GetBank('') / $bet;
-                if($pur >= 0){
+                if($pur >= 0 || $winType == 'bonus'){
                     $winType = 'bonus';
                 }else if($limitOdd > 1){
                     $winType = 'win';
