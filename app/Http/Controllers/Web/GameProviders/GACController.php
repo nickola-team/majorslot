@@ -967,6 +967,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if (!$embed || $detect->isiOS() || $detect->isiPadOS())
             {
                 $url = GACController::makegamelink($gamecode);
+                Log::error('GAC1 : getLobbyUrl . ' . $response->body());
             }
             else
             {
@@ -974,8 +975,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             if ($url)
             {
+                Log::error('GAC2 : getLobbyUrl . ' . $response->body());
                 return ['error' => false, 'data' => ['url' => $url]];
             }
+            Log::error('GAC3 : getLobbyUrl . ' . $response->body());
             return ['error' => true, 'msg' => '게임실행 오류입니다'];
         }
 
