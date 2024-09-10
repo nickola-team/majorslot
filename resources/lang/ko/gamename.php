@@ -1262,6 +1262,10 @@ return [
         "JackpotHunter" => "잭팟 헌터",
         "ForgingWilds" => "포징 와일드",
         "HottoBurn7DeadlyFreeSpin" => "핫 투 번 7 데들리 프리스핀",
+        "AztecTreasureHunt" => "아즈텍 트레저 헌트",
+        "DragonGold88" => "드래곤 골드 88",
+        "GemElevator" => "젬 엘리베이터",
+        "AngelvsSinner" => "엔젤 vs 시너",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

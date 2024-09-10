@@ -16,6 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'skin'=>'B'],
             'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'skin'=>'SLOT'],
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'skin'=>'SLOT'],
+            'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
