@@ -964,7 +964,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $detect = new \Detection\MobileDetect();
             $embed = env('GAC_EMBED', true);
 
-            if (!$embed) // || $detect->isiOS() || $detect->isiPadOS()
+            if (!$embed || $detect->isiOS() || $detect->isiPadOS())
             {
                 $url = GACController::makegamelink($gamecode);
             }
