@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\AngelvsSinnerPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameAngelvsSinnerStack::where('id', 2)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameAngelvsSinnerStack::where('id', 49773)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -771,7 +771,7 @@ namespace VanguardLTE\Games\AngelvsSinnerPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameAngelvsSinnerStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 43000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
