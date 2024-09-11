@@ -248,11 +248,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function balance($userid, \Illuminate\Http\Request $request)
         {
-            Log::error('GAC : getBalance start user_id=' . $userid);
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
             if (!$user)
             {
-                Log::error('GAC : getBalance no found user. user_id=' . $userid);
                 return response()->json([
                     'result' => false,
                     'message' => 'Not found user',
@@ -261,7 +259,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]
                 ]);
             }
-            Log::error('GAC : getBalance user='. $user->username . ',balance=' . $user->balance .', user_id=' . $userid);
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
