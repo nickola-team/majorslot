@@ -380,7 +380,7 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
     Route::post('api/outbalance', [
         'as' => 'frontend.api.withdraw',
         'uses' => 'ApiController@withdraw',
-    ]);
+    ])->middleware('simultaneous:1');
     Route::post('api/depositAccount', [
         'as' => 'frontend.api.depositAccount',
         'uses' => 'ApiController@depositAccount',
