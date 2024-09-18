@@ -3,7 +3,7 @@ namespace VanguardLTE\PPGameStackModel;
 {
     class PPGameBigBassVegasDoubleDownDeluxeStack extends \Illuminate\Database\Eloquent\Model
     {
-        protected $table = 'w_ppgame_bbvddd_stack';
+        protected $table = 'ppgame_bbvddd_stack';
         protected $fillable = [
             'id', 
             'game_id', 

@@ -141,6 +141,8 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $strWinLine = $stack['win_line'];
                     $str_rmul = $stack['rmul'];
                     $str_mo_wpos = $stack['mo_wpos'];
+                    $str_mo = $stack['mo'];
+                    $str_mo_t = $stack['mo_t'];
                     $mo_m = $stack['mo_m'];
                     $mo_c = $stack['mo_c'];
                     $mo_tv = $stack['mo_tv'];
@@ -245,6 +247,9 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     }
                     if($mo_c > 0){
                         $strOtherResponse = $strOtherResponse . '&mo_c=' . $mo_c;
+                    }
+                    if($str_mo != ''){
+                        $strOtherResponse = $strOtherResponse . '&mo=' . $str_mo . '&mo_t=' . $str_mo_t;
                     }
                     $str_apaw = '';
                     if($apv > 0){
@@ -474,6 +479,8 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 $mo_tv = 0;
                 $mo_m = 0;
                 $mo_c = 0;
+                $str_mo = '';
+                $str_mo_t = '';
                 if($slotEvent['slotEvent'] == 'freespin' || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -514,6 +521,8 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $mo_c = $stack['mo_c'];
                     $mo_tv = $stack['mo_tv'];
                     $str_rmul = $stack['rmul'];
+                    $str_mo = $stack['mo'];
+                    $str_mo_t = $stack['mo_t'];
                     if($stack['g'] != '')
                     {
                         $arr_g = $stack['g'];
@@ -563,6 +572,8 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $mo_c = $stack[0]['mo_c'];
                     $mo_tv = $stack[0]['mo_tv'];
                     $str_rmul = $stack[0]['rmul'];
+                    $str_mo = $stack[0]['mo'];
+                    $str_mo_t = $stack[0]['mo_t'];
                     if($stack[0]['g'] != '')
                     {
                         $arr_g = $stack[0]['g'];
@@ -781,10 +792,13 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 if($mo_c > 0){
                     $strOtherResponse = $strOtherResponse . '&mo_c=' . $mo_c;
                 }
+                if($str_mo != ''){
+                    $strOtherResponse = $strOtherResponse . '&mo=' . $str_mo . '&mo_t=' . $str_mo_t;
+                }
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $str_rs_p == '') 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
