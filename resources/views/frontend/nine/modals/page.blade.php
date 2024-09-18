@@ -136,7 +136,7 @@
                   </div>
                   <div class="alert alert-danger">
                     <p>
-                      <strong translate="" class="ng-scope">최소 입금 금액은 10,000원 부터 가능합니다.</strong>
+                      <strong translate="" class="ng-scope">최소 입금 금액은 50,000원 부터 가능합니다.</strong>
                     </p>
                     <p>
                       <strong translate="" class="ng-scope">입금계좌는 수시로 변경되오니 반드시 입금 전 계좌 문의를 통해 계좌번호를 확인 후 입금하여 주시기 바랍니다.</strong>
