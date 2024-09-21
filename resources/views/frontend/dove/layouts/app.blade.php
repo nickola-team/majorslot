@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="/frontend/dove/css/custom.css?v=202301301150">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-	<script type="text/javascript" src="/frontend/dove/js/default.js?v=2"></script>
+	<script type="text/javascript" src="/frontend/dove/js/default.js?v=4"></script>
 	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.min.js"></script>
 	<script type="text/javascript" src="/frontend/todayslot/jq/slideshow5/jquery.cycle2.carousel.min.js"></script>
 	<link rel="stylesheet" href="/frontend/todayslot/jq/slideshow5/style.css">
@@ -38,6 +38,9 @@
 	<!---->
 		@if (empty($logo))
 		<?php $logo = 'dove'; ?>
+		@endif
+		@if (empty($title))
+		<?php $title = '도브'; ?>
 		@endif
 		@if (empty($telegram))
 		<?php $telegram = '#'; ?>

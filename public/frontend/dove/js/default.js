@@ -106,7 +106,7 @@ function showProfile(){
   else
     $('#profile-drop').css('display', 'flex');
 }
-function openLoginModal(logo, banks) {    
+function openLoginModal(logo, title, banks) {    
     const div = document.getElementById('main-modal');
 
     var logincontent = `<div id="login-modal" class="dialog row" style="flex-direction: row;">
@@ -134,7 +134,7 @@ function openLoginModal(logo, banks) {
             <div data-v-6194c674="" class="row" style="height: 25px; flex-direction: row;">
               <div data-v-f92ca952="" data-v-6194c674="" class="row" style="flex-direction: row;">
                 <div class="row" style="width: 100%; flex-direction: row;">
-                  <button data-v-6194c674="" class="margin-left-5 button text" style="color: rgb(255, 255, 255); background: transparent;" onclick="openRegisterModal('${logo}','${banks}');">
+                  <button data-v-6194c674="" class="margin-left-5 button text" style="color: rgb(255, 255, 255); background: transparent;" onclick="openRegisterModal('${logo}','${title}','${banks}');">
                     <span data-v-6194c674="" class="text">회원가입</span>
                   </button>
                 </div>
@@ -153,7 +153,7 @@ function closeModal(modalname){
       document.getElementById(modalname).remove();
     }
 }
-function openRegisterModal(logo, banks) {
+function openRegisterModal(logo, title, banks) {
     if(Array.isArray(banks)){
       var banklist = '';
       for(var k = 0; k < banks.length; k++){
@@ -178,7 +178,7 @@ function openRegisterModal(logo, banks) {
         <img src="/frontend/${logo}/logo/${logo}.png">
         </div>
         <div data-v-06860046="" class="header-text row" style="flex-direction: row;">
-          <span data-v-06860046="" class="text-level-5-5 text">도브카지노에 오신 것을 환영합니다</span>
+          <span data-v-06860046="" class="text-level-5-5 text">${title} 카지노에 오신 것을 환영합니다</span>
         </div>
         <div data-v-06860046="" class="header-text-2 row" style="flex-direction: row;">
           <span data-v-06860046="" class="text-level-9 text">회원가입 후 프로모에 참가하세요</span>
