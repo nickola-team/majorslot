@@ -1266,6 +1266,9 @@ return [
         "DragonGold88" => "드래곤 골드 88",
         "GemElevator" => "젬 엘리베이터",
         "AngelvsSinner" => "엔젤 vs 시너",
+        "BigBassVegasDoubleDownDeluxe" => "빅 베스 베가스 더블 다운 디럭스",
+        "OodlesofNoodles" => "우들즈 오브 누들즈",
+        "MysteryMice" => "미스터리 마이스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
