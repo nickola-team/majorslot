@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
+namespace VanguardLTE\Games\OodlesofNoodlesPM
 {
     class Server
     {
@@ -64,7 +64,7 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'BuyFreeSpin', -1);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Bl', 0);
                 $slotSettings->SetGameData($slotSettings->slotId . 'Lines', 10);
-                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [3,11,7,5,8,4,12,4,6,9,3,8,3,3,8]);
+                $slotSettings->setGameData($slotSettings->slotId . 'LastReel', [6,12,7,6,10,5,8,5,4,9,6,10,6,6,10]);
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []); //FreeStacks
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', '');
@@ -134,23 +134,14 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $str_psym = $stack['psym'];
                     $str_accm = $stack['accm'];
                     $str_accv = $stack['accv'];
+                    $str_aam = $stack['aam'];
+                    $str_aav = $stack['aav'];
                     $str_lmi = $stack['lmi'];
                     $str_lmv = $stack['lmv'];
                     $str_slm_mp = $stack['slm_mp'];
                     $str_slm_mv = $stack['slm_mv'];
                     $strWinLine = $stack['win_line'];
                     $str_rmul = $stack['rmul'];
-                    $str_mo_wpos = $stack['mo_wpos'];
-                    $str_mo = $stack['mo'];
-                    $str_mo_t = $stack['mo_t'];
-                    $mo_m = $stack['mo_m'];
-                    $mo_c = $stack['mo_c'];
-                    $mo_tv = $stack['mo_tv'];
-                    $arr_g = null;
-                    if($stack['g'] != '')
-                    {
-                        $arr_g = $stack['g'];
-                    }
                     if($slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                         $strOtherResponse = $strOtherResponse . '&puri=' . $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin');
                     }
@@ -162,18 +153,6 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     }
                     if($str_srf != ''){
                         $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
-                    }
-                    if($arr_g != null){
-                        foreach($arr_g as $index=>$item){
-                            if(isset($item['mo_tv']) && $item['mo_tv'] > 0){
-                                $submo_tw = $item['mo_tv'] * $bet;
-                                if(isset($item['mo_m']) && $item['mo_m'] > 1){
-                                    $submo_tw = $submo_tw * $item['mo_m'];
-                                }
-                                $arr_g[$index]['mo_tw'] = '' . $submo_tw;
-                            }
-                        }
-                        $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($arr_g));
                     }
                     if($str_trail != ''){
                         $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
@@ -200,7 +179,7 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                         $strOtherResponse = $strOtherResponse . '&pw=' . (str_replace(',', '', $str_pw) / $original_bet * $bet);
                     }
                     if($str_accv != ''){
-                        $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0;1&accv=' . $str_accv;
+                        $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0&accv=' . $str_accv;
                     }
                     if($str_psym != ''){
                         $arr_psym = explode('~', $str_psym);
@@ -232,24 +211,8 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     if($str_rmul != ''){
                         $strOtherResponse = $strOtherResponse . '&rmul=' . $str_rmul;
                     }
-                    if($str_mo_wpos != ''){
-                        $strOtherResponse = $strOtherResponse .'&mo_wpos=' . $str_mo_wpos;
-                    }
-                    if($mo_m > 0){
-                        $strOtherResponse = $strOtherResponse . '&mo_m=' . $mo_m;
-                    }
-                    if($mo_tv > 0){
-                        $mo_tw = $mo_tv * $bet;
-                        if($mo_m > 1){
-                            $mo_tw = $mo_tw * $mo_m;
-                        }
-                        $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $mo_tw;
-                    }
-                    if($mo_c > 0){
-                        $strOtherResponse = $strOtherResponse . '&mo_c=' . $mo_c;
-                    }
-                    if($str_mo != ''){
-                        $strOtherResponse = $strOtherResponse . '&mo=' . $str_mo . '&mo_t=' . $str_mo_t;
+                    if($str_aav != ''){
+                        $strOtherResponse = $strOtherResponse . '&aam=' . $str_aam . '&aav=' . $str_aav;
                     }
                     $str_apaw = '';
                     if($apv > 0){
@@ -289,8 +252,9 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     }
                 }
                 
-                $Balance = $slotSettings->GetBalance();  
-                $response = 'def_s=3,11,7,5,8,4,12,4,6,9,3,8,3,3,8&balance='. $Balance .'&cfgs=12543&ver=3&mo_s=7&index=1&balance_cash='. $Balance .'&mo_v=20,50,100,150,200,250,500,1000,2000,5000,50000&def_sb=3,11,3,6,9&reel_set_size=13&def_sa=4,12,8,3,9&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"2650941",max_rnd_win:"5000",max_rnd_win_a:"3334",max_rnd_hr_a:"1484637"}}&wl_i=tbm~5000;tbm_a~3334&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime='. floor(microtime(true) * 1000) .'&sa=4,12,8,3,9&sb=3,11,3,6,9&reel_set10=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&reel_set11=12,6,7,8,10,2,5,6,12,7,11,6,5,10,6,5,13,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,2,12,10,9,4,3,10,5,8,12,3,6,8,12,6,13,4,10,11,12,8,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,13,5,10,6,3,9,7,7,12,3,4,11,3,6,2,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,2,12,9,10,4,3,11,5,13,9,8,7,7,7~6,12,13,3,6,7,11,3,5,7,10,4,3,5,2,9,4,5,6,7,7,12,9,5,13,4,3,8,5,6,11,4,6,2,10,3,6,4,3,8,7,7,7~4,5,7,6,2,12,5,2,8,7,6,4,11,13,3,9,7,7,10,6,3,5,13,7,7~5,4,13,6,7,11,13,4,8,2,7,5,3,12,7,7,10,2,6,9,7,7&reel_set12=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&purInit_e=1,1&sh=3&wilds=2~0,0,0,0,0~1,1,1,1,1;13~0,0,0,0,0~1,1,1,1,1&bonuses=0&st=rect&c='.$bet.'&sw=5&sver=5&bls=10,15&counter=2&ntp=0.00&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;2000,200,50,5,0;1000,150,30,0,0;500,100,20,0,0;500,100,20,0,0;200,50,10,0,0;100,25,2,0,0;100,25,2,0,0;50,10,2,0,0;50,10,2,0,0;50,10,2,0,0;0,0,0,0,0&l=10&total_bet_max=30,000,000.00&reel_set0=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&s='.$lastReelStr.'&accInit=[{id:0,mask:"cp;tp;lvl;sc;cl"},{id:1,mask:"cp;tp;lvl;sc;cl"}]&reel_set2=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set1=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set4=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&purInit=[{bet:1000,type:"default"},{bet:3000,type:"default"}]&reel_set3=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set6=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set5=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set8=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set7=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&reel_set9=12,6,7,8,10,1,5,6,12,7,11,6,5,10,6,5,8,7,7,12,4,10,5,8,4,10,3,12,8,10,4,8,9,1,12,10,9,4,3,10,5,8,12,3,6,8,12,6,4,10,11,12,8,7,7,7,7,7~6,4,3,9,7,11,3,8,6,3,9,7,11,5,10,6,3,9,7,7,12,3,4,11,3,6,1,9,5,11,9,6,11,4,9,3,5,4,11,6,3,5,11,1,12,9,10,4,3,11,5,1,9,8,7,7,7,7,7~6,12,1,3,6,7,11,3,5,7,10,4,3,5,1,9,4,5,6,7,7,12,9,5,4,3,8,5,6,11,4,6,1,10,3,6,4,3,8,7,7,7,7,7~4,5,7,6,1,12,5,1,8,7,6,4,11,3,9,7,7,10,6,3,5,1,7,7,7,7,7~5,4,6,7,11,1,4,8,7,5,3,12,1,7,7,10,1,6,9,7,7,7,7,7&total_bet_min=100.00';
+                $Balance = $slotSettings->GetBalance(); 
+                $response = 'def_s=6,12,7,6,10,5,8,5,4,9,6,10,6,6,10&balance='. $Balance .'&cfgs=12597&ver=3&index=1&balance_cash='. $Balance .'&def_sb=3,8,11,7,9&reel_set_size=6&def_sa=5,12,11,7,10&reel_set=0&balance_bonus=0.00&na=s&scatters=1~0,0,0,0,0~0,0,0,0,0~1,1,1,1,1&rt=d&gameInfo={props:{max_rnd_sim:"1",max_rnd_hr:"572740",max_rnd_win:"5100",max_rnd_win_a:"3400",max_rnd_hr_a:"323911"}}&wl_i=tbm~5100;tbm_a~3400&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime='. floor(microtime(true) * 1000) .'&sa=5,12,11,7,10&sb=3,8,11,7,9&sc='. implode(',', $slotSettings->Bet) . $strOtherResponse .'&defc=100.00&purInit_e=1&sh=3&wilds=2~0,0,0,0,0~1,1,1,1,1&bonuses=0&st=rect&c='.$bet.'&sw=5&sver=5&bls=10,15&counter=2&ntp=0.00&paytable=0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;2000,200,50,5,0;1000,150,30,0,0;500,100,20,0,0;500,100,20,0,0;200,50,10,0,0;100,25,5,0,0;100,25,5,0,0;100,25,5,0,0;100,25,5,0,0;100,25,5,0,0;0,0,0,0,0&l=10&total_bet_max=10,000,000.00&reel_set0=6,12,1,3,11,12,5,7,8,3,4,9,5,6,8,3,9,10,7,5~6,8,11,3,4,9,3,5,6,10,1,12,10,7,4~10,6,9,7,8,4,11,6,4,1,12,5,3,12,11,12,3,5~4,12,8,9,4,12,3,6,5,11,5,7,10,7,4,12,1,11,7~11,12,1,3,4,5,6,7,8,9,10&s='.$lastReelStr.'&reel_set2=12,3,5,6,12,8,5,1,3,9,7,8,5,9,3,4,11,7,4,10,5~11,12,3,4,5,6,7,8,9,10~11,5,12,6,4,6,10,9,10,7,5,12,4,12,3,8,4,3~12,11,5,4,5,10,11,3,12,7,11,7,8,1,5,12,4,9,4,6,7~11,12,3,4,5,6,7,8,9,10&reel_set1=6,5,11,3,7,5,6,12,3,9,4,1,7,5,10,8,9,12,5,3,8~11,12,3,4,5,6,7,8,9,10~10,8,12,3,4,10,5,4,11,9,5,6,1,6,3,7,10,12~11,12,3,4,5,6,7,8,9,10~11,12,3,4,5,6,7,8,9,10&reel_set4=11,12,3,4,5,6,7,8,9,10~11,12,1,3,4,5,6,7,8,9,10~11,12,3,4,5,6,7,8,9,10~11,12,1,3,4,5,6,7,8,9,10~11,12,3,4,5,6,7,8,9,10&purInit=[{bet:1000,type:"fs"}]&reel_set3=11,12,3,4,5,6,7,8,9,10~1,10,4,8,12,4,3,7,6,9,5,10,11,3,7,6~11,12,1,3,4,5,6,7,8,9,10~11,12,3,4,5,6,7,8,9,10~11,12,3,4,5,6,7,8,9,10&reel_set5=5,4,10,3,9,3,5,11,4,3,7,12,5,7,8,9,12,8,6~4,8,3,6,4,7,11,3,10,6,10,9,5,7,12~11,10,3,8,10,4,9,3,6,12,5,11,12,4,12,7,5,6~9,4,5,11,7,12,5,8,12,10,6,3,4,11,7,4,7,5~11,12,3,4,5,6,7,8,9,10&total_bet_min=10.00';
+
             }
             else if( $slotEvent['slotEvent'] == 'doCollect' || $slotEvent['slotEvent'] == 'doCollectBonus') 
             {
@@ -382,7 +346,7 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 // $winType = 'bonus';
 
                 $allBet = $betline * $lines;
-                $purMuls = [100, 300];
+                $purMuls = [100];
                 if($pur >= 0 && $slotEvent['slotEvent'] != 'freespin'){
                     $allBet = $allBet * $purMuls[$pur];
                 }else if($bl > 0){
@@ -472,15 +436,10 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 $str_slm_mp = '';
                 $str_slm_mv = '';
                 $str_rmul = '';
-                $arr_g = null;
+                $str_aam = '';
+                $str_aav = '';
                 $apv = 0;
                 $wmv = 0;
-                $str_mo_wpos = '';
-                $mo_tv = 0;
-                $mo_m = 0;
-                $mo_c = 0;
-                $str_mo = '';
-                $str_mo_t = '';
                 if($slotEvent['slotEvent'] == 'freespin' || $slotSettings->GetGameData($slotSettings->slotId . 'CurrentRespin') >= 0){
                     $stack = $tumbAndFreeStacks[$slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount')];
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', $slotSettings->GetGameData($slotSettings->slotId . 'TotalSpinCount') + 1);
@@ -511,22 +470,14 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $str_psym = $stack['psym'];
                     $str_accm = $stack['accm'];
                     $str_accv = $stack['accv'];
+                    $str_aam = $stack['aam'];
+                    $str_aav = $stack['aav'];
                     $str_lmi = $stack['lmi'];
                     $str_lmv = $stack['lmv'];
                     $str_slm_mp = $stack['slm_mp'];
                     $str_slm_mv = $stack['slm_mv'];
                     $strWinLine = $stack['win_line'];
-                    $str_mo_wpos = $stack['mo_wpos'];
-                    $mo_m = $stack['mo_m'];
-                    $mo_c = $stack['mo_c'];
-                    $mo_tv = $stack['mo_tv'];
                     $str_rmul = $stack['rmul'];
-                    $str_mo = $stack['mo'];
-                    $str_mo_t = $stack['mo_t'];
-                    if($stack['g'] != '')
-                    {
-                        $arr_g = $stack['g'];
-                    }
                 }else{
                     $stack = $slotSettings->GetReelStrips($winType, $betline * $lines, $pur);
                     if($stack == null){
@@ -562,22 +513,14 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $str_psym = $stack[0]['psym'];
                     $str_accm = $stack[0]['accm'];
                     $str_accv = $stack[0]['accv'];
+                    $str_aam = $stack[0]['aam'];
+                    $str_aav = $stack[0]['aav'];
                     $str_lmi = $stack[0]['lmi'];
                     $str_lmv = $stack[0]['lmv'];
                     $str_slm_mp = $stack[0]['slm_mp'];
                     $str_slm_mv = $stack[0]['slm_mv'];
                     $strWinLine = $stack[0]['win_line'];
-                    $str_mo_wpos = $stack[0]['mo_wpos'];
-                    $mo_m = $stack[0]['mo_m'];
-                    $mo_c = $stack[0]['mo_c'];
-                    $mo_tv = $stack[0]['mo_tv'];
                     $str_rmul = $stack[0]['rmul'];
-                    $str_mo = $stack[0]['mo'];
-                    $str_mo_t = $stack[0]['mo_t'];
-                    if($stack[0]['g'] != '')
-                    {
-                        $arr_g = $stack[0]['g'];
-                    }
                 }
                 
                 if($strWinLine != ''){
@@ -606,26 +549,6 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $arr_psym[1] = str_replace(',', '', $arr_psym[1]) / $original_bet * $betline;
                     $totalWin = $totalWin + $arr_psym[1];
                     $str_psym = implode('~', $arr_psym);
-                }
-                $mo_tw = 0;
-                if($mo_tv > 0){
-                    $mo_tw = $mo_tv * $betline;
-                    if($mo_m > 1){
-                        $mo_tw = $mo_tw * $mo_m;
-                    }
-                    $totalWin = $totalWin + $mo_tw;
-                }
-                if($arr_g != null){
-                    foreach($arr_g as $index=>$item){
-                        if(isset($item['mo_tv']) && $item['mo_tv'] > 0){
-                            $submo_tw = $item['mo_tv'] * $betline;
-                            if(isset($item['mo_m']) && $item['mo_m'] > 1){
-                                $submo_tw = $submo_tw * $item['mo_m'];
-                            }
-                            $totalWin = $totalWin + $submo_tw;
-                            $arr_g[$index]['mo_tw'] = '' . $submo_tw;
-                        }
-                    }
                 }
 
                 $spinType = 's';
@@ -716,7 +639,19 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $strOtherResponse = $strOtherResponse . '&srf=' . $str_srf;
                 }
                 if($str_trail != ''){
-                    $strOtherResponse = $strOtherResponse . '&trail=' . $str_trail;
+                    $arr_trail = explode(';', $str_trail);
+                    for($k = 0; $k < count($arr_trail); $k++){
+                        if(strpos($arr_trail[$k], 'nmwin') !== false)
+                        {
+                            $arr_nmwin = explode('~', $arr_trail[$k]);
+                            if(count($arr_nmwin) == 2)
+                            {
+                                $arr_nmwin[1] = '' . (str_replace(',', '', $arr_nmwin[1]) / $original_bet * $betline);
+                            }
+                            $arr_trail[$k] = implode('~', $arr_nmwin);
+                        }
+                    }
+                    $strOtherResponse = $strOtherResponse . '&trail=' . implode(';', $arr_trail);
                 }
                 if($str_s_mark != ''){
                     $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
@@ -745,7 +680,10 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                     $strOtherResponse = $strOtherResponse . '&pw=' . (str_replace(',', '', $str_pw) / $original_bet * $betline);
                 }
                 if($str_accv != ''){
-                    $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0;1&accv=' . $str_accv;
+                    $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm . '&acci=0&accv=' . $str_accv;
+                }
+                if($str_aav != ''){
+                    $strOtherResponse = $strOtherResponse . '&aam=' . $str_aam . '&aav=' . $str_aav;
                 }
                 if($str_psym != ''){
                     $strOtherResponse = $strOtherResponse . '&psym=' . $str_psym;
@@ -777,28 +715,10 @@ namespace VanguardLTE\Games\BigBassVegasDoubleDownDeluxePM
                 if($apv > 0){
                     $strOtherResponse = $strOtherResponse . '&apaw=' . $str_apaw . '&apt=ma&apv=' . $apv;
                 }
-                if($arr_g != null){
-                    $strOtherResponse = $strOtherResponse . '&g=' . preg_replace('/"(\w+)":/i', '\1:', json_encode($arr_g));
-                }
-                if($str_mo_wpos != ''){
-                    $strOtherResponse = $strOtherResponse .'&mo_wpos=' . $str_mo_wpos;
-                }
-                if($mo_m > 0){
-                    $strOtherResponse = $strOtherResponse . '&mo_m=' . $mo_m;
-                }
-                if($mo_tv > 0){
-                    $strOtherResponse = $strOtherResponse . '&mo_tv=' . $mo_tv . '&mo_tw=' . $mo_tw;
-                }
-                if($mo_c > 0){
-                    $strOtherResponse = $strOtherResponse . '&mo_c=' . $mo_c;
-                }
-                if($str_mo != ''){
-                    $strOtherResponse = $strOtherResponse . '&mo=' . $str_mo . '&mo_t=' . $str_mo_t;
-                }
                 if($strWinLine != ''){
                     $strOtherResponse = $strOtherResponse . '&' . $strWinLine;
                 }
-                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=25&w='.$totalWin.'&s=' . $strLastReel;
+                $response = 'tw='.$slotSettings->GetGameData($slotSettings->slotId . 'TotalWin') . $strOtherResponse .'&balance='.$Balance. '&index='.$slotEvent['index'].'&balance_cash='.$Balance . '&reel_set='. $currentReelSet.'&balance_bonus=0.00&na='.$spinType .'&bl='. $slotSettings->GetGameData($slotSettings->slotId . 'Bl') .'&rid='. $slotSettings->GetGameData($slotSettings->slotId . 'RoundID') .'&stime=' . floor(microtime(true) * 1000) .'&sa='.$strReelSa.'&sb='.$strReelSb.'&sh=3&st=rect&c='.$betline.'&sw=5&sver=5&counter='. ((int)$slotEvent['counter'] + 1) .'&l=10&w='.$totalWin.'&s=' . $strLastReel;
                 if( ($slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') + 1 <= $slotSettings->GetGameData($slotSettings->slotId . 'CurrentFreeGame') && $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames') > 0) && $str_rs_p == '') 
                 {
                     //$slotSettings->SetGameData($slotSettings->slotId . 'TotalWin', 0);
