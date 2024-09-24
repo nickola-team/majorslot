@@ -136,10 +136,22 @@
                   </div>
                   <div class="alert alert-danger">
                     <p>
-                      <strong translate="" class="ng-scope">23:50 ~ 00:30, 휴일 다음 첫 영업일 새벽에는 은행점검으로 인해 계좌이체가 지연될 수 있습니다</strong>
+                      <strong translate="" class="ng-scope">최소 입금 금액은 50,000원 부터 가능합니다.</strong>
                     </p>
                     <p>
-                      <strong translate="" class="ng-scope">위 시간 이외에도 몇몇 은행은 추가적 점검시간이 따로 있으니 이점 유념하시기 바랍니다</strong>
+                      <strong translate="" class="ng-scope">입금계좌는 수시로 변경되오니 반드시 입금 전 계좌 문의를 통해 계좌번호를 확인 후 입금하여 주시기 바랍니다.</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">계좌 문의 후 안내드리는 계좌 외에 다른 계좌로 입금하실 경우 해당 금액은 본사에서 책임지지 않습니다.</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">등록하신 계좌로만 입금 처리가 가능하며, 토스 등 간편송금 앱 및 오픈뱅킹 입금은 어떠한 사유가 있더라도 충전 처리가 불가합니다.</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">타인 명의 계좌 또는 타인 계좌에서 이름을 변경하여 입금하는 3자 입금은 어떠한 경우에도 충전 처리가 불가합니다.</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">은행 점검 시간 (23:00~00:30)을 확인하신 후 해당 시간에는 입금이 지연될 수 있으니 점검 시간을 피해 신청해 주시기 바랍니다</strong>
                     </p>
                   </div>
                   <div class="text-center">
@@ -197,7 +209,16 @@
                   </div>
                   <div class="alert alert-danger">
                     <p>
-                      <strong translate="" class="ng-scope">입금자명과 출금자명이 다를경우 본인확인 요청이 있을 수 있습니다</strong>
+                      <strong translate="" class="ng-scope">최소 환전금액은 10,000원 부터 가능합니다</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">환전 신청 시 현재 보유 머니에서 차감되며, 등록하신 계좌로만 환전 처리가 가능합니다.</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">은행 점검 시간 (23:00~00:30) 을 확인하신 후 해당 시간에는 출금이 지연될 수 있으니 점검 시간을 피해 신청해 주시기 바랍니다</strong>
+                    </p>
+                    <p>
+                      <strong translate="" class="ng-scope">자세한 문의사항은 고객센터를 이용해 주시기 바랍니다.</strong>
                     </p>
                   </div>
                   <div class="text-center">

@@ -1,4 +1,4 @@
-@extends('frontend.dove.layouts.app', ['logo' => 'seen', 'telegram' => '#'])
+@extends('frontend.dove.layouts.app', ['logo' => 'seen', 'telegram' => '#', 'title' => 'SEEN'])
 @section('page-title', $title)
 
 @section('content')

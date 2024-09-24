@@ -1,0 +1,128 @@
+:root {
+    --slot-item-height: 60px;
+    --slot-item-width: 60px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "mult slot" "...  bowls"
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .BowlsSlot {
+    grid-area: bowls
+}
+
+.Spin .Multiplier {
+    grid-area: mult
+}
+
+.Multiplier {
+    width: 50px;
+    height: 67px;
+    line-height: 67px;
+    margin-top: 60px;
+    background-image: -webkit-image-set(url(./images/vs10noodles/multBg.png) 1x, url(./images/vs10noodles/multBg@2x.png) 2x);
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.Carousel {
+    display: grid;
+    justify-content: center
+}
+
+.BowlsSlot {
+    width: 350px
+}
+
+.BowlsSlot .ReelsSlot__Reel {
+    flex: 1
+}
+
+.BowlsSlot .ReelsSlot__Item {
+    flex-basis: auto
+}
+
+.MoneyScatter__Label {
+    line-height: normal;
+    text-shadow: unset
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+div:not(.WinLines-Group)>.LinesSlot.Base .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.Base .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot.Base .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.Base .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.Base .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10noodles/bg.png) 1x, url(./images/vs10noodles/bg@2x.png) 2x);
+    width: 327px;
+    height: 200px;
+    margin: -10px -12px;
+    background-repeat: no-repeat
+}
+
+div:not(.WinLines-Group)>.LinesSlot.BowlsSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.BowlsSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot.BowlsSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.BowlsSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.BowlsSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10noodles/table.png) 1x, url(./images/vs10noodles/table@2x.png) 2x);
+    width: 350px;
+    height: 46px;
+    margin: 4px 0;
+    background-repeat: no-repeat
+}
