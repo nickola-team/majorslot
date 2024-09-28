@@ -1,0 +1,109 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 45px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: flex;
+    align-items: flex-end
+}
+
+.Spin .RespinsLeft {
+    height: 60px;
+    width: 57px;
+    margin-right: -40px;
+    margin-bottom: 5px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Spin .RespinsLeft__Title {
+    width: 40px;
+    font-size: .64rem;
+    line-height: normal
+}
+
+.Expanded {
+    width: 100%;
+    height: 100%;
+    position: relative
+}
+
+.ExpandedWild {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent;
+    margin-left: 50px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs25badge/bg.png) 1x, url(./images/vs25badge/bg@2x.png) 2x);
+    width: 319px;
+    height: 175px;
+    margin: -26px -51px;
+    background-repeat: no-repeat
+}
+
+.Carousel__Controls {
+    bottom: -30px;
+    margin-left: 25px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.WinLines-Group .ReelsSlot__Item {
+    opacity: 1
+}
+
+.WinLines-Group .ReelsSlot__Item:after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: #20272b;
+    border: 1px solid transparent;
+    opacity: .9;
+    z-index: 1
+}
+
+.WinLines-Group .ReelsSlot__Item--win:after {
+    opacity: 0;
+    border-color: hsla(0, 0%, 100%, .22)
+}
