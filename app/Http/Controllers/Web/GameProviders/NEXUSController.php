@@ -14,9 +14,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
             'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'skin'=>'B'],
+            'nexus-ppl' => ['thirdname' =>'pragmaticplay_casino','type' => 'casino', 'skin'=>'B'],
             'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'skin'=>'SLOT'],
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'skin'=>'SLOT'],
             'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'skin'=>'SLOT'],
+            'nexus-pp' => ['thirdname' =>'pragmaticplay_slot','type' => 'slot', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
@@ -164,6 +166,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $view = 1;
             if($href == 'nexus-evo'){
                 $view = 0;
+            }else if($href == 'nexus-ppl'){
+                $view = 0;
             }
             if ($data && $data['code'] == 0)
             {
@@ -202,6 +206,22 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'provider' => self::NEXUS_PROVIDER,
                         'vendorKey' => $vendorKey, 
                         'gameid' => 'evo',
+                        'href' => $href,
+                        'gamecode' => $vendorKey,
+                        'symbol' => $skin,
+                        'name' => 'Lobby',
+                        'title' => 'Lobby',
+                        'skin' => $skin,
+                        'type' => 'table',
+                        'icon' => '/frontend/Default/ico/gold/EVOLUTION_Lobby.jpg',
+                        'view' => 1
+                    ]);
+                }
+                else if($href == 'nexus-ppl'){
+                    array_push($gameList, [
+                        'provider' => self::NEXUS_PROVIDER,
+                        'vendorKey' => $vendorKey, 
+                        'gameid' => 'ppl',
                         'href' => $href,
                         'gamecode' => $vendorKey,
                         'symbol' => $skin,

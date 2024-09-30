@@ -1269,6 +1269,8 @@ return [
         "BigBassVegasDoubleDownDeluxe" => "빅 베스 베가스 더블 다운 디럭스",
         "OodlesofNoodles" => "우들즈 오브 누들즈",
         "MysteryMice" => "미스터리 마이스",
+        "BadgeBlitz" => "뱃지 블리츠",
+        "AnimeMechaMegaways" => "애니메 메카 메가웨이즈",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
