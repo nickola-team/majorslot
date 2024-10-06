@@ -1,0 +1,63 @@
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 47px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.OverlaySymbol {
+    position: absolute;
+    right: -5px;
+    top: -5px
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent;
+    margin-left: 20px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20dhcluster2/bg.png) 1x, url(./images/vs20dhcluster2/bg@2x.png) 2x);
+    height: 226px;
+    width: 305px;
+    margin: -13px -34px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs20dhcluster2/bgFs.png) 1x, url(./images/vs20dhcluster2/bgFs@2x.png) 2x)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
