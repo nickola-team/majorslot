@@ -1375,6 +1375,9 @@ return [
         "_777fruityclassic" => "777 후루티 클래식",
         "luckypenny" => "럭키 페니",
         "amazoniaspirit" => "아마조니아 스피릿",
+        "fortuneglobe" => "포춘 글로브",
+        "hotfirefruits" => "핫 파이어 후루츠",
+        "_3potsofegypt" => "3 팟스 오브 이집트",
 
         // CQ9
         "Double Fly" => "더블 플라이",
