@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\TheDogHouseMuttleyCrewPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMuttleyCrewStack::where('id', 233669)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameTheDogHouseMuttleyCrewStack::where('id', 47925)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -778,7 +778,11 @@ namespace VanguardLTE\Games\TheDogHouseMuttleyCrewPM
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur < 0)
+                        if($pur == 2)
+                        {
+                            $stacks = $stacks->where('odd', '<=', 50);  
+                        }
+                        else if($pur == 1)
                         {
                             $stacks = $stacks->where('odd', '<=', 25);  
                         }
