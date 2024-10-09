@@ -10,6 +10,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         */
 
         const NEXUS_PROVIDER = 'nexus';
+        const NEXUS_PPVERIFY_PROVIDER = 'nexusv';
+        const NEXUS_PP_HREF = 'nexus-pp';
         const NEXUS_GAMEKEY = 'B';
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
@@ -19,6 +21,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],
             'nexus-mgl' => ['thirdname' =>'microgaming_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],
             'nexus-og' => ['thirdname' =>'orientalgame_casino','type' => 'casino', 'symbol'=>'og', 'skin'=>'B'],
+
+            //==== SLOT ====
             'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
             'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'symbol'=>'bng', 'skin'=>'SLOT'],
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],
@@ -134,10 +138,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $data;
         }
         
-        public static function getUserBalance($href, $user) {   
+        public static function getUserBalance($href, $user, $prefix=self::NEXUS_PROVIDER) {   
 
             $balance = -1;
-            $user_code = self::NEXUS_PROVIDER  . sprintf("%04d",$user->id);
+            $user_code = $prefix  . sprintf("%04d",$user->id);
             $data = NEXUSController::moneyInfo($user_code);
 
             if ($data && $data['code'] == 0)
@@ -243,9 +247,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user) 
+        public static function makegamelink($gamecode, $user,  $prefix=self::NEXUS_PROVIDER) 
         {
-            $user_code = self::NEXUS_PROVIDER  . sprintf("%04d",$user->id);
+            $user_code = $prefix  . sprintf("%04d",$user->id);
             $game = NEXUSController::getGameObj($gamecode);
             if (!$game)
             {
@@ -275,9 +279,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($href, $user)
+        public static function withdrawAll($href, $user, $prefix=self::NEXUS_PROVIDER)
         {
-            $balance = NEXUSController::getuserbalance($href,$user);
+            $balance = NEXUSController::getuserbalance($href,$user,$prefix);
             if ($balance < 0)
             {
                 return ['error'=>true, 'amount'=>$balance, 'msg'=>'getuserbalance return -1'];
@@ -285,8 +289,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if ($balance > 0)
             {
                 $params = [
-                    'username' => self::NEXUS_PROVIDER  . sprintf("%04d",$user->id),
-                    'siteUsername' => self::NEXUS_PROVIDER  . sprintf("%04d",$user->id),
+                    'username' => $prefix  . sprintf("%04d",$user->id),
+                    'siteUsername' => $prefix  . sprintf("%04d",$user->id),
                     'requestKey' => $user->generateCode(24)
                 ];
 
@@ -465,15 +469,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $timepoint = strtotime($round['createdAt']) + 1 - 9 * 60 * 60;
                     }
-                    $gameObj = NEXUSController::getGameObj($round['gameId']);
-                    
-                    if (!$gameObj)
+                    if($round['vendorKey'] == 'dreamgaming_casino')
                     {
                         $gameObj = NEXUSController::getGameObj($round['vendorKey']);
                         if (!$gameObj)
                         {
                             Log::error('NEXUS Game could not found : '. $round['gameId']);
                             continue;
+                        }
+                    }
+                    else
+                    {
+                        $gameObj = NEXUSController::getGameObj($round['gameId']);
+                        
+                        if (!$gameObj)
+                        {
+                            $gameObj = NEXUSController::getGameObj($round['vendorKey']);
+                            if (!$gameObj)
+                            {
+                                Log::error('NEXUS Game could not found : '. $round['gameId']);
+                                continue;
+                            }
                         }
                     }
                     $bet = 0;
@@ -643,8 +659,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'stat' => $stat
             ];
         }
-
-
         public static function getAgentBalance()
         {
 
@@ -663,7 +677,539 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             return intval($balance);
         }
+        public static function syncpromo()
+        {
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();           
+            if (!$user)
+            {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+            $gamelist = NEXUSController::getgamelist(self::NEXUS_PP_HREF);
+            $len = count($gamelist);
+            if ($len > 10) {$len = 10;}
+            if ($len == 0)
+            {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+            $rand = mt_rand(0,$len);
+                
+            $symbol = $gamelist[$rand]['symbol'];
+            $gamecode = $gamelist[$rand]['gamecode'];
+            //유저정보 조회
+            $user_code = self::NEXUS_PPVERIFY_PROVIDER  . sprintf("%04d",$user->id);
+            $data = NEXUSController::moneyInfo($user_code);
+            if($data == null || $data['code'] != 0)
+            {
+                //새유저 창조
+                $params = [
+                    'username' => $user_code,
+                    'nickname' => $user_code,
+                    'siteUsername' => $user_code,
+                ];
 
+                $data = NEXUSController::sendRequest('/register', $params);
+                if ($data==null || $data['code'] != 0)
+                {
+                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
+                    return null;
+                }
+            }
+            else
+            {
+                $balance = $data['balance'];
+            }
+
+            $url = NEXUSController::makegamelink($gamecode, $user, self::NEXUS_PPVERIFY_PROVIDER);
+            if ($url == null)
+            {
+                return ['error' => true, 'msg' => 'game link error '];
+            }
+
+            $parse = parse_url($url);
+            $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+        
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                    }
+                    if (str_contains($key, 'symbol='))
+                    {
+                        $gamecode = $key;
+                    }
+                }
+                if (!$mgckey){
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+                
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo)
+                {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races']))
+                    {
+                        foreach ($json_data['races'] as $race)
+                        {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->racedetails = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?'.$gamecode.'&' . $mgckey );
+                if ($response->ok())
+                {
+                    $promo->raceprizes = $response->body();
+                }
+                
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/v2/winners/?'.$gamecode.'&' . $mgckey, ['latestIdentity' => $raceIds]) ;
+                if ($response->ok())
+                {
+                    $promo->racewinners = $response->body();
+                }
+
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/common/games?' . $mgckey );
+                if ($response->ok())
+                {
+                    $json_data = $response->json();
+                    //disable not own games
+                    $ownCats = \VanguardLTE\Category::where(['href'=> 'pragmatic', 'shop_id'=>0,'site_id'=>0])->first();
+                    $gIds = $ownCats->games->pluck('game_id')->toArray();
+                    $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view',1)->get();
+                    $multiLobby = 0;
+                    if(isset($json_data['lobbyCategories']) || isset($json_data['gameLaunchURL']))
+                    {
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat)
+                        {
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game)
+                            {
+                                foreach ($ownGames as $og)
+                                {
+                                    if ($og->label == $game['symbol'])
+                                    {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
+                                }
+                            }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
+                        }
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    }
+                    else if(isset($json_data['data']) && count($json_data['data']) > 0)
+                    {
+                        $multiLobby = 1;
+                        $multi_json = $json_data['data'][0];
+                        if(isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL']))
+                        {
+                            $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                        }
+                    }   
+                    $promo->games = json_encode($json_data);
+                    $promo->multiminilobby = $multiLobby;
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            }
+            else
+            {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }          
+            
+        }
+        public function ppverify($gamecode, \Illuminate\Http\Request $request){
+            set_time_limit(0);
+            $user = \Auth()->user();
+            if($user == null){
+                $this->ppverifyLog($gamecode, '', 'There is no user');
+                return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
+            }
+            $user_code = self::NEXUS_PPVERIFY_PROVIDER  . sprintf("%04d",$user->id);
+            $balance = 0;
+            //유저정보 조회
+            $data = NEXUSController::moneyInfo($user_code);
+            if($data == null || $data['code'] != 0)
+            {
+                //새유저 창조
+                $params = [
+                    'username' => $user_code,
+                    'nickname' => $user_code,
+                    'siteUsername' => $user_code,
+                ];
+
+                $data = NEXUSController::sendRequest('/register', $params);
+                if ($data==null || $data['code'] != 0)
+                {
+                    $this->ppverifyLog($gamecode, '', 'There is no user');
+                    return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']);
+                }
+            }
+            else
+            {
+                $balance = $data['balance'];
+            }
+            
+            
+            // 유저마지막 베팅로그 얻기
+            $verify_log = \VanguardLTE\PPGameVerifyLog::where(['user_id'=>$user->id, 'label'=>$gamecode])->first();
+            $pm_category = \VanguardLTE\Category::where('href', 'pragmatic')->first();
+            $cat_id = $pm_category->original_id;
+
+            if ($balance != $user->balance)
+            {
+                //withdraw all balance
+                if($balance > 0)
+                {
+                    $data = NEXUSController::withdrawAll(NEXUSController::NEXUS_PP_HREF, $user , NEXUSController::NEXUS_PPVERIFY_PROVIDER);
+                    if ($data['error'])
+                    {
+                        $this->ppverifyLog($gamecode, $user->id, 'withdrawAll error');
+                        return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']);
+                    }
+                }
+                if(isset($verify_log) && $verify_log->crid == '')
+                {
+                    //Add balance
+                    $adduserbalance = $verify_log->bet;   // 유저머니를 베트머니만큼 충전한다.
+                    if ($adduserbalance > 1)
+                    {
+                        $params = [
+                            'username' => $user_code,
+                            'siteUsername' => $user_code,
+                            "amount" =>  intval($adduserbalance),
+                            "requestKey" => $user->generateCode(24)
+                        ];
+        
+                        $data = NEXUSController::sendRequest('/deposit', $params);
+                        if ($data==null || $data['code'] != 0)
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'add-balance exception=' . $ex->getMessage() . ', PARAM=' . json_encode($params));
+                            return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
+                        }
+                    }
+                }
+            }
+            ///////////////////////<--- End --->/////////////////////////
+            $category = NEXUSController::NEXUS_GAME_IDENTITY[NEXUSController::NEXUS_PP_HREF];
+            $url = NEXUSController::makegamelink($category['thirdname'].'_'.$gamecode, $user, self::NEXUS_PPVERIFY_PROVIDER);
+            if ($url == null)
+            {
+                $this->ppverifyLog($gamecode, $user->id, 'make game link error');
+                return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
+            }
+
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            // if($response->status() == 302){
+            //     $url = $response->header('location');
+            //     $response = Http::withOptions(['allow_redirects' => false,'proxy' => config('app.ppproxy')])->get($url);
+            // }
+        
+            if ($response->status() == 302)
+            {
+                $location = $response->header('location');
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($location);
+                $parse = parse_url($url);
+                $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+                $datapath = $ppgameserver . '/gs2c/common/games-html5/games/vs/'. $gamecode . '/';
+                $gameservice = $ppgameserver. '/gs2c/ge/v3/gameService';
+                $verifyurl = $ppgameserver. '/gs2c/session/verify';
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/\"datapath\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $datapath = $match[1];
+                    }
+                    preg_match("/\"gameService\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $gameservice = $match[1];
+                    }
+                    preg_match("/\"gameVerificationURL\":\"([^\"]*)/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $verifyurl = $match[1];
+                    }
+                }
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key){
+                    if (str_contains( $key, 'mgckey='))
+                    {
+                        $mgckey = $key;
+                    }
+                }
+                if (!$mgckey){
+                    $this->ppverifyLog($gamecode, $user->id, 'could not find mgckey value');
+                    return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>$verifyurl]); 
+                }
+                // if($verify_log != null)
+                // {
+                //     return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$verify_log->rid, 'bet'=>$verify_log->bet, 'verifyurl'=>$verifyurl]); 
+                // }
+                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vs10bbextreme','vs10bbfmission'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10txbigbass','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
+                $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
+
+                $cver = 99951;
+                $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($datapath .'desktop/bootstrap.js');
+                if ($response->ok())
+                {
+                    $content = $response->body();
+                    preg_match("/UHT_REVISION={common:'(\d+)',desktop:'\d+',mobile/", $content, $match);
+                    if(!empty($match) && isset($match[1]) && !empty($match[1])){
+                        $cver = $match[1];
+                    }
+                }
+                $data = [
+                    'action' => 'doInit',
+                    'symbol' => $gamecode,
+                    'cver' => $cver,
+                    'index' => 1,
+                    'counter' => 1,
+                    'repeat' => 0,
+                    'mgckey' => explode('=', $mgckey)[1]
+                ];
+                $v_type = 'v3';
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                    ])->asForm()->post($gameservice, $data);
+                if (!$response->ok())
+                {
+                    $this->ppverifyLog($gamecode, $user->id, 'doInit request error');
+                    return response()->json(['error'=>true, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>'', 'bet'=>'', 'verifyurl'=>$verifyurl]); 
+                }
+                $result = PPController::toJson($response->body());
+                $line = (int)$result['l'] ?? 20;
+                $bet = (float)$result['c'] ?? 50;
+                $arr_bets = isset( $result['sc']) ? explode(',', $result['sc']) : [];
+                $bl = $result['bl'] ?? -1;
+                $spinType = $result['na'] ?? 's';
+                $rs_p = $result['rs_p'] ?? -1;
+                $fsmax = $result['fsmax'] ?? -1;
+                $index = $result['index'] ?? 1;
+                $counter = $result['counter'] ?? 2;
+                if(isset($verify_log) && $verify_log->crid != '')
+                {
+                    $rid = $verify_log->crid;
+                }
+                else
+                {
+                    $rid = '0';
+                }
+                $allbet = $line * $bet;
+                if(isset($verify_log) && $verify_log->crid == ''){
+                    $bw = -1;
+                    $end = -1;
+                    $bgt = -1;
+                    $ind = 0;
+                    $isRespin = false;
+                    $allbet = $verify_log->bet;
+                    $pur_ind = -1;
+                    $game = \VanguardLTE\Game::where('original_id', $verify_log->game_id)->where('shop_id', $user->shop_id)->first();
+                    if(!isset($game)){
+                        return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$rid, 'bet'=>$allbet, 'verifyurl'=>$verifyurl]); 
+                    }
+                    $ppgamelog = \VanguardLTE\PPGameLog::where(['user_id' => $user->id, 'game_id'=>$game->id, 'roundid' => $verify_log->rid])->orderby('id', 'asc')->first();
+                    if(!isset($ppgamelog)){
+                        return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$rid, 'bet'=>$allbet, 'verifyurl'=>$verifyurl]); 
+                    }
+                    $ppgamelog = json_decode($ppgamelog->str);
+                    $pur = -1;
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->pur) && $ppgamelog->request->pur >= 0){
+                        $pur = $ppgamelog->request->pur;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->bl)){
+                        $bl = $ppgamelog->request->bl;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->c)){
+                        $bet = $ppgamelog->request->c;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->l)){
+                        $line = $ppgamelog->request->l;
+                    }
+                    if(isset($ppgamelog->request) && isset($ppgamelog->request->ind)){
+                        $pur_ind = $ppgamelog->request->ind;
+                    }
+                    while(true){
+                        try
+                        {
+                            $data = [
+                                'action' => 'doSpin',
+                                'symbol' => $gamecode,
+                                'index' => $index + 1,
+                                'counter' => $counter + 1,
+                                'repeat' => 0,
+                                'mgckey' => explode('=', $mgckey)[1]
+                            ];
+                            if($spinType != 'b'){
+                                $isRespin = false;
+                            }
+                            if($spinType == 's'){
+                                $data['c'] = $bet;
+                                $data['l'] = $line;
+                                if($pur_ind >= 0){
+                                    $data['ind'] = $pur_ind;
+                                    if($gamecode != 'vs15godsofwar'){
+                                        $pur_ind = -1;
+                                    }
+                                }
+                            }else if($spinType == 'c'){
+                                $data['action'] = 'doCollect';
+                            }else if($spinType == 'cb'){
+                                $data['action'] = 'doCollectBonus';
+                            }else if($spinType == 'fso'){
+                                $data['action'] = 'doFSOption';
+                                $data['ind'] = 0;
+                            }else if($spinType == 'm'){
+                                $data['action'] = 'doMysteryScatter';
+                                if($gamecode == 'vs10bookfallen'){
+                                    $data['ind'] = 0;
+                                }
+                            }else if($spinType == 'go'){
+                                $data['action'] = 'doGambleOption';
+                                $data['g_a'] = 'stand';
+                                $data['g_o_ind'] = -1;
+                            }else if($spinType == 'b'){
+                                $data['action'] = 'doBonus';
+                                if($isRespin == false){
+                                    $isRespin = true;
+                                    $ind = 0;
+                                }else{
+                                    $ind++;
+                                }
+                                if($gamecode == 'vs7pigs'){
+                                    $arr_i_pos = isset($result['i_pos']) ? explode(',', $result['i_pos']) : [1,1,1];
+                                    $data['ind'] = $arr_i_pos[$ind];
+                                }else if($gamecode == 'vs243queenie'){
+                                    if($bw != 1){
+                                        $data['ind'] = isset($result['wi']) ? ($result['wi'] + 1) : 1;
+                                    }
+                                }else if(in_array($gamecode, $arr_b_gamble_games)){
+                                    $data['ind'] = 1;
+                                }else if(in_array($gamecode, $arr_b_no_ind_games)){
+                                    $data['ind'] = 0;
+                                }else if(in_array($gamecode, $arr_b_ind_games)){
+                                    if($bgt == 9 || $bgt == 23){
+                                        $data['ind'] = 0;
+                                    }else if($bgt == 11 || $bgt == 31){
+                                        
+                                    }else if($bgt == 21){
+                                        if($end == 0){
+                                            $data['ind'] = 0;
+                                        }
+                                    }else{
+                                        $data['ind'] = $ind;
+                                    }
+                                }
+                            }
+                            if($bl >= 0){
+                                $data['bl'] = $bl;
+                            }
+                            if($pur >= 0){
+                                $data['pur'] = $pur;
+                            }
+                            $response = Http::withOptions(['proxy' => config('app.ppproxy')])->withHeaders([
+                                'Accept' => '*/*',
+                                'Content-Type' => 'application/x-www-form-urlencoded'
+                                ])->asForm()->post($gameservice, $data);
+                            if (!$response->ok())
+                            {
+                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error, Body => ' . $response->body());
+                                if(in_array($bet, $arr_bets) == false){
+                                    $this->ppverifyLog($gamecode, $user->id, 'doSpin BetMoney =' . $bet . ', BetList=' . json_encode($arr_bets));
+                                }
+                                break;
+                            }
+                            $result = PPController::toJson($response->body());
+                            if(count($result) == 0){
+                                $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Data=' . json_encode($data));
+                                break;
+                            }
+                            $spinType = $result['na'] ?? 's';
+                            $rs_p = $result['rs_p'] ?? -1;
+                            $fsmax = $result['fsmax'] ?? -1;
+                            $index = $result['index'] ?? 1;
+                            $counter = $result['counter'] ?? 2;
+                            $bw = $result['bw'] ?? -1;
+                            $end = $result['end'] ?? -1;
+                            $bgt = $result['bgt'] ?? -1;
+                            if(isset($result['rid']))
+                            {
+                                $rid = $result['rid'];
+                            }
+                            $pur = -1;
+                            if($spinType == 's' && $rs_p == -1 && $fsmax == -1){
+                                break;
+                            }
+                            
+                        }
+                        catch (\Exception $ex)
+                        {
+                            $this->ppverifyLog($gamecode, $user->id, 'doSpin Error Exception=' . $ex->getMessage() . ', Data=' . json_encode($data));
+                            break;
+                        }
+                    }
+                }
+                if(isset($verify_log) && $rid != '0' && $verify_log->crid == ''){  
+                    $verify_log->crid = $rid;
+                    $verify_log->save();
+                }
+                return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$rid, 'bet'=>$allbet, 'verifyurl'=>$verifyurl]); 
+            }else{
+                Log::error('server response is not 302.');
+                return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
+            }
+        }
+        public function ppverifyLog($gamecode, $user_id, $msg)
+        {
+            $strlog = '';
+            $strlog .= "\n";
+            $strlog .= date("Y-m-d H:i:s") . ' ';
+            $strlog .= $user_id . '->' . $gamecode . ' : ' . $msg;
+            $strlog .= "\n";
+            $strlog .= ' ############################################### ';
+            $strlog .= "\n";
+            $strinternallog = '';
+            if( file_exists(storage_path('logs/') . 'PPVerify.log') ) 
+            {
+                $strinternallog = file_get_contents(storage_path('logs/') . 'PPVerify.log');
+            }
+            file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
+        }
 
     }
 
