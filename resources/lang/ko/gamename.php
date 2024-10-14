@@ -1271,6 +1271,9 @@ return [
         "MysteryMice" => "미스터리 마이스",
         "BadgeBlitz" => "뱃지 블리츠",
         "AnimeMechaMegaways" => "애니메 메카 메가웨이즈",
+        "WisdomofAthena1000" => "위즈덤 오브 아테나 1000",
+        "TheDogHouseMuttleyCrew" => "더 도그 하우스 머틀리 크루",
+        "FortuneHitnRoll" => "포춘 힛 앤 롤",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
@@ -1375,6 +1378,9 @@ return [
         "_777fruityclassic" => "777 후루티 클래식",
         "luckypenny" => "럭키 페니",
         "amazoniaspirit" => "아마조니아 스피릿",
+        "fortuneglobe" => "포춘 글로브",
+        "hotfirefruits" => "핫 파이어 후루츠",
+        "_3potsofegypt" => "3 팟스 오브 이집트",
 
         // CQ9
         "Double Fly" => "더블 플라이",

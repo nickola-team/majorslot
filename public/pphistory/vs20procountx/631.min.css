@@ -1,0 +1,153 @@
+:root {
+    --slot-item-width: 43px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.TumblingCount .MoneyScatter__LabelWrap {
+    justify-content: flex-end;
+    line-height: normal
+}
+
+.TumblingCount .MoneyScatter__LabelWrap .MoneyScatter__Label {
+    font-size: .64rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs20cbrhstx/bg.png) 1x, url(./images/vs20cbrhstx/bg@2x.png) 2x);
+    width: 295px;
+    height: 262px;
+    margin: -11px -19px
+}
+
+.Spin {
+    display: grid;
+    gap: 10px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "multiplier slot" "tmbWin     slot"
+}
+
+.Spin .Multiplier {
+    grid-area: multiplier;
+    width: 75px;
+    height: 60px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    line-height: normal
+}
+
+.Spin .Multiplier .Image__Children {
+    width: 50px;
+    font-size: .64rem
+}
+
+.Spin .Multiplier__Value {
+    font-size: .79rem
+}
+
+.Spin .TumblingWin {
+    grid-area: tmbWin;
+    width: 75px;
+    height: 39px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    line-height: normal
+}
+
+.Spin .TumblingWin .Image__Children {
+    width: 60px;
+    font-size: .64rem
+}
+
+.Spin .TumblingWin__Title {
+    white-space: nowrap
+}
+
+.Spin .TumblingWin__Value {
+    font-size: .79rem
+}
+
+.Spin .Carousel {
+    grid-area: slot;
+    margin-left: 10px
+}
+
+.Spin .Carousel__Controls {
+    bottom: -25px
+}
+
+.WinLines-Block .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+:root {
+    --slot-item-height: 40px;
+    --slot-item-width: 52px
+}
+
+.Spin {
+    grid-template-areas: "tmbWin slot" "multiplier slot"
+}
+
+.Spin .TumblingWin {
+    width: 82px;
+    height: 35px
+}
+
+.Spin .TumblingWin .Image__Children {
+    width: 70px
+}
+
+.Spin .Multiplier {
+    width: 82px;
+    height: 57px
+}
+
+.Spin .Multiplier .Image__Children {
+    width: 70px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20procountx/bg.png) 1x, url(./images/vs20procountx/bg@2x.png) 2x);
+    width: 349px;
+    height: 250px;
+    margin: -4px -19px;
+    background-repeat: no-repeat
+}
