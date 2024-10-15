@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\FortuneHitnRollPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameFortuneHitnRollStack::where('id', 1)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameFortuneHitnRollStack::where('id', 37423)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -771,21 +771,14 @@ namespace VanguardLTE\Games\FortuneHitnRollPM
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameFortuneHitnRollStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; //mt_rand(0, 48000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur < 0)
-                        {
-                            $stacks = $stacks->where('odd', '<=', 25);  
-                        }
-                        else
-                        {
-                            $stacks = $stacks->where('odd', '<=', 15);  
-                        }  
+                        $stacks = $stacks->where('odd', '<=', 15);
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{

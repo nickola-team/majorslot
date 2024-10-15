@@ -1271,6 +1271,9 @@ return [
         "MysteryMice" => "미스터리 마이스",
         "BadgeBlitz" => "뱃지 블리츠",
         "AnimeMechaMegaways" => "애니메 메카 메가웨이즈",
+        "WisdomofAthena1000" => "위즈덤 오브 아테나 1000",
+        "TheDogHouseMuttleyCrew" => "더 도그 하우스 머틀리 크루",
+        "FortuneHitnRoll" => "포춘 힛 앤 롤",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
