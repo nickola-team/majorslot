@@ -269,6 +269,18 @@
                                         <input type="text" name="gamertp" id="gamertp" class="form-control{{ $errors->has('gamertp') ? ' is-invalid' : '' }}" value="{{ number_format($rtppercent,2) }}" >
                                     </div>
                                 @endif
+                                @if (auth()->user()->isInOutPartner() && $user->hasRole('manager'))
+                                    <div class="form-group table-responsive">
+                                        <table class="table align-items-center table-flush">
+                                            <tr>
+                                                <th>프라그마틱 인증</th>
+                                            </tr>
+                                            <tr>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="ppverifyOn" {{isset($user->sessiondata()['ppverifyOn']) && $user->sessiondata()['ppverifyOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="없음" data-label-on="있음"></span></label></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                @endif
                                 @endif
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">보관</button>
