@@ -983,7 +983,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
                 }
             }
-            
+            //프라그마틱 인증부분 설정되어있는지 확인
+            $is_ppverify = false;
+            if($user->hasRole('user') && isset($user->referral))
+            {
+                if(isset($user->referral->sessiondata()['ppverifyOn']) && $user->referral->sessiondata()['ppverifyOn']==1)
+                {
+                    $is_ppverify = true;
+                }
+            }
             
             // 유저마지막 베팅로그 얻기
             $verify_log = \VanguardLTE\PPGameVerifyLog::where(['user_id'=>$user->id, 'label'=>$gamecode])->first();
@@ -1010,7 +1018,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']); 
                     }
                 }
-                if(isset($verify_log) && $verify_log->crid == '')
+                if(isset($verify_log) && $verify_log->crid == '' && $is_ppverify == true)
                 {
                     //Add balance
                     $adduserbalance = $verify_log->bet;   // 유저머니를 베트머니만큼 충전한다.
@@ -1147,7 +1155,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $rid = '0';
                 }
                 $allbet = $line * $bet;
-                if(isset($verify_log) && $verify_log->crid == ''){
+                if($is_ppverify == false)
+                {
+                    $allbet = $line * ($result['defc'] ?? $bet);
+                }
+                if(isset($verify_log) && $verify_log->crid == '' && $is_ppverify == true){
                     $bw = -1;
                     $end = -1;
                     $bgt = -1;
