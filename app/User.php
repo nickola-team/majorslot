@@ -1432,7 +1432,7 @@ namespace VanguardLTE
                     $data = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::withdrawAll', $lockUser->playing_game, $this);
                     if ($data['error'] == false){
                         Log::channel('monitor_game')->info('Withdraw from ' . $lockUser->username . ' amount = ' . $data['amount'] . ' at ' . $ct->provider . ' | reason = ' . $reason);
-                        if($data['amount'] > 0){
+                        if($data['amount'] >= 0){
                             $lockUser->update(['playing_game' => null, 'balance' => $data['amount']]);
                             $this->balance = $data['amount']; //update current object's vale
                         }else{
