@@ -269,7 +269,7 @@
                                         <input type="text" name="gamertp" id="gamertp" class="form-control{{ $errors->has('gamertp') ? ' is-invalid' : '' }}" value="{{ number_format($rtppercent,2) }}" >
                                     </div>
                                 @endif
-                                @if (auth()->user()->isInOutPartner() && $user->hasRole('manager'))
+                                @if (auth()->user()->hasRole('admin') && $user->hasRole('manager'))
                                     <div class="form-group table-responsive">
                                         <table class="table align-items-center table-flush">
                                             <tr>
