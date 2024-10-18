@@ -985,9 +985,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             //프라그마틱 인증부분 설정되어있는지 확인
             $is_ppverify = false;
-            if($user->hasRole('user') && isset($user->referral))
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
             {
-                if(isset($user->referral->sessiondata()['ppverifyOn']) && $user->referral->sessiondata()['ppverifyOn']==1)
+                $parent = $parent->referral;
+            }
+            if(isset($parent))
+            {
+                if(isset($parent->sessiondata()['ppverifyOn']) && $parent->sessiondata()['ppverifyOn']==1)
                 {
                     $is_ppverify = true;
                 }
