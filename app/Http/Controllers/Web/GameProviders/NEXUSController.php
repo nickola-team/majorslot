@@ -21,6 +21,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],
             'nexus-mgl' => ['thirdname' =>'microgaming_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],
             'nexus-og' => ['thirdname' =>'orientalgame_casino','type' => 'casino', 'symbol'=>'og', 'skin'=>'B'],
+            'nexus-bota' => ['thirdname' =>'bota_casino','type' => 'casino', 'symbol'=>'bota', 'skin'=>'B'],
 
             //==== SLOT ====
             'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
@@ -28,6 +29,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],
             'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'symbol'=>'playngo', 'skin'=>'SLOT'],
             'nexus-pp' => ['thirdname' =>'pragmaticplay_slot','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],
+            'nexus-hbn' => ['thirdname' =>'habanero_slot','type' => 'slot', 'symbol'=>'hbn', 'skin'=>'SLOT'],
+            'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
+            'nexus-rtg' => ['thirdname' =>'evolution_redtiger','type' => 'slot', 'symbol'=>'rtg', 'skin'=>'SLOT'],
+            'nexus-pgsoft' => ['thirdname' =>'pgsoft_slot','type' => 'slot', 'symbol'=>'pgsoft', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
@@ -885,9 +890,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             //프라그마틱 인증부분 설정되어있는지 확인
             $is_ppverify = false;
-            if($user->hasRole('user') && isset($user->referral))
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
             {
-                if(isset($user->referral->sessiondata()['ppverifyOn']) && $user->referral->sessiondata()['ppverifyOn']==1)
+                $parent = $parent->referral;
+            }
+            if(isset($parent))
+            {
+                if(isset($parent->sessiondata()['ppverifyOn']) && $parent->sessiondata()['ppverifyOn']==1)
                 {
                     $is_ppverify = true;
                 }
