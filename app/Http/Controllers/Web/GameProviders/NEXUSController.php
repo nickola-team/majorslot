@@ -264,7 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'vendorKey' => $game['vendorKey'],
                 'gameKey' => $game['symbol'],
                 'siteUsername' => $user_code,
-                'ip' => '',
+                'ip' => $user->last_name ?? '',
                 'language' => 'ko',
                 'requestKey' => $user->generateCode(24)
             ];
