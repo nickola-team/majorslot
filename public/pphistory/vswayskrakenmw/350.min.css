@@ -1,0 +1,1031 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 47px;
+    --slot-item-width: 53px
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%;
+    object-fit: none
+}
+
+.Spin {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-areas: "mult slot";
+    gap: 10px
+}
+
+.Spin .Multiplier {
+    grid-area: mult
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Carousel__Controls {
+    bottom: -33px
+}
+
+.Chests {
+    position: relative;
+    width: 479px;
+    height: 299px;
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/bonus/bg.png) 1x, url(./images/vswayskrakenmw/bonus/bg@2x.png) 2x)
+}
+
+.Chests .PickOptions__Option {
+    position: absolute;
+    line-height: normal;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.Chests .PickOptions__Option:first-child {
+    top: 90px;
+    left: 131px
+}
+
+.Chests .PickOptions__Option:nth-child(2) {
+    top: 107px;
+    left: 8px
+}
+
+.Chests .PickOptions__Option:nth-child(3) {
+    top: 190px;
+    left: 117px
+}
+
+.Chests .PickOptions__Option:nth-child(4) {
+    top: 190px;
+    left: 0
+}
+
+.Chests .PickOptions__Option:nth-child(5) {
+    top: 126px;
+    left: 72px
+}
+
+.Chests .PickOptions__Option:nth-child(6) {
+    top: 142px;
+    left: 166px
+}
+
+.Chests .PickOptions__Option:nth-child(7) {
+    top: 216px;
+    left: 187px
+}
+
+.Chests .PickOptions__Option:nth-child(8) {
+    top: 100px;
+    left: 400px
+}
+
+.Chests .PickOptions__Option:nth-child(9) {
+    top: 176px;
+    left: 364px
+}
+
+.Chests .PickOptions__Option:nth-child(10) {
+    top: 195px;
+    left: 282px
+}
+
+.Chests .PickOptions__Option:nth-child(11) {
+    top: 111px;
+    left: 323px
+}
+
+.Chests .PickOptions__Option:nth-child(12) {
+    top: 122px;
+    left: 249px
+}
+
+.TopResult {
+    width: 100%;
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/bonus/topBg.png) 1x, url(./images/vswayskrakenmw/bonus/topBg@2x.png) 2x);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.TopResult__Item {
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/bonus/topItem.png) 1x, url(./images/vswayskrakenmw/bonus/topItem@2x.png) 2x);
+    width: 76px;
+    height: 55px;
+    box-sizing: border-box;
+    padding-top: 10px
+}
+
+.Multiplier {
+    width: 60px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 14px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/multBg.png) 1x, url(./images/vswayskrakenmw/multBg@2x.png) 2x);
+    margin-top: 35px;
+    z-index: 1
+}
+
+.MoneyScatter__Label {
+    font-size: 14px;
+    line-height: 48px;
+    width: 100%;
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/msLabelBg.png) 1x, url(./images/vswayskrakenmw/msLabelBg@2x.png) 2x);
+    background-size: 100% 100%
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vswayskrakenmw/bg.png) 1x, url(./images/vswayskrakenmw/bg@2x.png) 2x);
+    width: 369px;
+    height: 366px;
+    margin: -17px -25px;
+    background-repeat: no-repeat
+}
+
+.WinLines-Group .Footer-direction {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.ReelsSlot__ItemImg[alt="1"],
+.ReelsSlot__ItemImg[alt="2"],
+.ReelsSlot__ItemImg[alt="3"],
+.ReelsSlot__ItemImg[alt="4"],
+.ReelsSlot__ItemImg[alt="5"],
+.ReelsSlot__ItemImg[alt="6"],
+.ReelsSlot__ItemImg[alt="7"],
+.ReelsSlot__ItemImg[alt="8"],
+.ReelsSlot__ItemImg[alt="9"],
+.ReelsSlot__ItemImg[alt="10"],
+.ReelsSlot__ItemImg[alt="11"],
+.ReelsSlot__ItemImg[alt="12"],
+.ReelsSlot__ItemImg[alt="14"] {
+    object-fit: fill
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswayskrakenmw/spin/1_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswayskrakenmw/spin/1_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswayskrakenmw/spin/2_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswayskrakenmw/spin/2_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswayskrakenmw/spin/3_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswayskrakenmw/spin/3_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswayskrakenmw/spin/4_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswayskrakenmw/spin/4_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswayskrakenmw/spin/5_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswayskrakenmw/spin/5_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswayskrakenmw/spin/6_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswayskrakenmw/spin/6_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswayskrakenmw/spin/7_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswayskrakenmw/spin/7_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="8"] {
+    content: url(images/vswayskrakenmw/spin/8_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="8"] {
+        content: url(images/vswayskrakenmw/spin/8_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="9"] {
+    content: url(images/vswayskrakenmw/spin/9_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="9"] {
+        content: url(images/vswayskrakenmw/spin/9_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="10"] {
+    content: url(images/vswayskrakenmw/spin/10_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="10"] {
+        content: url(images/vswayskrakenmw/spin/10_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="11"] {
+    content: url(images/vswayskrakenmw/spin/11_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="11"] {
+        content: url(images/vswayskrakenmw/spin/11_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="12"] {
+    content: url(images/vswayskrakenmw/spin/12_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="12"] {
+        content: url(images/vswayskrakenmw/spin/12_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="14"] {
+    content: url(images/vswayskrakenmw/spin/14_6.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="1"] .ReelsSlot__ItemImg[alt="14"] {
+        content: url(images/vswayskrakenmw/spin/14_6@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswayskrakenmw/spin/1_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswayskrakenmw/spin/1_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswayskrakenmw/spin/2_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswayskrakenmw/spin/2_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswayskrakenmw/spin/3_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswayskrakenmw/spin/3_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswayskrakenmw/spin/4_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswayskrakenmw/spin/4_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswayskrakenmw/spin/5_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswayskrakenmw/spin/5_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswayskrakenmw/spin/6_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswayskrakenmw/spin/6_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswayskrakenmw/spin/7_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswayskrakenmw/spin/7_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="8"] {
+    content: url(images/vswayskrakenmw/spin/8_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="8"] {
+        content: url(images/vswayskrakenmw/spin/8_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="9"] {
+    content: url(images/vswayskrakenmw/spin/9_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="9"] {
+        content: url(images/vswayskrakenmw/spin/9_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="10"] {
+    content: url(images/vswayskrakenmw/spin/10_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="10"] {
+        content: url(images/vswayskrakenmw/spin/10_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="11"] {
+    content: url(images/vswayskrakenmw/spin/11_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="11"] {
+        content: url(images/vswayskrakenmw/spin/11_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="12"] {
+    content: url(images/vswayskrakenmw/spin/12_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="12"] {
+        content: url(images/vswayskrakenmw/spin/12_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="14"] {
+    content: url(images/vswayskrakenmw/spin/14_5.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="2"] .ReelsSlot__ItemImg[alt="14"] {
+        content: url(images/vswayskrakenmw/spin/14_5@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswayskrakenmw/spin/1_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswayskrakenmw/spin/1_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswayskrakenmw/spin/2_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswayskrakenmw/spin/2_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswayskrakenmw/spin/3_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswayskrakenmw/spin/3_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswayskrakenmw/spin/4_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswayskrakenmw/spin/4_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswayskrakenmw/spin/5_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswayskrakenmw/spin/5_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswayskrakenmw/spin/6_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswayskrakenmw/spin/6_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswayskrakenmw/spin/7_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswayskrakenmw/spin/7_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="8"] {
+    content: url(images/vswayskrakenmw/spin/8_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="8"] {
+        content: url(images/vswayskrakenmw/spin/8_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="9"] {
+    content: url(images/vswayskrakenmw/spin/9_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="9"] {
+        content: url(images/vswayskrakenmw/spin/9_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="10"] {
+    content: url(images/vswayskrakenmw/spin/10_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="10"] {
+        content: url(images/vswayskrakenmw/spin/10_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="11"] {
+    content: url(images/vswayskrakenmw/spin/11_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="11"] {
+        content: url(images/vswayskrakenmw/spin/11_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="12"] {
+    content: url(images/vswayskrakenmw/spin/12_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="12"] {
+        content: url(images/vswayskrakenmw/spin/12_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="14"] {
+    content: url(images/vswayskrakenmw/spin/14_4.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="3"] .ReelsSlot__ItemImg[alt="14"] {
+        content: url(images/vswayskrakenmw/spin/14_4@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswayskrakenmw/spin/1_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswayskrakenmw/spin/1_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswayskrakenmw/spin/2_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswayskrakenmw/spin/2_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswayskrakenmw/spin/3_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswayskrakenmw/spin/3_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswayskrakenmw/spin/4_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswayskrakenmw/spin/4_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswayskrakenmw/spin/5_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswayskrakenmw/spin/5_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswayskrakenmw/spin/6_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswayskrakenmw/spin/6_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswayskrakenmw/spin/7_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswayskrakenmw/spin/7_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="8"] {
+    content: url(images/vswayskrakenmw/spin/8_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="8"] {
+        content: url(images/vswayskrakenmw/spin/8_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="9"] {
+    content: url(images/vswayskrakenmw/spin/9_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="9"] {
+        content: url(images/vswayskrakenmw/spin/9_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="10"] {
+    content: url(images/vswayskrakenmw/spin/10_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="10"] {
+        content: url(images/vswayskrakenmw/spin/10_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="11"] {
+    content: url(images/vswayskrakenmw/spin/11_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="11"] {
+        content: url(images/vswayskrakenmw/spin/11_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="12"] {
+    content: url(images/vswayskrakenmw/spin/12_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="12"] {
+        content: url(images/vswayskrakenmw/spin/12_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="14"] {
+    content: url(images/vswayskrakenmw/spin/14_3.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="4"] .ReelsSlot__ItemImg[alt="14"] {
+        content: url(images/vswayskrakenmw/spin/14_3@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="1"] {
+    content: url(images/vswayskrakenmw/spin/1_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="1"] {
+        content: url(images/vswayskrakenmw/spin/1_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="2"] {
+    content: url(images/vswayskrakenmw/spin/2_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="2"] {
+        content: url(images/vswayskrakenmw/spin/2_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="3"] {
+    content: url(images/vswayskrakenmw/spin/3_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="3"] {
+        content: url(images/vswayskrakenmw/spin/3_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="4"] {
+    content: url(images/vswayskrakenmw/spin/4_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="4"] {
+        content: url(images/vswayskrakenmw/spin/4_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="5"] {
+    content: url(images/vswayskrakenmw/spin/5_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="5"] {
+        content: url(images/vswayskrakenmw/spin/5_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="6"] {
+    content: url(images/vswayskrakenmw/spin/6_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="6"] {
+        content: url(images/vswayskrakenmw/spin/6_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="7"] {
+    content: url(images/vswayskrakenmw/spin/7_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="7"] {
+        content: url(images/vswayskrakenmw/spin/7_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="8"] {
+    content: url(images/vswayskrakenmw/spin/8_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="8"] {
+        content: url(images/vswayskrakenmw/spin/8_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="9"] {
+    content: url(images/vswayskrakenmw/spin/9_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="9"] {
+        content: url(images/vswayskrakenmw/spin/9_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="10"] {
+    content: url(images/vswayskrakenmw/spin/10_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="10"] {
+        content: url(images/vswayskrakenmw/spin/10_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="11"] {
+    content: url(images/vswayskrakenmw/spin/11_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="11"] {
+        content: url(images/vswayskrakenmw/spin/11_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="12"] {
+    content: url(images/vswayskrakenmw/spin/12_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="12"] {
+        content: url(images/vswayskrakenmw/spin/12_2@2x.png)
+    }
+}
+
+.ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="14"] {
+    content: url(images/vswayskrakenmw/spin/14_2.png)
+}
+
+@media(-webkit-min-device-pixel-ratio:2) {
+    .ReelsSlot__Reel[data-visible-items-count="5"] .ReelsSlot__ItemImg[alt="14"] {
+        content: url(images/vswayskrakenmw/spin/14_2@2x.png)
+    }
+}

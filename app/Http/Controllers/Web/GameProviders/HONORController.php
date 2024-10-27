@@ -985,9 +985,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             //프라그마틱 인증부분 설정되어있는지 확인
             $is_ppverify = false;
-            if($user->hasRole('user') && isset($user->referral))
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
             {
-                if(isset($user->referral->sessiondata()['ppverifyOn']) && $user->referral->sessiondata()['ppverifyOn']==1)
+                $parent = $parent->referral;
+            }
+            if(isset($parent))
+            {
+                if(isset($parent->sessiondata()['ppverifyOn']) && $parent->sessiondata()['ppverifyOn']==1)
                 {
                     $is_ppverify = true;
                 }
@@ -1104,9 +1109,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 // {
                 //     return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$verify_log->rid, 'bet'=>$verify_log->bet, 'verifyurl'=>$verifyurl]); 
                 // }
-                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vs10bbextreme','vs10bbfmission'];
-                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10txbigbass','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
-                $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
+                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vswayskrakenmw','vs10bbfmission'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10bhallbnza2', 'vs10bbsplxmas','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
+                $arr_b_gamble_games = ['vs20underground', 'vswayspowzeus', 'vswaysanime', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
 
                 $cver = 99951;
                 $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($datapath .'desktop/bootstrap.js');
