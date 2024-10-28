@@ -398,7 +398,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             $api_token = $user->generateCode(36);
             $user->update([
                 'remember_token' => $api_token,
-                'api_token' => $api_token
+                'api_token' => $api_token,
+                'last_name' => $request->ip()
             ]);
             // $user->update([
             //     'remember_token' => $user->api_token

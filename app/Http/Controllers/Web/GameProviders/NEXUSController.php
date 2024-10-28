@@ -21,6 +21,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],
             'nexus-mgl' => ['thirdname' =>'microgaming_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],
             'nexus-og' => ['thirdname' =>'orientalgame_casino','type' => 'casino', 'symbol'=>'og', 'skin'=>'B'],
+            'nexus-bota' => ['thirdname' =>'bota_casino','type' => 'casino', 'symbol'=>'bota', 'skin'=>'B'],
 
             //==== SLOT ====
             'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
@@ -28,6 +29,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],
             'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'symbol'=>'playngo', 'skin'=>'SLOT'],
             'nexus-pp' => ['thirdname' =>'pragmaticplay_slot','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],
+            'nexus-hbn' => ['thirdname' =>'habanero_slot','type' => 'slot', 'symbol'=>'hbn', 'skin'=>'SLOT'],
+            'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
+            'nexus-rtg' => ['thirdname' =>'evolution_redtiger','type' => 'slot', 'symbol'=>'rtg', 'skin'=>'SLOT'],
+            'nexus-pgsoft' => ['thirdname' =>'pgsoft_slot','type' => 'slot', 'symbol'=>'pgsoft', 'skin'=>'SLOT'],
         ];
         public static function getGameObj($uuid)
         {
@@ -259,7 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'vendorKey' => $game['vendorKey'],
                 'gameKey' => $game['symbol'],
                 'siteUsername' => $user_code,
-                'ip' => '',
+                'ip' => $user->last_name ?? '',
                 'language' => 'ko',
                 'requestKey' => $user->generateCode(24)
             ];
@@ -883,6 +888,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $balance = $data['balance'];
             }
             
+            //프라그마틱 인증부분 설정되어있는지 확인
+            $is_ppverify = false;
+            $parent = $user;
+            while ($parent && !$parent->isInOutPartner())
+            {
+                $parent = $parent->referral;
+            }
+            if(isset($parent))
+            {
+                if(isset($parent->sessiondata()['ppverifyOn']) && $parent->sessiondata()['ppverifyOn']==1)
+                {
+                    $is_ppverify = true;
+                }
+            }
             
             // 유저마지막 베팅로그 얻기
             $verify_log = \VanguardLTE\PPGameVerifyLog::where(['user_id'=>$user->id, 'label'=>$gamecode])->first();
@@ -901,7 +920,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         return response()->json(['error'=>true, 'mgckey'=>'', 'rid'=>'', 'bet'=>'', 'verifyurl'=>'']);
                     }
                 }
-                if(isset($verify_log) && $verify_log->crid == '')
+                if(isset($verify_log) && $verify_log->crid == '' && $is_ppverify == true)
                 {
                     //Add balance
                     $adduserbalance = $verify_log->bet;   // 유저머니를 베트머니만큼 충전한다.
@@ -980,9 +999,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 // {
                 //     return response()->json(['error'=>false, 'mgckey'=>explode('=', $mgckey)[1], 'rid'=>$verify_log->rid, 'bet'=>$verify_log->bet, 'verifyurl'=>$verifyurl]); 
                 // }
-                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vs10bbextreme','vs10bbfmission'];
-                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10txbigbass','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
-                $arr_b_gamble_games = ['vs20underground', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
+                $arr_b_ind_games = ['vs243lionsgold', 'vs10amm', 'vs10egypt', 'vs25asgard', 'vs9aztecgemsdx', 'vs10tut', 'vs243caishien', 'vs243ckemp', 'vs25davinci', 'vs15diamond', 'vs7fire88', 'vs20leprexmas', 'vs20leprechaun', 'vs25mustang', 'vs20santa', 'vs20pistols', 'vs25holiday', 'vs10bbextreme', 'vs243goldfor','vs25lagoon','vswayskrakenmw','vs10bbfmission'];
+                $arr_b_no_ind_games = ['vs7776secrets', 'vs10txbigbass', 'vs20terrorv', 'vs20drgbless', 'vs5drhs', 'vs20ekingrr', 'vswaysxjuicy', 'vs10goldfish','vs10floatdrg', 'vswaysfltdrg', 'vs20hercpeg', 'vs20honey', 'vs20hburnhs', 'vs4096magician', 'vs9chen', 'vs243mwarrior', 'vs20muertos', 'vs20mammoth', 'vs25peking', 'vswayshammthor', 'vswayslofhero', 'vswaysfrywld', 'vswaysluckyfish', 'vs10egrich', 'vs25rlbank', 'vs40streetracer', 'vs5spjoker', 'vs20superx', 'vs1024temuj', 'vs20doghouse', 'vs20tweethouse', 'vs20amuleteg', 'vs40madwheel', 'vs5trdragons', 'vs10vampwolf', 'vs20vegasmagic', 'vswaysyumyum', 'vs10jnmntzma','vs10kingofdth', 'vswaysrhino', 'vs20xmascarol', 'vswaysaztecking','vswaysrockblst', 'vs20maskgame','vswayscfglory','vs10bhallbnza2', 'vs10bbsplxmas','vs20dhdice','vswaysfltdrgny','vs10bblotgl','vswaysloki','vs20bblitz','vs20jhunter','vs10dgold88'];
+                $arr_b_gamble_games = ['vs20underground', 'vswayspowzeus', 'vswaysanime', 'vs40pirgold', 'vs40voodoo', 'vswayswwriches'];
 
                 $cver = 99951;
                 $response =  Http::withOptions(['proxy' => config('app.ppproxy')])->get($datapath .'desktop/bootstrap.js');
@@ -1031,7 +1050,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $rid = '0';
                 }
                 $allbet = $line * $bet;
-                if(isset($verify_log) && $verify_log->crid == ''){
+                if($is_ppverify == false)
+                {
+                    $allbet = $line * ($result['defc'] ?? $bet);
+                }
+                if(isset($verify_log) && $verify_log->crid == '' && $is_ppverify == true){
                     $bw = -1;
                     $end = -1;
                     $bgt = -1;

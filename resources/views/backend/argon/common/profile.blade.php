@@ -249,6 +249,7 @@
                                                 <th>유저삭제기능</th>
                                                 <th>유저가입 승인</th>
                                                 <th>유저 콜기능</th>
+                                                <th>프라그마틱 인증</th>
                                             </tr>
                                             <tr>
                                                 <td><label class="custom-toggle"><input type="checkbox" name="gameOn" {{isset($user->sessiondata()['gameOn']) && $user->sessiondata()['gameOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="없음" data-label-on="있음"></span></label></td>
@@ -260,6 +261,7 @@
                                                 <td><label class="custom-toggle"><input type="checkbox" name="manualjoin" {{!isset($user->sessiondata()['manualjoin']) || $user->sessiondata()['manualjoin']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="자동" data-label-on="수동"></span></label></td>
 
                                                 <td><label class="custom-toggle"><input type="checkbox" name="happyuser" {{isset($user->sessiondata()['happyuser']) && $user->sessiondata()['happyuser']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="차단" data-label-on="활성"></span></label></td>
+                                                <td><label class="custom-toggle"><input type="checkbox" name="ppverifyOn" {{isset($user->sessiondata()['ppverifyOn']) && $user->sessiondata()['ppverifyOn']==1?'checked':''}}><span class="custom-toggle-slider rounded-circle" data-label-off="없음" data-label-on="있음"></span></label></td>
                                             </tr>
                                         </table>
                                     </div>

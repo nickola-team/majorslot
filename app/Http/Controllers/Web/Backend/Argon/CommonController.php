@@ -372,7 +372,8 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'moneyperm' => 0,
                 'deluser' => 0,
                 'manualjoin' => 0,
-                'happyuser' => 0
+                'happyuser' => 0,
+                'ppverifyOn' => 0
             ];
             foreach ($customesettings as $setting => $value)
             {
