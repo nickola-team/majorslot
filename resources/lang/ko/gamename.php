@@ -1274,6 +1274,9 @@ return [
         "WisdomofAthena1000" => "위즈덤 오브 아테나 1000",
         "TheDogHouseMuttleyCrew" => "더 도그 하우스 머틀리 크루",
         "FortuneHitnRoll" => "포춘 힛 앤 롤",
+        "ReleasetheKrakenMegaways" => "릴리즈 더 크라켄 메가웨이즈",
+        "BigBassHalloween2" => "빅 배스 할로윈 2",
+        "VampyParty" => "뱀파이어 파티",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
