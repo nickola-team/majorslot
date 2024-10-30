@@ -1,8 +1,8 @@
 <div class="banner">
     <div class="banner-slider">
-        <div>
+        {{-- <div>
         <img class="banner-outside" src="/frontend/nine/images/slideshow1.png">
-        </div>
+        </div> --}}
         <div>
         <img class="banner-outside" src="/frontend/nine/images/slideshow2.png">
         </div>
