@@ -1277,6 +1277,9 @@ return [
         "ReleasetheKrakenMegaways" => "릴리즈 더 크라켄 메가웨이즈",
         "BigBassHalloween2" => "빅 배스 할로윈 2",
         "VampyParty" => "뱀파이어 파티",
+        "FangtasticFreespins" => "판타스틱 프리스핀즈",
+        "CandyCorner" => "캔디 코너",
+        "Moleionaire" => "몰레이오네어",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

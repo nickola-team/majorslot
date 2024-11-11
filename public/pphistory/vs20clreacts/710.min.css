@@ -1,0 +1,80 @@
+:root {
+    --slot-item-height: 45px;
+    --slot-item-width: 49px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    gap: 10px;
+    grid-template-areas: "slot pair"
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .SymbolPair {
+    grid-area: pair
+}
+
+.SymbolPair {
+    width: 143px;
+    height: 101px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    background-image: -webkit-image-set(url(./images/vs20clreacts/simplePair.png) 1x, url(./images/vs20clreacts/simplePair@2x.png) 2x)
+}
+
+.MoneyScatter__Label {
+    font-size: 14px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20clreacts/bg.png) 1x, url(./images/vs20clreacts/bg@2x.png) 2x);
+    width: 349px;
+    height: 323px;
+    margin: -3px;
+    background-repeat: no-repeat
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
