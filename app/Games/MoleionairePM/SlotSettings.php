@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\CandyCornerPM
+namespace VanguardLTE\Games\MoleionairePM
 {
     class SlotSettings
     {
@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\CandyCornerPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameCandyCornerStack::where('id', 47925)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameMoleionaireStack::where('id', 29221)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -762,30 +762,23 @@ namespace VanguardLTE\Games\CandyCornerPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyCornerStack::where('spin_type', 1)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMoleionaireStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                     if($pur >= 0){
                         $stacks = $stacks->where('pur_level', $pur);
                     }else{
                         $stacks = $stacks->where('pur_level', '<', 0);
                     }
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameCandyCornerStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameMoleionaireStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 38000);
+                $index = mt_rand(0, 45000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur == 1)
-                        {
-                            $stacks = $stacks->where('odd', '<=', 50);  
-                        }
-                        else
-                        {
-                            $stacks = $stacks->where('odd', '<=', 25);  
-                        }  
+                        $stacks = $stacks->where('odd', '<=', 15);
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
