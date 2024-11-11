@@ -6,9 +6,9 @@
         <!-- <div aria-live="polite" class="slick-list draggable"> -->
         <!-- <div class="slick-track" style="opacity: 1; width: 1500px;" role="listbox"> -->
         
-        <div>
+        {{-- <div>
             <img src="/frontend/nine/images/mobile/slideshow1.png" style="width:100%">
-        </div>
+        </div> --}}
         <div>
             <img src="/frontend/nine/images/mobile/slideshow2.png" style="width:100%">
         </div> 

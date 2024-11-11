@@ -1,0 +1,223 @@
+.Progress {
+    position: relative
+}
+
+.Progress,
+.Progress__Bg {
+    height: 100%
+}
+
+.Progress__ActiveWrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0
+}
+
+.Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+.Progress--hearts,
+.Progress--items {
+    align-self: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Progress--hearts .Progress__Bg,
+.Progress--items .Progress__Bg {
+    position: absolute
+}
+
+.Progress--hearts .Progress__Hearts,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Hearts,
+.Progress--items .Progress__Items {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%
+}
+
+.Progress--hearts .Progress__Heart,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Heart,
+.Progress--items .Progress__Items,
+.ProgressV2 {
+    position: relative
+}
+
+.ProgressV2__Bg {
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar {
+    overflow: hidden;
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar,
+.ProgressV2__ActiveImg {
+    position: absolute;
+    bottom: 0;
+    left: 0
+}
+
+:root {
+    --slot-item-height: 60px;
+    --slot-item-width: 61px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"] {
+    z-index: 1
+}
+
+.Spin {
+    margin: 15px 0 10px 60px;
+    display: grid;
+    grid-template-areas: "..   progress" "mult slot    "
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Multiplier {
+    grid-area: mult
+}
+
+.Spin .Progress {
+    grid-area: progress
+}
+
+.Progress {
+    height: 38px;
+    background-image: -webkit-image-set(url(./images/vs10fangfree/progress/bg.png) 1x, url(./images/vs10fangfree/progress/bg@2x.png) 2x);
+    background-size: contain;
+    z-index: 1
+}
+
+.Progress .Progress__Items {
+    justify-content: center;
+    gap: 20px
+}
+
+.Progress__Item--disabled {
+    opacity: .3;
+    filter: grayscale(1)
+}
+
+.Progress .LastItem {
+    position: absolute;
+    background-image: -webkit-image-set(url(./images/vs10fangfree/progress/lastItem.png) 1x, url(./images/vs10fangfree/progress/lastItem@2x.png) 2x);
+    background-size: contain;
+    width: 70px;
+    height: 70px;
+    right: -45px;
+    top: -10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    line-height: normal;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    font-size: .79rem;
+    white-space: nowrap
+}
+
+.Multiplier {
+    width: 65px;
+    height: 107px;
+    background-image: -webkit-image-set(url(./images/vs10fangfree/multBg.png) 1x, url(./images/vs10fangfree/multBg@2x.png) 2x);
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
+    left: -55px;
+    line-height: 70px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10fangfree/bg.png) 1x, url(./images/vs10fangfree/bg@2x.png) 2x);
+    width: 409px;
+    height: 217px;
+    margin: -23px -51px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs10fangfree/bgFs.png) 1x, url(./images/vs10fangfree/bgFs@2x.png) 2x);
+    width: 410px;
+    height: 236px;
+    margin: -44px -51px
+}
+
+.MoneyScatter--v .MoneyScatter__LabelWrap {
+    opacity: .4;
+    margin-top: 30px
+}
+
+.FsSlot .MoneyScatter--v .MoneyScatter__LabelWrap {
+    opacity: 1
+}
+
+.MoneyScatter--m .MoneyScatter__Label {
+    font-size: 14px
+}
+
+.MoneyScatter--m .MoneyScatter__LabelWrap {
+    top: 4px;
+    display: inline-block;
+    left: 7px;
+    width: auto
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
