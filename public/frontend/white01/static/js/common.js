@@ -86,16 +86,34 @@ function realtime_refresh() {
 
 function trans_point() {
 
-    var con = confirm("포인트를 게임머니로 전환하시겠습니까?");
-    if (!con) return false;
+    // var con = confirm("포인트를 게임머니로 전환하시겠습니까?");
+    // if (!con) return false;
 
-    $.get("/common/trans_point", function(data) {
+    // $.get("/common/trans_point", function(data) {
 
-        var data = JSON.parse(data);
-        console.log(data);
-        alert(data.ment);
-        if (data.result) location.reload();
-    })
+    //     var data = JSON.parse(data);
+    //     console.log(data);
+    //     alert(data.ment);
+    //     if (data.result) location.reload();
+    // })
+    if (confirm('포인트를 게임머니로 전환하시겠습니까?')) {
+        $.ajax({
+          url: '/api/convert_deal_balance',
+          type: 'POST',
+          dataType: "json",
+          data : null,
+          success: function(result) {
+  
+              if (result.error == false)
+              {
+                alert('전환되었습니다');
+                location.reload();
+              }else{
+                  alert(result.msg);
+              }
+          }
+        });
+      }
 }
 
 

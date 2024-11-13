@@ -92,14 +92,14 @@
                         @if(Auth::check())
                         <div>
                             <div class="user-nick">
-                                <span class="welcom">환영합니다.</span><span class="nick">빡님</span>
+                                <span class="welcom">환영합니다.</span><span class="nick">{{auth()->user()->username}}</span>
                             </div>
                             <div class="user-money">
-                                <span>호텔카지노(600원)</span>
+                                <span>카지노({{number_format(auth()->user()->balance, 0)}}원)</span>
                             </div>
                             <div class="user-point">
                                 <button type="button" onClick="trans_point();">머니전환</button>
-                                <span onClick="trans_point();">포인트(0P)</span>
+                                <span onClick="trans_point();">포인트({{number_format(auth()->user()->deal_balance,0)}}P)</span>
                             </div>
                         </div>
                         <button class="logout-button btn c-y" onClick="javascript:location.href='/logout'"><i class="fas fa-sign-in-alt"></i>로그아웃</button>
