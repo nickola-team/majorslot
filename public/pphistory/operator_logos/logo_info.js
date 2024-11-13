@@ -23,6 +23,9 @@ if (window["ga4_init"] != undefined)
 else
 	ga('create', 'UA-83294317-' + (7 + SPIN_TRACKER_ID), {'siteSpeedSampleRate':  10, 'sampleRate':   1, name: "ST" + SPIN_TRACKER_ID});
 
+if (window["Loader"] != null)
+	if (window["Loader"]["WURFLProcessed"] == undefined && window["Loader"]["SendStatistics"] != undefined)
+		window["Loader"]["SendStatistics"](JSON.stringify({}));
 
 function UHTPatch(info) // {name, ready(), apply(), interval}
 {
@@ -35,12 +38,56 @@ function UHTPatch(info) // {name, ready(), apply(), interval}
 			info["_UHT_timer"] = setTimeout(function(){UHTPatch(info)}, info.interval || 500);
 }
 
-var isStandalone = window["URLGameSymbol"] == "vsmeta"
+var isStandalone = window["URLGameSymbol"] == "slotsLobby"
 if(isStandalone)
 {
 	Loader.LoadGame = function(){};
 	//window.document.getElementById("wheelofpatience").remove();
 }
+
+UHTPatch({
+	name: "PatchPromotionsName",
+	ready:function()
+	{
+		return (window["TournamentProtocol"] != undefined && window["TournamentAnnouncementDisplayer"] != undefined && window["globalRuntime"] != undefined);
+	},
+	apply:function()
+	{
+		var oTAD_OSA = TournamentAnnouncementDisplayer.prototype.OnShowAnnouncement;
+		TournamentAnnouncementDisplayer.prototype.OnShowAnnouncement = function()
+		{
+			var announcement = XT.GetObject(AnnouncementVars.Announcement);
+			if (this.type != announcement.type)
+				return;
+
+			var removeRegex = "~[^~]*~";
+			announcement.message = announcement.message.replace(new RegExp(removeRegex, "g"), "");
+
+			oTAD_OSA.apply(this, arguments);
+		};
+
+	
+		var oTPTPPT = TournamentProtocol.TournamentParser.ParseTournaments;
+		TournamentProtocol.TournamentParser.ParseTournaments = function()
+		{
+			var res = oTPTPPT.apply(this, arguments);
+			if (res != null)
+			{
+				for (var r = 0; r < res.length; ++r)
+				{
+					var removeRegex = "~[^~]*~";
+			        res[r].name = res[r].name.replace(new RegExp(removeRegex, "g"), "");
+				}
+			}
+			return res;
+		};
+
+	},
+	retry:function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
 
 UHTPatch({
 	name: "PatchJurisdictionRequirementsOnGP16",
@@ -50,6 +97,11 @@ UHTPatch({
 	},
 	apply:function()
 	{
+		if (["vswaysmahwblck"].indexOf(window["UHT_GAME_CONFIG"]["GAME_SYMBOL"]) != -1)
+		{
+			window["UHT_GAME_CONFIG_SRC"].jurisdictionRequirements = "NOBF,"+window["UHT_GAME_CONFIG_SRC"].jurisdictionRequirements;
+		}
+			
 		if (location.hostname.indexOf(".gp16.") == -1)
 			return;
 
@@ -65,23 +117,523 @@ UHTPatch({
 	},
 	retry:function()
 	{
-		return (window["Renderer"] == undefined) && (location.hostname.indexOf(".gp16.") != -1);
+		return (window["Renderer"] == undefined);
 	},
 	interval: 1
 });
 
+
+
 UHTPatch({
-	name: "PatchRUMOnGP16",
+	name: "PatchNOAB_BetLevelV2",
+	ready: function()
+	{
+		return (window["BetLevelV2"] != undefined);
+	},
+	apply: function()
+	{
+		var oBLV2_XTRC = BetLevelV2.prototype.XTRegisterCallbacks;
+		BetLevelV2.prototype.XTRegisterCallbacks = function()
+		{
+			XT.RegisterCallbackBool(Vars.Jurisdiction_DisableAnteBet, this.OnJurisdictionDisable, this);
+			oBLV2_XTRC.apply(this, arguments);
+		}
+	},
+	retry: function()
+	{
+		return window["Renderer"] == undefined;
+	}
+});
+
+
+UHTPatch({
+	name: "PatchForceIntro",
+	ready: function()
+	{
+		return (window["globalRuntime"] != undefined && globalRuntime.sceneRoots.length > 1);
+	},
+	apply: function()
+	{
+		if (IsRequired("SHOPTY"))
+			if (Vars.Evt_CodeToData_IntroClosedOrSkipped != undefined)
+			{
+				var onIntro = function()
+				{
+					if(!Globals.isMobile)
+					{
+						var desktopInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceController, true);
+						if (desktopInterfaces.length > 0)
+							desktopInterfaces[0].Pressed_Paytable_Open();
+					}
+					else
+					{
+						var landscapeInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceControllerMobile_1, true);
+						var portraitInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceControllerMobile_2, true);
+						if (landscapeInterfaces.length > 0)
+							landscapeInterfaces[0].Pressed_Paytable_Open();
+						if (portraitInterfaces.length > 0)
+							portraitInterfaces[0].Pressed_Paytable_Open();
+					}
+				}
+				XT.RegisterCallbackEvent(Vars.Evt_CodeToData_IntroClosedOrSkipped, onIntro, this);
+			}
+	},
+	retry: function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	}
+});
+
+UHTPatch({
+	name: "PatchLimitAutoplay",
 	ready:function()
 	{
-		return true;
+		return (window["XT"] != undefined && window["XT"]["RegisterAndInitDone"]);
 	},
 	apply:function()
 	{
-		if (location.hostname.indexOf(".gp16.") == -1)
+		var lim = IsRequired("LIMAP")
+		
+		if (lim && lim[0])
+		{
+			var maxAPs = lim[0] | 0;
+			function isAllowed(value) {
+				return value <= maxAPs;
+			}
+			if (window["AutoplayControllerMobileV10"])
+			{
+				var ctrls = globalRuntime.sceneRoots[1].GetComponentsInChildren(AutoplayControllerMobileV10, true)
+				for (var i=0; i<ctrls.length; i++)
+					ctrls[i].sliderSpins.values = ctrls[i].sliderSpins.values.filter(isAllowed);
+			}
+
+			if (window["AutoplayControllerAdvancedV10"])
+			{
+				var ctrls = globalRuntime.sceneRoots[1].GetComponentsInChildren(AutoplayControllerAdvancedV10, true)
+				for (var i=0; i<ctrls.length; i++)
+					ctrls[i].sliderSpins.values = ctrls[i].sliderSpins.values.filter(isAllowed);
+			}
+
+			if (window["AutoplayControllerAdvanced"])
+			{
+				var ctrls = globalRuntime.sceneRoots[1].GetComponentsInChildren(AutoplayControllerAdvanced, true)
+				for (var i=0; i<ctrls.length; i++)
+				{
+					ctrls[i].requestedAutoSpins = ctrls[i].requestedAutoSpins.filter(isAllowed);
+					for (var j=0; j<ctrls[i].checkSpins.length; j++)
+						if (ctrls[i].requestedAutoSpins.indexOf(ctrls[i].checkSpins[j].gameObject.name | 0) == -1)
+							ctrls[i].checkSpins[j].gameObject.SetActive(false);
+					XT.SetInt(InterfaceVars.SelectedAutoSpinsIndexAdvanced, 0);
+				}
+			}
+
+			if (window["AutoplayControllerMobile"])
+			{
+				var ctrls = globalRuntime.sceneRoots[1].GetComponentsInChildren(AutoplayControllerMobile, true)
+				for (var i=0; i<ctrls.length; i++)
+					ctrls[i].requestedAutoSpins = ctrls[i].requestedAutoSpins.filter(isAllowed);
+			}
+		}
+	},
+	retry:function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	}
+});
+
+UHTPatch({
+	name: "PatchTextureDisposeOnIOS",
+	ready: function()
+	{
+		return (window["UIAtlas"] != undefined);
+	},
+	apply: function()
+	{
+		UIAtlas.CheckUsageAndClean = function() {};
+		UILabel.CheckUsageAndClean = function() {};
+
+		var oUIL_PPT = UILabel.prototype.processPixiText;
+		UILabel.prototype.processPixiText = function()
+		{
+			this.textIsUnprocessed = false;
+			oUIL_PPT.apply(this, arguments);
+		}
+	},
+	retry: function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
+
+
+UHTPatch({
+	name: "PatchSetMinSpinOnStart",
+	ready: function()
+	{
+		return (window["globalRuntime"] != undefined);
+	},
+	apply: function()
+	{
+		if (!IsRequired("MINBETSTART"))
+			return;
+		if (ServerOptions.isReplay)
 			return;
 
-		if (location.host.indexOf("test1.gp16") == -1 && location.host.indexOf("test2.gp16") == -1)
+		var OnChangeGameState = function()
+		{
+			if ((VSGameStateManager.internalState == VSGameState.Result) && (XT.GetObject(Vars.TumblingData) == null))
+			{
+				var bets = XT.GetObject(Vars.Bets);
+				var coinValues = XT.GetObject(Vars.CoinValues);
+				if (XT.GetBool(Vars.FromServer_AllowCoins))
+					CoinManager.instance.SetCoinValueIndex(0);
+				CoinManager.SetBetIndex(0);
+		
+				XT.UnregisterCallbackEvent(OnChangeGameState, this, Vars.Evt_Internal_ChangeVSGameState);
+			}
+		}
+
+		var OnXTGameInit = function()
+		{
+			XT.RegisterCallbackEvent(Vars.Evt_Internal_ChangeVSGameState, OnChangeGameState, this);
+		}
+		if (GameEvents["evtXTRegisterCallbacks"] != null)
+			EventManager.AddHandler(GameEvents.evtXTRegisterCallbacks, function() { XT.RegisterCallbackEvent(Vars.Evt_Internal_GameInit, OnXTGameInit, this); }, this);
+	},
+	retry: function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	},
+	interval: 50
+});
+
+UHTPatch({
+	name: "PatchShowMinSpinWarning",
+	ready: function()
+	{
+		return (window["globalRuntime"] != undefined);
+	},
+	apply: function()
+	{
+		if (!IsRequired("MINBETW"))
+			return;
+		if (ServerOptions.isReplay)
+			return;
+
+		var onScreenTargets = [];
+		var warningText = "";
+		var consumed = false;
+
+		var OnChangeGameState = function()
+		{
+			if ((VSGameStateManager.internalState == VSGameState.Result) && (XT.GetObject(Vars.TumblingData) == null))
+			{
+				if (!UpdateOnScreenWarning())
+					Consume();
+				XT.UnregisterCallbackEvent(OnChangeGameState, this, Vars.Evt_Internal_ChangeVSGameState);
+			}
+		}
+
+		var Consume = function()
+		{
+			consumed = true;
+			UpdateOnScreenWarning();
+			XT.UnregisterCallbackEvent(UpdateOnScreenWarning, this);
+			XT.UnregisterCallbackEvent(Consume, this, Vars.Evt_DataToCode_Pressed_Spin);
+			XT.UnregisterCallbackEvent(Consume, this, Vars.Evt_DataToCode_StartAutoplay);
+		}
+
+		var UpdateOnScreenWarning = function()
+		{
+			var minTotalBet = CoinManager.initialBetsFromServer[0] * XT.GetInt(Vars.LinesForMinBet);
+			var shouldShow = (CoinManager.GetNextTotalBet() > minTotalBet);
+			shouldShow &= !consumed;
+			shouldShow &= (XT.GetObject(Vars.TumblingData) == null);
+			shouldShow &= !XT.GetBool(Vars.Logic_IsFreeSpin);
+			for (var i = 0; i < onScreenTargets.length; i++)
+				onScreenTargets[i].gameObject.SetActive(shouldShow);
+			return shouldShow;
+		}
+
+		var OnXTGameInit = function()
+		{
+
+			var minTotalBet = CoinManager.initialBetsFromServer[0] * XT.GetInt(Vars.LinesForMinBet);
+			var minBetValue = LocaleManager.FormatValue(minTotalBet, new FormatOptions()).replaceAll(" ",'\u00A0');
+
+			var warningTextMap = {
+				en:`Current bet is higher than the minimum of ${minBetValue}`,
+				ar:`الرهان الحالي أعلى من الحد الأدنى ${minBetValue}`,
+				bg:`Текущият залог е по-висок от минимума на ${minBetValue}`,
+				cs:`Aktuální sázka je vyšší než minimum ${minBetValue}`,
+				da:`Nuværende indsats er højere end minimum af ${minBetValue}`,
+				de:`Der aktuelle Einsatz ist höher als das Minimum von ${minBetValue}`,
+				el:`Το τρέχον ποντάρισμα είναι υψηλότερο από το ελάχιστο του ${minBetValue}`,
+				es:`La apuesta actual es superior al mínimo de ${minBetValue}`,
+				et:`Praegune panus on suurem kui miinimum ${minBetValue}`,
+				fa:`شرط فعلی بیشتر از حداقل ${minBetValue} است`,
+				fi:`Nykyinen panos on suurempi kuin ${minBetValue}:n vähimmäismäärä`,
+				fr:`La mise actuelle est supérieure au minimum de ${minBetValue}`,
+				hr:`Trenutna oklada je veća od minimalne ${minBetValue}`,
+				hu:`Az aktuális tét nagyobb mint a ${minBetValue} minimális értéke`,
+				hy:`Ընթացիկ խաղադրույքը բարձր է նվազագույնից ${minBetValue}`,
+				id:`Taruhan saat ini lebih tinggi dari minimum ${minBetValue}`,
+				it:`La puntata attuale è superiore al minimo di ${minBetValue}`,
+				ja:`現在のベットが${minBetValue}の最小値より高い`,
+				ka:`მიმდინარე ფსონი მინიმუმზე მეტია ${minBetValue}`,
+				ko:`현재 베팅이 최소값 ${minBetValue}보다 높습니다.`,
+				lt:`Dabartinis statymas yra didesnis už ${minBetValue} minimumą`,
+				lv:`Pašreizējā likme ir lielāka par ${minBetValue} minimumu`,
+				ms:`Pertaruhan semasa lebih tinggi daripada minimum ${minBetValue}`,
+				nl:`Huidige inzet is hoger dan het minimum van ${minBetValue}`,
+				no:`Gjeldende innsats er høyere enn minimum av ${minBetValue}`,
+				pl:`Aktualny zakład jest wyższy niż minimum ${minBetValue}`,
+				pt:`A aposta atual é superior ao mínimo de ${minBetValue}`,
+				ro:`Miza curenta e mai mare decat minimul de ${minBetValue}`,
+				ru:`Текущая ставка выше минимальной ${minBetValue}`,
+				sk:`Aktuálna stávka je vyššia ako minimum ${minBetValue}`,
+				sr:`Тренутна опклада је већа од минималне ${minBetValue}`,
+				sv:`Aktuell insats är högre än minimum av ${minBetValue}`,
+				th:`การเดิมพันปัจจุบันสูงกว่าขั้นต่ำ ${minBetValue}`,
+				tr:`Mevcut bahis minimum ${minBetValue} değerinden yüksektir`,
+				uk:`Поточна ставка більша за мінімальну ${minBetValue}`,
+				vi:`Cược hiện tại cao hơn mức tối thiểu ${minBetValue}`,
+				zh:`当前投注额高于 ${minBetValue} 的最小值`,
+				zt:`目前的投注高於 ${minBetValue} 的最小值`
+			};
+
+			warningText = warningTextMap[UHT_CONFIG.LANGUAGE];
+			if (warningText == undefined)
+				warningText = warningTextMap.en;
+
+			var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+			if (localizationRoot != undefined)
+			{
+				//desktop
+				var isRK = false;
+				var pragmaticPlayLabelTransform = localizationRoot.transform.Find("GUI/PragmaticPlayAnchor/PragmaticPlayArrangeable/PragmaticPlayLabel");
+				if (pragmaticPlayLabelTransform != null)
+				{
+					var pragmaticPlayLabel = pragmaticPlayLabelTransform.GetComponent(UILabel);
+					if (pragmaticPlayLabel != null)
+					{
+						if (pragmaticPlayLabel.text.indexOf("REEL") != -1)
+							isRK = true;
+					}
+				}
+
+				var topBarTransform = localizationRoot.transform.Find("GUI/Interface/TopBar/Background/Sprite");
+				if (topBarTransform != null)
+				{
+					var labelTransform = localizationRoot.transform.Find("GUI/Interface/Windows/BetsWindow/Content/BetInCoins/Bet/Bet/TitleLines/Text/CoinsPerLineLabel");
+				
+					var newObj = instantiate(labelTransform.gameObject);
+					newObj.SetActive(false);
+					newObj.transform.SetParent(topBarTransform.parent, false);
+					newObj.SetActive(true);
+					newObj.SetActive(false);
+					var labelTopBar = newObj.GetComponent(UILabel);
+					labelTopBar.text = warningText;
+					labelTopBar.overflow = 0;
+					labelTopBar.width = 850;
+					labelTopBar.height = 80;
+					labelTopBar.transform.localPosition(-100,103,0);
+					labelTopBar.resize = 1;
+					labelTopBar.maxLines = 2;
+					labelTopBar.Start();
+					labelTopBar.init(true);
+					onScreenTargets.push(labelTopBar);
+
+					var topBarBkgTransform = localizationRoot.transform.Find("GUI/Utils/GUIArranger/UpLeft/Up");
+					if (topBarBkgTransform != null)
+					{
+						var newObj = instantiate(topBarBkgTransform.gameObject);
+						newObj.SetActive(false);
+						newObj.transform.SetParent(topBarTransform.parent, false);
+						newObj.SetActive(true);
+						newObj.SetActive(false);
+						var topBarBkgSprite = newObj.GetComponent(UISprite);
+						topBarBkgSprite.width = 870;
+						topBarBkgSprite.height = 80;
+						topBarBkgSprite.transform.localPosition(-100, 103, 0);
+						topBarBkgSprite.anchorX = 0.5;topBarBkgSprite.anchorY = 0.5;topBarBkgSprite.color.r = 0;topBarBkgSprite.color.g = 0;topBarBkgSprite.color.b = 0;topBarBkgSprite.color.a = 0.6;
+						topBarBkgSprite.Start();
+						onScreenTargets.push(topBarBkgSprite);
+					}
+				}
+
+				//mobile portrait
+				var pragmaticPlayLabelTransform = localizationRoot.transform.Find("GUI_mobile/PragmaticPlay/PPAnchorLand/PPArrangeableLand/PragmaticPlayLabel");
+				if (pragmaticPlayLabelTransform != null)
+				{
+					var pragmaticPlayLabel = pragmaticPlayLabelTransform.GetComponent(UILabel);
+					if (pragmaticPlayLabel != null)
+					{
+						if (pragmaticPlayLabel.text.indexOf("REEL") != -1)
+							isRK = true;
+					}
+				}
+
+
+				var labelPortTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Portrait/ContentInterface/Windows/BetsWindow/Content/BetInCoins/Bet/Title/BetTitleLines/Text/CoinsPerLineLabel");
+				var topBarPortTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Portrait/ContentInterface/TopBar/TopBarBackground/TopBarBackgroundSprite");
+				if (Globals.isMini)
+				{
+					labelPortTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Portrait/ContentInterface/Windows/BetsWindow/Content/BetInCoins/BetContent/TotalBetTitleLines/Text/TotalBetValue");
+					topBarPortTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Portrait/ContentInterface/BottomBar/Background/bg_sprite");
+				}
+
+				if (topBarPortTransform != null && labelPortTransform != null)
+				{
+					var newObj = instantiate(labelPortTransform.gameObject);
+					newObj.SetActive(false);
+					newObj.transform.SetParent(topBarPortTransform.parent, false);
+					newObj.SetActive(true);
+					newObj.SetActive(false);
+					var labelTopBarPort = newObj.GetComponent(UILabel);
+					labelTopBarPort.text = warningText;
+					labelTopBarPort.overflow = 0;
+					labelTopBarPort.width = Globals.isMini ? 700 : 1300;
+					labelTopBarPort.height = Globals.isMini ? 50 : 100;
+					if (Globals.isMini)
+						labelTopBarPort.fontSize = 30;
+
+					labelTopBarPort.transform.localPosition(0, Globals.isMini ? 245 : 193, 0);
+					labelTopBarPort.transform.localScale(1,1.176,1);
+					labelTopBarPort.resize = 1;
+					labelTopBarPort.maxLines = 1;
+					labelTopBarPort.dontIgnoreLocalScale = true;
+					labelTopBarPort.Start();
+					labelTopBarPort.init(true);
+					onScreenTargets.push(labelTopBarPort);
+
+					var topBarPortBkgTransform = localizationRoot.transform.Find("GUI_mobile/Utils/GUIArranger/UpLeft/Up");
+					if (topBarPortBkgTransform != null)
+					{
+						var newObj = instantiate(topBarPortBkgTransform.gameObject);
+						newObj.SetActive(false);
+						newObj.transform.SetParent(topBarPortTransform.parent, false);
+						newObj.SetActive(true);
+						newObj.SetActive(false);
+						var topBarPortBkgSprite = newObj.GetComponent(UISprite);
+						topBarPortBkgSprite.width = Globals.isMini ? 700 : 1300;
+						topBarPortBkgSprite.height = Globals.isMini ? 50 : 100;
+						topBarPortBkgSprite.transform.localPosition(0, Globals.isMini ? 245 : 198, 0);
+						topBarPortBkgSprite.transform.localScale(1,Globals.isMini ? 1 : 1.176, 1);
+						topBarPortBkgSprite.anchorX = 0.5;topBarPortBkgSprite.anchorY = 0.5;topBarPortBkgSprite.color.r = 0;topBarPortBkgSprite.color.g = 0;topBarPortBkgSprite.color.b = 0;topBarPortBkgSprite.color.a = 0.4;
+						topBarPortBkgSprite.Start();
+						onScreenTargets.push(topBarPortBkgSprite);
+					}
+				}
+				//mobile landscape
+				
+
+				var labelLandTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Landscape/ContentInterface/Windows/BetsWindow/Content/BetInCoins/Bet/Bet/Title/TitleLines/Text/CoinsPerLineLabel");
+				var topBarLandTransform = localizationRoot.transform.Find("GUI_mobile/Interface_Landscape/ContentInterface/BottomBar/Background/bgTopSprite");
+				if (topBarLandTransform != null)
+				{
+					var newObj = instantiate(labelLandTransform.gameObject);
+					newObj.SetActive(false);
+					newObj.transform.SetParent(topBarLandTransform.parent, false);
+					newObj.SetActive(true);
+					newObj.SetActive(false);
+					var labelTopBarLand = newObj.GetComponent(UILabel);
+					labelTopBarLand.text = warningText;
+					labelTopBarLand.fontSize = 48;
+					labelTopBarLand.overflow = 0;
+					labelTopBarLand.width = 650;
+					labelTopBarLand.height = 60;
+					if (isRK)
+						labelTopBarLand.transform.localPosition(0,204,0);
+					else
+						labelTopBarLand.transform.localPosition(0,194,0);
+					labelTopBarLand.transform.localScale(1,1.6,1);
+					labelTopBarLand.resize = 1;
+					labelTopBarLand.maxLines = 1;
+					labelTopBarLand.dontIgnoreLocalScale = true;
+					labelTopBarLand.Start();
+					labelTopBarLand.init(true);
+					onScreenTargets.push(labelTopBarLand);
+
+					var topBarLandBkgTransform = localizationRoot.transform.Find("GUI_mobile/Utils/GUIArranger/UpLeft/Up");
+					if (topBarLandBkgTransform != null)
+					{
+						var newObj = instantiate(topBarLandBkgTransform.gameObject);
+						newObj.SetActive(false);
+						newObj.transform.SetParent(topBarLandTransform.parent, false);
+						newObj.SetActive(true);
+						newObj.SetActive(false);
+						var topBarLandBkgSprite = newObj.GetComponent(UISprite);
+						topBarLandBkgSprite.width = 700;
+						topBarLandBkgSprite.height = 60;
+						if (isRK)
+							topBarLandBkgSprite.transform.localPosition(0, 204, 0);
+						else
+							topBarLandBkgSprite.transform.localPosition(0, 194, 0);
+						topBarLandBkgSprite.transform.localScale(1,1.6,1);
+						topBarLandBkgSprite.anchorX = 0.5;topBarLandBkgSprite.anchorY = 0.5;topBarLandBkgSprite.color.r = 0;topBarLandBkgSprite.color.g = 0;topBarLandBkgSprite.color.b = 0;topBarLandBkgSprite.color.a = 0.6;
+						topBarLandBkgSprite.Start();
+						onScreenTargets.push(topBarLandBkgSprite);
+					}
+				}
+			}
+			XT.RegisterCallbackEvent(Vars.Evt_Internal_BetChanged, UpdateOnScreenWarning, this);
+			XT.RegisterCallbackEvent(Vars.Evt_Internal_ChangeVSGameState, OnChangeGameState, this);
+			XT.RegisterCallbackEvent(Vars.Evt_DataToCode_Pressed_Spin, Consume, this);
+			XT.RegisterCallbackEvent(Vars.Evt_DataToCode_StartAutoplay, Consume, this);
+		}
+		if (GameEvents["evtXTRegisterCallbacks"] != null)
+			EventManager.AddHandler(GameEvents.evtXTRegisterCallbacks, function() { XT.RegisterCallbackEvent(Vars.Evt_Internal_GameInit, OnXTGameInit, this); }, this);
+	},
+	retry: function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	},
+	interval: 50
+});
+
+UHTPatch({
+	name: "PatchDefaultBetClamp",
+	ready:function()
+	{
+		return (window["globalRuntime"] != undefined && window["UHT_GAME_CONFIG_SRC"] != undefined);
+	},
+	apply:function()
+	{
+		
+		if (UHT_GAME_CONFIG.GAME_SYMBOL.indexOf("vs") != 0)
+			return;
+
+		var oCCVACB = CoinManager.ComputeCoinValuesAndCurrentBet;
+		CoinManager.ComputeCoinValuesAndCurrentBet = function(betsFromServer, lastBet, defaultBet)
+		{
+			var oDefaultBet = defaultBet;
+			oCCVACB.apply(this, arguments);
+			if (CoinManager.defaultBet < oDefaultBet)
+				if (lastBet > XT.GetDouble(Vars.MaxTotalBetFromServer) * 1000 / XT.GetInt(Vars.LinesForMinBet) / 1000)
+				{
+					var newBet = XT.GetDouble(Vars.MinTotalBetFromServer) * 1000 / XT.GetInt(Vars.LinesForMinBet) / 1000;
+					CoinManager.SetDesiredBet(newBet);
+					CoinManager.SetDefaultBet(newBet);
+				}
+		};
+	},
+	retry:function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	}
+});
+
+
+UHTPatch({
+	name: "PatchRUM",
+	ready:function()
+	{
+		return (window["UHT_GAME_CONFIG_SRC"] != undefined);
+	},
+	apply:function()
+	{
+		if ((location.hostname.indexOf(".gp16.") == -1) && (location.hostname.indexOf(".prerelease-env.biz") == -1) && (!IsRequired("RUM")))
 			return;
 
 		var scriptH = document.createElement("script");
@@ -98,7 +650,7 @@ UHTPatch({
 				enablePerformanceInstrumentation: false,
 				transports: [
 					new window.GrafanaFaroWebSdk.FetchTransport({
-						url: 'https://collector.gametechlabs.net/collect',
+						url: 'https://clctr.ltguevmavv.com/collect',
 						// /{app-key},
 
 						// Optional, if your receiver requires an API key
@@ -120,8 +672,14 @@ UHTPatch({
 						//},
 						//},
 					})
-				]
+				],
+				instrumentations: [
+					...window.GrafanaFaroWebSdk.getWebInstrumentations({
+						captureConsole: false,
+					})
+				 ],
 			});
+			window.faro.api.getSession().attributes.envId=(UHT_GAME_CONFIG_SRC.environmentId | 0).toString();
 			window.GrafanaFaroWebSdk.faro.api.pushMeasurement(
 				{
 					type: 'CustomLoadingTracker',
@@ -163,9 +721,226 @@ UHTPatch({
 	},
 	retry:function()
 	{
-		return false;
+		return (window["Renderer"] == undefined);
 	},
 	interval: 1
+});
+
+UHTPatch({
+	name: "PatchBBB",
+	ready: function()
+	{
+		return (window["BBB_Layout"] != undefined);
+	},
+	apply: function()
+	{
+		if (!IsRequired("BBB"))
+			return;
+
+		var isMini = window["UHT_GAME_CONFIG_SRC"]["minimode"] == '1';
+		if(!isMini)
+		{
+			if (window["FreeSpinsPurchaseManager"])
+				window["FreeSpinsPurchaseManager"].prototype.EnoughMoney = function() { return true; }
+	
+			if (window["FeaturePurchaseManager"])
+				window["FeaturePurchaseManager"].prototype.EnoughMoney = function() { return true; }
+	
+			if (window["FeaturePurchaseV2"])
+				window["FeaturePurchaseV2"].prototype.EnoughMoney = function() { return true; }
+	
+			if (window["FeaturePurchaseManager_GRM"])
+				window["FeaturePurchaseManager_GRM"].prototype.EnoughMoney = function() { return true; }
+	
+			if (window["FeaturePurchaseManager_BK"])
+				window["FeaturePurchaseManager_BK"].prototype.EnoughMoney = function() { return true; }
+		}
+		
+		BonusBuyBlack.prototype.OnUpdateButtonUp = function(unused)
+		{
+			if (!XT.GetBool(Vars.MaxBetAndCoinValueReached))
+				for(var b = 0; b < this.betUp_btnEnabler.length; b++) 
+					this.betUp_btnEnabler[b].EnableButton();
+			else
+				for(var b = 0; b < this.betUp_btnEnabler.length; b++) 
+					this.betUp_btnEnabler[b].DisableButton();
+		}
+
+		BonusBuyBlack.prototype.OnUpdateButtonDown = function(unused)
+		{
+			if (!XT.GetBool(Vars.MinSmallBetReached))
+				for(var b = 0; b < this.betDown_btnEnabler.length; b++) 
+					this.betDown_btnEnabler[b].EnableButton();
+			else
+				for(var b = 0; b < this.betDown_btnEnabler.length; b++) 
+					this.betDown_btnEnabler[b].DisableButton();
+		}
+
+		
+		BBB_Option.prototype.ConfirmBuy = function()
+		{
+			BonusBuyBlack.featureBought = true;
+			XT.TriggerEvent(Vars.Evt_DataToCode_UnblockSpin);
+			BonusBuyBlack.instance.spinIsBlocked = false;
+			this.buyCat.Stop();
+			this.buyCat.Start();
+		}
+		
+		BBB_Layout.prototype.Open = function(/**Array<BBB_OptionInfo>*/ info)
+		{
+			this.DeselectAll();
+			this.gameObject.SetActive(true);
+
+			this.bottomBar.SetActive(true);
+			this.bottomBar.transform.localPosition(0, this.bottomBarPosY, 0);
+			if (this.bottomBarSprite != null)
+				this.bottomBarSprite.width = this.bottomBarSpriteWidth;
+
+			for (var o=0; o<this.optionsNumber; o++)
+				this.options[o].UpdateInfo(info[o]);
+
+			//Taking first one as cheapest
+			this.bottomBarText.text = info[0].bottomText.text;
+			if ((UHT_GAME_CONFIG.LANGUAGE != "en") && (UHT_GAME_CONFIG.LANGUAGE != "id"))
+			{
+				if (this.bottomBarText.fontName != info[0].bottomText.fontName)
+				{
+					this.bottomBarText.fontName = info[0].bottomText.fontName;
+					this.bottomBarText.Prepare();
+				}
+			}
+			this.bottomBarValue.SetValueManually(XT.GetDouble(Vars.MinTotalBetFromServer));
+		}
+		
+		UICamera.prototype.UpdateCamera = function()
+		{
+		    var hoveredCollider = null;
+		    var skipGettingCollider = false;
+		
+		    if (this.cachedCamera.IsClippingInput())
+		    {
+		        var TL = new UHTMath.Vector3(-this.cachedCamera.extraCameraSettings.clipLeft, this.cachedCamera.extraCameraSettings.clipUp, 0.0);
+		        var BR = new UHTMath.Vector3(this.cachedCamera.extraCameraSettings.clipRight, -this.cachedCamera.extraCameraSettings.clipDown, 0.0);
+		
+		        var TLW = this.gameObject.transform.transformPoint(TL);
+		        var BRW = this.gameObject.transform.transformPoint(BR);
+		
+		        var TLS = this.cachedCamera.WorldToScreenPoint(TLW);
+		        var BRS = this.cachedCamera.WorldToScreenPoint(BRW);
+		
+		        if (Input.mousePosition.x < TLS.x || Input.mousePosition.y < TLS.y || Input.mousePosition.x > BRS.x || Input.mousePosition.y > BRS.y)
+		            skipGettingCollider = true;
+		    }
+		
+		    if (!skipGettingCollider)
+		        hoveredCollider = globalColliderInputManager.getHoveredCollider(this.cachedCamera.ScreenToWorldPoint(Input.mousePosition), this.eventReceiverMask);
+		    if (ServerOptions.isReplay && Globals.InputBlocked && (hoveredCollider != null))
+		        if (hoveredCollider["usedForReplay"] != true)
+		            hoveredCollider = null;
+		
+		
+		    if (Input.GetMouseButton(0))
+		    {
+		        this.mouseWasPressed = true;
+		
+		        if (Input.GetMouseButtonDown(0))
+		        {
+		            this.target = hoveredCollider;
+		
+		            if (this.target != null)
+						if (!this.target["RedirectedClick"])
+			                this.target.gameObject.SendMessage(UICamera.messagePress, true);
+		
+		            this.mousePosOnPress = new UHTMath.Vector3(Input.mousePosition);
+		
+		            this.mouseWasDragged = false;
+		            this.mouseIsOverTarget = true;
+		        }
+		    }
+		    else if (this.mouseWasPressed == true)
+		    {
+		        this.mouseWasPressed = false;
+		
+		        if (this.target != null)
+		        {
+		            this.target.gameObject.SendMessage(UICamera.messagePress, false);
+		
+		            if (hoveredCollider == this.target)
+		            {
+		                if (Input.lastUsedInputDeviceIsTouch == false)
+		                    this.target.gameObject.SendMessage(UICamera.messageHover, true);
+		
+		                if (this.mouseWasDragged == false)
+		                {
+		                    var redirectClick = this.target["RedirectedClick"];
+		                    if (redirectClick)
+		                        redirectClick["RedirectedClick"](this.target);
+		                    else
+		                        this.target.gameObject.SendMessage(UICamera.messageClick);
+		                }
+		            }
+		        }
+		
+		    }
+		    else
+		    {
+		        if ((Input.lastUsedInputDeviceIsTouch == false) && (hoveredCollider != this.target))
+		        {
+		            if (this.target != null)
+		            {
+		                this.target.gameObject.SendMessage(UICamera.messageHover, false);
+		            }
+		
+		            this.target = hoveredCollider;
+		
+		            if (this.target != null)
+		            {
+		                this.target.gameObject.SendMessage(UICamera.messageHover, true);
+		            }
+		        }
+		    }
+		
+		    return (hoveredCollider != null);
+		};
+
+	},
+	retry: function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
+
+UHTPatch({
+	name: "PatchBigWinSkipTracking",
+	ready: function()
+	{
+		return (window["ValueAnimatorWithBigWin"] != undefined);
+	},
+	apply: function()
+	{
+		var VAWBW_OFV = ValueAnimatorWithBigWin.prototype.OnFinalizeValue;
+		ValueAnimatorWithBigWin.prototype.OnFinalizeValue = function()
+		{
+			if (this.gameObject.activeInHierarchy && this.isAnimating)
+			{
+				if (this.isJackPot)
+				{
+					if (this.curTime > XT.GetFloat(Vars.MinimumJackpotBigWinDuration))
+						this.SendGASkipEvent();
+				}
+				else // was return in original if jackpot
+				if (XT.GetInt(Vars.BigWinLevel) > 0)
+					this.SendGASkipEvent()
+				else
+					this.SendGASkipEvent()
+			}
+			VAWBW_OFV.apply(this, arguments);
+		};
+	},
+	retry: function()
+	{
+		return (window["Renderer"] == undefined);
+	}
 });
 
 UHTPatch({
@@ -385,7 +1160,7 @@ UHTPatch({
 	}
 });
 
-var metaIframe;
+var metaIframe = null;
 var noMeta = false;
 
 UHTPatch({
@@ -408,7 +1183,12 @@ UHTPatch({
 			window.sendToGame = function(json)
 			{
 				var parsed = JSON.parse(json);
-				gameConfig = parsed.args.config;
+				if (typeof parsed.args.config == "string")
+					gameConfig = JSON.parse(parsed.args.config);
+				else
+					gameConfig = parsed.args.config
+
+				window["UHT_GAME_CONFIG_SRC"] = gameConfig;
 				gameSymbol = URLGameSymbol;
 				window.sendToGame = bkupSendToGame;
 			}
@@ -418,7 +1198,7 @@ UHTPatch({
 				type: "html5"
 			}));			
 		}
-		else if (location.hostname.indexOf(".gp33.") != -1)
+		else if (UHT_GAME_CONFIG_SRC.lobbyVersion == 'V3')
 		{
 			gameConfig = UHT_GAME_CONFIG_SRC;
 			gameSymbol = UHT_GAME_CONFIG.GAME_SYMBOL;
@@ -455,7 +1235,7 @@ UHTPatch({
 
 		var OpenLobby = function()
 		{
-			metaIframe.contentWindow.postMessage({group:'common', name:'openLobby'});
+			metaIframe.contentWindow.postMessage({group:'common', name:'openLobby'}, "*");
 			metaIframe.style.pointerEvents = "auto"
 		}
 
@@ -543,7 +1323,26 @@ UHTPatch({
 		var mgckey = encodeURIComponent(gameConfig.mgckey);
 		var ingameLobbyApiURL = encodeURIComponent(gameConfig.ingameLobbyApiURL);	
 		//var src = `${ServerOptions.serverUrl}/gs2c/common/lobby/v1/apps/lobby/1.0.0/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
-		var src = location.origin + `/gs2c/common/lobby/v1/apps/lobby/1.0.0/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
+		var src = new URL(UHT_CONFIG.GAME_URL).origin + `/gs2c/common/lobby/v1/apps/lobby/1.0.0/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
+
+		if(gameConfig["lobbyFilter"])
+			src += `&lobbyFilter=${gameConfig.lobbyFilter}`;
+		if(gameConfig["lobbyGameSymbol"])
+			src += `&lobbyGameSymbol=${gameConfig.lobbyGameSymbol}`;
+
+		IsRequired("UNUSED", false, false);
+		if(gameConfig.jurisdictionRequirements)
+			if(gameConfig.jurisdictionRequirements.length > 0)
+			{
+				var req = encodeURIComponent(gameConfig.jurisdictionRequirements);
+				src += `&requirements=${req}`;
+			}
+
+		if(gameConfig["styleName"] != undefined)
+		{
+			var styleName = encodeURIComponent(gameConfig["styleName"]);
+			src += `&stylename=${styleName}`;
+		}
 
 		metaIframe.src = src;
 		metaContainer.appendChild(metaIframe);
@@ -553,6 +1352,13 @@ UHTPatch({
 		{
 			MenuController.prototype.ButtonClicked = function(/**number*/ index)
 			{
+				var fullscreenDivs = document.getElementsByClassName("fullscreen-reserve");
+				if (fullscreenDivs.length > 0)
+					fullscreenDivs[0].remove();
+				fullscreenDivs = document.getElementsByClassName("fullscreen-root-hidden");
+				if (fullscreenDivs.length > 0)
+					fullscreenDivs[0].remove();
+
 				var btnType = this.internalOrder[index];
 
 				if (btnType == MenuButtonType.Tournament || btnType == MenuButtonType.PrizeDrop)
@@ -568,18 +1374,44 @@ UHTPatch({
 				if (btnType == MenuButtonType.Lobby)
 				{
 					OpenLobby();
-					metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: XT.GetDouble(Vars.BalanceReceived)}});
+					metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: XT.GetDouble(Vars.BalanceReceived)}}, "*");
 					XT.TriggerEvent(InterfaceVars.Evt_CodeToData_InterfaceWindowOpen);
+
+					if(this.OnHideNewGameNotification != undefined)
+						this.OnHideNewGameNotification();
+					
 				}
 
 				this.click[this.order.indexOf(btnType)].Start();
 			};
+
+			//messages will be processed twice if UHTInterfaceBOSS.enabled == true
+			var OnReceiveMessage = function(event)
+			{
+				if (event.data.event == "setMuteFromLobby")
+				{
+					if (event.data.payload != undefined)
+					{
+						if (event.data.payload.muted == true)
+						{
+							if (XT.GetObject(Vars.SoundState).gameSoundIsOn)
+								UHTInterfaceBOSS.soundCommands.push(false);
+						}
+						else
+						{
+							if (!XT.GetObject(Vars.SoundState).gameSoundIsOn)
+								UHTInterfaceBOSS.soundCommands.push(true);
+						}
+					}
+				}
+			};
+		window.addEventListener("message", OnReceiveMessage, false);
 		}
 
-		metaIframe.contentWindow.addEventListener("message", function(message)
+		window.addEventListener("message", function(message)
 		{
 			if(message.data == undefined) return;
-			if(message.data.group == "lobby")
+			if(message.data.group == "meta")
 			{
 				var data = message.data;
 				if(data.name == "readyToReceive")
@@ -587,7 +1419,7 @@ UHTPatch({
 					if(!isStandalone)
 					{
 						metaIframe.contentWindow.postMessage({group:'lobby', name:'hostInfo', 
-															  payload: { id: URLGameSymbol, host: 'slot'}});
+															  payload: { id: URLGameSymbol, host: 'slot'}}, "*");
 
 						//var mgr = XT.GetObject(Vars.SoundManagerObject);
 						//mgr.MuteMusic(true);
@@ -614,7 +1446,7 @@ UHTPatch({
 										var nameVal = nameValues[i].split('=');
 										if(nameVal[0] == 'balance')
 										{
-											metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: nameVal[1]}});
+											metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: nameVal[1]}}, "*");
 										}
 									}
 									
@@ -637,6 +1469,10 @@ UHTPatch({
 					{
 						location.assign(url);
 					}
+				}
+				else if(data.name == "close")
+				{
+					metaIframe.style.pointerEvents = "none";
 				}
 			}
 		}, false);
@@ -662,7 +1498,7 @@ UHTPatch({
 
 			var OnBalanceUpdated = function()
 			{
-				metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: XT.GetDouble(Vars.BalanceReceived)}});							
+				metaIframe.contentWindow.postMessage({group:'common', name:'updateBalance', payload: {amount: XT.GetDouble(Vars.BalanceReceived)}}, "*");
 			}
 			
 			XT.RegisterCallbackEvent(Vars.Evt_FromServer_BalanceUpdated, OnBalanceUpdated, this);
@@ -672,7 +1508,7 @@ UHTPatch({
 	},
 	retry:function()
 	{
-		return !isStandalone || noMeta;
+		return !isStandalone && !noMeta;
 	}
 });
 
@@ -680,6 +1516,90 @@ if(isStandalone)
 {
 	UHTPatch = function(info){};
 }
+
+UHTPatch({
+	name: "PatchUpdateSoundToMeta",
+	ready:function()
+	{
+		return (metaIframe!= undefined && window["globalRuntime"] != undefined && globalRuntime.sceneRoots.length > 1);
+	},
+	apply:function()
+	{
+		if(isStandalone)
+			return;
+		
+		var lastPayload = -1;
+		var OnSoundChanged = function(param)
+		{
+			var volume = XT.GetFloat(Vars.SoundVolume);
+			var soundState = XT.GetObject(Vars.SoundState);
+			if(!soundState.gameSoundIsOn)
+				volume = 0;
+			else if(volume < 0) volume = 0;
+			else if(volume > 1) volume = 1;
+			
+			if(lastPayload == volume)
+				return;
+
+			metaIframe.contentWindow.postMessage({group:'common', name:'sound', payload: {masterVolume: volume}}, "*");
+			lastPayload = volume;
+		}
+	
+		XT.RegisterCallbackEvent(Vars.Evt_Internal_SoundStateChanged, OnSoundChanged, this);
+		XT.RegisterCallbackFloat(Vars.SoundVolume, OnSoundChanged, this);
+	},
+	retry:function()
+	{
+		return !isStandalone && !noMeta;
+	}
+});
+
+UHTPatch({
+	name: "PatchMultiLobbyV3",
+	ready: function()
+	{
+        return (window["UHT_GAME_CONFIG_SRC"] != undefined && window["MultiLobbyConnection"] != undefined 
+						&& window["MenuController"] != null && window["TournamentConnection"] != undefined);
+	},
+	apply: function()
+	{
+		if(UHT_GAME_CONFIG_SRC["lobbyVersion"] == undefined || UHT_GAME_CONFIG_SRC["lobbyVersion"] != 'V3')
+			return;
+
+        var tournamentReloadedCalledOnce = false;
+        var tc_OTR = TournamentConnection.prototype.OnTournamentsReloaded;
+        TournamentConnection.prototype.OnTournamentsReloaded = function(/**string*/ param, /**number*/ statusCode)
+        {
+            tournamentReloadedCalledOnce = true;
+            tc_OTR.apply(this, arguments);
+
+            if(!this.hasUpdates)
+			    XT.SetObject(LobbyVars.LobbyCategorySymbols, ["anything"]); //to call UpdateButtons and enable lobby button
+        };
+
+        var mc_UB = MenuController.prototype.UpdateButtons;        
+        MenuController.prototype.UpdateButtons = function()
+        {
+            if(tournamentReloadedCalledOnce)
+                this.isEnabled[this.order.indexOf(MenuButtonType.Lobby)] = true;
+        
+            mc_UB.apply(this, arguments);
+        };
+
+		var mlc_SC = MultiLobbyConnection.prototype.SetupCategories;
+		MultiLobbyConnection.prototype.SetupCategories = function(/**boolean*/ loadTextures)
+		{
+			arguments[0] = false;
+			mlc_SC.apply(this, arguments);
+		}
+
+	},
+	retry: function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
+
 
 UHTPatch({
 	name: "PatchMissingChars",
@@ -913,6 +1833,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 7,300x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 7.300x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 7.300x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					},
 					{
@@ -936,6 +1857,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 6,600x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 6.600x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 6.600x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					},
 					{
@@ -959,6 +1881,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 5,900x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 5.900x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 5.900x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					}
 				  ]
@@ -1116,6 +2039,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 7,300x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 7.300x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 7.300x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					},
 					{
@@ -1138,6 +2062,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 6,600x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 6.600x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 6.600x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					},
 					{
@@ -1161,6 +2086,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 5,900x, with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
 						es:`El premio máx de este juego es de 5.900x, con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						pt:`O prémio máximo nesse jogo é de 5.900x com uma taxa de acerto de 1 em 1.000.000.000 e pode ser obtido no jogo base`
 					  }
 					}
 				  ]
@@ -1569,6 +2495,12 @@ UHTPatch({
 					  "vswayspizza_cv88"
 					],
 					"configs": [
+				      {
+						"rtp": "94.02",
+						"max_rnd_win": 7200,
+						"max_rnd_hr": 166666667,
+						"hideWinLimitPaytable" : true
+					  },
 					  {
 						"rtp": "95.03",
 						"max_rnd_win": 7200,
@@ -1615,6 +2547,7 @@ UHTPatch({
 						"customText" : {
 							en:`The max prize in this game is 5000x and can be achieved when choosing the EXPANDING WILDS free spins option`,
 							es:`El premio máximo de este juego es de 5.000x y puede alcanzarse al elegir la opción de tiradas gratis con WILDS EXPANSIVOS`,
+							pt:`O prémio máximo deste jogo é de 5,000X e pode ser ganho ao escolher o modo "EXPANDING WILD" de jogadas grátis`
 						  }
 					  },
 					  {
@@ -1622,6 +2555,7 @@ UHTPatch({
 						"customText" : {
 							en:`The max prize in this game is 5000x and can be achieved when choosing the EXPANDING WILDS free spins option`,
 							es:`El premio máximo de este juego es de 5.000x y puede alcanzarse al elegir la opción de tiradas gratis con WILDS EXPANSIVOS`,
+							pt:`O prémio máximo deste jogo é de 5,000X e pode ser ganho ao escolher o modo "EXPANDING WILD" de jogadas grátis`
 						  }
 					  },
 					  {
@@ -1629,10 +2563,527 @@ UHTPatch({
 						"customText" : {
 							en:`The max prize in this game is 5000x and can be achieved when choosing the EXPANDING WILDS free spins option`,
 							es:`El premio máximo de este juego es de 5.000x y puede alcanzarse al elegir la opción de tiradas gratis con WILDS EXPANSIVOS`,
+							pt:`O prémio máximo deste jogo é de 5,000X e pode ser ganho ao escolher o modo "EXPANDING WILD" de jogadas grátis`
 						  }
 					  }
 					]
-				}
+				},
+				{
+					"gameSymbols": [
+					  "vs576wwrage_cv96"
+					],
+					"configs": [
+					  {
+						"rtp": "94.00",
+						"max_rnd_win": 3300,
+						"max_rnd_hr": 500000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 3,300x with a hitrate of 1 in 500,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 3.300x con una tasa de aparición de 1 en 500.000.000 y se puede conseguir en el juego base',
+								},
+								{
+									en:'The max prize in this game is 2,800x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 2.800x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3300)
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,300x with a hitrate of 1 in 500,000,000 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 3.300x con una tasa de aparición de 1 en 500.000.000 y se puede conseguir en el juego base`,
+						}
+					  },
+					  {
+						"rtp": "95.00",
+						"max_rnd_win": 4300,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4300)
+						`,
+						"customText" : {
+							en:`The max prize in this game is 4,300x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 4.300x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						}
+					  },
+					  {
+						"rtp": "96.00",
+						"max_rnd_win": 3400,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3400)
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,400x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 3.400x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+						}
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs20fruitswx_cv99"
+					],
+					"configs": [
+					  {
+						"rtp": "94.51",
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 25,000X`,
+							es:`El premio máx de este juego es 25.000X`,
+							pt:`O prémio máximo deste jogo é de 25.000X`
+						}
+					  },
+					  {
+						"rtp": "95.52",
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 25,000X`,
+							es:`El premio máx de este juego es 25.000X`,
+							pt:`O prémio máximo deste jogo é de 25.000X`
+						}
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs5ultra_cv56"
+					],
+					"configs": [
+					  {
+						"rtp": "90.63",
+						"max_rnd_win": 1150,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "95.65",
+						"max_rnd_win": 1200,
+						"max_rnd_hr": 500000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.70",
+						"max_rnd_win": 1150,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  }
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs20trswild2_cv84"
+					],
+					"configs": [
+					  {
+						"rtp": "87.09",
+						"customText" : {
+							en:`The max prize in this game is 4,500x and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 4.500x y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é 4.500x e pode ser alcançado no jogo base`
+						}
+					  },
+					  {
+						"rtp": "94.24",
+						"customText" : {
+							en:`The max prize in this game is 4,500x and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 4.500x y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é 4.500x e pode ser alcançado no jogo base`
+						  }
+					  },
+					  {
+						"rtp": "95.12",
+						"customText" : {
+							en:`The max prize in this game is 4,500x and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 4.500x y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é 4.500x e pode ser alcançado no jogo base`
+						  }
+					  },
+					  {
+						"rtp": "96.51",
+						"customText" : {
+							en:`The max prize in this game is 4,500x and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 4.500x y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é 4.500x e pode ser alcançado no jogo base`
+						  }
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs5magicdoor_cv100"
+					],
+					"configs": [
+					  {
+						"rtp": "94.53",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 125000000,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 5,000x with a hitrate of 1 in 125,000,000 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 125.000.000 y se puede conseguir en el juego base`,
+						}
+					  },
+					  {
+						"rtp": "95.54",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 142857143,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 5,000x with a hitrate of 1 in 142,857,143 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 142.857.143 y se puede conseguir en el juego base`,
+						}
+					  },
+					  {
+						"rtp": "96.55",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 111111111,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 5,000x with a hitrate of 1 in 111,111,111 and can be achieved on the base game`,
+							es:`El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 111.111.111 y se puede conseguir en el juego base`,
+						}
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs10firestrike_cv37"
+					],
+					"configs": [
+					  {
+						"rtp": "94.50",
+						"max_rnd_win": 27000,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "95.50",
+						"max_rnd_win": 27000,
+						"max_rnd_hr": 166666667,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.50",
+						"max_rnd_win": 27000,
+						"max_rnd_hr": 166666667,
+						"hideWinLimitPaytable" : true
+					  }
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs1masterjoker_cv43"
+					],
+					"configs": [
+					  {
+						"rtp": "95.49",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 10000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.46",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 10000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.51",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 10000,
+						"hideWinLimitPaytable" : true
+					  }
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs20doghouse_cv29"
+					],
+					"configs": [
+					  {
+						"rtp": "95.51",
+						"max_rnd_win": 6870,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.51",
+						"max_rnd_win": 5115,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs20pistols_cv89"
+					],
+					"configs": [
+					  {
+						"rtp": "94.00",
+						"max_rnd_win": 20000,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 20,000x and can be achieved during the base game and the buy "DUEL" option`,
+							es:`El premio máx de este juego es de 20.000x y se puede conseguir en el juego base y en la función DUEL`,
+							pt:`O prémio máximo deste jogo é de 20.000X e pode ser ganho no jogo base e no modo "DUEL"`
+						}
+					  },
+					  {
+						"rtp": "95.00",
+						"max_rnd_win": 20000,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 20,000x and can be achieved during the base game and the buy "DUEL" option`,
+							es:`El premio máx de este juego es de 20.000x y se puede conseguir en el juego base y en la función DUEL`,
+							pt:`O prémio máximo deste jogo é de 20.000X e pode ser ganho no jogo base e no modo "DUEL"`
+						}
+					  },
+					  {
+						"rtp": "96.00",
+						"max_rnd_win": 20000,
+						"hideWinLimitPaytable" : true,
+						"customText" : {
+							en:`The max prize in this game is 20,000x and can be achieved during the base game and the buy "DUEL" option`,
+							es:`El premio máx de este juego es de 20.000x y se puede conseguir en el juego base y en la función DUEL`,
+							pt:`O prémio máximo deste jogo é de 20.000X e pode ser ganho no jogo base e no modo "DUEL"`
+						}
+					  }
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs15diamond_cv11"
+					],
+					"configs": [
+					  {
+						"rtp": "94.16",
+						"max_rnd_win": 1130,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.48",
+						"max_rnd_win": 1140,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.96",
+						"max_rnd_win": 1160,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs576treasures_cv54"
+					],
+					"configs": [
+					  {
+						"rtp": "94.76",
+						"max_rnd_win": 3620,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3620);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,620x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game`,
+							pt:`O prémio máximo neste jogo é de 3.620x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base`,
+						}
+					  },
+					  {
+						"rtp": "95.78",
+						"max_rnd_win": 3670,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3670);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,670x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game`,
+							pt:`O prémio máximo neste jogo é de 3.670x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base`,
+						}
+					  },
+					  {
+						"rtp": "96.77",
+						"max_rnd_win": 3590,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3590);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,590x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game`,
+							pt:`O prémio máximo neste jogo é de 3.590x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base`,
+						}
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs9aztecgemsdx_cv52"
+					],
+					"configs": [
+					  {
+						"rtp": "94.5",
+						"max_rnd_win": 3930,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3930);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "95.5",
+						"max_rnd_win": 4380,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4380);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.5",
+						"max_rnd_win": 4280,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4280);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs243caishien_cv32"
+					],
+					"configs": [
+					  {
+						"rtp": "95.5",
+						"max_rnd_win": 3650,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+						localizationRoot.transform.Find("IntroScreen/content/Pages/Page1/LabelsHolder/Landscape/Label_II").GetComponentsInChildren(UILabel,true)[0].text = '3.650';
+						localizationRoot.transform.Find("IntroScreen/content/Pages/Page1/LabelsHolder/Portrait/Label_II").GetComponentsInChildren(UILabel,true)[0].text = '3.650';
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 3650);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.5",
+						"max_rnd_win": 2880,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+						localizationRoot.transform.Find("IntroScreen/content/Pages/Page1/LabelsHolder/Landscape/Label_II").GetComponentsInChildren(UILabel,true)[0].text = '2.880';
+						localizationRoot.transform.Find("IntroScreen/content/Pages/Page1/LabelsHolder/Portrait/Label_II").GetComponentsInChildren(UILabel,true)[0].text = '2.880';
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 2880);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vs25jeitinho_cv96"
+					],
+					"configs": [
+					  {
+						"rtp": "95.50",
+						"max_rnd_win": 2600,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 2600);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.50",
+						"max_rnd_win": 2800,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 2800);
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				  },
+				  {
+					"gameSymbols": [
+					  "vswaysfreezet_cv101"
+					],
+					"configs": [
+					  {
+						"rtp": "94.50",
+						"max_rnd_win": 4888,
+						"max_rnd_hr": 111111111,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4888);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 4,888x, with a hitrate 1 in 111,111,111 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 4.888x con una tasa de aparición de 1 en 111.111.111 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 4.888x, com uma taxa de acerto de 1 em 111.111.111 e pode ser alcançado durante o jogo base`,
+						}
+					  },
+					  {
+						"rtp": "96.50",
+						"max_rnd_win": 4888,
+						"max_rnd_hr": 200000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4888);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 4,888x, with a hitrate 1 in 200,000,000 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 4.888x con una tasa de aparición de 1 en 200.000.000 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 4.888x, com uma taxa de acerto de 1 em 200.000.000 e pode ser alcançado durante o jogo base`,
+						}
+					  }
+					]
+				  },
 			];
 			var targetConfig = undefined;
 			var oJSXC_HIR = JurisdictionShowXChance.prototype.HandleInitResponse;
@@ -1641,8 +3092,19 @@ UHTPatch({
 				XT.SetBool(Vars.Jurisdiction_Show_X_Chance, true);
 				var gameInfo = XT.GetObject("GameInfo");
 				if (gameInfo == null)
+				{
 					if (dict["gameInfo"])
-						gameInfo = JSON5.parse(dict["gameInfo"]);
+					{
+						try
+						{
+							gameInfo = JSON5.parse(dict["gameInfo"]);
+						}
+						catch(err)
+						{
+
+						}
+					}
+				}
 
 				var targetGame = configOverrides.find((element) => element.gameSymbols.indexOf(window["UHT_GAME_CONFIG"]["GAME_SYMBOL"]) != -1);
 				if (targetGame != undefined)
@@ -1686,7 +3148,7 @@ UHTPatch({
 							for (var i = 0; i < jurisdictionCustomizations.length; i++)
 							{
 								if (jurisdictionCustomizations[i].jurisdiction == "GR")
-									jurisdictionCustomizations[i].jurisdiction = "PE"
+									jurisdictionCustomizations[i].jurisdiction = UHT_GAME_CONFIG_SRC["jurisdiction"];
 							}
 						}
 
@@ -1724,6 +3186,8 @@ UHTPatch({
 										if (xtvar2cat != null)
 										{
 											xtvar2cat.greater = xtvar2cat.lessOrEquals;
+											if (xtvar2cat.lessOrEquals != null)
+												xtvar2cat.lessOrEquals.Start();
 										}
 									}
 								}
@@ -2042,23 +3506,23 @@ UHTPatch({
 			var oCCVACB = CoinManager.ComputeCoinValuesAndCurrentBet;
 			CoinManager.ComputeCoinValuesAndCurrentBet = function(betsFromServer, lastBet, defaultBet)
 			{
-					var newBets = betsFromServer;
-					var minBet = betsFromServer[0];
-					if (minBet * 100 < minSpinBetCents)
-					{
-						newBets = [];
-						for (var i=0; i<betsFromServer.length; i++)
-							if (betsFromServer[i] * 100 >= minSpinBetCents)
-								newBets.push(betsFromServer[i]);
-						var proposedMinBet = Math.ceil((minSpinBetCents)) / 100;
-						if (IsRequired("NODEC"))
-							proposedMinBet = Math.ceil(proposedMinBet);
-						if (newBets[0] / proposedMinBet > 1.1)
-							newBets.splice(0, 0, proposedMinBet);
+				var newBets = betsFromServer;
+				var minBet = betsFromServer[0];
+				if (minBet * 100 < minSpinBetCents)
+				{
+					newBets = [];
+					for (var i=0; i<betsFromServer.length; i++)
+						if (betsFromServer[i] * 100 >= minSpinBetCents)
+							newBets.push(betsFromServer[i]);
+					var proposedMinBet = Math.ceil((minSpinBetCents)) / 100;
+					if (IsRequired("NODEC"))
+						proposedMinBet = Math.ceil(proposedMinBet);
+					if (newBets[0] / proposedMinBet > 1.1)
+						newBets.splice(0, 0, proposedMinBet);
 
-						arguments[0] = newBets;
-						oCCVACB.apply(this, arguments);
-					}
+					arguments[0] = newBets;
+				}
+				oCCVACB.apply(this, arguments);
 			};
 		}
 		else if (UHT_GAME_CONFIG.GAME_SYMBOL.indexOf("vs") == 0)
@@ -2301,7 +3765,18 @@ UHTPatch({
 					if (XT.GetObject(Vars.FeaturePurchase) == null)
 						featureBought = -2;
 					else
+					{
 						featureBought = XT.GetObject(Vars.FeaturePurchase).purchaseIndex;
+						if (window["FeaturePurchaseV2"])
+						{
+							var fpv2 = globalRuntime.sceneRoots[1].GetComponentsInChildren(FeaturePurchaseV2, true);
+							for (var i = 0; i < fpv2.length; i++)
+							{
+								if (fpv2[i].fsPurchased)
+									return true;
+							}
+						}
+					}
 					break;
 				case "fsp":
 					featureBought = XT.GetObject(Vars.FreeSpinsPurchaseConfig).optionIndex;
@@ -3075,16 +4550,25 @@ UHTPatch({
 	},
 	apply: function()
 	{
-		if (IsRequired("NOCS"))
+		var noSwitch = IsRequired("NOCS");
+
+		var oVSCXTL_SHC = VideoSlotsConnectionXTLayer.prototype.SetHasCoins;
+		VideoSlotsConnectionXTLayer.prototype.SetHasCoins = function()
 		{
-			CoinsSwitcher.prototype.OnPress = function() {};
-			var oVSCXTL_SHC = VideoSlotsConnectionXTLayer.prototype.SetHasCoins;
-			VideoSlotsConnectionXTLayer.prototype.SetHasCoins = function()
+			XT.SetBool(InterfaceVars.ShowCoinsAndCashHint, false);
+			
+			if (noSwitch)
 			{
-				XT.SetBool(InterfaceVars.ShowCoinsAndCashHint, false);
 				XT.SetBool(Vars.HasCoins, true);
 				oVSCXTL_SHC.apply(this, [true]);
 			}
+			else
+				oVSCXTL_SHC.apply(this, arguments);
+		}
+		
+		if (noSwitch)
+		{
+			CoinsSwitcher.prototype.OnPress = function() {};
 			var oVSCXTL_US = VideoSlotsConnectionXTLayer.prototype.UpdateSettings;
 			VideoSlotsConnectionXTLayer.prototype.UpdateSettings = function()
 			{
@@ -3438,6 +4922,8 @@ UHTPatch({
 	}
 });
 
+var XStype = false;
+
 UHTPatch({
 	name: "PatchXS_KB",
 	ready: function()
@@ -3446,28 +4932,27 @@ UHTPatch({
 	},
 	apply: function()
 	{
-		if (IsRequired("XS_KB") && !Globals.isMobile && !Globals.isMini)
+		XStype = IsRequired("XS");
+		if (XStype != false)
+			XStype = XStype[0];
+		if (IsRequired("XS_KB"))
+			XStype = "KB";
+		
+		if (XStype && !Globals.isMini && (window["MultiLobbyConnection"] != undefined))
 		{
+			var scriptsToLoad = 1;
+			if(XStype == "SBCL")
+				scriptsToLoad = 2;
+			
 			var introSkipped = false;
-			var scriptLoaded = false;
-			var retryCounter = 0;
-			var successCallback = function()
-			{
-				scriptLoaded = true;
-				if (introSkipped)
-					injectXS_KB();
-			};
-
-			var errorCallback = function()
-			{
-				document.getElementsByTagName("HEAD")[0].removeChild(script);
-				if (retryCounter < 5)
-				{
-					retryCounter++;
-					setTimeout(function(){script = loadScript(path, successCallback, errorCallback);}, 2000);
-				}
-			};
-
+			
+			var scriptLoaded = [];
+			var retryCounter = [];
+			var successCallbacks = [];
+			var errorCallbacks = [];
+			var paths = [];
+			var scripts = [];
+			
 			var loadScript = function(url, loadCallback, errorCallback)
 			{
 				var script = document.createElement("script");
@@ -3487,16 +4972,65 @@ UHTPatch({
 				return script;
 			}
 
-			var path = "";
 			var split = UHT_CONFIG.GAME_URL.split("/");
 			split.splice(split.indexOf(UHT_CONFIG.SYMBOL) - 2);
-			path = split.join("/") + "/";
-			path += "XS_KB.js";
-			var script = loadScript(path, successCallback, errorCallback);
+			var rootPath = split.join("/") + "/";
+			paths[0] = rootPath+"XS_" + XStype + ".js"; //"_"+lang;	
+			if(XStype == "SBCL")
+			{
+				var lang = window["UHT_GAME_CONFIG"]["LANGUAGE"];
+				paths[1] = rootPath+"XS_"+XStype+"_"+lang+".js";
+			}
+
+			var allScriptsLoaded = function()
+			{
+				var allLoaded = true;
+				for(var i=0; i < scriptsToLoad; i++)
+				{
+					if(!scriptLoaded[i])
+					{
+						allLoaded = false;
+						break;
+					}
+				}
+				return allLoaded;
+			}
+
+			var loadScriptWithRetries = function(index)
+			{
+				scriptLoaded[index] = false;
+				retryCounter[index] = 0;
+				
+				successCallbacks[index] = function()
+				{
+					scriptLoaded[index] = true;
+					if (introSkipped && allScriptsLoaded())
+						injectXS_KB();
+				};
+
+				errorCallbacks[index] = function()
+				{
+					document.getElementsByTagName("HEAD")[0].removeChild(scripts[index]);
+					if (retryCounter[index] < 5)
+					{
+						retryCounter[index]++;
+						setTimeout(function(){scripts[index] = loadScript(paths[index], successCallbacks[index], errorCallbacks[index]);}, 2000);
+					}
+				};
+
+				scripts[index] = loadScript(paths[index], successCallbacks[index], errorCallbacks[index]);	
+			}
+			
+			for(var i=0; i < scriptsToLoad; i++)
+			{
+				loadScriptWithRetries(i);
+			}
+			
 			var onIntro = function()
 			{
 				introSkipped = true;
-				if (scriptLoaded)
+				
+				if (allScriptsLoaded())
 				{
 					injectXS_KB();
 				}
@@ -3566,126 +5100,6 @@ UHTPatch({
 	}
 });
 
-UHTPatch({
-	name: "PatchPromotionsAnnouncerForTournamentRank",
-	ready:function()
-	{
-		return (window["PromotionsAnnouncer"] != undefined);
-	},
-	apply:function()
-	{
-		PromotionsAnnouncer.prototype.NextAnnouncement = function()
-		{
-			var tournamentsRanks = globalRuntime.sceneRoots[1].GetComponentsInChildren(TournamentsRank, true);
-			if (this.announcements.length == 0)
-			{
-				this.rules.SetVisible(false);
-
-				if (this.hasExtraLayout)
-				{
-					this.extraLayout.rules.SetVisible(false);
-					this.secondaryExtraRules.SetVisible(false);
-				}
-
-				this.catHide.Start();
-				this.isVisible = false;
-				this.UnblockSpin();
-				XT.TriggerEvent(TournamentVars.Evt_Internal_PromotionsAnnouncer_AllAnnouncementsShown);
-				XT.SetBool(TournamentVars.DisplayingPromotionsInOtherGames, false);
-				for (var i = 0; i < tournamentsRanks.length; i++)
-					tournamentsRanks[i].startRotation.Start();
-				return;
-			}
-
-			this.uid = this.announcements[0].uid;
-			XT.SetString(TournamentVars.RankPromotionID, this.uid);
-			XT.SetBool(TournamentVars.DisplayingPromotionsInOtherGames, true);
-			for (var i = 0; i < tournamentsRanks.length; i++)
-			{
-				tournamentsRanks[i].stopRotation.Start();
-				tournamentsRanks[i].OnTournamentsUpdated();
-			}
-
-			this.secondaryUID = "";
-
-			var currentPromoHolder = TournamentConnection.instance.FindPromoHolder(this.uid);
-			this.showMerged = false;
-			if (currentPromoHolder.type == TournamentProtocol.PromoType.Tournament && currentPromoHolder.promotion.displayStyle == TournamentProtocol.DisplayStyle.DropsAndWins && this.announcements.length > 1)
-			{
-				var nextPromoHolder = TournamentConnection.instance.FindPromoHolder(this.announcements[1].uid);
-				if (nextPromoHolder.type == TournamentProtocol.PromoType.Race && nextPromoHolder.promotion.displayStyle == TournamentProtocol.DisplayStyle.DropsAndWins)
-				{
-					this.showMerged = true;
-					this.secondaryUID = this.announcements[1].uid;
-				}
-			}
-
-			if (Globals.isMini)
-				this.showMerged = false;
-
-			if (this.tournamentSimpleOptIn != null)
-			{
-				this.tournamentSimpleOptIn.isMergedDDW = this.showMerged;
-				this.tournamentSimpleOptIn.OnAnnounce();
-			}
-
-			if (!this.showMerged)
-			{
-				this.displayer.UpdateTournament(this.uid);
-				this.label.text = this.announcements[0].description;
-				this.rules.SetVisible(false);
-			}
-			else
-			{
-				for (var i = 0; i < this.secondaryDisplayers.length; i++)
-				{
-					this.secondaryDisplayers[i].UpdateTournament(this.uid);
-					this.secondaryLabels[i].text = this.announcements[i].description;
-				}
-				this.secondaryRules.SetVisible(false);
-			}
-
-			if (this.hasExtraLayout)
-			{
-				this.extraLayout.label.text = this.label.text;
-				this.extraLayout.displayer.UpdateTournament(this.uid);
-				this.extraLayout.rules.SetVisible(false);
-				if (this.showMerged)
-				{
-					for (var i = 0; i < this.secondaryExtraLabels.length; i++)
-					{
-						this.secondaryExtraLabels[i].text = this.announcements[i].description;
-					}
-					this.secondaryExtraDisplayer.UpdateTournament(this.uid);
-					this.secondaryExtraRules.SetVisible(false);
-				}
-			}
-
-			if (this.styleSwitcher != null)
-				this.styleSwitcher.SwitchByDisplayStyle(this.uid);
-
-			PromotionsHelper.PromotionCheckTournamentOptOut(this.uid);
-
-			if (!this.showMerged)
-			{
-				this.catShow.Start();
-				this.isVisible = true;
-				this.announcements.splice(0, 1);
-			}
-			else
-			{
-				this.secondaryCatShow.Start();
-				this.isVisible = true;
-				this.announcements.splice(0, 1);
-				this.announcements.splice(0, 1);
-			}
-		};
-	},
-	retry:function()
-	{
-		return (window["Renderer"] == undefined);
-	}
-});
 
 UHTPatch({
 	name: "PatchBoss",
@@ -3749,6 +5163,101 @@ UHTPatch({
 });
 
 UHTPatch({
+	name: "PatchNoMessagesAvailable",
+	ready:function()
+	{
+		return (window["UHT_GAME_CONFIG"] != undefined && window["globalRuntime"] != undefined && globalRuntime.sceneRoots.length > 1);
+	},
+	apply:function()
+	{
+		this.OnXTGameInit = function()
+		{
+			var translationDict = 
+			{
+				"en": "No messages available",
+				"ar": "لا توجد رسائل متاحة",
+				"bg": "Няма налични съобщения",
+				"cs": "Žádné zprávy nejsou k dispozici",
+				"da": "Ingen beskeder tilgængelige",
+				"de": "Keine Nachrichten verfügbar",
+				"el": "Δεν υπάρχουν διαθέσιμα μηνύματα",
+				"es": "No hay mensajes disponibles",
+				"et": "Sõnumid puuduvad",
+				"fa": "هیچ پیامی موجود نیست",
+				"fi": "Ei viestejä saatavilla",
+				"fr": "Aucun message disponible",
+				"hr": "Nema dostupnih poruka",
+				"hu": "Nincsenek elérhető üzenetek",
+				"hy": "Հասանելի հաղորդագրություններ չկան",
+				"id": "Tidak ada pesan yang tersedia",
+				"it": "Nessun messaggio disponibile",
+				"ja": "メッセージはありません",
+				"ka": "არ არის შეტყობინებები",
+				"ko": "사용 가능한 메시지가 없습니다.",
+				"lt": "Pranešimų nėra",
+				"lv": "Nav pieejami ziņojumi",
+				"ms": "Tiada mesej tersedia",
+				"nl": "Geen berichten beschikbaar",
+				"no": "Ingen meldinger tilgjengelig",
+				"pl": "Brak dostępnych wiadomości",
+				"pt": "Não há mensagens disponíveis",
+				"ro": "Niciun mesaj",
+				"ru": "Сообщения недоступны",
+				"sk": "Žiadne správy nie sú k dispozícii",
+				"sr": "Nema dostupnih poruka",
+				"sv": "Inga meddelanden tillgängliga",
+				"th": "ไม่มีข้อความ",
+				"tr": "Mesaj mevcut değil",
+				"uk": "Немає доступних повідомлень",
+				"vi": "Không có tin nhắn nào",
+				"zh": "无留言",
+				"zt": "無訊息可用"
+			}
+
+			var localizationRoot = globalRuntime.sceneRoots[1].GetComponentInChildren(LocalizationRoot);
+			if (localizationRoot == null)
+				return;
+
+			var paths;
+			if(Globals.isMobile)
+			{
+				paths = [
+					"GUI_mobile/Tournament/Ear/Land/ScreenAnchor/Holder_Rank/Rank/Ear/Message",
+					"GUI_mobile/Tournament/Ear/Land/ScreenAnchor/Holder_Rank/Rank/Ear/LocalizedLabels",
+					"GUI_mobile/Tournament/Ear/Port/ScreenAnchor/Holder_Rank/RankArranged/Rank/Ear/Message",
+					"GUI_mobile/Tournament/Ear/Port/ScreenAnchor/Holder_Rank/RankArranged/Rank/Ear/LocalizedLabels"
+				];
+			}
+			else
+			{
+				paths = [
+					"GUI/Tournament/ScreenAnchor/Holder_Rank/Rank/Ear/Message",
+					"GUI/Tournament/ScreenAnchor/Holder_Rank/Rank/Ear/LocalizedLabels"
+				];
+			}
+
+			for (var i = 0; i < paths.length; i++)
+			{
+				var t = localizationRoot.transform.Find(paths[i]);
+				if (t != null)
+				{
+					var label = t.GetComponentsInChildren(UILabel, true)[0];
+					if (label != null)
+					{
+						label.text = translationDict[UHT_CONFIG.LANGUAGE];
+					}
+				}
+			}
+		}
+		XT.RegisterCallbackEvent(Vars.Evt_Internal_GameInit, this.OnXTGameInit, this);
+	},
+	retry:function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	}
+});
+
+UHTPatch({
 	name: "PatchFreeRoundsLeftTopBar",
 	ready:function()
 	{
@@ -3766,7 +5275,7 @@ UHTPatch({
 				"cs": "BONUSOVÁ OTOČENÍ ZDARMA",
 				"da": "GRATIS BONUSSPINS",
 				"de": "GRATIS-BONUS-SPINS",
-				"el": "ΔΩΡΕΆΝ ΠΕΡΙΣΤΡΟΦΈΣ ΜΠΌΝΟΥΣ",
+				"el": "ΔΩΡΕΑΝ ΠΕΡΙΣΤΡΟΦΕΣ ΜΠΟΝΟΥΣ",
 				"es": "TIRADAS BONUS GRATIS",
 				"et": "TASUTA BOONUSKEERUTUSED",
 				"fa": "چرخش پاداش رایگان",
@@ -3823,6 +5332,49 @@ UHTPatch({
 				}
 			}
 
+			var prizesRemainingPaths = [
+				"GUI/Tournament/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PContent/PD_BM/Title/Title/PrizesLeftLabel",
+				"GUI/Tournament/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PContent/PD_AGBM/Title/Title/PrizesLeftLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Portrait/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_BM/Title/Title/PrizesRemainingLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Portrait/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_AGBM/Title/Title/PrizesRemainingLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_BM/Title/Title/PrizesRemainingLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_AGBM/Title/Title/PrizesRemainingLabel"
+			];
+
+			var totalPrizesPaths = [
+				"GUI/Tournament/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PContent/PD_BM/Title/Title/NoOfPrizesLabel",
+				"GUI/Tournament/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PContent/PD_AGBM/Title/Title/NoOfPrizesLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_BM/Title/Title/NoOfPrizesLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Landscape/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_AGBM/Title/Title/NoOfPrizesLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Portrait/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_BM/Title/Title/NoOfPrizesLabel",
+				"GUI_mobile/Tournament/TournamentArrangeable/Tournament/Portrait/Content/Holder_Tournaments/Clipped/Details/Prizes/PrizesContent/PD_AGBM/Title/Title/NoOfPrizesLabel"
+			];
+
+			for (var i = 0; i < prizesRemainingPaths.length; i++)
+			{
+				var t = localizationRoot.transform.Find(prizesRemainingPaths[i]);
+				if (t != null)
+				{
+					var label = t.GetComponentsInChildren(UILabel, true)[0];
+					if (label != null)
+					{
+						label.anchorX = 0.5;
+					}
+				}
+			}
+
+			for (var i = 0; i < totalPrizesPaths.length; i++)
+			{
+				var t = localizationRoot.transform.Find(totalPrizesPaths[i]);
+				if (t != null)
+				{
+					var label = t.GetComponentsInChildren(UILabel, true)[0];
+					if (label != null)
+					{
+						label.anchorX = 1;
+					}
+				}
+			}
 		}
 		XT.RegisterCallbackEvent(Vars.Evt_Internal_GameInit, this.OnXTGameInit, this);
 	},
@@ -4294,6 +5846,87 @@ UHTPatch({
 });
 
 UHTPatch({
+	name: "PatchMinimizeEar",
+	ready:function()
+	{
+		return (window["NotificationsManager"] != undefined && window["V3Animator"] != undefined);
+	},
+	apply:function()
+	{
+		if (Globals.isMobile || Globals.isMini) //on Mobile the ear is minimized with one V3Animator, Open_Minimized, not in 2 stages like on desktop
+			return;
+
+		var oNM_CS = NotificationsManager.prototype.ChangeState;
+		var skipNextAnimatorEnd = false;
+		var parentName = null;
+		NotificationsManager.prototype.ChangeState = function(state)
+		{
+			if (this.currentEarState == NotificationsManager.EarState.Open && state == NotificationsManager.EarState.Minimized){
+				if(parentName == "Default_Minimized")
+					skipNextAnimatorEnd = true;
+			}
+
+			oNM_CS.apply(this, arguments);
+		}
+
+		var oV3A_IU = V3Animator.prototype.InternalUpdate;
+		V3Animator.prototype.InternalUpdate = function()
+		{
+			var restoreOriginalCAT = null;
+			if (this.isPlaying && this.currentTime >= this.animationTime &&
+					   this.animationMode == V3AnimationMode.Default &&
+						this.callWhenFinished != null && this.canStartCallback)
+			{
+				parentName = this.gameObject.transform.parent.gameObject.name;
+				if(skipNextAnimatorEnd && parentName == "Open_Default" && this.callWhenFinished.cat != null)
+				{
+					if(this.callWhenFinished.cat.events)
+					{
+						var actions = this.callWhenFinished.cat.events[0].actions;
+
+						var Minimized = null;
+						for(i in actions[0].ToDisableList)
+						{
+							if(actions[0].ToDisableList[i].name == "Minimized")
+							{
+								Minimized = actions[0].ToDisableList[i];
+								actions[0].ToDisableList.splice(i, 1);
+								break;
+							}
+						}
+
+						var oToEnableList = actions[0].ToEnableList;
+						actions[0].ToEnableList = [];
+						
+						var oAction1 = actions[1];
+						actions.pop();
+
+						restoreOriginalCAT = function()
+						{
+							actions[0].ToDisableList.unshift(Minimized);
+							actions[0].ToEnableList = oToEnableList;
+							actions.push(oAction1);
+						};
+					}
+				}
+			}
+
+			oV3A_IU.apply(this, arguments);
+
+			if(restoreOriginalCAT != null)
+			{
+				restoreOriginalCAT();
+				skipNextAnimatorEnd = false;
+			}
+		}
+	},
+	retry:function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
+
+UHTPatch({
 	name: "PatchPromotionsWarningWithTitle",
 	ready:function()
 	{
@@ -4464,7 +6097,14 @@ UHTPatch({
 		var oBFIL_RTIB = BuyFeature_InterfaceLink.prototype.RevertToInitialBet;
 		BuyFeature_InterfaceLink.prototype.RevertToInitialBet = function()
 		{
-			XT.TriggerEvent(Vars.Evt_Internal_BetChanged);
+			XT.TriggerEvent(Vars.Evt_Internal_BetChanged); // !!! not in trunk
+
+			if (Vars.EnableSmallBets != undefined)
+				XT.SetBool(Vars.EnableSmallBets, false);
+
+			if (this.initialBet == CoinManager.GetNextBet())
+				return;
+	
 			oBFIL_RTIB.apply(this, arguments);
 		};
 
@@ -5072,84 +6712,6 @@ UHTPatch({
 					IDNEX[i].localScale(0.225, 0.225, 1);
 				}
 			}
-
-			if (this.catShowEndDate != null)
-			{
-				var oCSED_S = this.catShowEndDate.Start;//IRS
-				this.catShowEndDate.Start = function()
-				{
-					oCSED_S.apply(this, arguments);
-
-					for (var i = 0; i < IDNSM.length; i++)
-					{
-						if (IDNSM[i] != null)
-						{
-							IDNSM[i].localPosition(0, 50, 0);
-						}
-					}
-
-					for (var i = 0; i < IDNEX.length; i++)
-					{
-						if (IDNEX[i] != null)
-						{
-							IDNEX[i].localPosition(0, 50, 0);
-							IDNEX[i].localScale(0.225, 0.225, 1);
-						}
-					}
-				}
-			}
-
-			if (this.catShowRank != null)
-			{
-				var oCSR_S = this.catShowRank.Start;//IRS
-				this.catShowRank.Start = function()
-				{
-					oCSR_S.apply(this, arguments);
-
-					for (var i = 0; i < IDNSM.length; i++)
-					{
-						if (IDNSM[i] != null)
-						{
-							IDNSM[i].localPosition(0, 35, 0);
-						}
-					}
-
-					for (var i = 0; i < IDNEX.length; i++)
-					{
-						if (IDNEX[i] != null)
-						{
-							IDNEX[i].localPosition(0, 35, 0);
-							IDNEX[i].localScale(0.225, 0.225, 1);
-						}
-					}
-				}
-			}
-
-			if (this.catHideRank != null)
-			{
-				var oCHR_S = this.catHideRank.Start;//IRS
-				this.catHideRank.Start = function()
-				{
-					oCHR_S.apply(this, arguments);
-
-					for (var i = 0; i < IDNSM.length; i++)
-					{
-						if (IDNSM[i] != null)
-						{
-							IDNSM[i].localPosition(0, 0, 0);
-						}
-					}
-
-					for (var i = 0; i < IDNEX.length; i++)
-					{
-						if (IDNEX[i] != null)
-						{
-							IDNEX[i].localPosition(0, 0, 0);
-							IDNEX[i].localScale(0.275, 0.275, 1);
-						}
-					}
-				}
-			}
 		}
 
 		var oTR_XTRC = TournamentsRank.prototype.XTRegisterCallbacks;
@@ -5359,13 +6921,18 @@ UHTPatch({
 });
 
 UHTPatch({
-	name: "PatchHotGames",
+	name: "PatchHotGamesAndV3",
 	ready:function()
 	{
 		return window["MultiLobbyConnection"] != undefined;
 	},
 	apply:function()
 	{
+		if (UHT_GAME_CONFIG_SRC.lobbyVersion == 'V3')
+		{
+			UHT_GAME_CONFIG_SRC.multiProductMiniLobby = true;
+		}
+		
 		MultiLobbyConnection.IsHotSlot = function(/**string*/ uid)
 		{
 			return false;
@@ -5661,6 +7228,25 @@ UHTPatch({
 			{
 				var mustHide = true;
 				var stylenames = "idn2_idn2101,idn2_idntotob2b24,idn2_idn2107,idn2_idntotob2b25,idn_idn2109,idn_oxplay3,idn2_idn2110,idn2_idntotob2b26,idn2_idn2111,idn2_idntotob2b27,idnplay_adline1,idnplay__adline2,idn_streaming,idnsport_stream,jokerbolastreaming,kerabolastreaming,nagabolastreaming,idn2_idntotob2b16,t1idn_t1ap6,t1idn_idnsport_3_idr,idn2_idn2ap7,idn2_idntotob2b_6,bh_bh001,bh_bh0010,bh_bh0011,bh_bh0012,bh_bh0013,bh_bh0014,bh_bh0015,bh_bh0016,bh_bh0017,bh_bh0018,bh_bh0019,bh_bh002,bh_bh0020,bh_bh0021,bh_bh0022,bh_bh0023,bh_bh0024,bh_bh0025,bh_bh0026,bh_bh0027,bh_bh0028,bh_bh0029,bh_bh003,bh_bh0030,bh_bh004,bh_bh005,bh_bh006,bh_bh007,bh_bh008,bh_bh009,bh_idnup2,idn2_idnin2,idn2_idntotob2b_9,idn2_idnin3,idn2_idntotob2b_8,idnubo_xaa_idr,idnubo_xab_idr,idnubo_xac_idr,idnubo_xad_idr,idnubo_xae_idr,idnubo_xaf_idr,idnubo_xag_idr,idnubo_xai_idr,idnubo_xaj_idr,idnubo_xak_idr,idnubo_xal_idr,idnubo_xam_idr,idnubo_xan_idr,idnubo_xao_idr,idnubo_xap_idr,idnubo_xaq_idr,idnubo_xar_idr,idnubo_xas_idr,idnubo_xau_idr,idnubo_xav_idr,idnubo_xax_idr,idnubo_xay_idr,idnubo_xba_idr,idnubo_xbb_idr,idnubo_xbc_idr,idnubo_xbd_idr,idnubo_xbf_idr,idnubo_xbh_idr,idnubo_xbi_idr,idnubo_xbj_idr,idnubo_xbk_idr,idnubo_xbl_idr,idnubo_xbm_idr,idnubo_xbo_idr,idnubo_xbp_idr,idnubo_xbq_idr,idnubo_xbr_idr,idnubo_xbs_idr,idnubo_xbt_idr,idnubo_xbu_idr,idnubo_xbv_idr,idnubo_xbw_idr,idnubo_xbx_idr,idnubo_xby_idr,idnubo_xbz_idr,idnubo_xca_idr,idnubo_xcb_idr,idnubo_xcc_idr,idnubo_xcd_idr,idnubo_xce_idr,idn_idn_idnsport_2_idr,t1idn_dewabet_cny,t1idn_t1idndewabetcnysw,t1idn_dewabet_idr,t1idn_t1idndewabetidrsw,t1idn_dewabet_myr,t1idn_t1idndewabetmyrsw,t1idn_dewabet_thb,t1idn_t1idndewabetthbsw,t1idn_dewabet_vnd,t1idn_t1idndewabetvndsw,t1idn_dewagg_idr,t1idn_t1idndewaggidrsw,t1idn_idngoal_idr,t1idn_t1idnidnsport1idrsw,t1idn_idnsport2_idr,t1idn_t1idnidnsport2idrsw,t1idn_idnsport2_ld_idr,t1idn_t1idnidnsport2ldswidr,t1idn_idnsport_cny,t1idn_idnsport_idr,t1idn_idnsport_ld_idr,t1idn_t1idnidnsportldswidr,t1idn_idnsport_myr,t1idn_idnsport_thb,t1idn_idnsport_vnd,t1idn_kdslots_idr,t1idn_t1idnkdslotsidrsw,t1idn_kdslots_vnd,t1idn_t1idnkdslotsvndsw,t1idn_lemacau_idr,t1idn_t1idnlemacauidrsw,t1idn_unovegas_idr,t1idn_t1idnunovegasidrsw,idn_303vip_idr,idn_7meter_idr,idn_7winbet,idn_airasiabet_idr,idn_ajaibslots,idn_alexavegas_idr,idn_alphaslots88,idn_amergg,idn_anekaslots,idn_areaslots,idn_arunabet,idn_asialive88,idn_asianwin88,idn_asiaroyal88,idn_bcoin,idn_bestoto88,idn_betcrypto88,idn_betcrypto88_usd,idn_bethoki77,idn_betslots88,idn_bettogel,idn_bigdewa,idn_bola88_idr,idn_bolagg,idn_bolatangkas_idr,idn_brobet77,idn_bslots88,idn_capital303,idn_caspo777,idn_cemeslot,idn_cocobet,idn_coin303,idn_dash86,idn_dewabetcnysw,idn_dewabetidrsw,idn_dewabetmyrsw,idn_dewabetthbsw,idn_dewabetvndsw,idn_dewacash_idr,idn_dewacasino,idn_dewagg,idn_dewaggsw,idn_dewascore_idr,idn_dewataslot_idr,idn_dewaterbang,idn_dewavegas_sw,idn_dnabet,idn_dragonslot,idn_enterslots,idn_eraplay88,idn_exabet88,idn_galaxybet88,idn_gaskuenbet,idn_gladiator88,idn_gobetasia,idn_golbos_idr,idn_holyslot88,idn_ibetoto,idn_ibwin,idn_idn001,idn_idn002,idn_idn003,idn_idn004,idn_idn005,idn_idn006,idn_idn007,idn_idn008,idn_idn009,idn_idn010,idn_idn011,idn_idn012,idn_idn013,idn_idn014,idn_idn015,idn_idn016,idn_idn017,idn_idn018,idn_idn019,idn_idn020,idn_idn021,idn_idn022,idn_idn023,idn_idn024,idn_idn025,idn_idn026,idn_idn027,idn_idn028,idn_idn029,idn_idn030,idn_idn031,idn_idn032,idn_idn033,idn_idn034,idn_idn035,idn_idn036,idn_idn037,idn_idn038,idn_idn039,idn_idn040,idn_idn041,idn_idn042,idn_idn043,idn_idn044,idn_idn045,idn_idn046,idn_idn047,idn_idn048,idn_idn049,idn_idn050,idn_idn051,idn_idn052,idn_idn053,idn_idn054,idn_idn055,idn_idn056,idn_idn057,idn_idn058,idn_idn059,idn_idn060,idn_idn061,idn_idn062,idn_idn063,idn_idn064,idn_idn065,idn_idn066,idn_idn067,idn_idn068,idn_idn069,idn_idn070,idn_idn071,idn_idn072,idn_idn073,idn_idn074,idn_idn075,idn_idn076,idn_idn077,idn_idn078,idn_idn079,idn_idn080,idn_idn081,idn_idn082,idn_idn083,idn_idn084,idn_idn085,idn_idn086,idn_idn087,idn_idn088,idn_idn089,idn_idn090,idn_idn091,idn_idn092,idn_idn093,idn_idn094,idn_idn095,idn_idn096,idn_idn097,idn_idn098,idn_idn099,idn_idn100,idn_idn101,idn_idn102,idn_idn103,idn_idn104,idn_idn105,idn_idn106,idn_idn107,idn_idn108,idn_idn109,idn_idn110,idn_idn111,idn_idn112,idn_idn113,idn_idn114,idn_idn115,idn_idn116,idn_idn117,idn_idn118,idn_idn119,idn_idn120,idn_idn121,idn_idn122,idn_idn123,idn_idn124,idn_idn125,idn_idn126,idn_idn127,idn_idn128,idn_idn129,idn_idn130,idn_idn131,idn_idn132,idn_idn133,idn_idn134,idn_idn135,idn_idn136,idn_idn137,idn_idn138,idn_idn139,idn_idn140,idn_idn141,idn_idn142,idn_idn143,idn_idn144,idn_idn145,idn_idn146,idn_idn147,idn_idn148,idn_idn149,idn_idn150,idn_idn151,idn_idn152,idn_idn153,idn_idn154,idn_idn155,idn_idn156,idn_idn157,idn_idn158,idn_idn159,idn_idn160,idn_idn161,idn_idn162,idn_idn163,idn_idn164,idn_idn165,idn_idn166,idn_idn167,idn_idn168,idn_idn169,idn_idn170,idn_idn171,idn_idn172,idn_idn173,idn_idn174,idn_idn175,idn_idn176,idn_idn177,idn_idn178,idn_idn179,idn_idn180,idn_idn181,idn_idn182,idn_idn183,idn_idn184,idn_idn185,idn_idn186,idn_idn187,idn_idn188,idn_idn189,idn_idn190,idn_idn191,idn_idn192,idn_idn193,idn_idn194,idn_idn195,idn_idn196,idn_idn197,idn_idn198,idn_idn199,idn_idn200,idn_idncash,idn_idngg,idn_idngoal_idr,idn_idnseamless_idnsport_ld,idn_idntogel,idn_idnup_b2_krw,idn_igamble247,idn_ihokibet,idn_ilucky88,idn_indogame,idn_indogg,idn_indopride88,idn_indoslots,idn_indosport88,idn_indoxl,idn_jagoslots,idn_javabet,idn_javaslots,idn_jawaratoto88,idn_kdcambodia,idn_kdslotsidrsw,idn_kdslotsvndsw,idn_kedaislot,idn_kemonbet,idn_kerabatslot,idn_kingjr99,idn_klik99,idn_klikfifa_idr,idn_klikslots,idn_klubslot,idn_knslots,idn_koinid,idn_kointoto,idn_koinvegas,idn_landslot88,idn_lemacausw,idn_ligaplay88,idn_maniatogel,idn_megahoki88,idn_mejahoki_idr,idn_mildcasino_idr,idn_mnaslot,idn_nagagg,idn_nagaikan,idn_narkobet,idn_ngbet,idn_nyalabet,idn_ox001,idn_ox002,idn_ox003,idn_ox004,idn_ox005,idn_ox006,idn_ox007,idn_ox008,idn_ox009,idn_ox010,idn_ox011,idn_ox012,idn_ox013,idn_ox014,idn_ox015,idn_ox016,idn_ox017,idn_ox018,idn_ox019,idn_ox020,idn_ox021,idn_ox022,idn_ox023,idn_ox024,idn_ox025,idn_ox026,idn_ox027,idn_ox028,idn_ox029,idn_ox030,idn_ox031,idn_ox032,idn_ox033,idn_ox034,idn_ox035,idn_ox036,idn_ox037,idn_ox038,idn_ox039,idn_ox040,idn_ox041,idn_ox042,idn_ox043,idn_ox044,idn_ox045,idn_ox046,idn_ox047,idn_ox048,idn_ox049,idn_ox050,idn_ox051,idn_ox052,idn_ox053,idn_ox054,idn_ox055,idn_ox056,idn_ox057,idn_ox058,idn_ox059,idn_ox060,idn_ox061,idn_ox062,idn_ox063,idn_ox064,idn_ox065,idn_ox066,idn_ox067,idn_ox068,idn_ox069,idn_ox070,idn_ox071,idn_ox072,idn_ox073,idn_ox074,idn_ox075,idn_ox076,idn_ox077,idn_ox078,idn_ox079,idn_ox080,idn_ox081,idn_ox082,idn_ox083,idn_ox084,idn_ox085,idn_ox086,idn_ox087,idn_ox088,idn_ox089,idn_ox090,idn_ox091,idn_ox092,idn_ox093,idn_ox094,idn_ox095,idn_ox096,idn_ox097,idn_ox098,idn_ox099,idn_ox100,idn_ox101,idn_ox102,idn_ox103,idn_ox104,idn_ox105,idn_ox106,idn_ox107,idn_ox108,idn_ox109,idn_ox110,idn_ox111,idn_ox112,idn_ox113,idn_ox114,idn_ox115,idn_ox116,idn_ox117,idn_ox118,idn_ox119,idn_ox120,idn_ox121,idn_ox122,idn_ox123,idn_ox124,idn_ox125,idn_ox126,idn_ox127,idn_ox128,idn_ox129,idn_ox130,idn_ox131,idn_ox132,idn_ox133,idn_ox134,idn_ox135,idn_ox136,idn_ox137,idn_ox138,idn_ox139,idn_ox140,idn_ox141,idn_ox142,idn_ox143,idn_ox144,idn_ox145,idn_ox146,idn_ox147,idn_ox148,idn_ox149,idn_ox150,idn_ox151,idn_ox152,idn_ox153,idn_ox154,idn_ox155,idn_ox156,idn_ox157,idn_ox158,idn_ox159,idn_ox160,idn_ox161,idn_ox162,idn_ox163,idn_ox164,idn_ox165,idn_ox166,idn_ox167,idn_ox168,idn_ox169,idn_ox170,idn_ox171,idn_ox172,idn_ox173,idn_ox174,idn_ox175,idn_ox176,idn_ox177,idn_ox178,idn_ox179,idn_ox180,idn_ox181,idn_ox182,idn_ox183,idn_ox184,idn_ox185,idn_ox186,idn_ox187,idn_ox188,idn_ox189,idn_ox190,idn_ox191,idn_ox192,idn_ox193,idn_ox194,idn_ox195,idn_ox196,idn_ox197,idn_ox198,idn_ox199,idn_ox200,idn_oxplay,idn_oxplayb2c,idn_paiza99_idr,idn_pandawa88,idn_permatabet88,idn_pionbet,idn_playslots88,idn_powernet,idn_pphoki,idn_proplay88,idn_qq88bet,idn_santagg,idn_shenpoker,idn_shenpokerlc,idn_shiobet,idn_shnslot,idn_simplebet8,idn_skor88_idr,idn_slotasia,idn_slotid88,idn_slotogel,idn_slotsgg,idn_starslots88,idn_stasiunplay,idn_tangkas_idr,idn_tiketslot,idn_togelasiabet,idn_tokohoki78,idn_totogg88,idn_totoid88,idn_totowin88,idn_trdsbet,idn_uboxaivipbet88,idn_uboxbaubocash,idn_unogg,idn_unovegassw,idn_vegas4d,idn_vegas88_idr,idn_vegasgg,idn_vegashoki88,idn_visabet88,idn_winslots8,idn_x2casino,idn2_idntotob2b19,t1idnsg18,t1idn_idnsport_2_idr,idn2_bolagila,idn2_dewalive,idn2_dewapoker,idn2_dewatogel,idn2_domino88,idn2_dominobetn,idn2_idn19,idn2_idnpokerb2b,idn2_kartupoker,idn2_lapak303,idn2_naga303,idn2_nagapoker,idn2_poker88,idn2_remipoker,idn2_togel88,idn2_totogel,idn2_idn25,idn2_idntototb2b,idn2_idn26,idn2_idntotob2b_2,idn2_idn30,idn2_idntotob2b_3,idn2_idn31,idn2_idntotob2b_4,idn2_idntotob2b_5,idn2_idnsg40,idn2_idntotob2b_7,idn_oxplayrk,idn_oxplay001,idn_oxplay1,idn2_idnsg42,idn2_idntotob2b4,idn2_idntotob2b_10,idn2_idnsg48,idn2_idntotob2b_10,idn_idnsg50,idn_idnidnsportidr,idn_idnsg51,idn_idnsport4idr,idn2_idnsg52,idn2_idntotob2b15,idn2_idnsg55,idn2_idntotob2b_12,idn2_idnsg58,idn2_idntotob2b_11,idn2_idnsg66,idn2_idntotob2b13,idn2_idnsg69,idn2_idntotob2b14,idn2_idnsg71,idn2_idntotob2b17,idn_idnsg74,idn_idnidnsport3idr,id2_idnsg75,id2_idntotob2b18,idn2_idnsg78,idn2_idntotob2b20,idn2_idnsg79,idn2_idntotob2b_21,idn2_idnsg80,idn2_idntotob2b22,idn_idnsg81,idn_oxplay2enhance,idn_oxplay2,idn2_idnsg82,idn2_idntotob2b23".split(",");
+				if (stylenames.indexOf(UHT_GAME_CONFIG.STYLENAME)>-1)
+					mustHide = false;
+
+				if (mustHide)
+				{
+					var customLoader = globalRuntime.sceneRoots[0].transform.Find("UI Root/LoaderParent/Loader/CustomContent");
+					if (customLoader != null && customLoader.gameObject != null)
+					{
+						customLoader.gameObject.SetActive(false);
+					}
+				}
+			}
+
+			//IDNUP
+			var gameSymbols = "vs40killdieh,vs20swbombdrop,vs20olyh,vs20puresweeth,vswaysdogbank,vs4096bison,vs20sunjewel,vs20purefruith,vswaysladydh,vswaysrisphon".split(",");
+			if (gameSymbols.indexOf(UHT_CONFIG.SYMBOL)>-1)
+			{
+				var mustHide = true;
+				var stylenames = "bh_idnupmeritroyal,bh_idnupkingroyal".split(",");
 				if (stylenames.indexOf(UHT_GAME_CONFIG.STYLENAME)>-1)
 					mustHide = false;
 
@@ -5989,6 +7575,106 @@ UHTPatch({
 	{
 		return (window["Renderer"] == undefined);
 	}
+});
+
+UHTPatch({
+	name: "PatchHideCashInfo",
+	ready:function()
+	{
+		return (window["UHT_GAME_CONFIG_SRC"] != undefined && window["globalRuntime"] != undefined && globalRuntime.sceneRoots.length > 1);
+	},
+	apply:function()
+	{
+		if (IsRequired("SNEX"))
+		{
+			var paths;
+			var startPath;
+
+			if (!Globals.isMobile)
+			{
+				paths = [
+					"UI Root/XTRoot/Root/Paytable/Pages/Common_Info2/BetMenu/Title",
+					"UI Root/XTRoot/Root/Paytable/Pages/Common_Info2/BetMenu/Rules/Rule1",
+					"UI Root/XTRoot/Root/Paytable/Pages/Common_Info1/MainGameInterface/Rules/Rule4",
+				];
+
+				startPath = "UI Root/XTRoot/Root/Paytable/Pages";
+			}
+			else //mobile
+			{
+				paths = [
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_landscape/Common_Info4/Content/RealContent/BetMenu/Title",
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_landscape/Common_Info4/Content/RealContent/BetMenu/Rules/Rule1",
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_portrait/Common_Info4/Content/RealContent/BetMenu/Title",
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_portrait/Common_Info4/Content/RealContent/BetMenu/Rules/Rule1",
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_landscape/Common_Info2/Content/RealContent/Rules_MainGameInterface/Rule7",
+					"UI Root/XTRoot/Root/Paytable_mobile/Paytable_portrait/Common_Info2/Content/RealContent/Rules_MainGameInterface/Rule7"
+				];
+
+				startPath = "UI Root/XTRoot/Root/Paytable_mobile";
+			}
+
+			for (var i = 0; i < paths.length; i++)
+			{
+				var t = globalRuntime.sceneRoots[1].transform.Find(paths[i]);
+				if (t != null)
+				{
+					var uilabel = t.gameObject.GetComponent(UILabel);
+					if (uilabel != null)
+						uilabel.dontIgnoreLocalScale = true;
+					t.localScale(0, 0, 0);
+
+				}
+			}
+
+			var t = globalRuntime.sceneRoots[1].transform.Find(startPath);
+			var allValD = t.GetComponentsInChildren(ValueDisplayer, true);
+			var malfunctionText = null;
+			for(var i in allValD)
+			{
+				var name = allValD[i].vdVariable.variable.name;
+				if (name == "MinTotalBetFromServer")
+				{
+					var parent = allValD[i].gameObject.transform.parent;
+					var anchor = parent.GetComponentsInChildren(MultipleLabelAnchor, true);
+					if(anchor != null)
+					{
+						var toHide = parent.gameObject.transform.parent;
+						toHide.localScale(0, 0, 0);
+
+						var malfunctionPath = toHide.gameObject.transform.parent;
+						var labels = malfunctionPath.GetComponentsInChildren(UILabel, true);
+						for(var j in labels)
+						{
+							if(String(labels[j].gameObject.name).startsWith("Malfunction"))
+							{
+								malfunctionText = labels[j].text;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if(malfunctionText != null)
+			{
+				var allLabels = t.GetComponentsInChildren(UILabel, true);
+				//hide all labels with the malfunction text
+				for(var i in allLabels)
+				{
+					if(allLabels[i].text == malfunctionText)
+					{
+						allLabels[i].dontIgnoreLocalScale = true;
+						allLabels[i].gameObject.transform.localScale(0, 0, 0);
+					}
+				}
+			}
+		}
+	},
+	retry:function()
+	{
+		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
+	},
 });
 
 UHTPatch({
@@ -6755,7 +8441,8 @@ UHTPatch({
 				if (JSOs.length>0)
 				{
 					var jso = JSOs[0];
-					jso.chanceLabel.width = 600;
+					jso.chanceLabel.maxLines = 1;
+					jso.chanceLabel.width = 580;
 					jso.chanceLabel.height = 100;
 					jso.chanceLabel.gameObject.transform.localPosition(0, 5, 0);
 					jso.chanceLabel.init();
@@ -6957,10 +8644,60 @@ UHTPatch({
 		if (window["UHT_CONFIG"].LANGUAGE == "pt")
 		{
 			var MMCFLTL = ModificationsManager.CopyFromLabelToLabel;
+			var isFAT = null;
 			ModificationsManager.CopyFromLabelToLabel = function(copyFrom, copyTo, alsoCopyText, copyEffects)
 			{
 				if (copyFrom.text == "PRIMA A TECLA DE ESPAÇO PARA ROTAÇÃO TURBO")
 					copyFrom.text = "PRESSIONE A TECLA DE ESPAÇO PARA ROTAÇÃO TURBO";
+
+				if (globalRuntime.sceneRoots.length > 1 && isFAT == null)
+				{
+					isFAT = false;
+					var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+					if (localizationRoot != undefined)
+					{
+						var pragmaticPlayLabelTransform = localizationRoot.transform.Find("GUI/PragmaticPlayAnchor/PragmaticPlayArrangeable/PragmaticPlayLabel");
+						if (pragmaticPlayLabelTransform != null)
+						{
+							var pragmaticPlayLabel = pragmaticPlayLabelTransform.GetComponent(UILabel);
+							if (pragmaticPlayLabel != null)
+							{
+								if (pragmaticPlayLabel.text.indexOf("FAT") != -1)
+									isFAT = true;
+							}
+						}
+
+						var pragmaticPlayLabelTransform = localizationRoot.transform.Find("GUI_mobile/PragmaticPlay/PPAnchorLand/PPArrangeableLand/PragmaticPlayLabel");
+						if (pragmaticPlayLabelTransform != null)
+						{
+							var pragmaticPlayLabel = pragmaticPlayLabelTransform.GetComponent(UILabel);
+							if (pragmaticPlayLabel != null)
+							{
+								if (pragmaticPlayLabel.text.indexOf("FAT") != -1)
+									isFAT = true;
+							}
+						}
+					}
+				}
+
+				if (isFAT)
+				{
+					if (copyFrom.text == "MANTER PREMIDO PARA RODADA TURBO ")
+						copyFrom.text = "MANTER APERTADO PARA A RODADA TURBO";
+				}
+				MMCFLTL.apply(this, arguments);
+			};
+		}
+
+		if (window["UHT_CONFIG"].LANGUAGE == "uk")
+		{
+			var MMCFLTL = ModificationsManager.CopyFromLabelToLabel;
+			ModificationsManager.CopyFromLabelToLabel = function(copyFrom, copyTo, alsoCopyText, copyEffects)
+			{
+				if (copyFrom.text == "BAC")
+					copyFrom.text = "ВИ";
+				if (copyFrom.text.indexOf("sРАУНДИ") != -1)
+					copyFrom.text = copyFrom.text.replace("sРАУНДИ", "РАУНДИ");
 				MMCFLTL.apply(this, arguments);
 			};
 		}
@@ -7822,7 +9559,6 @@ UHTPatch({
 		var oVGAMOIF = VerifyGameAuthenticityManager.prototype.OpenIframe;
 		VerifyGameAuthenticityManager.prototype.OpenIframe = function()
 		{
-
 			if (!initialized)
 			{
 				GetBuyFeatureCosts();
@@ -7863,6 +9599,12 @@ UHTPatch({
 				{
 					var onNewClickAuth = function()
 					{
+						var currency = UHT_GAME_CONFIG_SRC["currency"];
+						var bet = CoinManager.GetLastTotalBet();
+						if (costIdx >= 0 && costIdx < bfCosts.length)
+							bet = CoinManager.GetLastBet() * bfCosts[costIdx];
+						var balance = XT.GetDouble(Vars.BalanceReceived) + XT.GetDouble(Vars.BonusBalanceReceived);
+						// _Clipboard.CopyText("PP||" + ServerOptions.mgckey + "||" + btoa(window["UHT_GAME_CONFIG_SRC"]["gameVerificationURL"]) + "||" + btoa(VerifyGameAuthenticityManager.rid + "||" + currency + "||" + bet + "||" + balance));
 						_Clipboard.CopyText("PP||" + qrtext);
 						QRCODEMAKE();
 					}
@@ -7911,6 +9653,60 @@ UHTPatch({
 					}
 				}
 				else
+				if (window["UHT_GAME_CONFIG"]["LANGUAGE"] == "pt")
+				{
+					if (Globals.isMobile)
+					{
+						document.getElementsByTagName("h1")[0].innerHTML = 'VERIFICAR AUTENTICIDADE DO JOGO';
+
+						document.getElementById("para1").innerHTML =
+						'1. Instale o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> da App Store ou do Google Play. Importante: antes de baixar, certifique-se de que a publicadora esteja listada como <span class="orange">PRAGMATIC PLAY</span>.';
+						//document.getElementById("para1").fontFamily = 'Verdana';
+						
+						document.getElementById("para3").innerHTML =
+						'2. Quando o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> estiver instalado, clique no botão AUTENTICAR abaixo.';
+						//document.getElementById("para3").fontFamily = 'Verdana';
+						
+						document.getElementById("para4Port").innerHTML =
+						'3. Após clicar no botão AUTENTICAR abaixo, abra o aplicativo e conclua a verificação do jogo no aplicativo. Se solicitado ao abrir o aplicativo, permita a colagem.';
+						//document.getElementById("para4Port").fontFamily = 'Verdana';
+						
+						document.getElementsByClassName("authButton")[0].innerHTML = 'AUTENTICAR';
+
+						document.getElementsByTagName("h1")[1].innerHTML = 'VERIFICAR AUTENTICIDADE DO JOGO';
+
+						document.getElementById("para1Port").innerHTML =
+						'1. Instale o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> da App Store ou do Google Play. Importante: antes de baixar, certifique-se de que a publicadora esteja listada como <span class="orange">PRAGMATIC PLAY</span>.';
+						//document.getElementById("para1Port").fontFamily = 'Verdana';
+						
+						document.getElementById("para3Port").innerHTML =
+						'2. Quando o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> estiver instalado, clique no botão AUTENTICAR abaixo.';
+						//document.getElementById("para3Port").fontFamily = 'Verdana';
+						
+						document.getElementById("para4").innerHTML =
+						'3. Após clicar no botão AUTENTICAR abaixo, abra o aplicativo e conclua a verificação do jogo no aplicativo. Se solicitado ao abrir o aplicativo, permita a colagem.';
+						//document.getElementById("para4").fontFamily = 'Verdana';
+						
+						document.getElementsByClassName("authButtonPort")[0].innerHTML = 'AUTENTICAR';
+					}
+					else
+					{
+						document.getElementsByTagName("h1")[0].innerHTML = 'VERIFICAR AUTENTICIDADE DO JOGO';
+						
+						document.getElementById("para1").innerHTML =
+						'1. Instale o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> no seu dispositivo móvel da App Store ou do Google Play<br>Importante: antes de baixar, certifique-se de que a publicadora esteja listada como <span class="orange">PRAGMATIC PLAY</span>';
+						//document.getElementById("para1").fontFamily = 'Verdana';
+						
+						document.getElementById("para3").innerHTML =
+						'2. Abra o app <span class="orange">PRAGMATIC PLAY AUTHENTICATOR</span> no seu dispositivo móvel. Dentro do app, clique em <img id="appImg"> para abrir a câmera. Em seguida, leia o código QR abaixo.</p>';
+						//document.getElementById("para3").fontFamily = 'Verdana';
+						
+						document.getElementById("para4").innerHTML = 
+						'Por favor, conclua a verificação do jogo no seu dispositivo móvel';
+						//document.getElementById("para4").fontFamily = 'Verdana';
+					}
+				}
+				else
 				{
 					if (Globals.isMobile)
 					{
@@ -7933,13 +9729,21 @@ UHTPatch({
 				}
 				
 				initialized = true;
-			}
+			}			
+
 			Globals.GamePaused = true;
 			oVGAMOIF.apply(this, arguments);
 			if (!Globals.isMobile)
 			{
+				var currency = UHT_GAME_CONFIG_SRC["currency"];
+				var bet = CoinManager.GetLastTotalBet();
+				if (costIdx >= 0 && costIdx < bfCosts.length)
+					bet = CoinManager.GetLastBet() * bfCosts[costIdx];
+				var balance = XT.GetDouble(Vars.BalanceReceived) + XT.GetDouble(Vars.BonusBalanceReceived);
+				// VerifyGameAuthenticityManager.qrcode.makeCode(ServerOptions.mgckey + "||" + btoa(window["UHT_GAME_CONFIG_SRC"]["gameVerificationURL"]) + "||" + btoa(VerifyGameAuthenticityManager.rid + "||" + currency + "||" + bet + "||" + balance));
 				VerifyGameAuthenticityManager.qrcode.makeCode(qrtext);
 				QRCODEMAKE();
+		        document.getElementById("qrcode").title = '';
 			}
 		};
 
@@ -8146,6 +9950,7 @@ UHTPatch({
 	},
 	apply:function()
 	{
+		//FRB Windows
 		var frbPathsDesktop = [
 			"UI Root/XTRoot/Root/GUI/Interface/Windows/BonusRoundsWindows/BonusRoundsFinishedWindow/Texts/ManuallyCredited",
 			"UI Root/XTRoot/Root/GUI/Interface/Windows/BonusRoundsWindows/TimedBonusRoundsFinishedWindow/Texts/ManuallyCredited",
@@ -8192,6 +9997,50 @@ UHTPatch({
 			"UI Root/XTRoot/Root/GUI_mobile/Interface_Portrait/ContentInterface/Windows/BonusRoundsWindows/BonusRoundsFinishedWindow/AutomaticPayout",
 			"UI Root/XTRoot/Root/GUI_mobile/Interface_Portrait/ContentInterface/Windows/BonusRoundsWindows/TimedBonusRoundsFinishedWindow/AutomaticPayout",
 			"UI Root/XTRoot/Root/GUI_mobile/Interface_Portrait/ContentInterface/Windows/BonusRoundsWindows/BoostBonusRoundsFinishedWindow/AutomaticPayout",
+		];
+
+		//Prize Won Windows
+		var prizeWonDesktop = [
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/AG/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/BM/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Asia/Content/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/AG/AutomaticPayout",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/BM/Texts/AutomaticPayout"
+		];
+
+		var prizeWonLandscape = [
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/AG/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/BM/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/FR/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/FR/Texts/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/FR/Texts/ManuallyCreditedFRT",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/AG/Texts/AutomaticPayout",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Land/BM/Texts/AutomaticPayout"
+		];
+
+		var prizeWonPortrait = [
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/AG/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/BM/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/FR/Texts/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/FR/Texts/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/FR/Texts/ManuallyCreditedFRT",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Asia/Content/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/AG/Texts/AutomaticPayout",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/Port/BM/Texts/AutomaticPayout"
+		];
+
+		var prizeWonMini = [
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/AG/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/BM/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/FR/FRN/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/FR/FRT/ManuallyCreditedFRT",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/FR/FRF/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Asia/Content/ManuallyCredited",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/AG/AutomaticPayout",
+			"UI Root/XTRoot/Root/GUI_mobile/Tournament/PromotionsAnnouncer/ContentWin/Content/Europe/Texts/BM/AutomaticPayout"
 		];
 
 		var activate = function(t, param)
@@ -8326,10 +10175,41 @@ UHTPatch({
 
 		var OnXTGameInit = function()
 		{
-			OnBonusPromoRoundType("");
-		}
+			if (IsRequired("NOMAC"))
+			{
+				var root = globalRuntime.sceneRoots[1];
+				var allPaths = frbPathsDesktop.concat(
+					frbPathsDesktopAutomatic,
+					frbPathsLandscape,
+					frbPathsPortrait,
+					frbPathsLandscapeAutomatic,
+					frbPathsPortraitAutomatic,
+					frbPathsMini,
+					frbPathsMiniAutomatic,
+					prizeWonDesktop,
+					prizeWonLandscape,
+					prizeWonPortrait,
+					prizeWonMini
+				);
 
-		XT.RegisterCallbackString(Vars.BonusRoundPromoType, OnBonusPromoRoundType, this);
+				for (var i = 0; i < allPaths.length; ++i)
+				{
+					var t = root.transform.Find(allPaths[i]);
+					if (t != null)
+					{
+						var labels = t.GetComponentsInChildren(UILabel, true);
+						for (var j = 0; j < labels.length; j++)
+						{
+							labels[j].text = "";
+						}
+					}
+				}
+			}
+			else
+				OnBonusPromoRoundType("");
+		}
+		if (!IsRequired("NOMAC"))
+			XT.RegisterCallbackString(Vars.BonusRoundPromoType, OnBonusPromoRoundType, this);
 		XT.RegisterCallbackEvent(Vars.Evt_Internal_GameInit, OnXTGameInit, this);
 	},
 	retry:function()
@@ -8763,6 +10643,7 @@ UHTPatch({
 			if (IsRequired("SOCE_V1"))
 			{
 				SOCE_replacements.push({src:"credited", dst:"added"});
+				SOCE_replacements.push({src:"credits", dst:"coins"});
 				SOCE_replacements.push({src:"credit", dst:"coins"});
 			}
 			if (IsRequired("SOCE_V2"))
@@ -8773,6 +10654,11 @@ UHTPatch({
 			}
 			if (IsRequired("SOCE_V5"))
 			{
+				SOCE_replacements.splice(0,0,
+					{src:"to place this bet, you will need to visit the cashier and add funds to your account", dst: "Insufficient coins to place the spin"},
+					{src:"insufficient funds to place this bet.", dst: " "},
+					{src:"please fund your account or lower the bet level.", dst: "Insufficient coins to place the spin"}
+				);
 				SOCE_replacements.push({src:"please fund your account", dst:"please buy more coins"});
 				SOCE_replacements.push({src:"funds", dst:"coins"});
 			}
@@ -8883,10 +10769,13 @@ UHTPatch({
 			if (IsRequired("SOCE_V1"))
 			{
 				SOCE_replacements.push({src:"credited", dst:"added"});
+				SOCE_replacements.push({src:"credits", dst:"coins"});
 				SOCE_replacements.push({src:"credit", dst:"coins"});
 			}
-			if (IsRequired("SOCE_V2"))
+			if (IsRequired("SOCE_V2") || IsRequired("SOCE_V2X"))
 			{
+				if (IsRequired("SOCE_V2X"))
+					SOCE_replacements = [];
 				SOCE_replacements.push({src:"gambled", dst:"chanced"});
 				SOCE_replacements.push({src:"gamble", dst:"take a chance"});
 				SOCE_replacements.push({src:"gambling", dst:"taking a chance"});
@@ -8903,6 +10792,11 @@ UHTPatch({
 			}
 			if (IsRequired("SOCE_V5"))
 			{
+				SOCE_replacements.splice(0,0,
+					{src:"to place this bet, you will need to visit the cashier and add funds to your account", dst: "Insufficient coins to place the spin"},
+					{src:"insufficient funds to place this bet.", dst: " "},
+					{src:"please fund your account or lower the bet level.", dst: "Insufficient coins to place the spin"}
+				);
 				SOCE_replacements.push({src:"please fund your account", dst:"please buy more coins"});
 				SOCE_replacements.push({src:"funds", dst:"coins"});
 			}
@@ -8917,12 +10811,29 @@ UHTPatch({
 			}
 			if (IsRequired("SOCE_V8"))
 			{
-				SOCE_replacements.splice(1,0,{src:"pay", dst:"tmp00", wordonly:true});
-				SOCE_replacements.splice(1,0,{src:" pay ", dst:" tmp01 ", wordonly:true});
-				SOCE_replacements.splice(3,0,{src:"tmp01", dst:"pay", wordonly:true});
-				SOCE_replacements.push({src:"tmp00", dst:"purchase"});
+				SOCE_replacements.splice(1,0,
+					{src:"paying symbols", dst:"symbols"},
+					{src:"paying", dst:"purchasing"},
+					{src:" pay ", dst:" tmp01 ", wordonly:true},
+					{src:"pay", dst:"tmp00", wordonly:true},
+					{src:"tmp01", dst:"pay", wordonly:true}
+				);
 				
-				SOCE_replacements.splice(1,0,{src:"paying", dst:"purchasing"}); //this is before the above
+				SOCE_replacements.push({src:"tmp00", dst:"purchase"});
+			}
+
+			if (IsRequired("SOCE_V8P"))
+			{
+				SOCE_replacements.splice(1,0,
+					{src:"paying symbols", dst:"symbols"},
+					{src:"paying", dst:"playing"},
+					{src:" pay ", dst:" tmp01 ", wordonly:true},
+					{src:"pay", dst:"tmp00", wordonly:true},
+					{src:"tmp01", dst:"pay", wordonly:true}
+				);
+				
+				SOCE_replacements.push({src:"tmp00", dst:"play"});
+				SOCE_replacements.push({src:"slot machine", dst:"video slot"});
 			}
 
 			var labels = globalRuntime.sceneRoots[1].GetComponentsInChildren(UILabel, true);
@@ -8940,11 +10851,11 @@ UHTPatch({
 					var dst = soce.dst.split('');
 					dst[0] = dst[0].toUpperCase();
 					dst = dst.join('');
-					labels[j].text = labels[j].text.replace(new RegExp(p+src+s, 'g'), dst);
+					labels[j].text = labels[j].text.replace(new RegExp("(?<!<)"+p+src+s, 'g'), dst);
 					//UPPER
-					labels[j].text = labels[j].text.replace(new RegExp(p+soce.src.toUpperCase()+s, 'g'), soce.dst.toUpperCase());
+					labels[j].text = labels[j].text.replace(new RegExp("(?<!<)"+p+soce.src.toUpperCase()+s, 'g'), soce.dst.toUpperCase());
 					//lower
-					labels[j].text = labels[j].text.replace(new RegExp(p+soce.src+s, 'g'), soce.dst);
+					labels[j].text = labels[j].text.replace(new RegExp("(?<!<)"+p+soce.src+s, 'g'), soce.dst);
 				}
 				var smlt = SystemMessageManager.localizedTexts;
 				for (var lt in smlt)
@@ -10514,6 +12425,9 @@ UHTPatch({
 				UHTInterfaceBOSS.PostMessage("RC_SHOWN");
 
 			oSMMShowMessage.apply(this, arguments);
+
+			if (metaIframe != null)
+				metaIframe.contentWindow.postMessage({group:'lobby', name:'close'}, "*");
 		}
 
 	},
@@ -11584,7 +13498,8 @@ function IsRequired(requirement, justCheck, useServerOptions)
 	var reqs_string = reqs_processed.join(',');
 	window["UHT_GAME_CONFIG_SRC"].jurisdictionRequirements = reqs_string;
 	window["UHT_GAME_CONFIG_SRC"].brandRequirements = "";
-	window["UHT_GAME_CONFIG"].jurisdictionRequirements = reqs_string;
+	if(window["UHT_GAME_CONFIG"])
+		window["UHT_GAME_CONFIG"].jurisdictionRequirements = reqs_string;
 	
 	if (window["ServerOptions"] != undefined)
 	{
@@ -11661,6 +13576,15 @@ UHTPatch({
 			return;
 		}
 
+		var spinCounter=0;
+		
+		var spinFastPlayCounter=0;
+		var spinTurboCounter=0;
+		var spinAutoPlayCounter=0;
+		var spinResponseTimer=0;
+		
+		var spinBatchSize=1;
+		
 		var oT_SE = Tracking.prototype.SendEvent;
 		Tracking.prototype.SendEvent = function(category, action, value, type)
 		{
@@ -11676,7 +13600,28 @@ UHTPatch({
 			
 			if (window["GrafanaFaroWebSdk"] != undefined)
 			{
-				window.GrafanaFaroWebSdk.faro.api.pushMeasurement(
+				if (category == "uht_spin")
+				{
+					if (action == "started_normal_spin_fastplay")
+					{
+						spinCounter++;
+						spinFastPlayCounter += (XT.GetBool(Vars.FastPlay) ? 1 : 0);
+					}
+					
+					if (action == "started_turbo_spin_fastplay")
+					{
+						spinCounter++;
+						spinTurboCounter++;
+						spinFastPlayCounter += (XT.GetBool(Vars.FastPlay) ? 1 : 0);
+					}
+						
+					if (action == "finished_autospin")
+					{
+						spinAutoPlayCounter++;
+					}
+				}
+				else
+					window.GrafanaFaroWebSdk.faro.api.pushMeasurement(
 					{
 						type: 'Custom'+type,
 						values:
@@ -11688,7 +13633,7 @@ UHTPatch({
 						context: 
 						{
 							category: category,
-							symbol: URLGameSymbol,
+							symbol: ServerOptions.gameSymbol,
 							action: action
 						}
 					}
@@ -11701,6 +13646,7 @@ UHTPatch({
 				arguments[1] = "E" + arguments[1];
 			oT_SE.apply(this, arguments);
 		}
+		
 		var oT_STAS = Tracking.prototype.StopTimerAndSend;
 		Tracking.prototype.StopTimerAndSend = function(category, variable, type)
 		{
@@ -11710,22 +13656,50 @@ UHTPatch({
 			{
 				globalTracking.QueuedTimers[globalTracking.QueuedTimers.length - 1].type = "ST" + SPIN_TRACKER_ID;
 			}
-			
 			if (window["GrafanaFaroWebSdk"] != undefined)
 			{
+				var timer = this.GetTimerValue(category, variable, type);
+				var values =
+				{
+					value: timer
+				};
+				
+				if (category == "uht_spin")
+				{
+					if (variable == "time_response_received")
+					{
+						spinResponseTimer += timer;
+						if (spinCounter >= spinBatchSize)
+						{
+							values["fastplayCount"] = spinFastPlayCounter;
+							values["turboCount"] = spinTurboCounter;
+							values["autoplayCount"] = spinAutoPlayCounter;
+							values["value"] = values["responsetimeAverage"] = ((spinResponseTimer / spinCounter) * 100 | 0) / 100;
+							values["_batchsize"] = spinCounter;
+
+							spinCounter=0;
+							spinFastPlayCounter=0;
+							spinTurboCounter=0;
+							spinAutoPlayCounter=0;
+							spinResponseTimer=0;
+							
+							if (spinBatchSize < 64)
+								spinBatchSize *= 2;
+						}
+						else
+							return;
+					}
+				}
 				window.GrafanaFaroWebSdk.faro.api.pushMeasurement(
 					{
 						type: 'CustomTimer'+type,
-						values:
-						{
-							value: this.GetTimerValue(category, variable, type)
-						},
+						values: values,
 					},
 					{
 						context: 
 						{
 							category: category,
-							symbol: URLGameSymbol,
+							symbol: ServerOptions.gameSymbol,
 							variable: variable
 						}
 					}
