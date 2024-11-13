@@ -1,5 +1,9 @@
 function casinoGameStart(category){
- 
+    if(is_login == 'N')
+    {
+        alert("로그인 후 사용하세요");
+        return;
+    }
 	$.ajax({
 	   type: "POST",
 	   url: "/api/getgamelist",

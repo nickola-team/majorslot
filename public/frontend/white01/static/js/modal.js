@@ -8,13 +8,17 @@ $(document).ready(function() {
 
 
 function open_modal(type, page = 0) {
-
+    
     if (type == "reg" || type == "login") {
 
         $(".modal." + type + "Modal").modal();
 
     } else {
-
+        if(is_login == 'N')
+        {
+            alert("로그인 후 사용하세요");
+            return;
+        }
         $modal = $(".modal.layoutModal");
 
         $.get("/modal/get_content", {

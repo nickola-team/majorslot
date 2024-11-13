@@ -18,11 +18,15 @@
     <script type="text/javascript" src="/frontend/white01/static/js/common.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/func.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/modal.js?v=1731504619"></script>
-
+    @if(Auth::check())
     <script>
         var is_login = 'Y';
     </script>
-
+    @else
+    <script>
+        var is_login = 'N';
+    </script>
+    @endif
 
 
     <script type="text/javascript">
@@ -397,10 +401,13 @@
 
                 function go_lobby(type, code, is_use, id = "", ban_code = "") {
 
-                    // if (is_use == "N") {
+                    if (is_login == "Y") {
                     	alert("점검중입니다.");
                     	return false;
-                    // }
+                    }else{
+                      alert("로그인 후 사용하세요");
+                      return false;
+                    }
 
                     $.get("/game/game_lobby", {
                         type: type,
