@@ -4,6 +4,7 @@
 <head>
     <title>WHITE</title>
     <link rel="shortcut icon" href="/frontend/white01/static/images/favicon/fa.png" type="image/x-icon">
+    <link rel="stylesheet" href="/frontend/boss/V/swal.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="/frontend/white01/static/fontawesome/css/all.min.css">
@@ -18,9 +19,16 @@
     <script type="text/javascript" src="/frontend/white01/static/js/common.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/func.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/modal.js?v=1731504619"></script>
+    <script type="text/javascript" src="/frontend/boss/V/sweetalert.min.js"></script>
     @if(Auth::check())
     <script>
         var is_login = 'Y';
+        var username = '{{auth()->user()->username}}';
+        var recommendername = '{{auth()->user()->recommender}}';
+        var userbank = '{{auth()->user()->bank_name}}';
+        var accountno = '{{auth()->user()->account_no}}';
+        var userbalance = '{{auth()->user()->balance}}';
+        var noticelist = @json($noticelist);
     </script>
     @else
     <script>
