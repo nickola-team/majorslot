@@ -4,6 +4,7 @@
 <head>
     <title>WHITE</title>
     <link rel="shortcut icon" href="/frontend/white01/static/images/favicon/fa.png" type="image/x-icon">
+    <link rel="stylesheet" href="/frontend/boss/V/swal.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="/frontend/white01/static/fontawesome/css/all.min.css">
@@ -18,9 +19,16 @@
     <script type="text/javascript" src="/frontend/white01/static/js/common.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/func.js?v=1731504619"></script>
     <script type="text/javascript" src="/frontend/white01/static/js/modal.js?v=1731504619"></script>
+    <script type="text/javascript" src="/frontend/boss/V/sweetalert.min.js"></script>
     @if(Auth::check())
     <script>
         var is_login = 'Y';
+        var username = '{{auth()->user()->username}}';
+        var recommendername = '{{auth()->user()->recommender}}';
+        var userbank = '{{auth()->user()->bank_name}}';
+        var accountno = '{{auth()->user()->account_no}}';
+        var userbalance = '{{auth()->user()->balance}}';
+        var noticelist = @json($noticelist);
     </script>
     @else
     <script>
@@ -1872,14 +1880,41 @@
 
             if (!state) return false;
 
-            $.post("/registration", params, function(data) {
-                var data = JSON.parse(data);
-                alert(data.ment);
-                if (data.result) {
-                    location.reload();
-                    $("button.modal-close-btn").trigger("click");
+            // $.post("/registration", params, function(data) {
+            //     var data = JSON.parse(data);
+            //     alert(data.ment);
+            //     if (data.result) {
+            //         location.reload();
+            //         $("button.modal-close-btn").trigger("click");
+            //     }
+            // })
+            var formData = {
+                'username':params['user_id'],
+                'password':params['user_pw1'],
+                'bank_name':params['bankname'],
+                'recommender':params['bankuser'],
+                'account_no':params['bankaccount'],
+                'tel1':params['user_hp'],
+                'friend':params['recommender']
+            }
+            $.ajax({
+                url: '/api/join',
+                type: 'POST',
+                data: formData,
+                dataType: "json",
+                async: false,
+                success: function(result) {
+                    if (result.error == false) {
+                        alert("등록되었습니다");
+                        $("button.modal-close-btn").trigger("click");
+                    } else {
+                        alert(result.msg);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("오류가 발생하였습니다");
                 }
-            })
+            });
 
         }
 
@@ -1907,23 +1942,33 @@
         function duple_check(a, type) {
 
             $ds = $(a).closest(".infos").find("input[name=" + type + "]");
-            $.get("/registration/duple_check", {
-                type: type,
-                val: $ds.val()
-            }, function(data) {
-                var data = JSON.parse(data);
-
-                if (!data.is_duple) {
-
-                    $ds.data("is_duple", "N");
-                } else {
-
-                    $ds.data("is_duple", "Y");
+            if(type == 'user_id')
+            {
+                $.ajax({
+                url: '/api/checkid',
+                type: 'POST',
+                data: {
+                    "id": $ds.val()
+                },
+                dataType: 'json',
+                success: function(result) {
+                    isSend = 0;
+                    if (result.ok === 1) {
+                        $ds.data("is_duple", "N");
+                    } else {
+                        $ds.data("is_duple", "Y");
+                        alert('중복된 아이디입니다');
+                    }
+                },
+                error: function(err) {
+                
                 }
-
-                alert(data.ment);
-            })
-
+                });
+            }
+            else
+            {
+                $ds.data("is_duple", "N");
+            }
         }
     </script>
     <div class="modal regModal fade" tabindex="-1" aria-hidden="true">
