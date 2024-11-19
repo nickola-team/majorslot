@@ -20,6 +20,7 @@ function casinoGameStart(category){
                     "result":true,
                     "ment":"",
                     "content":`<script>
+                                    var gameclick = false;
                                     function play_game(game_type, code, lev){
                                         if ($("input#bet_agree").length){
                                             var is_agree = $("input#bet_agree").is(":checked");
@@ -29,7 +30,15 @@ function casinoGameStart(category){
                                                 return false;
                                             }
                                         }
-                                        startGameByProvider(game_type, code);  
+                                        var gameres;
+                                        if(gameclick != true){
+                                            gameclick = true;
+                                            startGameByProvider(game_type, code);                                              
+                                        }
+                                        
+                                        setTimeout(()=>{
+                                            gameclick = false;
+                                            },2000);
                                     }
                                 </script>
                                 <div class="game-btn" onclick="play_game('${data.games[0].provider}', '${data.games[0].gamecode}')">
