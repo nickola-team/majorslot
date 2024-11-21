@@ -819,7 +819,7 @@ function casinoGameStart(category){
 	   cache: false,
 	   async: true,
 	   success: function (data, status) {
-		   if (data.error) {
+		   if (data.error) { 
 			   alert(data.msg);
 			   return;
 		   }

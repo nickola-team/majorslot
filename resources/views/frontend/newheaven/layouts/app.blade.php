@@ -77,7 +77,7 @@
     <link rel="stylesheet" href="/frontend/newheaven/common/css/app.css?_v=1711076938">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
-    <link href="http://fonts.googleapis.com/earlyaccess/notosanskr.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/notosanskr.css" rel="stylesheet">
 
     <link rel="stylesheet" href="/frontend/newheaven/common/plugins/build/css/intlTelInput.css">
     <link rel="stylesheet" href="/frontend/newheaven/common/css/plugins/colorbox.css">

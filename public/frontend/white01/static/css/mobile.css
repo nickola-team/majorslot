@@ -1,0 +1,405 @@
+@media(max-width:1380px) {}
+
+@media(max-width:1260px) {}
+
+@media(max-width:1500px) {
+    .mobile {
+        display: block !important
+    }
+    .desktop {
+        display: none !important
+    }
+    .top {
+        margin-bottom: 30px;
+    }
+    .logo {
+        margin: 0;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    .logo img {
+        width: 50%;
+        max-width: 300px;
+    }
+    .logo-effect {
+        display: none;
+    }
+    .top-center {
+        display: inline-block;
+    }
+    .top-center .top-btn {
+        margin: 30px 0 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .top-center .top-btn {
+        margin: 0 auto;
+    }
+    .top-center .top-btn .register-button,
+    .top-center .top-btn .login-button {
+        margin: 5px 8px;
+    }
+    .left-menu-btn {
+        width: 45px;
+        height: 45px;
+        background-color: transparent;
+        border: none;
+        float: left;
+        padding: 0;
+        position: absolute;
+        z-index: 99;
+        margin: 10px 0 0 10px;
+    }
+    .left-menu-btn span {
+        display: block;
+        width: calc(100% - 10px);
+        height: 3px;
+        background-color: #ffc318;
+        margin: 0 auto 8px;
+    }
+    .left-menu-btn span:first-child {
+        position: relative;
+        margin-top: 0;
+        top: 0;
+        transition: top .3s .3s, transform .3s 0s;
+    }
+    .left-menu-btn span:nth-child(2) {
+        opacity: 1;
+        transition: opacity .3s;
+    }
+    .left-menu-btn span:last-child {
+        margin-bottom: 0;
+        position: relative;
+        top: 0;
+        transition: top .3s .3s, transform .3s 0s;
+    }
+    .left-menu-btn.opened span:first-child {
+        top: 11px;
+        transform: rotate(-45deg);
+        transition: top .3s 0s, transform .3s .3s, color .3s .3s;
+    }
+    .left-menu-btn.opened span:nth-child(2) {
+        opacity: 0;
+    }
+    .left-menu-btn.opened span:last-child {
+        top: -11px;
+        transform: rotate(45deg);
+        transition: top .3s 0s, transform .3s .3s;
+    }
+    .right-menu-btn {
+        width: 45px;
+        height: 45px;
+        float: right;
+        background-color: transparent;
+        border: 2px solid #e9c866;
+        padding: 0;
+        position: relative;
+        z-index: 99;
+        margin: 10px 10px 0 0;
+    }
+    .right-menu-btn svg {
+        width: 35px;
+        height: 35px;
+        color: #e9c866;
+    }
+    .app-header-nav {
+        display: none;
+        position: absolute;
+        left: 10px;
+        top: 50px;
+        transition: all 1s ease-in-out;
+    }
+    .app-header-nav.opened {
+        z-index: 20;
+        display: block;
+    }
+    .app-header-nav .nav-list {
+        display: block;
+        background-color: #000;
+    }
+    .app-header-nav .nav-list .nav-list-buttonbox {
+        display: flex;
+        min-width: 280px;
+        min-height: 45px;
+        margin: 2px 0;
+    }
+    .app-header-nav .nav-button {
+        background: linear-gradient( to top, #040727, #1e2145);
+        width: 100%;
+        margin: 0px;
+        border: 1px solid #fff;
+        border-radius: 10px;
+        justify-content: flex-start;
+        padding-left: 15px;
+        color: #fff;
+    }
+    .app-header-nav .nav-button i {
+        color: #FFCC68;
+        opacity: 1;
+    }
+    .search-form {
+        justify-content: center;
+    }
+    .modal-dialog .search-form {
+        margin: 0 auto;
+    }
+    .comp-list .comp-panel {
+        margin: 10px;
+        width: 160px;
+    }
+    .comp-panel .comp-name-kr {
+        font-size: 16px;
+    }
+    .information .info-content {
+        display: block;
+    }
+    .information .info-item {
+        width: 100%;
+        padding: 0 20px;
+        margin: 0;
+    }
+    .information .info-body {
+        height: auto;
+    }
+    .information .info-body ul li {
+        margin: 0;
+    }
+    #footer {
+        display: block;
+        min-height: 100px;
+        padding: 30px 0;
+    }
+    #footer .callcenter {
+        position: inherit;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+}
+
+@media(max-width:1160px) {
+    .form-container .form-group .infos .btn-grp button {
+        min-width: calc(25% - 4px);
+    }
+    .form-container .form-group .infos .btn-grp button:first-child {
+        margin: 0 2px;
+    }
+}
+
+@media(max-width:1080px) {}
+
+@media(max-width:1000px) {
+    .cate:before {
+        display: none;
+    }
+    #body .cate ul {
+        padding: 0 5%;
+    }
+    #body .cate ul li {
+        width: 100%;
+        height: auto;
+        background: linear-gradient(0deg, #040728, #161d5e, rgb(0 0 0 / 50%));
+        border: 1px solid #3e4581;
+        border-radius: 8px;
+        box-shadow: 1px 1px 11px 1px #777;
+        margin: 0 5px;
+        padding: 15px 0;
+    }
+    .cate ul li.active,
+    .cate ul li:hover {
+        color: #909adb;
+    }
+    .modal-banner .panel {
+        width: 100%
+    }
+    .modal-menu {
+        min-width: 100%
+    }
+    .modal-menu button {
+        width: 100%;
+        margin: 0
+    }
+}
+
+@media(max-width:920px) {
+    .game-btn {
+        width: calc(25% - 16px)
+    }
+}
+
+@media(max-width:767px) {
+    .modal-dialog {
+        box-shadow: inset 0 -30px 250px 100px #0e0e0e
+    }
+    .modal-menu {
+        padding: 10px 0;
+        flex-wrap: wrap
+    }
+    .modal-menu button {
+        width: 33.33%;
+        margin: 4px 0
+    }
+    .modal-menu button span {
+        display: inline-block;
+        min-width: 75px;
+        text-align: left
+    }
+    .gamelist-container {
+        overflow-y: auto;
+        max-height: initial;
+        padding: 0
+    }
+    .game-btn {
+        width: calc(33.33% - 16px)
+    }
+    .popup {
+        left: 50%;
+        top: 50%;
+        width: 90%;
+        height: auto;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media(max-width:700px) {
+    #body .cate ul li {
+        font-size: 22px;
+    }
+    #footer .company-info {
+        display: inline-block;
+    }
+}
+
+@media(max-width:600px) {
+    #body .cate ul li {
+        font-size: 18px;
+    }
+    #body .cate ul li.active:before,
+    #body .cate ul li.active:after {
+        content: "";
+        margin: 0;
+    }
+}
+
+@media(max-width:500px) {
+    #body .cate ul li {
+        font-size: 12px;
+    }
+    .transferModal .bs-table td {
+        font-size: 10px
+    }
+    .bs-table.b-font tr td {
+        font-size: 12px;
+    }
+    .bs-table tr td.c_title,
+    .bs-table tr td.c_content {
+        padding-left: 5px;
+        font-size: 12px;
+        max-width: 300px;
+    }
+    .bs-table span.w_board {
+        overflow-x: auto;
+        width: initial;
+    }
+    .modal-dialog {
+        box-shadow: inset 0 0 200px 50px #0e0e0e
+    }
+    .modal-header .btn-group {
+        display: flex
+    }
+    .modal-header .btn-group button {
+        width: 100%;
+        font-size: 12px;
+        padding: 0
+    }
+    .modal-banner .title-panel .title {
+        font-size: 30px
+    }
+    .modal-menu button {
+        font-size: 10px
+    }
+    .modal-menu button .icon-panel {
+        margin-right: 5px
+    }
+    .modal-menu button span {
+        min-width: 58px
+    }
+    .bs-table thead th {
+        font-size: 12px
+    }
+    .bs-table tr .count-td {
+        width: initial
+    }
+    .bs-table tr .title-td {
+        max-width: 170px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+    .bs-table tr .title-td img {
+        max-width: 100%;
+        height: auto
+    }
+    .bs-table tr .date-td {
+        width: initial;
+        font-size: 10px;
+        max-width: 80px
+    }
+    .bs-table tr .nav-td {
+        width: 30px
+    }
+    .bs-table td .level-txt {
+        width: 100%;
+        text-align: center
+    }
+    .gamelistModal .modal-body {
+        padding: 0 5px 50px
+    }
+    .gamelistModal .modal-panel {
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0
+    }
+    .game-btn {
+        width: calc(33.33% - 8px);
+        margin: 7px 4px
+    }
+    .game-btn .play-btn {
+        max-width: 70px;
+        font-size: 8px;
+        top: 2px;
+        left: 2px
+    }
+    .game-btn .play-btn.practice {
+        top: 32px
+    }
+    .game-btn .play-btn .icon-panel {
+        width: 16px;
+        min-width: 16px;
+        height: 16px
+    }
+    .game-btn .footer {
+        height: 30px;
+        font-size: 10px;
+        padding: 0 3px
+    }
+    .search-form {
+        width: 100%
+    }
+    .cool-logo {
+        left: -100px
+    }
+    .information .info-item {
+        font-size: 14px;
+    }
+    .information .info-body ul li {
+        font-size: 12px;
+    }
+}
+
+@media(max-width:450px) {}
+
+@media(max-width:360px) {}
