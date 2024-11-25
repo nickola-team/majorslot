@@ -1280,6 +1280,10 @@ return [
         "FangtasticFreespins" => "판타스틱 프리스핀즈",
         "CandyCorner" => "캔디 코너",
         "Moleionaire" => "몰레이오네어",
+        "WolfGoldUltimate" => "울프 골드 얼티메이트",
+        "HimalayanWild" => "히말라얀 와일드",
+        "EternalEmpressFreezeTime" => "이터널 엠프레스 - 프리즈 타임",
+        "GatesofOlympusXmas1000" => "게이트 오브 올림푸스 크리스마스 1000",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
