@@ -1,0 +1,240 @@
+.Progress {
+    position: relative
+}
+
+.Progress,
+.Progress__Bg {
+    height: 100%
+}
+
+.Progress__ActiveWrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0
+}
+
+.Progress__ActiveBar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+.Progress--hearts,
+.Progress--items {
+    align-self: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.Progress--hearts .Progress__Bg,
+.Progress--items .Progress__Bg {
+    position: absolute
+}
+
+.Progress--hearts .Progress__Hearts,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Hearts,
+.Progress--items .Progress__Items {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%
+}
+
+.Progress--hearts .Progress__Heart,
+.Progress--hearts .Progress__Items,
+.Progress--items .Progress__Heart,
+.Progress--items .Progress__Items,
+.ProgressV2 {
+    position: relative
+}
+
+.ProgressV2__Bg {
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar {
+    overflow: hidden;
+    height: 100%;
+    width: 100%
+}
+
+.ProgressV2__ActiveBar,
+.ProgressV2__ActiveImg {
+    position: absolute;
+    bottom: 0;
+    left: 0
+}
+
+:root {
+    --slot-item-height: 49px;
+    --slot-item-width: 62px
+}
+
+.LinesSlot .ReelsSlot {
+    overflow: hidden
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height);
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__Item--2 {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__Item:has(.MoneyScatter) {
+    z-index: 0
+}
+
+.WinLines-Block .LinesSlot .ReelsSlot__Item:has(.MoneyScatter) {
+    overflow: hidden
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 1
+}
+
+.Spin {
+    margin-left: 40px;
+    display: grid;
+    grid-template-areas: "repeat" "slot" "progress"
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .RespinProgress {
+    grid-area: progress
+}
+
+.Spin .Repeat {
+    grid-area: repeat
+}
+
+.Repeat {
+    z-index: 1;
+    display: flex;
+    justify-content: space-between
+}
+
+.Repeat__Item {
+    width: 120px;
+    font-size: .79rem;
+    color: #6d7179;
+    display: flex;
+    gap: 3px
+}
+
+.Repeat__Item--lwq {
+    justify-content: flex-end
+}
+
+.Repeat__Item--lwa {
+    order: -1;
+    justify-content: flex-start
+}
+
+.RespinProgress {
+    width: 89px;
+    height: 25px;
+    background-image: -webkit-image-set(url(./images/vs5himalaw/progress/bg.png) 1x, url(./images/vs5himalaw/progress/bg@2x.png) 2x);
+    margin: -5px auto
+}
+
+.RespinProgress .Progress__Item {
+    width: 18px;
+    height: 18px;
+    position: absolute
+}
+
+.RespinProgress .Progress__Item:first-child {
+    content: -webkit-image-set(url(./images/vs5himalaw/progress/i1.png) 1x, url(./images/vs5himalaw/progress/i1@2x.png) 2x);
+    left: 14px
+}
+
+.RespinProgress .Progress__Item:nth-child(2) {
+    content: -webkit-image-set(url(./images/vs5himalaw/progress/i2.png) 1x, url(./images/vs5himalaw/progress/i2@2x.png) 2x);
+    left: 36px
+}
+
+.RespinProgress .Progress__Item:nth-child(3) {
+    content: -webkit-image-set(url(./images/vs5himalaw/progress/i3.png) 1x, url(./images/vs5himalaw/progress/i3@2x.png) 2x);
+    left: 58px
+}
+
+.MoneyScatter {
+    line-height: normal
+}
+
+.MoneyScatter.v .MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.MoneyScatter.jpc .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs5himalaw/spin/jpc.png) 1x, url(./images/vs5himalaw/spin/jpc@2x.png) 2x)
+}
+
+.MoneyScatter.jp1 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs5himalaw/spin/jp1.png) 1x, url(./images/vs5himalaw/spin/jp1@2x.png) 2x)
+}
+
+.MoneyScatter.jp2 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs5himalaw/spin/jp2.png) 1x, url(./images/vs5himalaw/spin/jp2@2x.png) 2x)
+}
+
+.MoneyScatter.jp3 .ReelsSlot__ItemImg {
+    content: -webkit-image-set(url(./images/vs5himalaw/spin/jp3.png) 1x, url(./images/vs5himalaw/spin/jp3@2x.png) 2x)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs5himalaw/bg.png) 1x, url(./images/vs5himalaw/bg@2x.png) 2x);
+    width: 376px;
+    height: 153px;
+    margin: -5px -33px;
+    background-repeat: no-repeat
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

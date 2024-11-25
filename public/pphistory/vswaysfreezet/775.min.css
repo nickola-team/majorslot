@@ -1,0 +1,123 @@
+:root {
+    --slot-item-width: 48px;
+    --slot-item-height: 49px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.FsProgress {
+    width: 85px;
+    height: 36px;
+    margin-right: 20px;
+    align-self: flex-end;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    line-height: normal;
+    position: relative
+}
+
+.FsProgress--locked:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysfreezet/fsProgressLock.png) 1x, url(./images/vswaysfreezet/fsProgressLock@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 20px;
+    height: 26px;
+    z-index: 2;
+    top: auto;
+    left: inherit
+}
+
+.FsProgress__Title {
+    width: 70px;
+    font-size: .64rem
+}
+
+.Respin--first .ReelsSlot__ItemImg[alt="13"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/13_active.png) 1x, url(./images/vswaysfreezet/spin/13_active@2x.png) 2x)
+}
+
+.Respin--first .ReelsSlot__ItemImg[alt="14"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/15_active.png) 1x, url(./images/vswaysfreezet/spin/15_active@2x.png) 2x)
+}
+
+.Respin--first .ReelsSlot__ItemImg[alt="2"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/2_active.png) 1x, url(./images/vswaysfreezet/spin/2_active@2x.png) 2x)
+}
+
+.Respin--first .ReelsSlot__ItemImg[alt="2_value"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/2_value_active.png) 1x, url(./images/vswaysfreezet/spin/2_value_active@2x.png) 2x)
+}
+
+.Respin .ReelsSlot__ItemImg[alt="2"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/2_active.png) 1x, url(./images/vswaysfreezet/spin/2_active@2x.png) 2x)
+}
+
+.Respin .ReelsSlot__ItemImg[alt="2_value"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/2_value_active.png) 1x, url(./images/vswaysfreezet/spin/2_value_active@2x.png) 2x)
+}
+
+.Respin--last .ReelsSlot__ItemImg[alt="13"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/13_active.png) 1x, url(./images/vswaysfreezet/spin/13_active@2x.png) 2x)
+}
+
+.Respin--last .ReelsSlot__ItemImg[alt="2"],
+.Respin--last .ReelsSlot__ItemImg[alt="2_value"] {
+    content: normal
+}
+
+.Respin--last .ReelsSlot__ItemImg[alt="15"] {
+    content: -webkit-image-set(url(./images/vswaysfreezet/spin/14_active.png) 1x, url(./images/vswaysfreezet/spin/14_active@2x.png) 2x)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vswaysfreezet/bg.png) 1x, url(./images/vswaysfreezet/bg@2x.png) 2x);
+    width: 274px;
+    height: 185px;
+    margin: -23px -17px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vswaysfreezet/bgFs.png) 1x, url(./images/vswaysfreezet/bgFs@2x.png) 2x)
+}
+
+.WinLines-Group .Footer-direction {
+    display: none
+}
