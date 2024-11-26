@@ -394,11 +394,11 @@
       $(document).on('input', '#reg-accountnum', function() {
         let vl = $(this).val();
         if (vl == '') {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
         } else {
-          $(this).parent().parent().addClass('has-success');
-          $(this).parent().parent().removeClass('has-error');
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
         }
       });
 
@@ -447,7 +447,7 @@
         $('#register-popup input').trigger('input');
         $('#register-popup select').trigger('change');
         let err = $('#register-popup .has-success').length;
-        if (err < 8) {
+        if (err < 7) {
           return false;
         }
         $(this).addClass('is-loading disabled');
