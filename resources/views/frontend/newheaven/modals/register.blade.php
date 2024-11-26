@@ -413,7 +413,7 @@
         }
       })
       $(document).on('input', '#register-popup input', function() {
-        if ($('#register-popup .has-success').length == 7) {
+        if ($('#register-popup .has-success').length >= 7) {
           $('#reg-continue').removeAttr('disabled');
         } else {
           $('#reg-continue').attr('disabled', 'disabled');
