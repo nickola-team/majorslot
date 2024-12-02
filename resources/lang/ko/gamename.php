@@ -1284,6 +1284,9 @@ return [
         "HimalayanWild" => "히말라얀 와일드",
         "EternalEmpressFreezeTime" => "이터널 엠프레스 - 프리즈 타임",
         "GatesofOlympusXmas1000" => "게이트 오브 올림푸스 크리스마스 1000",
+        "PenguinsChristmasPartyTime" => "펭귄즈 크리스마스 파티 타임",
+        "SugarRushDice" => "슈가 러쉬 다이스",
+        "WolfGoldDice" => "울프 골드 다이스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",
