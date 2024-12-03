@@ -46,6 +46,28 @@ if(isStandalone)
 }
 
 UHTPatch({
+	name: "DisableLobbyNotifications",
+	ready:function()
+	{
+		return (window["MultiLobbyConnection"] != undefined);
+	},
+	apply:function()
+	{
+		if(IsRequired("LN"))
+			return;
+		
+		MultiLobbyConnection.CanHaveAlerts = function()
+		{
+			return false;
+		};
+	},
+	retry:function()
+	{
+		return (window["Renderer"] == undefined);
+	}
+});
+
+UHTPatch({
 	name: "PatchPromotionsName",
 	ready:function()
 	{
@@ -123,6 +145,105 @@ UHTPatch({
 });
 
 
+UHTPatch({
+	name: "PatchDemoJackpots",
+	ready: function()
+	{
+		return (window["JackpotsManager"] != undefined);
+	},
+	apply: function()
+	{
+		if (window["UHT_GAME_CONFIG_SRC"].demoMode == '1')
+			if (window["UHT_GAME_CONFIG"]["GAME_SYMBOL"].indexOf("vsprg") == 0)
+			{
+				window["UHT_GAME_CONFIG_SRC"].brandRequirements += "NOJPT";
+				var demoJP =
+				`{
+					"jackpotID":"0",
+					"jackpotInstance":"69",
+					"winInfo":
+					{
+						"totalWinCount":69,
+						"biggestWinAmount":"69",
+						"biggestWinDate":"01/01/2042",
+						"biggestWinnerID":"**69",
+						"latestWinAmount":"69",
+						"latestWinDate":"01/01/2042",
+						"latestWinnerID":"69**"
+					},
+					"name":"DemoJackpot",
+					"amount":"-",
+					"amountUSD":"-",
+					"prevWonAmount":"-",
+					"prevWonAmountUSD":"-",
+					"minBet":"0",
+					"minBetUSD":"0",
+					"order":"0",
+					"groupKind":"M",
+					"status":"A",
+					"rtp":"-",
+					"nextSeedAmount":"-",
+					"nextSeedAmountUSD":"-",
+					"contributePercent":"-",
+					"babyContributeInitialPercent":"-",
+					"babyContributePercent":"-",
+					"jackpotBabyAmount":"-",
+					"jackpotBabyAmountUSD":"-",
+					"startNextFromSeed":"true"
+				}`;
+				
+				var demoJPresponse =
+				"["+
+					demoJP
+					+","+
+					demoJP.replace('"order":"0"','"order":"1"').replace('"jackpotID":"0"','"jackpotID":"1"')
+					+","+
+					demoJP.replace('"order":"0"','"order":"2"').replace('"jackpotID":"0"','"jackpotID":"2"')
+					+","+
+					demoJP.replace('"order":"0"','"order":"3"').replace('"jackpotID":"0"','"jackpotID":"3"')
+					+"]";
+				
+				var oVSPP_PVJD = VSProtocolParser.ParseVsJackpotData;
+				VSProtocolParser.ParseVsJackpotData = function()
+				{
+					var ret = oVSPP_PVJD.apply(this, arguments);
+					ret.IsActive = true;
+					return ret;
+				}
+				var oJM_PJ = JackpotsManager.prototype.ParseJackpots;
+				JackpotsManager.prototype.ParseJackpots = function()
+				{
+
+					arguments[0] = demoJPresponse;
+					return oJM_PJ.apply(this, arguments);
+				}
+				var oJM_JRC = JackpotsManager.prototype.JackpotReloadCallback;
+				JackpotsManager.prototype.JackpotReloadCallback = function()
+				{
+					arguments[0] = demoJPresponse;
+					arguments[1] = 200;
+					oJM_JRC.apply(this, arguments);
+				}
+
+				var oJVM_JIR = JackpotVisualManager.prototype.JackpotsInformationReceived;
+				JackpotVisualManager.prototype.JackpotsInformationReceived = function()
+				{
+					oJVM_JIR.apply(this, arguments);
+					for (var i = 0; i<this.visuals.length; i++)
+						for (var j = 0; j<this.visuals[i].contentAmount.length; j++)
+							this.visuals[i].contentAmount[j].GetComponentsInChildren(UILabel, true)[0].text = "XXX";
+					XT.SetDouble(Vars.ReturnToPlayerMinWithJackpot, "XXX");
+					XT.SetDouble(Vars.ReturnToPlayerWithJackpot, "XXX");
+				}
+				
+			}
+	},
+	retry: function()
+	{
+		return window["Renderer"] == undefined;
+	}
+});
+
 
 UHTPatch({
 	name: "PatchNOAB_BetLevelV2",
@@ -155,28 +276,101 @@ UHTPatch({
 	apply: function()
 	{
 		if (IsRequired("SHOPTY"))
+		{
+			if (window["UHT_CUSTOM_LOADER_TYPE"] == "FP") 
+			{
+				ClientLoader.prototype.OnRequestToHideLoader = function()
+				{
+					this.tryToHide = true;
+					XT.TriggerEvent(Vars.Evt_DataToCode_IntroClosePressed);
+				};
+			}
+
 			if (Vars.Evt_CodeToData_IntroClosedOrSkipped != undefined)
 			{
 				var onIntro = function()
 				{
 					if(!Globals.isMobile)
 					{
+						if (window["InterfaceController"] == undefined)
+							return;
 						var desktopInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceController, true);
 						if (desktopInterfaces.length > 0)
-							desktopInterfaces[0].Pressed_Paytable_Open();
+						{
+							if (desktopInterfaces[0].internalState != 16 && desktopInterfaces[0].internalState != 18)
+								desktopInterfaces[0].Pressed_Paytable_Open();
+							else
+							{
+								var onVSGameStateChanged = function()
+								{
+									var BF_IL = globalRuntime.sceneRoots[1].GetComponentsInChildren(BuyFeature_InterfaceLink)[0];
+									if (desktopInterfaces.length > 0 && BF_IL.closeTimer < 0)
+									{
+										if (desktopInterfaces[0].internalState != 16 && desktopInterfaces[0].internalState != 18)
+										{
+											desktopInterfaces[0].Pressed_Paytable_Open();
+											XT.UnregisterCallbackEvent(onVSGameStateChanged, this, Vars.Evt_Internal_ChangeVSGameState);
+										}
+									}
+								}
+								XT.RegisterCallbackEvent(Vars.Evt_Internal_ChangeVSGameState, onVSGameStateChanged, this, 696969);
+							}
+						}
 					}
 					else
 					{
+						if (window["InterfaceControllerMobile_1"] == undefined && window["InterfaceControllerMobile_2"] == undefined)
+							return;
+
 						var landscapeInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceControllerMobile_1, true);
 						var portraitInterfaces = globalRuntime.sceneRoots[1].GetComponentsInChildren(InterfaceControllerMobile_2, true);
 						if (landscapeInterfaces.length > 0)
-							landscapeInterfaces[0].Pressed_Paytable_Open();
+						{
+							if (landscapeInterfaces[0].internalState != 16 && landscapeInterfaces[0].internalState != 18)
+								landscapeInterfaces[0].Pressed_Paytable_Open();
+							else
+							{
+								var onVSGameStateChangedLand = function()
+								{
+									var BF_IL = globalRuntime.sceneRoots[1].GetComponentsInChildren(BuyFeature_InterfaceLink)[0];
+									if (landscapeInterfaces.length > 0 && BF_IL.closeTimer < 0)
+									{
+										if (landscapeInterfaces[0].internalState != 16 && landscapeInterfaces[0].internalState != 18)
+										{
+											landscapeInterfaces[0].Pressed_Paytable_Open();
+											XT.UnregisterCallbackEvent(onVSGameStateChangedLand, this, Vars.Evt_Internal_ChangeVSGameState);
+										}
+									}
+								}
+								XT.RegisterCallbackEvent(Vars.Evt_Internal_ChangeVSGameState, onVSGameStateChangedLand, this, 696969);
+							}
+						}
 						if (portraitInterfaces.length > 0)
-							portraitInterfaces[0].Pressed_Paytable_Open();
+						{
+							if (portraitInterfaces[0].internalState != 16 && portraitInterfaces[0].internalState != 18)
+								portraitInterfaces[0].Pressed_Paytable_Open();
+							else
+							{
+								var onVSGameStateChangedPort = function()
+								{
+									var BF_IL = globalRuntime.sceneRoots[1].GetComponentsInChildren(BuyFeature_InterfaceLink)[0];
+									if (portraitInterfaces.length > 0 && BF_IL.closeTimer < 0)
+									{
+										if (portraitInterfaces[0].internalState != 16 && portraitInterfaces[0].internalState != 18)
+										{
+											portraitInterfaces[0].Pressed_Paytable_Open();
+											XT.UnregisterCallbackEvent(onVSGameStateChangedPort, this, Vars.Evt_Internal_ChangeVSGameState);
+										}
+									}
+								}
+								XT.RegisterCallbackEvent(Vars.Evt_Internal_ChangeVSGameState, onVSGameStateChangedPort, this, 696969);
+							}
+						}
 					}
 				}
 				XT.RegisterCallbackEvent(Vars.Evt_CodeToData_IntroClosedOrSkipped, onIntro, this);
 			}
+		}
 	},
 	retry: function()
 	{
@@ -1323,8 +1517,10 @@ UHTPatch({
 		var mgckey = encodeURIComponent(gameConfig.mgckey);
 		var ingameLobbyApiURL = encodeURIComponent(gameConfig.ingameLobbyApiURL);	
 		//var src = `${ServerOptions.serverUrl}/gs2c/common/lobby/v1/apps/lobby/1.0.0/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
-		var src = new URL(UHT_CONFIG.GAME_URL).origin + `/gs2c/common/lobby/v1/apps/lobby/1.0.0/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
+		var src = `/op/pp_lobby/meta.html?mgckey=${mgckey}&symbol=${gameSymbol}&language=${gameConfig.lang}&currency=${gameConfig.currency}&region=${gameConfig.region}&ingameLobbyApiURL=${ingameLobbyApiURL}&vendor=slots`;
 
+		if(gameConfig["currencyOriginal"])
+			src += `&currencyOriginal=${gameConfig.currencyOriginal}`;
 		if(gameConfig["lobbyFilter"])
 			src += `&lobbyFilter=${gameConfig.lobbyFilter}`;
 		if(gameConfig["lobbyGameSymbol"])
@@ -1939,6 +2135,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 20,000x, with a hitrate of 1 in 166,666,667 and can be achieved when choosing the 5 free spins with 10x starting multiplier option`,
 						es:`El premio máx de este juego es de 20.000x, con una tasa de aparición de 1 en 166.666.667 y puede conseguirse al elegir la opción de 5 tiradas gratis con multiplicador inicial de 10x`,
+						pt:`O prêmio máximo nesse jogo é de 20.000x com uma taxa de acerto de 1 em 1.666.666.667 e pode ser obtido ao escolher o modo de 5 rodadas grátis com opção multiplicadora inicial de 10x`
 					  }
 					},
 					{
@@ -1962,6 +2159,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 20,000x, with a hitrate of 1 in 250,000,000 and can be achieved when choosing the 5 free spins with 10x starting multiplier option`,
 						es:`El premio máx de este juego es de 20.000x, con una tasa de aparición de 1 en 250.000.000 y puede conseguirse al elegir la opción de 5 tiradas gratis con multiplicador inicial de 10x`,
+						pt:`O prêmio máximo nesse jogo é de 20.000x com uma taxa de acerto de 1 em 250.000.000 e pode ser obtido ao escolher o modo de 5 rodadas grátis com opção multiplicadora inicial de 10x`
 					  }
 					},
 					{
@@ -1985,6 +2183,7 @@ UHTPatch({
 					  "customText" : {
 						en:`The max prize in this game is 20,000x, with a hitrate of 1 in 200,000,000 and can be achieved when choosing the 5 free spins with 10x starting multiplier option`,
 						es:`El premio máx de este juego es de 20.000x, con una tasa de aparición de 1 en 200.000.000 y puede conseguirse al elegir la opción de 5 tiradas gratis con multiplicador inicial de 10x`,
+						pt:`O prêmio máximo nesse jogo é de 20.000x com uma taxa de acerto de 1 em 200.000.000 e pode ser obtido ao escolher o modo de 5 rodadas grátis com opção multiplicadora inicial de 10x`
 					  }
 					}
 				  ]
@@ -2802,20 +3001,20 @@ UHTPatch({
 					"configs": [
 					  {
 						"rtp": "95.49",
-						"max_rnd_win": 5000,
-						"max_rnd_hr": 10000,
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 4113599256,
 						"hideWinLimitPaytable" : true
 					  },
 					  {
 						"rtp": "96.46",
-						"max_rnd_win": 5000,
-						"max_rnd_hr": 10000,
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 4001239944,
 						"hideWinLimitPaytable" : true
 					  },
 					  {
 						"rtp": "96.51",
-						"max_rnd_win": 5000,
-						"max_rnd_hr": 10000,
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 4494372480,
 						"hideWinLimitPaytable" : true
 					  }
 					]
@@ -2827,14 +3026,14 @@ UHTPatch({
 					"configs": [
 					  {
 						"rtp": "95.51",
-						"max_rnd_win": 6870,
+						"max_rnd_win": 6750,
 						"max_rnd_hr": 1000000000,
 						"hideWinLimitPaytable" : true
 					  },
 					  {
 						"rtp": "96.51",
-						"max_rnd_win": 5115,
-						"max_rnd_hr": 1000000000,
+						"max_rnd_win": 6750,
+						"max_rnd_hr": 3000000000,
 						"hideWinLimitPaytable" : true
 					  },
 					]
@@ -2978,7 +3177,7 @@ UHTPatch({
 					  {
 						"rtp": "96.5",
 						"max_rnd_win": 4280,
-						"max_rnd_hr": 1000000000,
+						"max_rnd_hr": 500000000,
 						"extraPayload": 
 						`
 						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 4280);
@@ -3084,6 +3283,918 @@ UHTPatch({
 					  }
 					]
 				  },
+				  {
+					"gameSymbols": [
+					  "vs25ultwolgol_cv101"
+					],
+					"configs": [
+					  {
+						"rtp": "94.53",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 333333333,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000x with a hitrate of 1 in 333,333,333 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 333.333.333 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 333.333.333 e pode ser alcançado durante o jogo base',
+								},
+								{
+									en:'The max prize in this game is 3,125x with a hitrate of 1 in 200,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 3.125x con una tasa de aparición de 1 en 200.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 3.125x, com uma taxa de acerto de 1 em 200.000.000 e pode ser alcançado durante o jogo base',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+						"customText" : {
+							en:'The max prize in this game is 5,000x with a hitrate of 1 in 333,333,333 and can be achieved on the base game',
+							es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 333.333.333 y se puede conseguir en el juego base',
+							pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 333.333.333 e pode ser alcançado durante o jogo base',
+						}
+					},
+					{
+						"rtp": "95.56",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base',
+								},
+								{
+									en:'The max prize in this game is 3,125x with a hitrate of 1 in 250,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 3.125x con una tasa de aparición de 1 en 250.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 3.125x, com uma taxa de acerto de 1 em 250.000.000 e pode ser alcançado durante o jogo base',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+						"customText" : {
+							en:'The max prize in this game is 5,000x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game',
+							es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+							pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base',
+						}
+					},
+					{
+						"rtp": "96.57",
+						"max_rnd_win": 5000,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base',
+								},
+								{
+									en:'The max prize in this game is 3,125x with a hitrate of 1 in 166,666,667 and can be achieved on the base game',
+									es:'El premio máx de este juego es de 3.125x con una tasa de aparición de 1 en 166.666.667 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 3.125x, com uma taxa de acerto de 1 em 166.666.667 e pode ser alcançado durante o jogo base',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+						"customText" : {
+							en:'The max prize in this game is 5,000x with a hitrate of 1 in 1,000,000,000 and can be achieved on the base game',
+							es:'El premio máx de este juego es de 5.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+							pt:'O prémio máximo neste jogo é de 5.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base',
+						}
+					},
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs20devilic_cv99"
+					],
+					"configs": [
+					  {
+						"rtp": "96.46",
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 333333333,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 10,000X with a chance to hit of 1 in 333,333,333',
+									es:'El premio máx de este juego es 10.000X con una posibilidad de conseguirlo de 1 sobre 333.333.333',
+									pt:'O prémio máximo neste jogo é 10.000X, com uma possibilidade de ser obtido de 1 em 333.333.333',
+								},
+								{
+									en:'The max prize in this game is 6,667X with a chance to hit of 1 in 142,857,143',
+									es:'El premio máx de este juego es 6.667X con una posibilidad de conseguirlo de 1 sobre 142.857.143',
+									pt:'O prémio máximo neste jogo é 6.667X, com uma possibilidade de ser obtido de 1 em 142.857.143',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 10000)
+						`,
+					  },
+					  {
+						"rtp": "95.60",
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 333333333,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 10,000X with a chance to hit of 1 in 500,000,000',
+									es:'El premio máx de este juego es 10.000X con una posibilidad de conseguirlo de 1 sobre 500.000.000',
+									pt:'O prémio máximo neste jogo é 10.000X, com uma possibilidade de ser obtido de 1 em 500.000.000',
+								},
+								{
+									en:'The max prize in this game is 6,667X with a chance to hit of 1 in 125,000,000',
+									es:'El premio máx de este juego es 6.667X con una posibilidad de conseguirlo de 1 sobre 125.000.000',
+									pt:'O prémio máximo neste jogo é 6.667X, com uma possibilidade de ser obtido de 1 em 125.000.000',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 10000)
+						`,
+					  },
+					  {
+						"rtp": "94.41",
+						"max_rnd_win": 10000,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 10,000X with a chance to hit of 1 in 1,000,000,000',
+									es:'El premio máx de este juego es 10.000X con una posibilidad de conseguirlo de 1 sobre 1.000.000.000',
+									pt:'O prémio máximo neste jogo é 10.000X, com uma possibilidade de ser obtido de 1 em 1.000.000.000',
+								},
+								{
+									en:'The max prize in this game is 6,667X with a chance to hit of 1 in 500,000,000',
+									es:'El premio máx de este juego es 6.667X con una posibilidad de conseguirlo de 1 sobre 500.000.000',
+									pt:'O prémio máximo neste jogo é 6.667X, com uma possibilidade de ser obtido de 1 em 500.000.000',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 10000)
+						`,
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs50jucier_cv91"
+					],
+					"configs": [
+					  {
+						"rtp": "94.03",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 4,167X',
+									es:'El premio máx de este juego es 4.167X',
+									pt:'O prémio máximo neste jogo é 4.167X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "95.00",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 4,167X',
+									es:'El premio máx de este juego es 4.167X',
+									pt:'O prémio máximo neste jogo é 4.167X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "96.05",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 4,167X',
+									es:'El premio máx de este juego es 4.167X',
+									pt:'O prémio máximo neste jogo é 4.167X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs10bbsplxmas_cv97"
+					],
+					"configs": [
+					  {
+						"rtp": "94.60",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "95.67",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "96.71",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs20goldfeverh_cv77"
+					],
+					"configs": [
+					  {
+						"rtp": "98.00",
+						"max_rnd_win": 11817,
+						"max_rnd_hr": 11000000000,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs5bb3reeler_cv101"
+					],
+					"configs": [
+					  {
+						"rtp": "94.50",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "95.50",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					  {
+						"rtp": "96.50",
+						"max_rnd_win": 5000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,000X',
+									es:'El premio máx de este juego es 5.000X',
+									pt:'O prémio máximo neste jogo é 5.000X',
+								},
+								{
+									en:'The max prize in this game is 3,334X',
+									es:'El premio máx de este juego es 3.334X',
+									pt:'O prémio máximo neste jogo é 3.334X',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5000)
+						`,
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vswaysspltsym_cv99"
+					],
+					"configs": [
+					  {
+						"rtp": "94.53",
+						"max_rnd_win": 14000,
+						"max_rnd_hr": 1000000000,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 14000);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 14,000x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 14.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 14.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base`,
+						}
+					  },
+					  {
+						"rtp": "95.54",
+						"max_rnd_win": 14000,
+						"max_rnd_hr": 142857143,
+						"hideWinLimitPaytable" : true,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 14000);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 14,000x, with a hitrate 1 in 142,857,143 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 14.000x con una tasa de aparición de 1 en 142.857.143 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 14.000x, com uma taxa de acerto de 1 em 142.857.143 e pode ser alcançado durante o jogo base`,
+						}
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs5drmystery_cv64"
+					],
+					"configs": [
+					  {
+						"rtp": "94.49",
+						"max_rnd_win": 1250,
+						"max_rnd_hr": 500000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1250);
+						var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+						if (localizationRoot != undefined)
+						{
+							var paths = [
+								"Paytable/Pages/Page2/ProgressiveFeature/Rule6",
+								"Paytable_mobile/Paytable_landscape/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6",
+								"Paytable_mobile/Paytable_portrait/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6"
+							];
+
+							for (var pIdx = 0; pIdx < paths.length; pIdx++)
+							{
+								var labelTransform = localizationRoot.transform.Find(paths[pIdx]);
+								if (labelTransform != undefined)
+								{
+									labelTransform.localScale(0,0,0);
+									labelTransform.GetComponent(UILabel).text = "";
+								}
+							}
+						}
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "95.49",
+						"max_rnd_win": 1250,
+						"max_rnd_hr": 500000000,
+						"extraPayload": 
+						`1250
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1250);
+						var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+						if (localizationRoot != undefined)
+						{
+							var paths = [
+								"Paytable/Pages/Page2/ProgressiveFeature/Rule6",
+								"Paytable_mobile/Paytable_landscape/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6",
+								"Paytable_mobile/Paytable_portrait/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6"
+							];
+
+							for (var pIdx = 0; pIdx < paths.length; pIdx++)
+							{
+								var labelTransform = localizationRoot.transform.Find(paths[pIdx]);
+								if (labelTransform != undefined)
+								{
+									labelTransform.localScale(0,0,0);
+									labelTransform.GetComponent(UILabel).text = "";
+								}
+							}
+						}
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "96.49",
+						"max_rnd_win": 1250,
+						"max_rnd_hr": 500000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1250);
+						var localizationRoot = globalRuntime.sceneRoots[1].GetComponentsInChildren(LocalizationRoot)[0];
+						if (localizationRoot != undefined)
+						{
+							var paths = [
+								"Paytable/Pages/Page2/ProgressiveFeature/Rule6",
+								"Paytable_mobile/Paytable_landscape/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6",
+								"Paytable_mobile/Paytable_portrait/Page4/Content/RealContent/ProgressiveFeatureBottom/Rule6"
+							];
+
+							for (var pIdx = 0; pIdx < paths.length; pIdx++)
+							{
+								var labelTransform = localizationRoot.transform.Find(paths[pIdx]);
+								if (labelTransform != undefined)
+								{
+									labelTransform.localScale(0,0,0);
+									labelTransform.GetComponent(UILabel).text = "";
+								}
+							}
+						}
+						`,
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs20treesot_cv98"
+					],
+					"configs": [
+					  {
+						"rtp": "94.06",
+						"max_rnd_win": 15000,
+						"max_rnd_hr": 166666667,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 15000);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 15,000x, with a hitrate 1 in 166,666,667 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 15.000x con una tasa de aparición de 1 en 166.666.667 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 15.000x, com uma taxa de acerto de 1 em 166.666.667 e pode ser alcançado durante o jogo base`,
+						},
+						"hideWinLimitPaytable" : true
+					  },
+					  {
+						"rtp": "95.10",
+						"max_rnd_win": 15000,
+						"max_rnd_hr": 333333333,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 15000);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 15,000x, with a hitrate 1 in 333,333,333 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 15.000x con una tasa de aparición de 1 en 333.333.333 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 15.000x, com uma taxa de acerto de 1 em 333.333.333 e pode ser alcançado durante o jogo base`,
+						},
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs20fruitswh_cv77"
+					],
+					"configs": [
+					  {
+						"rtp": "98.00",
+						"max_rnd_win": 5966,
+						"hideWinLimitPaytable" : true,
+						"extraPayload":
+						`
+						var SHOXC_LIM100 = {};
+						SHOXC_LIM100.chanceLabel = this.chanceLabel;
+						var OnBetLevelChanged = function()
+						{
+							var texts = [
+								{
+									en:'The max prize in this game is 5,966x, with a hitrate 1 in 2,000,000,000 and can be achieved during the base game',
+									es:'El premio máx de este juego es de 5.966x con una tasa de aparición de 1 en 2.000.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 5.966x, com uma taxa de acerto de 1 em 2.000.000.000 e pode ser alcançado durante o jogo base',
+								},
+								{
+									en:'The max prize in this game is 4,772x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game',
+									es:'El premio máx de este juego es de 4.772x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base',
+									pt:'O prémio máximo neste jogo é de 4.772x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base',
+								}
+							];
+							var bls = XT.GetObject(Vars.BetLevelSettings);
+							if (bls != null)
+							{
+								var text = texts[bls.betLevelIndex][UHT_CONFIG.LANGUAGE];
+								if (text == undefined)
+									text = texts[bls.betLevelIndex]["en"];
+								SHOXC_LIM100.chanceLabel.text = text;
+							}
+						}
+						XT.RegisterCallbackEvent(Vars.BetLevelChanged, OnBetLevelChanged, this);
+						`,
+						"gameInfoPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 5966)
+						`,
+					  }
+					]
+				},
+				{
+					"gameSymbols": [
+					  "vs10cowgold_cv59"
+					],
+					"configs": [
+						{
+							"rtp": "94.50",
+							"max_rnd_win": 1400,
+							"max_rnd_hr": 1000000000,
+							"hideWinLimitPaytable" : true,
+							"gameInfoPayload": 
+							`
+							XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1400)
+							`,
+						},
+						{
+							"rtp": "95.50",
+							"max_rnd_win": 1450,
+							"max_rnd_hr": 1000000000,
+							"hideWinLimitPaytable" : true,
+							"gameInfoPayload": 
+							`
+							XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1450)
+							`,
+						},
+						{
+							"rtp": "96.50",
+							"max_rnd_win": 1625,
+							"max_rnd_hr": 1000000000,
+							"hideWinLimitPaytable" : true,
+							"gameInfoPayload": 
+							`
+							XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 1625)
+							`,
+						}
+					]
+				},
+			{
+					"gameSymbols": [
+					  "vswaysjkrdrop_cv83"
+					],
+					"configs": [
+					  {
+						"rtp": "95.39",
+						"max_rnd_win": 3000,
+						"max_rnd_hr": 1000000000,
+						"extraPayload": 
+						`
+						XT.SetInt(WinLimitVars.WinLimit_TotalBetMultiplier, 15000);
+						`,
+						"customText" : {
+							en:`The max prize in this game is 3,000x, with a hitrate 1 in 1,000,000,000 and can be achieved during the base game`,
+							es:`El premio máx de este juego es de 3.000x con una tasa de aparición de 1 en 1.000.000.000 y se puede conseguir en el juego base`,
+							pt:`O prémio máximo neste jogo é de 3.000x, com uma taxa de acerto de 1 em 1.000.000.000 e pode ser alcançado durante o jogo base`,
+						},
+						"hideWinLimitPaytable" : true
+					  },
+					]
+				},
+
 			];
 			var targetConfig = undefined;
 			var oJSXC_HIR = JurisdictionShowXChance.prototype.HandleInitResponse;
@@ -3095,6 +4206,8 @@ UHTPatch({
 				{
 					if (dict["gameInfo"])
 					{
+						if (window["UHT_GAME_CONFIG"]["GAME_SYMBOL"] == "vs9aztecgemsdx_cv52")
+							dict["gameInfo"] = dict["gameInfo"].replace("-", "_");
 						try
 						{
 							gameInfo = JSON5.parse(dict["gameInfo"]);
@@ -3136,7 +4249,7 @@ UHTPatch({
 						}
 					}
 
-					targetConfig = targetGame.configs.find((element) => element.rtp == returnToPlayer);
+					targetConfig = (targetConfig) ? targetConfig : targetGame.configs.find((element) => element.rtp == returnToPlayer);
 					if (targetConfig != undefined)
 					{
 						var paytable = globalRuntime.sceneRoots[1].GetComponentInChildren(Paytable, true);
@@ -3228,6 +4341,48 @@ UHTPatch({
 
 				if (gameInfo != null)
 					oJSXC_HIR.apply(this, arguments);
+
+				if (ServerOptions.jurisdiction == "BS")
+				{
+					var stylePayload = `#WinLimitDesktop,#WinLimitLandscape,#WinLimitPortrait{margin-left:auto;margin-right:auto;position:relative;top:0;z-index:269;width:95%!important}.iPhone.MainWindow.Chrome #WinLimitLandscape,.iPhone.MainWindow.Chrome #WinLimitPortrait,.iPhone.MainWindow.MobileSafari #WinLimitLandscape{position:fixed;left:50%;transform:translateX(-50%)}canvas.WinLimitCanvas{margin-left:auto;margin-right:auto;display:block}@media only screen and (orientation:landscape){#WinLimitLandscape{display:block!important}#WinLimitPortrait{display:none!important}}@media only screen and (orientation:portrait){#WinLimitLandscape{display:none!important}#WinLimitPortrait{display:block!important}}`;
+					var style = document.createElement('style');
+					style.textContent = stylePayload;
+					document.head.appendChild(style);
+
+					var htmlString = "";
+					if (document.documentElement.id == "Mobile")
+						htmlString = '<div style=display:block;color:#fff class=RGSContainerActive data-height=25><div style=margin-left:auto;margin-right:auto;width:100%;display:block;height:20px;font-size:14px; id=WinLimitPortrait></div><div style=margin-left:auto;margin-right:auto;width:100%;display:none;white-space:nowrap;height:20px; id=WinLimitLandscape></div></div>';
+					else
+						htmlString = '<div style=display:block;color:#fff class=RGSContainerActive data-height=29><div style=width:100%;display:block;white-space:nowrap;font-size:2.5vh; id=WinLimitDesktop></div></div>';
+
+					var htmlContent = new DOMParser().parseFromString(htmlString, "text/html");
+					document.body.insertBefore(htmlContent.body.firstChild, renderCanvas);
+
+					var textContainer = document.getElementById("WinLimitDesktop");
+					if (textContainer != null)
+						textContainer.innerHTML = this.chanceLabel.text;
+					textContainer = document.getElementById("WinLimitPortrait");
+					if (textContainer != null)
+						textContainer.innerHTML = this.chanceLabel.text;
+					textContainer = document.getElementById("WinLimitLandscape");
+					if (textContainer != null)
+						textContainer.innerHTML = this.chanceLabel.text;
+
+					renderCanvas.classList.add("WinLimitCanvas");
+
+					var OnUHTResize = function(/**Object*/ unused)
+					{
+						var rgsParent = document.getElementsByClassName("RGSContainerActive")[0].dataset;
+						var pixelRatio = UHTScreen.height / window.innerHeight;
+						var scale = 1 - (rgsParent.height * pixelRatio / UHTScreen.height);
+						var sign = (document.documentElement.className.indexOf("iPhone") >= 0 && document.documentElement.id == "Mobile" && window.orientation == 90 && !window.frameElement) ? 1 : -1;
+						var transY = sign * ((rgsParent.height * pixelRatio / (UHTScreen.height - rgsParent.height * pixelRatio)) / 2) * 100 ;
+						renderCanvas.style.transform = "scale(" + scale + ") translateY(" + transY + "%)";
+					};
+
+					EventManager.AddHandler("EVT_UHT_RESIZE", OnUHTResize, this);
+					OnUHTResize(null);
+				}
 			}
 
 			JurisdictionShowXChance.prototype.OnGameInfoChanged = function()
@@ -4491,7 +5646,7 @@ UHTPatch({
 
 			var path = "";
 			var split = UHT_CONFIG.GAME_URL.split("/");
-			split.splice(split.indexOf(UHT_CONFIG.SYMBOL) - 2);
+			split.splice(split.indexOf(UHT_GAME_CONFIG.GAME_SYMBOL) - 2);
 			path = split.join("/") + "/";
 			path += "PP_Classic.js";
 			var script = loadScript(path, successCallback, errorCallback);
@@ -4941,7 +6096,7 @@ UHTPatch({
 		if (XStype && !Globals.isMini && (window["MultiLobbyConnection"] != undefined))
 		{
 			var scriptsToLoad = 1;
-			if(XStype == "SBCL")
+			if(XStype != "KB" && XStype != "BRTS")
 				scriptsToLoad = 2;
 			
 			var introSkipped = false;
@@ -4973,14 +6128,17 @@ UHTPatch({
 			}
 
 			var split = UHT_CONFIG.GAME_URL.split("/");
-			split.splice(split.indexOf(UHT_CONFIG.SYMBOL) - 2);
+			split.splice(split.indexOf(UHT_GAME_CONFIG.GAME_SYMBOL) - 2);
 			var rootPath = split.join("/") + "/";
-			paths[0] = rootPath+"XS_" + XStype + ".js"; //"_"+lang;	
-			if(XStype == "SBCL")
+			
+			if(scriptsToLoad > 1)
 			{
 				var lang = window["UHT_GAME_CONFIG"]["LANGUAGE"];
+				paths[0] = rootPath+"XS_GNR.js";
 				paths[1] = rootPath+"XS_"+XStype+"_"+lang+".js";
 			}
+			else
+				paths[0] = rootPath+"XS_" + XStype + ".js";
 
 			var allScriptsLoaded = function()
 			{
@@ -6094,18 +7252,28 @@ UHTPatch({
 	},
 	apply:function()
 	{
-		var oBFIL_RTIB = BuyFeature_InterfaceLink.prototype.RevertToInitialBet;
 		BuyFeature_InterfaceLink.prototype.RevertToInitialBet = function()
 		{
 			XT.TriggerEvent(Vars.Evt_Internal_BetChanged); // !!! not in trunk
 
+			var nextBet = CoinManager.GetNextBet()
+		
 			if (Vars.EnableSmallBets != undefined)
 				XT.SetBool(Vars.EnableSmallBets, false);
 
-			if (this.initialBet == CoinManager.GetNextBet())
+			if (this.initialBet == nextBet)
 				return;
 	
-			oBFIL_RTIB.apply(this, arguments);
+			if (XT.GetBool(Vars.FromServer_AllowCoins))
+			{
+				XT.SetInt(Vars.NextBetIndex, this.initialBetIndex);
+				CoinManager.instance.SetCoinValueIndex(this.initialCoinIndex);
+				XT.TriggerEvent("Evt_SetSmartBetFinished");
+			}
+			else
+			{
+				CoinManager.SetBetIndex(this.initialBetIndex);
+			}
 		};
 
 		BuyFeature_InterfaceLink.prototype.Start = function()
@@ -6921,10 +8089,10 @@ UHTPatch({
 });
 
 UHTPatch({
-	name: "PatchHotGamesAndV3",
+	name: "PatchV3",
 	ready:function()
 	{
-		return window["MultiLobbyConnection"] != undefined;
+		return window["UHT_GAME_CONFIG_SRC"] != undefined;
 	},
 	apply:function()
 	{
@@ -6932,7 +8100,22 @@ UHTPatch({
 		{
 			UHT_GAME_CONFIG_SRC.multiProductMiniLobby = true;
 		}
-		
+	},
+	retry:function()
+	{
+		return (window["Renderer"] == undefined);
+	},
+	interval: 3
+});
+
+UHTPatch({
+	name: "PatchHotGames",
+	ready:function()
+	{
+		return window["MultiLobbyConnection"] != undefined;
+	},
+	apply:function()
+	{
 		MultiLobbyConnection.IsHotSlot = function(/**string*/ uid)
 		{
 			return false;
@@ -7028,7 +8211,7 @@ UHTPatch({
 	},
 	apply:function()
 	{
-		if (!IsRequired("NORID"))
+		if ((IsRequired("SHORID") || IsRequired("VAPP")) && !IsRequired("NORID"))
 		{
 			var prepared = false;
 			var ppLabels = [];
@@ -8179,7 +9362,7 @@ UHTPatch({
 	{
 		FreeRoundsBonusConnection.prototype.ParseFreeRoundData = function(/** ? */ data)
 		{
-			if (XT.GetObject(Vars.BonusRoundsEvents) != null && XT.GetObject(Vars.BonusRoundsEvents).length > 0)
+			if ((XT.GetObject(Vars.BonusRoundsEvents) != null && XT.GetObject(Vars.BonusRoundsEvents).length > 0) || XT.GetObject(Vars.TumblingData) != null)
 				return;
 
 			var brData = new VsFreeRound();
@@ -8698,6 +9881,30 @@ UHTPatch({
 					copyFrom.text = "ВИ";
 				if (copyFrom.text.indexOf("sРАУНДИ") != -1)
 					copyFrom.text = copyFrom.text.replace("sРАУНДИ", "РАУНДИ");
+				if (copyFrom.text == "ЦЕЙ БОНУС ДОСТУПНИЙ ЗА")
+					copyFrom.text = "ЦЕЙ БОНУС ДОСТУПНИЙ ПРОТЯГОМ";
+				MMCFLTL.apply(this, arguments);
+			};
+		}
+
+		if (window["UHT_CONFIG"].LANGUAGE == "lt")
+		{
+			var MMCFLTL = ModificationsManager.CopyFromLabelToLabel;
+			ModificationsManager.CopyFromLabelToLabel = function(copyFrom, copyTo, alsoCopyText, copyEffects)
+			{
+				if (copyFrom.text == "Nepakanka lėšų statymui. Įdėkite pinigų į sąskaita arba sumažinkite staymą.")
+					copyFrom.text = "Nepakanka lėšų statymui. Įdėkite pinigų į sąskaita arba sumažinkite statymą.";
+				MMCFLTL.apply(this, arguments);
+			};
+		}
+
+		if (window["UHT_CONFIG"].LANGUAGE == "zh")
+		{
+			var MMCFLTL = ModificationsManager.CopyFromLabelToLabel;
+			ModificationsManager.CopyFromLabelToLabel = function(copyFrom, copyTo, alsoCopyText, copyEffects)
+			{
+				if (copyFrom.text == " 後開始")
+					copyFrom.text = " 即将开始";
 				MMCFLTL.apply(this, arguments);
 			};
 		}
@@ -9535,8 +10742,7 @@ UHTPatch({
 			if (window["FeaturePurchaseManager"])
 				for (var fpm = globalRuntime.sceneRoots[1].GetComponentsInChildren(FeaturePurchaseManager, true), i = 0; i < fpm.length; i++)
 					for (var j = 0; j < fpm[i].purchaseCosts.length; j++)
-						if (j < fpm[i].purchaseDisplayer.ftPurchaseItems.length && fpm[i].purchaseDisplayer.ftPurchaseItems[j].cat.show.cat != null)
-							bfCosts.push(fpm[i].purchaseCosts[j]);
+						bfCosts.push(fpm[i].purchaseCosts[j]);
 			if (window["FeaturePurchaseV2"])
 				for (var fpv2 = globalRuntime.sceneRoots[1].GetComponentsInChildren(FeaturePurchaseV2, true), i = 0; i < fpv2.length; i++)
 					for (var j = 0; j < fpv2[i].featurePurchaseData.purchaseCosts.length; j++)
@@ -10005,7 +11211,7 @@ UHTPatch({
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/BM/Texts/ManuallyCredited",
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCredited",
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCreditedFBF",
-			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCreditedFBF",
+			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/FR/ManuallyCreditedFRT",
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Asia/Content/ManuallyCredited",
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/AG/AutomaticPayout",
 			"UI Root/XTRoot/Root/GUI/Tournament/Tournament/PromotionsAnnouncer/ContentWin/ContentAnimator/Content/Europe/BM/Texts/AutomaticPayout"
@@ -10045,23 +11251,35 @@ UHTPatch({
 
 		var activate = function(t, param)
 		{
-			if (!IsRequired("MAC"))
-				return;
-
-			if (t != null)
+			if (IsRequired("MAC") || window["UHT_GAME_CONFIG_SRC"]["manualPayout"] != undefined)
 			{
-				var targetComponent = t.GetComponentsInChildren(XTVariable2CAT, true);
-				if (targetComponent.length > 0)
+				if (t != null)
 				{
-					if (param == "")
+					var targetComponent = t.GetComponentsInChildren(XTVariable2CAT, true);
+					if (targetComponent.length > 0)
 					{
-						if (targetComponent[0].notEquals.cat != null)
-							targetComponent[0].notEquals.Start();
-					}
-					else
-					{
-						if (targetComponent[0].equals.cat != null)
-							targetComponent[0].equals.Start();
+						if (param == "")
+						{
+							if (targetComponent[0].notEquals.cat != null)
+								targetComponent[0].notEquals.Start();
+						}
+						else
+						{
+							var willRunCat = IsRequired("MAC");
+							var targetCATparent = targetComponent[0].equals;
+							if (window["TournamentVars"] != undefined && window["TournamentVars"]["PrizeDropManuallyCredited_FR"] != undefined)
+							{
+								willRunCat = true;
+								if (param == "MR")
+									targetCATparent = XT.GetBool("PrizeDropManuallyCredited_FR") ? targetComponent[0].equals : targetComponent[0].notEquals;
+								else if (param == "TM")
+									targetCATparent = XT.GetBool("TournamentManuallyCredited_FR") ? targetComponent[0].equals : targetComponent[0].notEquals;
+								else if (param == "BB")
+									targetCATparent = targetComponent[0].notEquals;
+							}
+							if (willRunCat && targetCATparent.cat != null)
+								targetCATparent.Start();
+						}
 					}
 				}
 			}
@@ -10384,7 +11602,7 @@ UHTPatch({
 			else
 			{
 				var split = UHT_CONFIG.GAME_URL.split("/");
-				split.splice(split.indexOf(UHT_CONFIG.SYMBOL) - 2);
+				split.splice(split.indexOf(UHT_GAME_CONFIG.GAME_SYMBOL) - 2);
 				path = split.join("/") + "/";
 			}
 			path += scriptName + ".js";
@@ -10544,6 +11762,20 @@ UHTPatch({
 	}
 });
 
+UHTBeautifyAmount = function(value) // 198.84 -> 190
+{
+	var closest = 0.01;
+	if (value < 0.1)
+		closest = 0.01;
+	else if (value < 1)
+		closest = 0.1;
+	else if (value < 10)
+		closest = 1;
+	else
+		closest = Math.pow(10,Math.floor(Math.log10(value))) * 100 / 1000
+	return Math.floor (value/closest) * 1000 * closest / 1000;
+}
+
 UHTPatch({
 	name: "PatchConvertDynamicFields",
 	ready:function()
@@ -10569,6 +11801,36 @@ UHTPatch({
 
 				if (details.prizePool.prizesList == null)
 					details.prizePool.prizesList = [];
+				
+				
+				var highestPrize = "";
+				if (details.prizePool.prizesList != null && details.prizePool.prizesList.length > 0 && details.prizePool.prizesList[0].type == TournamentProtocol.PrizeType.Amount)
+					highestPrize = LocaleManager.FormatValueWithCustomCurrency(UHTBeautifyAmount(details.prizePool.prizesList[0].amount), details.prizePool.currency);
+
+				details.htmlRules = details.htmlRules.replace(/~highestPrizeBeautified/g, highestPrize);
+				details.shortHtmlRules = details.shortHtmlRules.replace(/~highestPrizeBeautified/g, highestPrize);
+
+				var totalPrizeAmount = "";
+				if (details.prizePool.totalPrizeAmount > 0)
+					totalPrizeAmount = LocaleManager.FormatValueWithCustomCurrency(UHTBeautifyAmount(details.prizePool.totalPrizeAmount), ServerOptions.currency);
+
+				details.htmlRules = details.htmlRules.replace(/~totalPrizeAmountBeautified/g, totalPrizeAmount);
+				details.shortHtmlRules = details.shortHtmlRules.replace(/~totalPrizeAmountBeautified/g, totalPrizeAmount);
+
+				for (var dfName in details.dynamicFieldMap)
+				{
+					var dfi = details.dynamicFieldMap[dfName];
+					var dfValue = dfi.defaultValue;
+					if (dfi.valueMap[ServerOptions.realCurrency] != undefined)
+					{
+						var val = _number.otod(dfi.valueMap[ServerOptions.realCurrency]);
+						dfValue = LocaleManager.FormatValueWithCustomCurrency(UHTBeautifyAmount(val), ServerOptions.currency);
+					}
+
+					details.htmlRules = details.htmlRules.replace(new RegExp('~'+dfName+'Beautified', 'g'), dfValue);
+					details.shortHtmlRules = details.shortHtmlRules.replace(new RegExp('~'+dfName+'Beautified', 'g'), dfValue);
+				}
+
 			}
 				
 			oPHCDF.apply(this, arguments);
@@ -11468,6 +12730,14 @@ UHTPatch({
 		{
 			XT.SetBool(TournamentVars.PrizeDropManuallyCredited, true);
 		}
+
+		if (IsRequired("MAC") && window["UHT_GAME_CONFIG_SRC"]["manualPayout"] == undefined)
+		{
+			XT.SetBool("PrizeDropManuallyCredited_AGBM", true);
+			XT.SetBool("PrizeDropManuallyCredited_FR", true);
+			XT.SetBool("TournamentManuallyCredited_AGBM", true);
+			XT.SetBool("TournamentManuallyCredited_FR", true);
+		}
 	},
 	retry:function()
 	{
@@ -11586,7 +12856,7 @@ UHTPatch({
 			var oLM_FV = LocaleManager.FormatValue;
 			LocaleManager.FormatValue = function(/**number*/ val, /**FormatOptions*/ formatInfo)
 			{
-				formatInfo.hasDecimals = false;
+				formatInfo.hasDecimals = !(val == (val | 0));
 				return oLM_FV.apply(this, arguments);
 			};
 		}
@@ -12212,59 +13482,6 @@ UHTPatch({
 	retry:function()
 	{
 		return window["XT"] == undefined || !window["XT"]["RegisterAndInitDone"];
-	}
-});
-
-UHTPatch({
-	name: "PatchAGCC_73839",
-	ready:function()
-	{
-		return (window["AGCCController"] != undefined);
-	},
-	apply:function()
-	{
-		AGCCController.prototype.Update = function()
-		{
-			if (UHT_GAME_CONFIG != null)
-			{
-				this.shouldShow = UHT_GAME_CONFIG["jurisdictionMsg"] == "imageAGCC";
-				this.image.SetActive(this.shouldShow);
-			}
-
-			if (this.shouldShow)
-			{
-				var myCamera = Globals.GetCameraForObject(this.image);
-				if (myCamera != null)
-				{
-					var posOnScreen = new UHTMath.Vector3(0, 0, 0);
-					posOnScreen.y = UHTScreen.height;
-					var posOnWorld = myCamera.ScreenToWorldPoint(posOnScreen);
-					var pos = this.image.transform.position();
-					this.image.transform.position(pos.x, posOnWorld.y + 0.05, pos.z);
-				}
-
-				if (UHTScreen.width >= UHTScreen.height * 1.4)
-				{
-					this.image.transform.localScale(2.1, 2.1, 2.1);
-				}
-				else if (UHTScreen.width >= UHTScreen.height)
-				{
-					this.image.transform.localScale(1.7, 1.7, 1.7);
-				}
-				else if (UHTScreen.width < UHTScreen.height)
-				{
-					this.image.transform.localScale(1.05, 1.05, 1.05);
-				}
-
-				var clientLoader = globalRuntime.sceneRoots[0].GetComponentsInChildren(ClientLoader)[0];
-				clientLoader.transform.localScale(0.6, 0.6, 0.6);
-				clientLoader.transform.localPosition(0, 30, 0);
-			}
-		};
-	},
-	retry:function()
-	{
-		return (window["Renderer"] == undefined);
 	}
 });
 
@@ -13582,6 +14799,7 @@ UHTPatch({
 		var spinTurboCounter=0;
 		var spinAutoPlayCounter=0;
 		var spinResponseTimer=0;
+		var spinWithCoinsCounter=0;
 		
 		var spinBatchSize=1;
 		
@@ -13606,6 +14824,7 @@ UHTPatch({
 					{
 						spinCounter++;
 						spinFastPlayCounter += (XT.GetBool(Vars.FastPlay) ? 1 : 0);
+						spinWithCoinsCounter += (XT.GetBool(Vars.HasCoins) ? 1 : 0);
 					}
 					
 					if (action == "started_turbo_spin_fastplay")
@@ -13613,6 +14832,7 @@ UHTPatch({
 						spinCounter++;
 						spinTurboCounter++;
 						spinFastPlayCounter += (XT.GetBool(Vars.FastPlay) ? 1 : 0);
+						spinWithCoinsCounter += (XT.GetBool(Vars.HasCoins) ? 1 : 0);
 					}
 						
 					if (action == "finished_autospin")
@@ -13672,6 +14892,7 @@ UHTPatch({
 						if (spinCounter >= spinBatchSize)
 						{
 							values["fastplayCount"] = spinFastPlayCounter;
+							values["usingCoinsCount"] = spinWithCoinsCounter;
 							values["turboCount"] = spinTurboCounter;
 							values["autoplayCount"] = spinAutoPlayCounter;
 							values["value"] = values["responsetimeAverage"] = ((spinResponseTimer / spinCounter) * 100 | 0) / 100;
