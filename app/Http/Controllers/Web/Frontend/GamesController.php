@@ -628,6 +628,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 "REGULATION"=>"/gs2c/regulation/process.do?symbol\u003d" . $game->label,
                 "datapath_alternative"=> $url . "/games/_". preg_replace('/^[_]/', '', $game->name) . "/common". $resource_type ."/games-html5/games/vs/" . $game->label . "/",
                 "replaySystemContextPath"=>"/ReplayService",
+                "lobbyVersion" => "V3",
                 "sessionKey"=>["VC8hg9RNXC7HWDlDYQl7HtAGMLsPlAwoVA4ytczIT5TSynxyBzU1xjiit5G2TRqF3J7kVcb3Xs8dfBpKWIvlOw\u003d\u003d",
                 "r48/4M0kDw0ZUpNowc/CqA\u003d\u003d",
                 "nfsH8UsO1bqZi/ohjw21/vhe8of3PaMILcnMvetLLvBmQECrM3wWurrX2dPybcdhcgTMhK8rFVZVtvdxv+XFI7AvU0qXZlu7UDFXDKnWVs+7AScd0ZDYepj1I98l6RoI68veAS/jr1jQmuGIUg/RwTEaqWpNiBkRsC2MyW+Hqa1m//VVDNJYrBwvtdoJdFX+MTEg3LriN0lxIaNG4iIWJYElwIEpcW/Qg0uQF1DPYf93jWfV+/0I8+p0GZO6/Nrg+lcr5GpWury7dqlR46MtDg\u003d\u003d"],

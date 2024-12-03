@@ -841,6 +841,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         if(isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL']))
                         {
                             $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                            $json_data['data'][0] = $multi_json;
                         }
                     }   
                     $promo->games = json_encode($json_data);
