@@ -13,13 +13,14 @@
               <li onclick="setTab('main-set',this);">
                 <span class="main-nav__label ng-scope" translate="">내 프로필</span>
               </li>
-			
+              @if($logo != 'poseidon02')
               <li onclick="setTab('deposit-set',this);mydepositlist();" class="active">
                 <span class="main-nav__label ng-scope" translate="">입금 신청</span>
               </li>
               <li onclick="setTab('withdraw-set',this);mywithdrawlist();">
                 <span class="main-nav__label ng-scope" translate="">출금 신청</span>
               </li>
+              @endif
               <li onclick="setTab('change-password-set',this);">
                 <span class="main-nav__label ng-scope" translate="">비밀번호 변경</span>
               </li>
