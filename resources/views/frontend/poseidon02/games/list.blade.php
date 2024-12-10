@@ -1,4 +1,4 @@
-@extends('frontend.boss.layouts.app', ['logo' => 'poseidon02','telegram' => ''])
+@extends('frontend.poseidon02.layouts.app')
 @section('page-title', $title)
 
 @section('content')
