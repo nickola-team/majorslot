@@ -1,7 +1,12 @@
 
 <div id="slots-popup" class="ngdialog ngdialog-theme-default ngdialog-gamespopup ng-scope ng-hide">
         <div class="ngdialog-overlay"></div>
+        @if( $detect->isMobile() || $detect->isTablet() ) 
         <div class="ngdialog-content" role="document">
+          @else
+          <div class="ngdialog-content" role="document"  style="width: 1107px; padding: 0; border-radius: 0; border-style: inset;  border-color: red;">
+          
+          @endif
           <div class="ngdialog-games-page" ng-init="activeCategory">
             <div class="title ng-binding"> 슬 롯 </div>
             <div class="game-button-container live">
