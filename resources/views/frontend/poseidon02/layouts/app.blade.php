@@ -106,7 +106,7 @@
                 <div class="content">
                 @include('frontend.boss.layouts.partials.category')
                 @include('frontend.boss.layouts.partials.notice')
-                @include('frontend.boss.layouts.partials.footer')
+                @include('frontend.poseidon02.layouts.partials.footer')
                 </div>
               </div>
             @endif
@@ -125,7 +125,7 @@
       @endif
       @include('frontend.poseidon02.modals.page')      
       @include('frontend.boss.modals.msg')      
-      @include('frontend.boss.modals.casino')
+      @include('frontend.poseidon02.modals.casino')
       @include('frontend.poseidon02.modals.slot')
       @include('frontend.boss.modals.minis')
       
