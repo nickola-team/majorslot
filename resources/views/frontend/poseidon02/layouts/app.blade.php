@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/frontend/boss/V/ngDialog.css">
     <link rel="stylesheet" href="/frontend/boss/V/customer.css">
     <link rel="stylesheet" href="/frontend/boss/V/customer-popup.css">
-    <link rel="stylesheet" href="/frontend/boss/V/ngDialog-games-popup.css?v0.2">
+    <link rel="stylesheet" href="/frontend/poseidon02/ngDialog-games-popup.css?v0.2">
     <link rel="stylesheet" href="/frontend/boss/V/ngDialog-theme-default.css">
     <link rel="stylesheet" href="/frontend/boss/V/ngdialog-multiplepopup.css">
     <link rel="stylesheet" href="/frontend/boss/V/ngdialog-default.css">
