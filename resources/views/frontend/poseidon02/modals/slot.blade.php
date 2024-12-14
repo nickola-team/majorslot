@@ -4,7 +4,7 @@
         @if( $detect->isMobile() || $detect->isTablet() ) 
         <div class="ngdialog-content" role="document">
           @else
-          <div class="ngdialog-content" role="document"  style="width: 1107px; padding: 0; border-radius: 0; border-style: inset;  border-color: red;">
+          <div class="ngdialog-content" role="document"  style="width: 1107px; padding: 0; border-radius: 0; border-style: inset;  border-color: blanchedalmond;">
           
           @endif
           <div class="ngdialog-games-page" ng-init="activeCategory">
