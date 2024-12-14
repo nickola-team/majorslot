@@ -8,21 +8,21 @@
         @endif
           <div class="ngdialog-games-page" ng-init="activeCategory">
             <div class="title ng-binding"> 라이브 카지노 </div>
-            <div class="game-button-container live">
+            <div class="game-button-container live" style="text-align: center;">
             @foreach($categories AS $index=>$category)
 						@if ($category->type =='live')
             @if ($category->status == 0)
               @if( $detect->isMobile() || $detect->isTablet() ) 
               <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;" onclick="javascript:swal('점검중입니다');">
               @else
-              <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;width: 33%;height: 195px;margin-right: 3px;" onclick="javascript:swal('점검중입니다');">
+              <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;width: 43%;height: 200px;margin-right: 3px;" onclick="javascript:swal('점검중입니다');">
               @endif
             
             @else
               @if( $detect->isMobile() || $detect->isTablet() ) 
               <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;" onclick="javascript:casinoGameStart('{{$category->href}}');">
               @else
-              <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;width: 33%;height: 195px;margin-right: 3px;" onclick="javascript:casinoGameStart('{{$category->href}}');">
+              <div class="game-buttons live" style="background:url('/frontend/kdior/images/game/{{strtoupper($category->title)}}.png') no-repeat #000000;width: 43%;height: 200px;margin-right: 3px;" onclick="javascript:casinoGameStart('{{$category->href}}');">
               @endif
             
             @endif
