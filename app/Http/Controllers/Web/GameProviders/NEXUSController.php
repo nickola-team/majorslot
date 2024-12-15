@@ -28,7 +28,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'symbol'=>'bng', 'skin'=>'SLOT'],
             'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],
             'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'symbol'=>'playngo', 'skin'=>'SLOT'],
-            'nexus-pp' => ['thirdname' =>'pragmaticplay_slot','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],
+            'nexus-pp' => ['thirdname' =>'pragmatic-n','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],
             'nexus-hbn' => ['thirdname' =>'habanero_slot','type' => 'slot', 'symbol'=>'hbn', 'skin'=>'SLOT'],
             'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
             'nexus-rtg' => ['thirdname' =>'evolution_redtiger','type' => 'slot', 'symbol'=>'rtg', 'skin'=>'SLOT'],

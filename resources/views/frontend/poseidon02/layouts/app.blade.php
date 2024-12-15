@@ -67,7 +67,7 @@
     <script type="text/javascript" src="/frontend/boss/V/jquery-jOdometer.min.js"></script>
     <!--  -->
     <!-- <script language="javascript" type="text/javascript" src="/frontend/boss/V/socket.io.js"></script> -->
-    <script language="javascript" type="text/javascript" src="/frontend/boss/V/customFunc.js"></script>
+    <script language="javascript" type="text/javascript" src="/frontend/poseidon02/customFunc.js"></script>
     <style>
       .ng-hide {
         display: none !important;
