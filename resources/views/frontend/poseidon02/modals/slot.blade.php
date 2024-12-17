@@ -38,12 +38,12 @@
       </div>
       <div id="slots-game-popup" class="ngdialog ngdialog-theme-default ngdialog-gamespopup ng-scope ng-hide">
         <div class="ngdialog-overlay"></div>
-        <div class="ngdialog-content" role="document">
+        <div class="ngdialog-content" role="document" style="width:1700px;">
           <div class="ngdialog-games-page" ng-init="activeCategory">
             <div class="title ng-binding"> <span id="provider-title">게임사</span> </div>
             <div class="game-button-container live">
-					<div class="gl-hotgames">
-						<div class="center" id="game-list-area">
+					<div class="gl-hotgames" style="overflow-y: scroll; height:700px;">
+						<div class="center" id="game-list-area" style="max-width:1700px;">
 						</div>
 					</div>
             </div>
