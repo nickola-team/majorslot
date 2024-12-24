@@ -92,7 +92,7 @@
         <main-page class="ng-scope">
           <div class="main-page">
             @if( $detect->isMobile() || $detect->isTablet() ) 
-              @include('frontend.boss.layouts.partials.m.banner')
+              @include('frontend.poseidon02.layouts.partials.m.banner')
             @else
             @include('frontend.boss.layouts.partials.banner')
             @endif
