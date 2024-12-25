@@ -880,11 +880,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 return null;
             }
+            Log::error('GAC : getLobbyUrl error2 failed. ');
             $gameObj = GACController::getGameObj($gamecode);
             if (!$gameObj)
             {
                 return null;
             }
+            Log::error('GAC : getLobbyUrl error1 failed. ');
             $username = $user->username;
             $parse = explode('#', $username);
             if (count($parse) > 1)
@@ -934,6 +936,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data['tableId'] = $gamecode;
             }
             $url = null;
+            Log::error('GAC : getLobbyUrl error failed. ');
             try {
                 $response = Http::timeout(20)->post(config('app.gac_api') . '/wallet/api/getLobbyUrl', $data);
                 if (!$response->ok())

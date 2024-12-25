@@ -1,5 +1,8 @@
 
 @if( $detect->isMobile() || $detect->isTablet() ) 
+<?php
+
+?>
   <div id="register-popup" class="ngdialog ngdialog-theme-default ngdialog-direct ng-scope ng-hide" role="alertdialog" aria-labelledby="ngdialog4-aria-labelledby" aria-describedby="ngdialog4-aria-describedby">
     <div class="ngdialog-content" role="document">
       <div class="ngdialog-signup" ng-controller="SignUpController">
@@ -266,7 +269,22 @@
       $(document).on('input', '#reg-username', function() {
         let vl = $(this).val();
         let patt = /[a-zA-Z0-9]/g;
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
+        } else if (vl.length < 4) {
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
+        } else if (!patt.test(vl)) {
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
+        } else {
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else if (vl.length < 4) {
@@ -279,14 +297,22 @@
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
+        }
+        
       });
 
       $("#btn-username").on('click', function() {
         if (isSend == 1) return false;
         let username = $("#reg-username").val();
         if (username == '') {
-          $("#reg-username").parent().parent().addClass('has-error');
+          if(isMobile()){
+            $("#reg-username").parent().parent().parent().addClass('has-error');
+            $("#reg-username").parent().parent().parent().removeClass('has-success');
+          }else{
+             $("#reg-username").parent().parent().addClass('has-error');
           $("#reg-username").parent().parent().removeClass('has-success');
+          }
+         
           return false;
         }
         $(".e-msg").html('');
@@ -303,12 +329,21 @@
             if (result.ok === 1) {
               $(".s-msg").html('확인');
 			        swal('확인');
-              $("#reg-username").parent().parent().removeClass('has-error');
-              $("#reg-username").parent().parent().addClass('has-success');              
+              if(isMobile()){
+                $("#reg-username").parent().parent().parent().addClass('has-error');
+                $("#reg-username").parent().parent().parent().removeClass('has-success');
+              }else{
+                $("#reg-username").parent().parent().addClass('has-error');
+              $("#reg-username").parent().parent().removeClass('has-success');
+              }             
             } else {
               $(".e-msg").text('중복된 아이디입니다');
 			        swal("Oops!", '중복된 아이디입니다', "error");
-              $("#reg-username").parent().parent().addClass('has-error');
+              if(isMobile()){
+                $("#reg-username").parent().parent().parent().addClass('has-error');
+              }else{
+                $("#reg-username").parent().parent().addClass('has-error');
+              }
             }
             $('input[name="token"]').val(result.token)
           },
@@ -322,36 +357,77 @@
 
       $(document).on('input', '#reg-password', function() {
         let vl = $(this).val();
-        if (vl == '' || vl.length < 6) {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
-        } else if (vl.length < 6) {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
-        } else {
-          $(this).parent().parent().addClass('has-success');
-          $(this).parent().parent().removeClass('has-error');
-        }
+        if(isMobile()){
+          if (vl == '' || vl.length < 6) {
+            $(this).parent().removeClass('has-success');
+            $(this).parent().addClass('has-error');
+          } else if (vl.length < 6) {
+            $(this).parent().removeClass('has-success');
+            $(this).parent().addClass('has-error');
+          } else {
+            $(this).parent().addClass('has-success');
+            $(this).parent().removeClass('has-error');
+          }
+        }else{
+          if (vl == '' || vl.length < 6) {
+            $(this).parent().parent().removeClass('has-success');
+            $(this).parent().parent().addClass('has-error');
+          } else if (vl.length < 6) {
+            $(this).parent().parent().removeClass('has-success');
+            $(this).parent().parent().addClass('has-error');
+          } else {
+            $(this).parent().parent().addClass('has-success');
+            $(this).parent().parent().removeClass('has-error');
+          }
+        }    
+        
       });
       $(document).on('input', '#reg-cpassword', function() {
         let vl = $(this).val();
         let np = $("#reg-cpassword").val();
         $(".reg-cpassword").text('');
-        if (vl == '') {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
-        } else if (np != vl) {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
-          $(".reg-cpassword").text('Password not match');
-        } else {
-          $(this).parent().parent().addClass('has-success');
-          $(this).parent().parent().removeClass('has-error');
-        }
+        if(isMobile()){
+          if (vl == '') {
+            $(this).parent().removeClass('has-success');
+            $(this).parent().addClass('has-error');
+          } else if (np != vl) {
+            $(this).parent().removeClass('has-success');
+            $(this).parent().addClass('has-error');
+            $(".reg-cpassword").text('Password not match');
+          } else {
+            $(this).parent().addClass('has-success');
+            $(this).parent().removeClass('has-error');
+          }
+        }else{
+          if (vl == '') {
+            $(this).parent().parent().removeClass('has-success');
+            $(this).parent().parent().addClass('has-error');
+          } else if (np != vl) {
+            $(this).parent().parent().removeClass('has-success');
+            $(this).parent().parent().addClass('has-error');
+            $(".reg-cpassword").text('Password not match');
+          } else {
+            $(this).parent().parent().addClass('has-success');
+            $(this).parent().parent().removeClass('has-error');
+          }
+        } 
+        
       });
       $(document).on('input', '#reg-wpassword', function() {
         let vl = $(this).val();
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
+        } else if (vl.length < 4 || vl.length > 16) {
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
+        } else {
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else if (vl.length < 4 || vl.length > 16) {
@@ -361,21 +437,44 @@
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
+        } 
+        
       });
 
       $(document).on('input', '#reg-name', function() {
         let vl = $(this).val();
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().removeClass('has-success');
+          $(this).parent().addClass('has-error');
+        } else {
+          $(this).parent().addClass('has-success');
+          $(this).parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else {
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
+        } 
+        
       });
       $(document).on('input', '#reg-phone', function() {
         let vl = $(this).val();
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().removeClass('has-success');
+          $(this).parent().removeClass('has-success');
+          $(this).parent().addClass('has-error');
+        } else {
+          $(this).parent().addClass('has-success');
+          $(this).parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else if (vl.length < 11) {
@@ -385,6 +484,8 @@
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
+        } 
+        
       });
       $("#reg-phone").on('keypress', function(e) {
         if ($(this).val().length > 10) {
@@ -393,27 +494,48 @@
       });
       $(document).on('input', '#reg-accountnum', function() {
         let vl = $(this).val();
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().removeClass('has-success');
+          $(this).parent().addClass('has-error');
+        } else {
+          $(this).parent().addClass('has-success');
+          $(this).parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
+        } else {
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
+        }
+        } 
+        
+      });
+
+      $(document).on('change', '#reg-bankname', function() {
+        let vl = $(this).val();
+        if(isMobile()){
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else {
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
-      });
-
-      $(document).on('change', '#reg-bankname', function() {
-        let vl = $(this).val();
-        if (vl == '') {
+        }else{
+          if (vl == '') {
           $(this).parent().parent().parent().parent().removeClass('has-success');
           $(this).parent().parent().parent().parent().addClass('has-error');
         } else {
           $(this).parent().parent().parent().parent().addClass('has-success');
           $(this).parent().parent().parent().parent().removeClass('has-error');
         }
+        } 
       })
       $(document).on('input', '#register-popup input', function() {
-        if ($('#register-popup .has-success').length == 7) {
+        if ($('#register-popup .has-success').length >= 7) {
           $('#reg-continue').removeAttr('disabled');
         } else {
           $('#reg-continue').attr('disabled', 'disabled');
@@ -423,7 +545,22 @@
       $(document).on('input', '#reg-refercode', function() {
         let vl = $(this).val();
         let patt = /[a-zA-Z0-9]/g;
-        if (vl == '') {
+        if(isMobile()){
+          if (vl == '') {
+          $(this).parent().removeClass('has-success');
+          $(this).parent().addClass('has-error');
+        } else if (vl.length < 4) {
+          $(this).parent().removeClass('has-success');
+          $(this).parent().addClass('has-error');
+        } else if (!patt.test(vl)) {
+          $(this).parent().addClass('has-success');
+          $(this).parent().removeClass('has-error');
+        } else {
+          $(this).parent().addClass('has-success');
+          $(this).parent().removeClass('has-error');
+        }
+        }else{
+          if (vl == '') {
           $(this).parent().parent().removeClass('has-success');
           $(this).parent().parent().addClass('has-error');
         } else if (vl.length < 4) {
@@ -436,6 +573,8 @@
           $(this).parent().parent().addClass('has-success');
           $(this).parent().parent().removeClass('has-error');
         }
+        } 
+        
       });
 
       
@@ -447,7 +586,7 @@
         $('#register-popup input').trigger('input');
         $('#register-popup select').trigger('change');
         let err = $('#register-popup .has-success').length;
-        if (err < 8) {
+        if (err < 7) {
           return false;
         }
         $(this).addClass('is-loading disabled');
@@ -482,4 +621,13 @@
           evt.preventDefault();
         }
       }
+
+      function isMobile() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        // 모바일 디바이스 감지 패턴
+        const mobilePattern = /android|iphone|ipad|ipod|blackberry|windows phone|opera mini|iemobile/i;
+
+        return mobilePattern.test(userAgent);
+    }
     </script>

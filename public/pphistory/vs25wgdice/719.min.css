@@ -1,0 +1,175 @@
+.OverlaySpin__Image {
+    position: absolute;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    z-index: 1;
+    object-fit: scale-down
+}
+
+.OverlaySpin .Spin {
+    border: 1px solid #4c4c4c;
+    overflow: hidden
+}
+
+.OverlaySpin .Spin .SlotWrap__Field {
+    margin: 0;
+    border: unset
+}
+
+.OverlaySlot {
+    position: relative
+}
+
+.OverlaySlot__Overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.OverlaySlot__Image {
+    height: 100%;
+    width: 100%
+}
+
+:root {
+    --slot-item-height: 63px;
+    --slot-item-width: 54px
+}
+
+.LinesSlot .ReelsSlot {
+    position: relative
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="1"] {
+    z-index: 2
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="2"] {
+    z-index: 1
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.OverlaySlot__Image {
+    object-fit: cover;
+    height: calc(100% - 2px);
+    width: calc(100% - 2px)
+}
+
+.OverlaySlot .MoneyScatter.Big {
+    width: 100%;
+    height: 100%
+}
+
+.OverlaySlot .Big .MoneyScatter__Money {
+    font-size: 14px;
+    font-weight: 700;
+    background-color: transparent
+}
+
+.OverlaySlot .Big .ReelsSlot__ItemImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
+.OverlaySlot__Image[alt="1"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/1x3.png) 1x, url(./images/vs25wgdice/spin/1x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="2"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/2x3.png) 1x, url(./images/vs25wgdice/spin/2x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="3"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/3x3.png) 1x, url(./images/vs25wgdice/spin/3x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="4"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/4x3.png) 1x, url(./images/vs25wgdice/spin/4x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="5"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/5x3.png) 1x, url(./images/vs25wgdice/spin/5x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="6"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/6x3.png) 1x, url(./images/vs25wgdice/spin/6x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="7"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/7x3.png) 1x, url(./images/vs25wgdice/spin/7x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="8"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/8x3.png) 1x, url(./images/vs25wgdice/spin/8x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="9"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/9x3.png) 1x, url(./images/vs25wgdice/spin/9x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="10"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/10x3.png) 1x, url(./images/vs25wgdice/spin/10x3@2x.png) 2x)
+}
+
+.OverlaySlot__Image[alt="11"] {
+    content: -webkit-image-set(url(./images/vs25wgdice/spin/11x3.png) 1x, url(./images/vs25wgdice/spin/11x3@2x.png) 2x)
+}
+
+.MoneyScatter__Label {
+    font-size: 14px
+}
+
+.MoneyScatter__Money {
+    position: absolute;
+    line-height: normal;
+    bottom: 2px
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs25wgdice/bg.png) 1x, url(./images/vs25wgdice/bg@2x.png) 2x);
+    width: 306px;
+    height: 214px;
+    margin: -7px -19px;
+    background-repeat: no-repeat
+}

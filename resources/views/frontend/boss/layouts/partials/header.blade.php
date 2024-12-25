@@ -179,6 +179,7 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">마이페이지</p>
                     <p class="ng-binding" style="font-size: 10px;">MY PAGE</p>
                   </li>
+                  @if($logo != 'poseidon02')
                   <li onclick="
                   @auth
                     navClick('page-popup');
@@ -206,7 +207,7 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">출금 신청</p>
                     <p class="ng-binding" style="font-size: 10px;">WITHDRAW</p>
                   </li>
-			
+                  @endif
                   <li onclick="
                   @auth
                     navClick('msg-popup');
@@ -220,6 +221,7 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">공지사항</p>
                     <p class="ng-binding" style="font-size: 10px;">NOTICE</p>
                   </li>
+                  @if($logo != 'poseidon02')
                   <li onclick="
                   @auth
                     navClick('msg-popup');
@@ -233,6 +235,7 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">고객센터</p>
                     <p class="ng-binding" style="font-size: 10px;">CUSTOMER</p>
                   </li>
+                  @endif
                 </ul>
               </div>
             </div>
