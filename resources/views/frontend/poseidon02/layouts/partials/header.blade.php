@@ -23,7 +23,7 @@
           <div class="header-top">
             <div class="logo-container" style="cursor: pointer;z-index: 999999;" onclick="window.location.href='/';">
               <div class="content">
-                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" width="260px">
+                <img src="/frontend/{{$logo??'poseidon02'}}/LOGO.png?0.1" width="260px">
               </div>
             </div>
 
@@ -179,35 +179,7 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">마이페이지</p>
                     <p class="ng-binding" style="font-size: 10px;">MY PAGE</p>
                   </li>
-                  @if($logo != 'poseidon02')
-                  <li onclick="
-                  @auth
-                    navClick('page-popup');
-                  @else
-                    navClick('login-popup');
-                  @endif
-                  setTab('deposit-set','#page-popup &gt; div.ngdialog-content &gt; div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(2)');mydepositlist();" class="ng-scope">
-                    <p ng-show="$index == 1" class="ng-hide">
-                      <i class="fa fa-mobile"></i>
-                    </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">입금 신청</p>
-                    <p class="ng-binding" style="font-size: 10px;">DEPOSIT</p>
-                  </li>
-                  <li onclick="
-                  @auth
-                    navClick('page-popup');
-                  @else
-                    navClick('login-popup');
-                  @endif
-
-                  setTab('withdraw-set','#page-popup &gt; div.ngdialog-content &gt; div.ngdialog-wallet-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');mywithdrawlist();" class="ng-scope">
-                    <p ng-show="$index == 1" class="ng-hide">
-                      <i class="fa fa-mobile"></i>
-                    </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">출금 신청</p>
-                    <p class="ng-binding" style="font-size: 10px;">WITHDRAW</p>
-                  </li>
-                  @endif
+                  
                   <li onclick="
                   @auth
                     navClick('msg-popup');
@@ -221,21 +193,6 @@
                     <p class="ng-binding" style="margin-bottom: 0px;">공지사항</p>
                     <p class="ng-binding" style="font-size: 10px;">NOTICE</p>
                   </li>
-                  @if($logo != 'poseidon02')
-                  <li onclick="
-                  @auth
-                    navClick('msg-popup');
-                  @else
-                    navClick('login-popup');
-                  @endif
-                  setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage();" class="ng-scope">
-                    <p ng-show="$index == 1" class="ng-hide">
-                      <i class="fa fa-mobile"></i>
-                    </p>
-                    <p class="ng-binding" style="margin-bottom: 0px;">고객센터</p>
-                    <p class="ng-binding" style="font-size: 10px;">CUSTOMER</p>
-                  </li>
-                  @endif
                 </ul>
               </div>
             </div>
