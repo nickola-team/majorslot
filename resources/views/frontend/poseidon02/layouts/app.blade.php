@@ -117,8 +117,8 @@
 
     @include('frontend.boss.modals.common')
     @if (!Auth::check())    
-      @include('frontend.boss.modals.login')
-      @include('frontend.boss.modals.register')
+      @include('frontend.poseidon02.modals.login')
+      @include('frontend.poseidon02.modals.register')
     @else
       @if( $detect->isMobile() || $detect->isTablet() ) 
         @include('frontend.poseidon02.modals.m.myinfo')
