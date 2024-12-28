@@ -23,7 +23,7 @@
           <div class="header-top">
             <div class="logo-container" style="cursor: pointer;z-index: 999999;" onclick="window.location.href='/';">
               <div class="content">
-                <img src="/frontend/{{$logo??'poseidon02'}}/LOGO.png?0.1" width="260px">
+                <img src="/frontend/{{$logo??'poseidon02'}}/LOGO.png?0.2" width="260px">
               </div>
             </div>
 
