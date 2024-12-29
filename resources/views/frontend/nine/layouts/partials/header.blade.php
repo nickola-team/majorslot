@@ -23,7 +23,12 @@
           <div class="header-top">
             <div class="logo-container" style="cursor: pointer;z-index: 999999; left:45%" onclick="window.location.href='/';">
               <div class="content">
+                @if($logo == 'aution')
+                <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" style="width:80%;padding-top:10px;">
+                @else
                 <img src="/frontend/{{$logo??'boss'}}/LOGO.png?0.1" style="width:70%;padding-top:10px;">
+                @endif
+                
               </div>
             </div>
 
