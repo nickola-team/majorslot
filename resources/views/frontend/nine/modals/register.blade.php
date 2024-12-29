@@ -4,7 +4,7 @@
         <div class="ngdialog-signup-page ng-scope" ng-controller="SignUpController">
           <div class="ngdialog-signup__content">
             <div class="logo">
-              <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="20%">
+              <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="12%">
             </div>
             <form name="signUp" novalidate="" ng-submit="processForm()" class="form-signup ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match" id="freg">
               <!--Member ID-->
