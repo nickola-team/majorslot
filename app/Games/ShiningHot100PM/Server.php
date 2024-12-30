@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\ShiningHot100PM
                 }
                 else
                 {
-                    $bet = '12.50';
+                    $bet = '10.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;
