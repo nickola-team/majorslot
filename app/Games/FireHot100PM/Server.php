@@ -92,7 +92,7 @@ namespace VanguardLTE\Games\FireHot100PM
                 }
                 else
                 {
-                    $bet = '12.50';
+                    $bet = '10.00';
                 }
                 $spinType = 's';
                 $fsmore = 0;
