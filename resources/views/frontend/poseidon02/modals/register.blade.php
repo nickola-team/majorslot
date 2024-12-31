@@ -4,7 +4,7 @@
         <div class="ngdialog-signup-page ng-scope" ng-controller="SignUpController">
           <div class="ngdialog-signup__content">
             <div class="logo">
-              <img src="/frontend/{{$logo??'boss'}}/LOGO.png" width="12%">
+              <img src="/frontend/{{$logo??'poseidon02'}}/LOGO.png" width="20%">
             </div>
             <form name="signUp" novalidate="" ng-submit="processForm()" class="form-signup ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-valid-have-special-char ng-valid-special-char-c ng-valid-no-match" id="freg">
               <!--Member ID-->
@@ -102,7 +102,7 @@
                 </div>
               </fieldset>
               <fieldset>
-                <!-- <div class="form-group"> -->
+                <div class="form-group">
                   <div class="col-sm-3">
                     <label>
                       <span ng-bind="'Account Number' | translate" class="ng-binding">계좌번호</span>
@@ -115,9 +115,8 @@
                   <div class="col-sm-4">
                     <!-- ngIf: signUp.AccountNumber.$dirty -->
                   </div>
-                <!-- </div> -->
+                </div>
               </fieldset>
-              
               <fieldset>
                 <div class="col-sm-3">
                   <label>
@@ -134,7 +133,7 @@
                 </div>
               </fieldset>
               <!--Member Reference-->
-              <fieldset>
+			  <fieldset>
                 <div class="col-sm-3">
                   <label>
                     <span translate="" class="ng-scope">추천인코드</span>
@@ -142,8 +141,9 @@
                   </label>
                 </div>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength" name="friend" id="reg-refercode">
+                  <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="friend" id="reg-refercode" value="">
                 </div>
+                <div class="clearfix"></div>
               </fieldset>
               <button type="button" class="btn btn-block btn-signup ng-scope" id="reg-continue">회원가입</button>
             </form>
@@ -310,6 +310,13 @@
           $(this).parent().parent().parent().parent().removeClass('has-error');
         }
       })
+      $(document).on('input', '#register-popup input', function() {
+        if ($('#register-popup .has-success').length == 8) {
+          $('#reg-continue').removeAttr('disabled');
+        } else {
+          $('#reg-continue').attr('disabled', 'disabled');
+        }
+      });
 
       $(document).on('input', '#reg-refercode', function() {
         let vl = $(this).val();
@@ -328,15 +335,6 @@
           $(this).parent().parent().removeClass('has-error');
         }
       });
-      $(document).on('input', '#register-popup input', function() {
-        if ($('#register-popup .has-success').length == 8) {
-          $('#reg-continue').removeAttr('disabled');
-        } else {
-          $('#reg-continue').attr('disabled', 'disabled');
-        }
-      });
-
-      
 
       
 	  
