@@ -399,7 +399,7 @@ namespace VanguardLTE\Games\TheBigDawgsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FscWinTotal', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'FscTotal', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = sprintf('%.1f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '6074458' . substr($roundstr, 4, 10);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
