@@ -16,7 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
             'nexus-evo' => ['thirdname' =>'evolution-n','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],
-            'nexus-ppl' => ['thirdname' =>'pragmaticplay_casino','type' => 'casino', 'symbol'=>'ppl', 'skin'=>'B'],
+            'nexus-ppl' => ['thirdname' =>'pragmatic_live','type' => 'casino', 'symbol'=>'ppl', 'skin'=>'A'],
             'nexus-dg' => ['thirdname' =>'dreamgaming_casino','type' => 'casino', 'symbol'=>'dg', 'skin'=>'B'],
             'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],
             'nexus-mgl' => ['thirdname' =>'microgaming_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],

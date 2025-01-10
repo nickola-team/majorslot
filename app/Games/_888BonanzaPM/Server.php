@@ -98,7 +98,7 @@ namespace VanguardLTE\Games\_888BonanzaPM
                 }
                 else
                 {
-                    $bet = '25.00';
+                    $bet = '30.00';
                 }
                 $spinType = 's';
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
@@ -288,9 +288,9 @@ namespace VanguardLTE\Games\_888BonanzaPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'Wins_Mask', '');
                     $slotSettings->SetGameData($slotSettings->slotId . 'Status', '');
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = sprintf('%.1f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '6074458' . substr($roundstr, 4, 10);
+                    $roundstr = '56671' . substr($roundstr, 4, 9);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 
