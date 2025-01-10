@@ -275,7 +275,7 @@ namespace VanguardLTE\Games\PiggyBankBillsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeStacks', []);
                     $slotSettings->SetGameData($slotSettings->slotId . 'TotalSpinCount', 0);
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = sprintf('%.1f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
                     $roundstr = '56671' . substr($roundstr, 4, 9);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
