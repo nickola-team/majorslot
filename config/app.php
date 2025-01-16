@@ -278,6 +278,12 @@ return [
 
 
     /*
+    WILDGAME API
+    */
+    'wildgame_api' => env('WILDGAME_API', ''),
+    'wildgame_opcode' => env('WILDGAME_OP', ''),
+    'wildgame_opkey' => env('WILDGAME_KEY', ''),
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

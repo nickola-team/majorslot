@@ -32,7 +32,6 @@ class GameLaunchCommand extends Command
         'HONOR',
         'NEXUS',
         // 'HDLIVE',
-        'KTEN',
         'HOLDEM'
     ];
 
