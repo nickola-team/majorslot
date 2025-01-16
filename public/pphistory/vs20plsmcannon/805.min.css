@@ -1,0 +1,103 @@
+:root {
+    --slot-item-height: 37px;
+    --slot-item-width: 47px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.SlotBgGreen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative
+}
+
+.SlotBgGreen:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20plsmcannon/greenBg.png) 1x, url(./images/vs20plsmcannon/greenBg@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.SlotBgGreen .ReelsSlot__ItemImg {
+    z-index: 1
+}
+
+.SlotBgGreen .MoneyScatter__LabelWrap {
+    z-index: 1;
+    line-height: normal;
+    align-items: flex-end;
+    justify-content: flex-start
+}
+
+.Carousel__Controls {
+    bottom: -30px
+}
+
+.Multiplier {
+    width: 92px;
+    height: 70px;
+    margin: 40px -2px 0 -20px;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    line-height: normal
+}
+
+.Multiplier__Title {
+    width: 65px;
+    font-size: .64rem
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20plsmcannon/bg.png) 1x, url(./images/vs20plsmcannon/bg@2x.png) 2x);
+    width: 345px;
+    height: 280px;
+    margin: -10px -8px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vs20plsmcannon/bgFs.png) 1x, url(./images/vs20plsmcannon/bgFs@2x.png) 2x)
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}

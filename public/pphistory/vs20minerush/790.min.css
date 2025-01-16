@@ -1,0 +1,161 @@
+:root {
+    --slot-item-height: 35px;
+    --slot-item-width: 39px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Mine {
+    display: flex
+}
+
+.Mine,
+.Mine__Level--0 {
+    position: relative
+}
+
+.Mine__Level--0:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20minerush/levels/level_0.png) 1x, url(./images/vs20minerush/levels/level_0@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 29px;
+    height: 10px;
+    margin: 0 auto;
+    top: inherit;
+    bottom: 2px
+}
+
+.Mine__Level--1 {
+    position: relative
+}
+
+.Mine__Level--1:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20minerush/levels/level_1.png) 1x, url(./images/vs20minerush/levels/level_1@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 29px;
+    height: 10px;
+    margin: 0 auto;
+    top: inherit;
+    bottom: 2px
+}
+
+.Mine__Level--2 {
+    position: relative
+}
+
+.Mine__Level--2:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20minerush/levels/level_2.png) 1x, url(./images/vs20minerush/levels/level_2@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 29px;
+    height: 10px;
+    margin: 0 auto;
+    top: inherit;
+    bottom: 2px
+}
+
+.Mine__Level--3 {
+    position: relative
+}
+
+.Mine__Level--3:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs20minerush/levels/level_3.png) 1x, url(./images/vs20minerush/levels/level_3@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 29px;
+    height: 10px;
+    margin: 0 auto;
+    top: inherit;
+    bottom: 2px
+}
+
+.Mine__Type--4:before {
+    content: none
+}
+
+.MoneyScatter__Label {
+    margin-bottom: 5px
+}
+
+.Carousel__Controls {
+    bottom: -55px
+}
+
+.Spin {
+    margin: 20px 0 40px 80px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs20minerush/bg.png) 1x, url(./images/vs20minerush/bg@2x.png) 2x);
+    width: 510px;
+    height: 300px;
+    margin: -17px -137px;
+    background-repeat: no-repeat
+}
+
+.WinLines-Group .SlotWrap__Footer {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

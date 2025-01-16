@@ -730,7 +730,7 @@ namespace VanguardLTE\Games\DragonKingHotPotsPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameDragonKingHotPotsStack::where('id', 5)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameDragonKingHotPotsStack::where('id', 4680)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
@@ -766,25 +766,25 @@ namespace VanguardLTE\Games\DragonKingHotPotsPM
                     if($pur >= 0){
                         $stacks = $stacks->where('pur_level', $pur);
                     }else{
-                        $stacks = $stacks->where('pur_level', '<=', 0);
+                        $stacks = $stacks->where('pur_level', '<', 0);
                     }
                 }else{
                     $stacks = \VanguardLTE\PPGameStackModel\PPGameDragonKingHotPotsStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = 0; // mt_rand(0, 43000);
+                $index = mt_rand(0, 48000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
                     // $index = mt_rand(0, 85000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        if($pur <= 0)
+                        if($pur < 0)
                         {
                             $stacks = $stacks->where('odd', '<=', 15);  
                         }
                         else
                         {
-                            $stacks = $stacks->where('odd', '<=', 35);  
+                            $stacks = $stacks->where('odd', '<=', 25);  
                         }  
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
