@@ -249,7 +249,7 @@ namespace VanguardLTE\Games\DragonKingdomEyesofFirePM
                 $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
                 $roundstr = sprintf('%.1f', microtime(TRUE));
                 $roundstr = str_replace('.', '', $roundstr);
-                $roundstr = '56671' . substr($roundstr, 4, 9);
+                $roundstr = '57409' . substr($roundstr, 2, 9);
                 $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                 $leftFreeGames = 0;
                 if($slotSettings->GetGameData($slotSettings->slotId . 'TumbSpinCount') > 0){
