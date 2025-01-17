@@ -68,6 +68,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
                     $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeReelCounts',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'IsFreeWin',0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'NoWinSpinMaxCount',0);
+                    $slotSettings->SetGameData($slotSettings->slotId . 'FreeEnd',0);
                 }else if($paramData['req'] == 2){
                     $gameDatas = $this->parseMessage($paramData['vals']);
                     $response_packet = [];
@@ -207,6 +208,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
                                 $result_val['AwardSpinTimes'] = $slotSettings->GetGameData($slotSettings->slotId . 'FreeGames');
                                 $result_val['Multiple'] = $slotSettings->GetGameData($slotSettings->slotId . 'BonusMul') * 3;
                                 $result_val['GameExtraData'] = "";
+                                $slotSettings->SetGameData($slotSettings->slotId . 'InitReelPaies', [0,0,0,0,0]);
                             }else{
                                 $slotSettings->SetGameData($slotSettings->slotId . 'CurrentBalance', $slotSettings->GetBalance());
                             }
@@ -215,6 +217,7 @@ namespace VanguardLTE\Games\FlyOutCQ9
                             $result_val['ScatterPayFromBaseGame'] = $slotSettings->GetGameData($slotSettings->slotId . 'ScatterWin');
                             $result_val['NextModule'] = 0;
                             $result_val['GameExtraData'] = "";
+                            $slotSettings->SetGameData($slotSettings->slotId . 'FreeEnd',1);
                         }
                         array_push($result_vals, count($result_vals) + 1);
                         array_push($result_vals, json_encode($result_val));
@@ -563,15 +566,15 @@ namespace VanguardLTE\Games\FlyOutCQ9
                 if($scatterReelNumberCount >= 5){
                     $reelWins = [0,0,0,0,0];
                     for($i=0;$i<5;$i++){
-                        $reelWins[$i] += floor($betline * 838 * ($scattersCount - 4)) + mt_rand(0, 8); 
+                        $reelWins[$i] += floor($betline * 407 * ($scattersCount - 4)) + mt_rand(0, 8); 
                     }
                     if($slotEvent != 'freespin'){
                         $result_val['ReelPay'] = $reelWins;
+                        $reelWins = [0,0,0,0,0];
                         $slotSettings->SetGameData($slotSettings->slotId . 'InitReelPaies', $reelWins);
                         $slotSettings->SetGameData($slotSettings->slotId . 'InitFreeRngData', $slotSettings->GetGameData($slotSettings->slotId . 'RngData'));
                     }else{
                         $result_val['ReelPay'] = $slotSettings->GetGameData($slotSettings->slotId . 'InitReelPaies');
-                        
                     }
                 }
             }
@@ -667,8 +670,8 @@ namespace VanguardLTE\Games\FlyOutCQ9
                         }   
                         $slotSettings->SetGameData($slotSettings->slotId . 'CurrentFreeReelCounts',$scatterReelCount);              
                     }
-                }else if($scatterReel[$k] == 1 && $scatterReelCount == 5){             
-                    $reelWins[$k] += floor($betline * 407 * ($scatterCount - 3)) + mt_rand(0,100);              
+                }else if($scatterReel[$k] == 1 && $scatterReelCount == 5){
+                   $reelWins[$k] += floor($betline * 407 * ($scatterCount - 3)) + mt_rand(0,100);              
                 }
                 // else if($scatterReel[$k] == 1 && $scatterCount == 2){
                 //     $reelWins[$k] += $betline * 3;
