@@ -173,7 +173,9 @@ namespace VanguardLTE\Games\FonzosFelineFortunesPM
                         $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
                     }
                     if($str_rs_iw != ''){
-                        $strOtherResponse = $strOtherResponse . '&rs_iw=' . (str_replace(',', '', $str_rs_iw) / $original_bet * $bet);
+                        if(is_numeric($str_rs_iw)){
+                            $strOtherResponse = $strOtherResponse . '&rs_iw=' . (str_replace(',', '', $str_rs_iw) / $original_bet * $bet);
+                        }
                     }
                     if($str_rs_win != ''){
                         $strOtherResponse = $strOtherResponse . '&rs_win=' . (str_replace(',', '', $str_rs_win) / $original_bet * $bet);
@@ -700,7 +702,9 @@ namespace VanguardLTE\Games\FonzosFelineFortunesPM
                     $strOtherResponse = $strOtherResponse . '&rs=' . $str_rs;
                 }
                 if($str_rs_iw != ''){
-                    $strOtherResponse = $strOtherResponse . '&rs_iw=' . (str_replace(',', '', $str_rs_iw) / $original_bet * $betline);
+                    if(is_numeric($str_rs_iw)){
+                        $strOtherResponse = $strOtherResponse . '&rs_iw=' . (str_replace(',', '', $str_rs_iw) / $original_bet * $betline);
+                    }
                 }
                 if($str_rs_win != ''){
                     $strOtherResponse = $strOtherResponse . '&rs_win=' . (str_replace(',', '', $str_rs_win) / $original_bet * $betline);
