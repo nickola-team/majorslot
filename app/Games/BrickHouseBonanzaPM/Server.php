@@ -171,7 +171,7 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                         $strOtherResponse = $strOtherResponse . '&accm=' . $str_accm;
                     }
                     if($apv > 0){
-                        $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apaw=' . ($apv * $bet);
+                        $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apwa=' . ($apv * $bet);
                     }
                     if($str_accv != ''){
                         $strOtherResponse = $strOtherResponse . '&accv=' . $str_accv;
@@ -502,10 +502,10 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                     }
                     $totalWin += $moneyWin;
                 }
-                $apaw = 0;
+                $apwa = 0;
                 if($apv > 0){
-                    $apaw = $apv * $betline;
-                    $totalWin += $apaw;
+                    $apwa = $apv * $betline;
+                    $totalWin += $apwa;
                 }
                 $spinType = 's';
                 if( $totalWin > 0) 
@@ -618,7 +618,7 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                     $strOtherResponse = $strOtherResponse . '&s_mark=' . $str_s_mark;
                 }
                 if($apv > 0){
-                    $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apaw=' . $apaw;
+                    $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apwa=' . $apwa;
                 }
                 if($rs_p >= 0){
                     $isState = false;
@@ -719,11 +719,16 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                         $strOtherResponse = $strOtherResponse . '&rs_t=' . $rs_t;
                     }
                     if($apv > 0){
-                        $apaw = $apv * $betline;
-                        $totalWin = $totalWin + $apaw;
-                        $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apaw=' . $apaw;
+                        $apwa = $apv * $betline;
+                        $totalWin = $totalWin + $apwa;
+                        $strOtherResponse = $strOtherResponse . '&apv=' . $apv . '&apt=ma&apwa=' . $apwa;
                         $isState = true;
                         $spinType = 'cb';
+                        $slotSettings->SetBalance($totalWin);
+                        $slotSettings->SetBank('', -1 * $totalWin);
+                    }
+                    if(isset($arr_g['bg']['rw'])){
+                        $arr_g['bg']['rw'] ='' . str_replace(',', '', $arr_g['bg']['rw']) / $original_bet * $betline;
                     }
                     $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
                 }
@@ -755,7 +760,7 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                 if($isState == true && $slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin') >= 0){
                     $allBet = $allBet * $pur_muls[$slotSettings->GetGameData($slotSettings->slotId . 'BuyFreeSpin')];
                 }
-                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, 0, $slotEvent['slotEvent'], false);
+                $slotSettings->SaveLogReport($_GameLog, $allBet, $lines, $slotSettings->GetGameData($slotSettings->slotId . 'TotalWin'), $slotEvent['slotEvent'], $isState);
             }
             if($slotEvent['action'] == 'doSpin' || $slotEvent['action'] == 'doFSOption' || $slotEvent['action'] == 'doCollect' || $slotEvent['action'] == 'doCollectBonus' || $slotEvent['action'] == 'doBonus'){                
                 $this->saveGameLog($slotEvent, $response, $slotSettings->GetGameData($slotSettings->slotId . 'RoundID'), $slotSettings);
