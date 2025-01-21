@@ -1,0 +1,504 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 31px;
+    --slot-item-width: 55px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.LinesSlot .ReelsSlot__ItemImg[alt="14"],
+.LinesSlot .ReelsSlot__ItemImg[alt="15"],
+.LinesSlot .ReelsSlot__ItemImg[alt="16"],
+.LinesSlot .ReelsSlot__ItemImg[alt="17"] {
+    z-index: 1
+}
+
+.Spin {
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-areas: "..  fg  ..  " "..  jp  ..  " "fs slot mult"
+}
+
+.Spin .Frogs {
+    grid-area: fg;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end
+}
+
+.Spin .Frogs__Item--g {
+    order: 3
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Jackpots {
+    grid-area: jp
+}
+
+.Spin .FreeSpinsLeft {
+    z-index: 1;
+    width: 60px;
+    height: 63px;
+    grid-area: fs;
+    align-self: center;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black);
+    position: absolute;
+    margin-left: -63px
+}
+
+.Spin .FreeSpinsLeft__Title {
+    font-size: .79rem
+}
+
+.Spin .FreeSpinsLeft .Image__Children {
+    width: 50px;
+    line-height: normal
+}
+
+.Spin .Multiplier {
+    grid-area: mult;
+    width: 30px;
+    height: 30px;
+    z-index: 1;
+    position: absolute;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.Jackpots {
+    display: grid;
+    grid-template-areas: "g  mj" "mn mi"
+}
+
+.Jackpots .JackpotItem .JackpotItemLetters {
+    display: flex
+}
+
+.Jackpots .JackpotItem .JackpotItemLetters .LetterJp {
+    width: 22px;
+    height: 21px
+}
+
+.Jackpots .JackpotItem .JackpotItemLetters .LetterJp__Active {
+    height: 13px
+}
+
+.Jackpots .JackpotItem--g {
+    grid-area: g
+}
+
+.Jackpots .JackpotItem--mi {
+    grid-area: mi
+}
+
+.Jackpots .JackpotItem--mj {
+    grid-area: mj
+}
+
+.Jackpots .JackpotItem--mn {
+    grid-area: mn
+}
+
+.Jackpots .JackpotItem--mi .JackpotItemLetters,
+.Jackpots .JackpotItem--mj .JackpotItemLetters {
+    justify-content: flex-end
+}
+
+.Action__Content {
+    width: 418px;
+    height: 230px;
+    flex: none;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative
+}
+
+.Bg--2.FreeSpin .Carousel__Slides,
+.Bg--4.FreeSpin .Carousel__Slides,
+.Bg--6.FreeSpin .Carousel__Slides,
+.Bg--7.FreeSpin .Carousel__Slides {
+    transform: scale(.9);
+    margin: -8px -15px -23px
+}
+
+.MoneyScatter__LabelWrap {
+    line-height: normal
+}
+
+.MoneyScatter__Money {
+    white-space: nowrap
+}
+
+.WinLines__Mul {
+    margin-bottom: -2px
+}
+
+.Carousel__Controls {
+    bottom: -40px
+}
+
+.FreeSpin.Bg--0 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/0.png) 1x, url(./images/vs50fatfrogs/backgrounds/0@2x.png) 2x)
+}
+
+.FreeSpin.Bg--0 .Action__Content:before,
+.FreeSpin.Bg--1 .Action__Content:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 420px;
+    height: 230px;
+    filter: brightness(.9)
+}
+
+.FreeSpin.Bg--1 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/1.png) 1x, url(./images/vs50fatfrogs/backgrounds/1@2x.png) 2x)
+}
+
+.FreeSpin.Bg--2 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/2.png) 1x, url(./images/vs50fatfrogs/backgrounds/2@2x.png) 2x)
+}
+
+.FreeSpin.Bg--2 .Action__Content:before,
+.FreeSpin.Bg--3 .Action__Content:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 420px;
+    height: 230px;
+    filter: brightness(.9)
+}
+
+.FreeSpin.Bg--3 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/3.png) 1x, url(./images/vs50fatfrogs/backgrounds/3@2x.png) 2x)
+}
+
+.FreeSpin.Bg--4 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/4.png) 1x, url(./images/vs50fatfrogs/backgrounds/4@2x.png) 2x)
+}
+
+.FreeSpin.Bg--4 .Action__Content:before,
+.FreeSpin.Bg--5 .Action__Content:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 420px;
+    height: 230px;
+    filter: brightness(.9)
+}
+
+.FreeSpin.Bg--5 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/5.png) 1x, url(./images/vs50fatfrogs/backgrounds/5@2x.png) 2x)
+}
+
+.FreeSpin.Bg--6 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/6.png) 1x, url(./images/vs50fatfrogs/backgrounds/6@2x.png) 2x)
+}
+
+.FreeSpin.Bg--6 .Action__Content:before,
+.FreeSpin.Bg--7 .Action__Content:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 420px;
+    height: 230px;
+    filter: brightness(.9)
+}
+
+.FreeSpin.Bg--7 .Action__Content:before {
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/7.png) 1x, url(./images/vs50fatfrogs/backgrounds/7@2x.png) 2x)
+}
+
+.Bg:not(.FreeSpin) .Action__Content:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/backgrounds/0.png) 1x, url(./images/vs50fatfrogs/backgrounds/0@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    width: 420px;
+    height: 230px;
+    filter: brightness(.9)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/slotBg.png) 1x, url(./images/vs50fatfrogs/slotBg@2x.png) 2x);
+    width: 280px;
+    height: 130px;
+    margin: -4px -2px;
+    background-repeat: no-repeat
+}
+
+div:not(.WinLines-Group)>.LinesSlot.LinesSlot--big .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.LinesSlot--big .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot.LinesSlot--big .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.LinesSlot--big .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot.LinesSlot--big .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs50fatfrogs/bigSlotBg.png) 1x, url(./images/vs50fatfrogs/bigSlotBg@2x.png) 2x);
+    width: 280px;
+    height: 191px;
+    margin: -4px -2px;
+    background-repeat: no-repeat
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

@@ -1,0 +1,404 @@
+.LinesSlot .ReelsSlot__ItemImg {
+    height: calc(100% - 3px);
+    width: calc(100% - 3px)
+}
+
+.WaysSlot .ReelsSlot__ItemImg {
+    height: 100%;
+    width: 100%
+}
+
+.WaysSlot .ReelsSlot__ItemImg--fill {
+    object-fit: fill
+}
+
+.PickOptions {
+    display: flex;
+    justify-content: space-around
+}
+
+.PickOptions__Option {
+    position: relative;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: .79rem
+}
+
+.PickOptions__Option-ImgWrap {
+    position: relative
+}
+
+.PickOptions__Option-Title {
+    display: block;
+    font-size: .79rem;
+    color: #6d7179
+}
+
+.PickOptions__Option-Value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%
+}
+
+.PickOptions__Option--selected {
+    border: 1px solid #525d65;
+    background: rgba(82, 93, 101, .5)
+}
+
+.PickOptions__Option--selected .PickOptions__Option-Title {
+    color: #fff
+}
+
+.Bonus30 .Img__Text {
+    font-size: .79rem
+}
+
+.Bonus30 .Img {
+    background-color: #20272b
+}
+
+.Respin {
+    display: flex;
+    flex-direction: column;
+    text-align: center
+}
+
+.Respin__Slots {
+    display: flex;
+    flex-wrap: wrap
+}
+
+.Respin__Slot {
+    margin-right: 16px;
+    margin-bottom: 16px
+}
+
+.SpinOverlayImg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.Carousel,
+.Carousel__Slides {
+    position: relative
+}
+
+.Carousel__Slide {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    transition-delay: .3s
+}
+
+.Carousel__Slide--active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0ms
+}
+
+.Carousel:hover .Carousel__Slide {
+    transition: unset;
+    transition-delay: 0ms
+}
+
+.Carousel__Controls {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px
+}
+
+.Carousel__Controls--hidden {
+    display: none
+}
+
+.Carousel__Arrows {
+    display: contents
+}
+
+.Carousel__Arrow {
+    position: relative;
+    height: 100%;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    box-sizing: border-box;
+    color: #6d7179;
+    margin-bottom: 2px
+}
+
+.Carousel__Arrow:hover {
+    color: #fff;
+    cursor: pointer
+}
+
+.Carousel__Arrow--left {
+    order: -1
+}
+
+.Carousel__Arrow--right {
+    order: 1
+}
+
+.Carousel__Dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 4px
+}
+
+.Carousel__Dot {
+    height: 10px;
+    width: 10px;
+    background-color: #6d7179;
+    border-radius: 50%
+}
+
+.Carousel__Dot--active {
+    background-color: #fff
+}
+
+.Carousel__Dot:hover {
+    cursor: pointer
+}
+
+:root {
+    --slot-item-height: 49px;
+    --slot-item-width: 63px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Carousel {
+    margin-left: 40px;
+    margin-top: 50px
+}
+
+.Carousel__Controls {
+    bottom: -25px
+}
+
+.Frame {
+    display: contents
+}
+
+.Frame--1:after {
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/frames/fr1.png) 1x, url(./images/vswaysbrickhos/frames/fr1@2x.png) 2x)
+}
+
+.Frame--1:after,
+.Frame--2:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Frame--2:after {
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/frames/fr2.png) 1x, url(./images/vswaysbrickhos/frames/fr2@2x.png) 2x)
+}
+
+.Frame--3:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/frames/fr3.png) 1x, url(./images/vswaysbrickhos/frames/fr3@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: ""
+}
+
+.Frame:after {
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px
+}
+
+.MoneyScatter--jp {
+    z-index: 1
+}
+
+.MoneyScatter--jp .MoneyScatter__Label {
+    display: none
+}
+
+.MoneyScatter--jp .MoneyScatter__Money {
+    margin-top: 30px
+}
+
+.BonusWheel {
+    position: relative;
+    height: 305px;
+    display: flex;
+    align-items: flex-end
+}
+
+.BonusWheel .Carousel {
+    opacity: .1
+}
+
+.BonusWheel .WheelWrap {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    left: 50px;
+    bottom: 5px
+}
+
+.BonusWheel .Wheel {
+    width: 300px;
+    height: 300px;
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/bonus/wheel.png) 1x, url(./images/vswaysbrickhos/bonus/wheel@2x.png) 2x)
+}
+
+.BonusWheel.BonusWheel--p-0 .Wheel {
+    transform: rotate(0deg)
+}
+
+.BonusWheel.BonusWheel--p-1 .Wheel {
+    transform: rotate(-30deg)
+}
+
+.BonusWheel.BonusWheel--p-2 .Wheel {
+    transform: rotate(-60deg)
+}
+
+.BonusWheel.BonusWheel--p-3 .Wheel {
+    transform: rotate(-90deg)
+}
+
+.BonusWheel.BonusWheel--p-4 .Wheel {
+    transform: rotate(-120deg)
+}
+
+.BonusWheel.BonusWheel--p-5 .Wheel {
+    transform: rotate(-150deg)
+}
+
+.BonusWheel.BonusWheel--p-6 .Wheel {
+    transform: rotate(-180deg)
+}
+
+.BonusWheel.BonusWheel--p-7 .Wheel {
+    transform: rotate(-210deg)
+}
+
+.BonusWheel.BonusWheel--p-8 .Wheel {
+    transform: rotate(-240deg)
+}
+
+.BonusWheel.BonusWheel--p-9 .Wheel {
+    transform: rotate(-270deg)
+}
+
+.BonusWheel.BonusWheel--p-10 .Wheel {
+    transform: rotate(-300deg)
+}
+
+.BonusWheel.BonusWheel--p-11 .Wheel {
+    transform: rotate(-330deg)
+}
+
+.BonusWheel .Pointer {
+    width: 47px;
+    height: 26px;
+    position: absolute;
+    bottom: 0;
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/bonus/pointer.png) 1x, url(./images/vswaysbrickhos/bonus/pointer@2x.png) 2x)
+}
+
+.BonusWheel--slot {
+    height: 277px
+}
+
+.BonusWheel--slot .Carousel {
+    opacity: 1
+}
+
+.BonusWheel--slot .WheelWrap {
+    bottom: 150px;
+    clip-path: inset(203px 0 0 0)
+}
+
+.WinLines-Group .Footer-direction {
+    display: none
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/bg.png) 1x, url(./images/vswaysbrickhos/bg@2x.png) 2x);
+    width: 454px;
+    height: 277px;
+    margin: -101px -69px;
+    background-repeat: no-repeat
+}
+
+.FreeSpin div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    background-image: -webkit-image-set(url(./images/vswaysbrickhos/bgFs.png) 1x, url(./images/vswaysbrickhos/bgFs@2x.png) 2x)
+}
