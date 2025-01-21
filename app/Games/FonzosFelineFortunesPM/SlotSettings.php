@@ -1,5 +1,5 @@
 <?php 
-namespace VanguardLTE\Games\BrickHouseBonanzaPM
+namespace VanguardLTE\Games\FonzosFelineFortunesPM
 {
     class SlotSettings
     {
@@ -730,13 +730,12 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
         public function GetReelStrips($winType, $bet, $pur = -1)
         {
             // if($winType == 'bonus'){
-                // $stack = \VanguardLTE\PPGameStackModel\PPGameBrickHouseBonanzaStack::where('id', 46760)->first();
+                // $stack = \VanguardLTE\PPGameStackModel\PPGameFonzosFelineFortunesStack::where('id', 25811)->first();
                 // return json_decode($stack->spin_stack, true);
             // }
             $spintype = 0;
             if($winType == 'bonus'){
                 $winAvaliableMoney = $this->GetBank('bonus');
-                $spintype = 1;
             }else if($winType == 'win'){
                 $winAvaliableMoney = $this->GetBank('');
             }else{
@@ -763,22 +762,30 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                 ])->pluck('freestack_id');
             while(true){
                 if($winType == 'bonus'){
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFonzosFelineFortunesStack::where('spin_type', 1)->whereNotIn('id', $existIds);
                     if($pur >= 0){
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameBrickHouseBonanzaStack::where('spin_type', 1)->where('pur_level', $pur)->whereNotIn('id', $existIds);
+                        $stacks = $stacks->where('pur_level', $pur);
                     }else{
-                        $stacks = \VanguardLTE\PPGameStackModel\PPGameBrickHouseBonanzaStack::where('spin_type', 1)->where('pur_level','<=', 0)->whereNotIn('id', $existIds);
+                        $stacks = $stacks->where('pur_level', '<=', 0);
                     }
                 }else{
-                    $stacks = \VanguardLTE\PPGameStackModel\PPGameBrickHouseBonanzaStack::where('spin_type', 0)->whereNotIn('id', $existIds);
+                    $stacks = \VanguardLTE\PPGameStackModel\PPGameFonzosFelineFortunesStack::where('spin_type', 0)->whereNotIn('id', $existIds);
                 }
-                $index = mt_rand(0, 47000);
+                $index = mt_rand(0, 38000);
                 if($winType == 'win'){
                     $stacks = $stacks->where('odd', '>', 0);
-                    // $index = mt_rand(0, 85000);
+                    // $index = mt_rand(0, 65000);
                 }
                 if($isLowBank == true){
                     if($winType == 'bonus'){
-                        $stacks = $stacks->where('odd', '<=', 15);    
+                        if($pur == 1)
+                        {
+                            $stacks = $stacks->where('odd', '<=', 50);  
+                        }
+                        else
+                        {
+                            $stacks = $stacks->where('odd', '<=', 20);  
+                        }  
                     }
                     $stacks = $stacks->orderby('odd', 'asc')->take(100)->get();
                 }else{
@@ -811,6 +818,9 @@ namespace VanguardLTE\Games\BrickHouseBonanzaPM
                     }
                 }
                 if(!isset($stacks) || count($stacks) == 0){
+                    if($isLowBank == true){
+                        $existIds = [0];
+                    }
                     if($isLowBank == true){
                         $existIds = [0];
                     }
