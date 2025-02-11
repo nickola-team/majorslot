@@ -15,24 +15,70 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_GAMEKEY = 'B';
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
-            'nexus-evo' => ['thirdname' =>'evolution-n','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],
-            'nexus-ppl' => ['thirdname' =>'pragmatic_live','type' => 'casino', 'symbol'=>'ppl', 'skin'=>'A'],
-            'nexus-dg' => ['thirdname' =>'dreamgaming_casino','type' => 'casino', 'symbol'=>'dg', 'skin'=>'B'],
-            'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],
-            'nexus-mgl' => ['thirdname' =>'microgaming_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],
-            'nexus-og' => ['thirdname' =>'orientalgame_casino','type' => 'casino', 'symbol'=>'og', 'skin'=>'B'],
-            'nexus-bota' => ['thirdname' =>'bota_casino','type' => 'casino', 'symbol'=>'bota', 'skin'=>'B'],
+            'nexus-evo' => ['thirdname' =>'evolution-n','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],              //에볼루션
+            'nexus-ppl' => ['thirdname' =>'pragmatic_casino','type' => 'casino', 'symbol'=>'ppl', 'skin'=>'E'],         //프라그마틱 카지노
+            'nexus-dg' => ['thirdname' =>'dreamgaming_casino','type' => 'casino', 'symbol'=>'dg', 'skin'=>'B'],         //드림게이밍
+            'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],              //아시안게이밍 카지노
+            'nexus-mgl' => ['thirdname' =>'mggrand_casino','type' => 'casino', 'symbol'=>'mgl', 'skin'=>'A'],           //마이크로게이밍 그랜드 카지노
+            'nexus-og' => ['thirdname' =>'orientalgame_casino','type' => 'casino', 'symbol'=>'og', 'skin'=>'B'],        //오리엔탈 게이밍
+            'nexus-bota' => ['thirdname' =>'bota_casino','type' => 'casino', 'symbol'=>'bota', 'skin'=>'B'],            //보타 카지노
+            //new
+            'nexus-bgl' => ['thirdname' =>'bg_casino','type' => 'casino', 'symbol'=>'bgl', 'skin'=>'B'],                //빅게이밍
+            'nexus-motil' => ['thirdname' =>'motivation_casino','type' => 'casino', 'symbol'=>'motil', 'skin'=>'A'],    //모티베이션 카지노
+            'nexus-ezugil' => ['thirdname' =>'ezugi_casino','type' => 'casino', 'symbol'=>'ezugil', 'skin'=>'A'],       //이주기
+            'nexus-taishanl' => ['thirdname' =>'taishan_casino','type' => 'casino', 'symbol'=>'taishanl', 'skin'=>'A'], //taishan 카지노
+            'nexus-skyl' => ['thirdname' =>'skywind_casino','type' => 'casino', 'symbol'=>'skyl', 'skin'=>'A'],         //스카이윈드 카지노
+            'nexus-betl' => ['thirdname' =>'betgames_casino','type' => 'casino', 'symbol'=>'betl', 'skin'=>'A'],        //벳게임즈 TV
+            'nexus-sexyl' => ['thirdname' =>'sexy_casino','type' => 'casino', 'symbol'=>'sexyl', 'skin'=>'B'],          //섹시 바카라
+            'nexus-dbl' => ['thirdname' =>'dblive_casino','type' => 'casino', 'symbol'=>'dbl', 'skin'=>'B'],            //DB Live 카지노
 
             //==== SLOT ====
-            'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
-            'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'symbol'=>'bng', 'skin'=>'SLOT'],
-            'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],
-            'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'symbol'=>'playngo', 'skin'=>'SLOT'],
-            'nexus-pp' => ['thirdname' =>'pragmatic-n','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],
-            'nexus-hbn' => ['thirdname' =>'habanero_slot','type' => 'slot', 'symbol'=>'hbn', 'skin'=>'SLOT'],
-            'nexus-mg' => ['thirdname' =>'microgaming_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],
-            'nexus-rtg' => ['thirdname' =>'evolution_redtiger','type' => 'slot', 'symbol'=>'rtg', 'skin'=>'SLOT'],
-            'nexus-pgsoft' => ['thirdname' =>'pgsoft_slot','type' => 'slot', 'symbol'=>'pgsoft', 'skin'=>'SLOT'],
+            'nexus-pp' => ['thirdname' =>'pragmatic_slot','type' => 'slot', 'symbol'=>'pp', 'skin'=>'SLOT'],            //프라그마틱 슬롯
+            'nexus-mg' => ['thirdname' =>'mggrand_slot','type' => 'slot', 'symbol'=>'mg', 'skin'=>'SLOT'],              //마이크로게이밍
+            'nexus-bng' => ['thirdname' =>'booongo_slot','type' => 'slot', 'symbol'=>'bng', 'skin'=>'SLOT'],            //부운고 
+            'nexus-playson' => ['thirdname' =>'playson_slot','type' => 'slot', 'symbol'=>'playson', 'skin'=>'SLOT'],    //플레이손
+            'nexus-playngo' => ['thirdname' =>'playngo_slot','type' => 'slot', 'symbol'=>'playngo', 'skin'=>'SLOT'],    //플레이앤고
+            'nexus-hbn' => ['thirdname' =>'habanero_slot','type' => 'slot', 'symbol'=>'hbn', 'skin'=>'SLOT'],           //하바네로
+            'nexus-rtg' => ['thirdname' =>'evolution_redtiger','type' => 'slot', 'symbol'=>'rtg', 'skin'=>'SLOT'],      //레드타이거
+            'nexus-pgsoft' => ['thirdname' =>'pgsoft_slot','type' => 'slot', 'symbol'=>'pgsoft', 'skin'=>'SLOT'],       //PG소프트
+            //new
+            'nexus-ag' => ['thirdname' =>'ag_slot','type' => 'slot', 'symbol'=>'ag', 'skin'=>'SLOT'],                   //아시안게이밍 슬롯
+            'nexus-bp' => ['thirdname' =>'blueprint_slot','type' => 'slot', 'symbol'=>'bp', 'skin'=>'SLOT'],            //블루프린트 슬롯
+            'nexus-cq9' => ['thirdname' =>'cq9_slot','type' => 'slot', 'symbol'=>'cq9', 'skin'=>'SLOT'],                //CQ9 슬롯
+            'nexus-sh' => ['thirdname' =>'spearhead_slot','type' => 'slot', 'symbol'=>'sh', 'skin'=>'SLOT'],            //슬롯 매트릭스
+            'nexus-gmw' => ['thirdname' =>'gmw_slot','type' => 'slot', 'symbol'=>'gmw', 'skin'=>'SLOT'],                //GMW
+            'nexus-netent' => ['thirdname' =>'netent_slot','type' => 'slot', 'symbol'=>'netent', 'skin'=>'SLOT'],       //넷엔트
+            'nexus-btg' => ['thirdname' =>'btg_slot','type' => 'slot', 'symbol'=>'btg', 'skin'=>'SLOT'],                //BTG
+            'nexus-aspect' => ['thirdname' =>'aspect_slot','type' => 'slot', 'symbol'=>'aspect', 'skin'=>'SLOT'],       //Aspect
+            'nexus-betsoft' => ['thirdname' =>'betsoft_slot','type' => 'slot', 'symbol'=>'betsoft', 'skin'=>'SLOT'],    //Betsoft 슬롯
+            'nexus-skywind' => ['thirdname' =>'skywind_slot','type' => 'slot', 'symbol'=>'skywind', 'skin'=>'SLOT'],    //스카이윈드 슬롯
+            'nexus-ftg' => ['thirdname' =>'ftg_slot','type' => 'slot', 'symbol'=>'ftg', 'skin'=>'SLOT'],                //FTG 슬롯
+            'nexus-netgaming' => ['thirdname' =>'netgaming','type' => 'slot', 'symbol'=>'netgaming', 'skin'=>'SLOT'],   //넷게이밍
+            'nexus-ps' => ['thirdname' =>'ps_slot','type' => 'slot', 'symbol'=>'ps', 'skin'=>'SLOT'],                   //플레이스타 슬롯
+            'nexus-naga' => ['thirdname' =>'naga_slot','type' => 'slot', 'symbol'=>'naga', 'skin'=>'SLOT'],             //NAGA
+            'nexus-nspin' => ['thirdname' =>'nspin_slot','type' => 'slot', 'symbol'=>'nspin', 'skin'=>'SLOT'],          //Nextspin 슬롯
+            'nexus-evop' => ['thirdname' =>'evo_slot','type' => 'slot', 'symbol'=>'evop', 'skin'=>'SLOT'],              //에보플레이 슬롯
+            'nexus-aux' => ['thirdname' =>'aux_slot','type' => 'slot', 'symbol'=>'aux', 'skin'=>'SLOT'],                //아바타UX 슬롯
+            'nexus-relax' => ['thirdname' =>'relax_slot','type' => 'slot', 'symbol'=>'relax', 'skin'=>'SLOT'],          //릴렉스
+            'nexus-reelp' => ['thirdname' =>'reelplay_slot','type' => 'slot', 'symbol'=>'reelp', 'skin'=>'SLOT'],       //릴플레이 슬롯
+            'nexus-fant' => ['thirdname' =>'fantasma_slot','type' => 'slot', 'symbol'=>'fant', 'skin'=>'SLOT'],         //판타즈마 슬롯
+            'nexus-boome' => ['thirdname' =>'boomerang_slot','type' => 'slot', 'symbol'=>'boome', 'skin'=>'SLOT'],      //부메랑 슬롯
+            'nexus-4tp' => ['thirdname' =>'4tp_slot','type' => 'slot', 'symbol'=>'4tp', 'skin'=>'SLOT'],                //포더플레이어 슬롯
+            'nexus-nlc' => ['thirdname' =>'nlc_slot','type' => 'slot', 'symbol'=>'nlc', 'skin'=>'SLOT'],                //노리밋시티 슬롯
+            'nexus-hs' => ['thirdname' =>'hs_slot','type' => 'slot', 'symbol'=>'hs', 'skin'=>'SLOT'],                   //핵쏘우게이밍 슬롯
+            'nexus-joker' => ['thirdname' =>'joker_slot','type' => 'slot', 'symbol'=>'joker', 'skin'=>'SLOT'],          //조커 슬롯
+            'nexus-jili' => ['thirdname' =>'jili_slot','type' => 'slot', 'symbol'=>'jili', 'skin'=>'SLOT'],             //JILI 슬롯
+            'nexus-funky' => ['thirdname' =>'funkygames_slot','type' => 'slot', 'symbol'=>'funky', 'skin'=>'SLOT'],     //펀키게임즈 슬롯
+            'nexus-bgaming' => ['thirdname' =>'bgaming_slot','type' => 'slot', 'symbol'=>'bgaming', 'skin'=>'SLOT'],    //비게이밍 슬롯
+            'nexus-booming' => ['thirdname' =>'booming_slot','type' => 'slot', 'symbol'=>'booming', 'skin'=>'SLOT'],    //부밍게임즈 슬롯
+            'nexus-expanse' => ['thirdname' =>'expanse_slot','type' => 'slot', 'symbol'=>'expanse', 'skin'=>'SLOT'],    //익스팬스 슬롯
+            'nexus-ygr' => ['thirdname' =>'ygr_slot','type' => 'slot', 'symbol'=>'ygr', 'skin'=>'SLOT'],                //YGR
+            'nexus-dragon' => ['thirdname' =>'dragoonsoft_slot','type' => 'slot', 'symbol'=>'dragon', 'skin'=>'SLOT'],  //드래곤소프트
+            'nexus-wazdan' => ['thirdname' =>'wazdan_slot','type' => 'slot', 'symbol'=>'wazdan', 'skin'=>'SLOT'],       //와즈단
+            'nexus-octo' => ['thirdname' =>'octoplay_slot','type' => 'slot', 'symbol'=>'octo', 'skin'=>'SLOT'],         //옥토플레이
+            'nexus-ygg' => ['thirdname' =>'ygg_slot','type' => 'slot', 'symbol'=>'ygg', 'skin'=>'SLOT'],                //이그드라실
+            'nexus-novo' => ['thirdname' =>'novomatic_slot','type' => 'slot', 'symbol'=>'novo', 'skin'=>'SLOT'],        //노보메틱
+            'nexus-bt1' => ['thirdname' =>'bt1_sports','type' => 'sports', 'symbol'=>'bt1', 'skin'=>'SPORTS'],          //BT1
         ];
         public static function getGameObj($uuid)
         {
