@@ -1676,4 +1676,10 @@ Route::group(['prefix' => 'spbt1'],function(){
     Route::get('/golobby', 'GameProviders\BTIController@embedGACgame');
 });
 
+//for RG
+Route::group([ 'prefix' => 'rg',], function () {
+    Route::get('/balance', 'GameProviders\RGController@balance');
+    Route::post('/changeBalance', 'GameProviders\RGController@changeBalance');
+});
+
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
