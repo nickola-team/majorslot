@@ -7,6 +7,7 @@
                 </div>                
             </div>
         </div>
+        @if(isset($logo) && $logo != 'best')
         <div class="carousel-text-cont">
             <div class="ct-center">
                 <div class="carousel-ct carousel" data-ride="carousel" data-pause="false">
@@ -33,5 +34,6 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 </div>

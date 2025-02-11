@@ -707,7 +707,10 @@ namespace VanguardLTE\Games\FonzosFelineFortunesPM
                     }
                 }
                 if($str_rs_win != ''){
-                    $strOtherResponse = $strOtherResponse . '&rs_win=' . (str_replace(',', '', $str_rs_win) / $original_bet * $betline);
+                    if(is_numeric($str_rs_win)){
+                        $strOtherResponse = $strOtherResponse . '&rs_win=' . (str_replace(',', '', $str_rs_win) / $original_bet * $betline);
+                    }                    
+                    
                 }
                 if($str_pw != ''){
                     $strOtherResponse = $strOtherResponse . '&pw=' . (str_replace(',', '', $str_pw) / $original_bet * $betline);
