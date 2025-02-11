@@ -12,6 +12,7 @@ namespace VanguardLTE
             'win', 
             'game', 
             'type', 
+            'bet_type', 
             'denomination', 
             'percent', 
             'percent_jps', 
