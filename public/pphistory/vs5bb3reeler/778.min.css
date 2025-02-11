@@ -1,0 +1,245 @@
+:root {
+    --slot-item-height: 48px;
+    --slot-item-width: 55px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.MoneyScatter__LabelWrap {
+    justify-content: flex-end
+}
+
+.MoneyScatter__Label {
+    opacity: .3
+}
+
+.FsSlot .MoneyScatter__Label {
+    opacity: 1
+}
+
+.FsSlot-Level--2 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/multipliers/mult_2.png) 1x, url(./images/vs5bb3reeler/multipliers/mult_2@2x.png) 2x)
+}
+
+.FsSlot-Level--2 .ReelsSlot__Item--2:after,
+.FsSlot-Level--3 .ReelsSlot__Item--2:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    right: auto;
+    left: -20px;
+    top: -5px;
+    height: 33px;
+    width: 100%;
+    z-index: 2
+}
+
+.FsSlot-Level--3 .ReelsSlot__Item--2:after {
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/multipliers/mult_3.png) 1x, url(./images/vs5bb3reeler/multipliers/mult_3@2x.png) 2x)
+}
+
+.FsSlot-Level--4 .ReelsSlot__Item--2:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/multipliers/mult_10.png) 1x, url(./images/vs5bb3reeler/multipliers/mult_10@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    right: auto;
+    left: -20px;
+    top: -5px;
+    height: 33px;
+    width: 100%;
+    z-index: 2
+}
+
+.Spin {
+    display: grid;
+    grid-template-areas: "feature    " "topProgress" "slot       "
+}
+
+.Spin .Feature {
+    grid-area: feature
+}
+
+.Spin .Progress {
+    grid-area: topProgress
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Carousel .SlotWrap__Field {
+    align-items: center
+}
+
+.Action .Spin {
+    margin-top: 30px;
+    margin-left: 80px
+}
+
+.Action.FreeSpin .Spin {
+    margin-left: 35px
+}
+
+.Action.FreeSpin--super .Spin {
+    margin-left: 70px
+}
+
+.Action.FreeSpin--super .Spin .FsSlot-Level--4 .ReelsSlot__Item--2:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/multipliers/mult_20.png) 1x, url(./images/vs5bb3reeler/multipliers/mult_20@2x.png) 2x);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    right: auto;
+    left: -20px;
+    top: -5px;
+    height: 33px;
+    width: 100%;
+    z-index: 2
+}
+
+.Progress {
+    z-index: 1;
+    display: flex;
+    position: relative;
+    gap: 2px
+}
+
+.Progress:before {
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/progress/bg.png) 1x, url(./images/vs5bb3reeler/progress/bg@2x.png) 2x);
+    width: 270px
+}
+
+.Progress--superFs:before,
+.Progress:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    content: "";
+    height: 25px;
+    left: -5px;
+    top: -2px
+}
+
+.Progress--superFs:before {
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/progress/bgSuperFs.png) 1x, url(./images/vs5bb3reeler/progress/bgSuperFs@2x.png) 2x);
+    width: 206px
+}
+
+.Progress__Level {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-between;
+    gap: 2px
+}
+
+.Progress__Item {
+    filter: grayscale(1);
+    opacity: .9;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center
+}
+
+.Progress__Item--active {
+    filter: grayscale(0);
+    opacity: 1
+}
+
+.Progress__Item img {
+    width: 20px;
+    height: auto
+}
+
+.Progress .LevelText {
+    font-size: 6px;
+    line-height: 5px;
+    width: 20px;
+    transform: rotate(-45deg);
+    font-weight: 700;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px
+}
+
+.Feature {
+    z-index: 1;
+    font-size: .79rem;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.MegaSymbol {
+    position: absolute;
+    top: 0;
+    left: 0
+}
+
+.Carousel__Controls {
+    bottom: -30px
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs5bb3reeler/slotBg.png) 1x, url(./images/vs5bb3reeler/slotBg@2x.png) 2x);
+    width: 334px;
+    height: 211px;
+    margin: -50px -84px;
+    background-repeat: no-repeat
+}
+
+.MoneyScatter__Label,
+.MoneyScatter__Money {
+    background-color: unset;
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}

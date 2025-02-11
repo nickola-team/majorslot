@@ -102,7 +102,7 @@ namespace VanguardLTE\Games\RiseofPyramidsPM
                 }
                 else
                 {
-                    $bet = '12.50';
+                    $bet = '10.00';
                 }
                 $lastReelStr = implode(',', $slotSettings->GetGameData($slotSettings->slotId . 'LastReel'));
                 $fsmore = 0;
@@ -362,9 +362,9 @@ namespace VanguardLTE\Games\RiseofPyramidsPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'FreeBalance', $slotSettings->GetBalance());
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = sprintf('%.1f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '6074458' . substr($roundstr, 4, 10);
+                    $roundstr = '57409' . substr($roundstr, 2, 9);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
 

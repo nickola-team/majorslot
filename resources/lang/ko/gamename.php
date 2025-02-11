@@ -1287,6 +1287,14 @@ return [
         "PenguinsChristmasPartyTime" => "펭귄즈 크리스마스 파티 타임",
         "SugarRushDice" => "슈가 러쉬 다이스",
         "WolfGoldDice" => "울프 골드 다이스",
+        "TinyToads" => "타이니 토드",
+        "DragonKingHotPots" => "드래곤 킹 핫 팟스",
+        "MiningRush" => "마이닝 러시",
+        "BigBassBonanza3Reeler" => "빅 베스 보난자 3 릴러",
+        "AztecSmash" => "아즈텍 스매시",
+        "FloatingDragonYearoftheSnake" => "플로팅 드래곤 - 이어 오브 더 스네이크",
+        "BrickHouseBonanza" => "브릭 하우스 보난자",
+        "FonzosFelineFortunes" => "폰조스 펠린 포춘스",
         
         //Booongo
         "tigerstone" => "타이거 스톤",

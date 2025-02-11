@@ -326,9 +326,9 @@ namespace VanguardLTE\Games\MustangGoldPM
                     $slotSettings->SetGameData($slotSettings->slotId . 'BonusMpl', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'Bgt', 0);
                     $slotSettings->SetGameData($slotSettings->slotId . 'ReplayGameLogs', []); //ReplayLog
-                    $roundstr = sprintf('%.4f', microtime(TRUE));
+                    $roundstr = sprintf('%.1f', microtime(TRUE));
                     $roundstr = str_replace('.', '', $roundstr);
-                    $roundstr = '6074458' . substr($roundstr, 4, 10);
+                    $roundstr = '57409' . substr($roundstr, 2, 9);
                     $slotSettings->SetGameData($slotSettings->slotId . 'RoundID', $roundstr);   // Round ID Generation
                     $leftFreeGames = 0;
                     $slotSettings->SetGameData($slotSettings->slotId . 'TumbAndFreeStacks', []);

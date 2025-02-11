@@ -278,6 +278,12 @@ return [
 
 
     /*
+    WILDGAME API
+    */
+    'wildgame_api' => env('WILDGAME_API', ''),
+    'wildgame_opcode' => env('WILDGAME_OP', ''),
+    'wildgame_opkey' => env('WILDGAME_KEY', ''),
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
@@ -343,6 +349,12 @@ return [
     'bti_api' => env('BTI_API', ''),
     'bti_key' => env('BTI_KEY', ''),
     /*
+
+    /*
+    HONOR Auth key
+    */
+    'rg_api' => env('RG_API', ''),
+    'rg_key' => env('RG_KEY', ''),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

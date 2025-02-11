@@ -1,0 +1,86 @@
+:root {
+    --slot-item-height: 57px;
+    --slot-item-width: 64px
+}
+
+.LinesSlot .ReelsSlot {
+    gap: 2px
+}
+
+.LinesSlot .ReelsSlot__Reel {
+    height: auto
+}
+
+.LinesSlot .ReelsSlot__Item {
+    flex-basis: var(--slot-item-height)
+}
+
+.LinesSlot .ReelsSlot__ItemImg {
+    height: auto;
+    width: auto;
+    object-fit: none
+}
+
+.Spin {
+    display: grid;
+    gap: 20px;
+    grid-template-areas: "slot mult"
+}
+
+.Spin .Carousel {
+    grid-area: slot
+}
+
+.Spin .Multiplier {
+    grid-area: mult
+}
+
+.Multiplier {
+    width: 65px;
+    height: 64px;
+    line-height: 64px;
+    background-image: -webkit-image-set(url(./images/vs10fonzofff/multBg.png) 1x, url(./images/vs10fonzofff/multBg@2x.png) 2x)
+}
+
+.Multiplier,
+.Retrigger {
+    text-shadow: #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px, #000 0 0 1px;
+    filter: drop-shadow(2px 4px 4px black)
+}
+
+.Retrigger {
+    width: 130px;
+    height: 174px;
+    background-image: -webkit-image-set(url(./images/vs10fonzofff/bonus/y.png) 1x, url(./images/vs10fonzofff/bonus/y@2x.png) 2x)
+}
+
+.Retrigger--no {
+    background-image: -webkit-image-set(url(./images/vs10fonzofff/bonus/n.png) 1x, url(./images/vs10fonzofff/bonus/n@2x.png) 2x)
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot {
+    box-shadow: unset
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Reel {
+    box-shadow: none;
+    background-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field .ReelsSlot__Item {
+    border-color: transparent
+}
+
+div:not(.WinLines-Group)>.LinesSlot .SlotWrap__Field:before {
+    position: absolute;
+    content: "";
+    background-image: -webkit-image-set(url(./images/vs10fonzofff/bg.png) 1x, url(./images/vs10fonzofff/bg@2x.png) 2x);
+    width: 344px;
+    height: 189px;
+    margin: -12px -11px;
+    background-repeat: no-repeat
+}
