@@ -1683,11 +1683,11 @@ Route::group([ 'prefix' => 'rg',], function () {
 });
 //for RG
 Route::group([ 'prefix' => 'nexus',], function () {
-    Route::post('/balance', 'GameProviders\RGController@balance');
-    Route::post('/betPlace', 'GameProviders\RGController@betPlace');
-    Route::post('/betResult', 'GameProviders\RGController@betResult');
-    Route::post('/betCancel', 'GameProviders\RGController@betCancel');
-    Route::post('/betAdjust', 'GameProviders\RGController@betAdjust');
+    Route::post('/balance', 'GameProviders\NEXUSController@balance');
+    Route::post('/betPlace', 'GameProviders\NEXUSController@betPlace');
+    Route::post('/betResult', 'GameProviders\NEXUSController@betResult');
+    Route::post('/betCancel', 'GameProviders\NEXUSController@betCancel');
+    Route::post('/betAdjust', 'GameProviders\NEXUSController@betAdjust');
 });
 
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
