@@ -418,7 +418,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             $category = \VanguardLTE\Category::where(['provider' => RGController::RG_PROVIDER, 'shop_id' => 0, 'href' => $gameObj['href']])->first();
             $gamename = $gametitle . '_' . $gameObj['href'];
-            if($round['type'] == 'cancel')  // 취소처리된 경우
+            if($type == 'cancel')  // 취소처리된 경우
             {
                 $gamename = $gametitle . '_rg[C]_' . $gameObj['href'];
             }
