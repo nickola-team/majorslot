@@ -1464,8 +1464,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return response()->json([
                 "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
                 "data" => [
-                    "beforeBalance" => $beforeBalance,
-                    "balance" => $user->balance,       // 보유 금액 (Number)
+                    "beforeBalance" => intval($beforeBalance),
+                    "balance" => intval($user->balance),       // 보유 금액 (Number)
                     "currency" => 'KRW',    // 화폐 (String)
                 ]
             ]);
