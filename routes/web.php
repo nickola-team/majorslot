@@ -1683,7 +1683,7 @@ Route::group([ 'prefix' => 'rg',], function () {
 });
 //for RG
 Route::group([ 'prefix' => 'nexus',], function () {
-    Route::get('/balance', 'GameProviders\RGController@balance');
+    Route::post('/balance', 'GameProviders\RGController@balance');
     Route::post('/betPlace', 'GameProviders\RGController@betPlace');
     Route::post('/betResult', 'GameProviders\RGController@betResult');
     Route::post('/betCancel', 'GameProviders\RGController@betCancel');

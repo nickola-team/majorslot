@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const NEXUS_PROVIDER = 'nexus';
+        const NEXUS_PROVIDER = 'nexus_s';
         const NEXUS_PPVERIFY_PROVIDER = 'nexusv';
         const NEXUS_PP_HREF = 'nexus-pp';
         const NEXUS_GAMEKEY = 'B';
