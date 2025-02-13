@@ -1681,5 +1681,13 @@ Route::group([ 'prefix' => 'rg',], function () {
     Route::get('/balance', 'GameProviders\RGController@balance');
     Route::post('/changeBalance', 'GameProviders\RGController@changeBalance');
 });
+//for RG
+Route::group([ 'prefix' => 'nexus',], function () {
+    Route::get('/balance', 'GameProviders\RGController@balance');
+    Route::post('/betPlace', 'GameProviders\RGController@betPlace');
+    Route::post('/betResult', 'GameProviders\RGController@betResult');
+    Route::post('/betCancel', 'GameProviders\RGController@betCancel');
+    Route::post('/betAdjust', 'GameProviders\RGController@betAdjust');
+});
 
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
