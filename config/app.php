@@ -351,7 +351,7 @@ return [
     /*
 
     /*
-    HONOR Auth key
+    RG Auth key
     */
     'rg_api' => env('RG_API', ''),
     'rg_key' => env('RG_KEY', ''),

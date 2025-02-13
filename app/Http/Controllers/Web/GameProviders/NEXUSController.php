@@ -298,13 +298,36 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode, $user,  $prefix=self::NEXUS_PROVIDER) 
+        public static function makegamelink($gamecode,  $prefix=self::NEXUS_PROVIDER) 
         {
-            $user_code = $prefix  . sprintf("%04d",$user->id);
             $game = NEXUSController::getGameObj($gamecode);
             if (!$game)
             {
                 return null;
+            }
+            $user = auth()->user();
+            if ($user == null)
+            {
+                return null;
+            }
+            $user_code = $prefix  . sprintf("%04d",$user->id);
+            //유저정보 조회
+            $data = NEXUSController::moneyInfo($user_code);
+            if($data == null || $data['code'] != 0)
+            {
+                //새유저 창조
+                $params = [
+                    'username' => $user_code,
+                    'nickname' => $user_code,
+                    'siteUsername' => $user_code,
+                ];
+
+                $data = NEXUSController::sendRequest('/register', $params);
+                if ($data==null || $data['code'] != 0)
+                {
+                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
+                    return null;
+                }
             }
             $params = [
                 'vendorKey' => $game['vendorKey'],
@@ -446,7 +469,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     
                 }
             }
-            return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [NEXUSController::NEXUS_PROVIDER, $gamecode])]];
+            $url = NEXUSController::makegamelink($gamecode);
+            if ($url)
+            {
+                return ['error' => false, 'data' => ['url' => $url]];
+            }
+            return ['error' => true, 'msg' => '게임실행 오류입니다'];
         }
 
         public static function gamerounds($fromtimepoint, $totimepoint)
@@ -1281,6 +1309,66 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
         }
 
+        // callback
+        public function balance(\Illuminate\Http\Request $request)
+        {
+            Log::error('Nexus. Balance Request PARAMS =====> ' . $request->getContent());
+            return response()->json([
+                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                "data" => [
+                    "balance" => 10000.0,       // 보유 금액 (Number)
+                    "currency" => 'KRW',    // 화폐 (String)
+                ]
+            ]);
+        }
+        public function betPlace(\Illuminate\Http\Request $request)
+        {
+            Log::error('Nexus. Bet Place Request PARAMS =====> ' . $request->getContent());
+            return response()->json([
+                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                "data" => [
+                    "beforeBalance" => 10000,
+                    "balance" => 9000.0,       // 보유 금액 (Number)
+                    "currency" => 'KRW',    // 화폐 (String)
+                ]
+            ]);
+        }
+        public function betResult(\Illuminate\Http\Request $request)
+        {
+            Log::error('Nexus. Bet Result Request PARAMS =====> ' . $request->getContent());
+            return response()->json([
+                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                "data" => [
+                    "beforeBalance" => 9000,
+                    "balance" => 9000.0,       // 보유 금액 (Number)
+                    "currency" => 'KRW',    // 화폐 (String)
+                ]
+            ]);
+        }
+        public function betCancel(\Illuminate\Http\Request $request)
+        {
+            Log::error('Nexus. Bet Cancel Request PARAMS =====> ' . $request->getContent());
+            return response()->json([
+                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                "data" => [
+                    "beforeBalance" => 9000,
+                    "balance" => 9000.0,       // 보유 금액 (Number)
+                    "currency" => 'KRW',    // 화폐 (String)
+                ]
+            ]);
+        }
+        public function betAdjust(\Illuminate\Http\Request $request)
+        {
+            Log::error('Nexus. Bet Adjust Request PARAMS =====> ' . $request->getContent());
+            return response()->json([
+                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                "data" => [
+                    "beforeBalance" => 9000,
+                    "balance" => 9000.0,       // 보유 금액 (Number)
+                    "currency" => 'KRW',    // 화폐 (String)
+                ]
+            ]);
+        }
     }
 
 }

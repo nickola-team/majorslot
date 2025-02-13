@@ -1059,7 +1059,64 @@ namespace VanguardLTE\Console
                 }
                 $this->info('End');
             });
+            \Artisan::command('daily:bulknewcategory {startid} {endid}', function ($categoryid, $startid, $endid) {
+                set_time_limit(0);
+                $this->info("Begin adding bulk new category to all shop");
+                
+                for ($originalid = $startid; $originalid<$endid; $originalid++){
+                    $this->info("creating  " . $originalid . " category..");
+                    $cat = \VanguardLTE\Category::where('id', $originalid)->first();
+                    if (!$cat)
+                    {
+                        $this->error('Can not find original id of new category');
+                        continue;
+                    }
+                    $data = $cat->toArray();
 
+                    $sites = \VanguardLTE\WebSite::all()->pluck('id')->toArray();
+                    foreach ($sites as $site)
+                    {
+                        $sitecats = \VanguardLTE\Category::where('site_id', $site)->get();
+                        if (count($sitecats) > 0)
+                        {
+                            if (\VanguardLTE\Category::where(['shop_id'=>0,'original_id'=>$originalid,'site_id'=>$site])->first())
+                            {
+                                $this->info("Category already exist in " . $site . " site");
+                            }
+                            else
+                            {
+                                $data['site_id'] = $site;
+                                if ($cat->parent > 0)
+                                {
+                                    $supercategory = \VanguardLTE\Category::where(['site_id' => $site, 'original_id' => $cat->parent])->first();
+                                    if ($supercategory){
+                                        $data['parent'] = $supercategory->id;
+                                    }
+                                }
+                                $site_cat = \VanguardLTE\Category::create($data);
+                            }
+                            
+                            
+                        }
+                    }
+                    $data['site_id'] = 0;
+                    $shop_ids = \VanguardLTE\Shop::all()->pluck('id')->toArray();
+                    foreach ($shop_ids as $id)
+                    {
+                        $default_cat = \VanguardLTE\Category::where(['shop_id'=> $id])->first();
+                        $data['site_id'] = $default_cat->site_id;
+                        if (\VanguardLTE\Category::where(['shop_id'=> $id, 'href' => $cat->href, 'provider' => $cat->provider])->first())
+                        {
+                            $this->info("Category already exist in " . $id . " shop");
+                        }
+                        else{
+                            $data['shop_id'] = $id;
+                            $shop_cat = \VanguardLTE\Category::create($data);
+                        }
+                    }
+                }
+                $this->info('End');
+            });
             \Artisan::command('daily:newwebsite', function () {
                 set_time_limit(0);
                 $this->info("Begin adding new category to sites");
