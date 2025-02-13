@@ -672,71 +672,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $transactionKey = $betrounds[2];
             
             $params = [
-                'id' => $transactionKey
+                'transactionKey' => $transactionKey,
+                'lang' => 'ko'
             ];
 
-            $data = NEXUSController::sendRequest('/transaction_one', $params);
+            $data = NEXUSController::sendRequest('/getdetailurl', $params);
             if ($data==null || $data['code'] != 0)
             {
                 return null;
             }
-
-
-            $betdetails = null;
-            $gametype = 'nexus';
-            $result = null;
-            if($data['transactions'])
+            else
             {
-                foreach($data['transactions'] as $transaction)
-                {
-                    if($transaction['transactionKey'] == $transactionKey)
-                    {
-                        if($transaction['detail'])
-                        {
-                            $betdetails = $transaction['detail'];
-                        }
-                        else
-                        {
-                            $betdetails = [];
-                        }
-                        $betdetails['betType'] = '';
-                        $bet = 0;
-                        $win = 0;
-                        if($transaction['type'] == 'turn_bet')
-                        {
-                            $bet = $transaction['cash'];
-                        }
-                        else
-                        {
-                            $win = $transaction['cash'];
-                        }
-                        $betdetails['bet_money'] = $bet;
-                        $betdetails['win_money'] = $win;
-                        $betdetails = json_encode($betdetails);
-                        break;
-                    }
-                }
+                return $data['url'];
             }
-            // foreach ($data['wager'] as $bet)
-            // {
-            //     if ($bet['txn_type'] == 'CREDIT' && $bet['txn_no'] == $txn_no)
-            //     {
-            //         $gametype = $bet['type'];
-            //         $betdetails = json_decode($bet['detail'], true);
-            //         $betdetails['betType'] = $bet['type'];
-            //         $betdetails['bet_money'] = $bet['bet_money'];
-            //         $betdetails['win_money'] = $bet['win_money'];
-            //         $betdetails = json_encode($betdetails);
-            //         break;
-            //     }
-            // }
-
-            return [
-                'type' => $gametype,
-                'result' => $result,
-                'bets' => $betdetails,
-                'stat' => $stat
-            ];
         }
         public static function getAgentBalance()
         {
@@ -1309,62 +1257,215 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             file_put_contents(storage_path('logs/') . 'PPVerify.log', $strinternallog . $strlog);
         }
 
-        // callback
+        // callback for seamless
         public function balance(\Illuminate\Http\Request $request)
         {
-            Log::error('Nexus. Balance Request PARAMS =====> ' . $request->getContent());
+            $data = json_decode($request->getContent(), true);
+            if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
+            {
+                Log::error('Nexus CallBack Balance : Invalid ApiKey. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'Invalid ApiKey'  
+                ]);
+            }
+            if(!isset($data['params']) || !isset($data['params']['siteUsername']))
+            {
+                Log::error('Nexus CallBack Balance : No params. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'No params'  
+                ]);
+            }
+            $userid = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
+            $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
+            if (!$user)
+            {
+                Log::error('Nexus CallBack Balance : Not found user. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'Not found user'  
+                ]);
+            }
             return response()->json([
                 "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
                 "data" => [
-                    "balance" => 10000.0,       // 보유 금액 (Number)
+                    "balance" => intval($user->balance),       // 보유 금액 (Number)
                     "currency" => 'KRW',    // 화폐 (String)
                 ]
             ]);
         }
         public function betPlace(\Illuminate\Http\Request $request)
         {
-            Log::error('Nexus. Bet Place Request PARAMS =====> ' . $request->getContent());
-            return response()->json([
-                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
-                "data" => [
-                    "beforeBalance" => 10000,
-                    "balance" => 9000.0,       // 보유 금액 (Number)
-                    "currency" => 'KRW',    // 화폐 (String)
-                ]
-            ]);
+            return addGameRound('BetPlace', json_decode($request->getContent(), true));
         }
         public function betResult(\Illuminate\Http\Request $request)
         {
-            Log::error('Nexus. Bet Result Request PARAMS =====> ' . $request->getContent());
-            return response()->json([
-                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
-                "data" => [
-                    "beforeBalance" => 9000,
-                    "balance" => 9000.0,       // 보유 금액 (Number)
-                    "currency" => 'KRW',    // 화폐 (String)
-                ]
-            ]);
+            return addGameRound('Result', json_decode($request->getContent(), true));
         }
         public function betCancel(\Illuminate\Http\Request $request)
         {
-            Log::error('Nexus. Bet Cancel Request PARAMS =====> ' . $request->getContent());
-            return response()->json([
-                "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
-                "data" => [
-                    "beforeBalance" => 9000,
-                    "balance" => 9000.0,       // 보유 금액 (Number)
-                    "currency" => 'KRW',    // 화폐 (String)
-                ]
-            ]);
+            return addGameRound('Cancel', json_decode($request->getContent(), true));
         }
         public function betAdjust(\Illuminate\Http\Request $request)
         {
-            Log::error('Nexus. Bet Adjust Request PARAMS =====> ' . $request->getContent());
+            return addGameRound('Adjust', json_decode($request->getContent(), true));
+        }
+        public function addGameRound($callbackType, $data)
+        {
+            if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
+            {
+                Log::error('Nexus CallBack '. $callbackType .' : Invalid ApiKey. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'Invalid ApiKey'  
+                ]);
+            }
+            if(!isset($data['params']) || !isset($data['params']['siteUsername']))
+            {
+                Log::error('Nexus CallBack '. $callbackType .' : No params. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'No params'  
+                ]);
+            }
+            $round = $data['params'];
+            $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER  .'(\d+)/', '$1', $round['siteUsername'])) ;
+            if($userid == 0){
+                $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
+            }
+            if($round['vendorKey'] == 'dreamgaming_casino')
+            {
+                $gameObj = NEXUSController::getGameObj($round['vendorKey']);
+                if (!$gameObj)
+                {
+                    Log::error('Nexus CallBack '. $callbackType .' : Game could not found. PARAMS= ' . json_encode($data));
+                    return response()->json([
+                        "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                        "msg" => 'Game could not found'  
+                    ]);
+                }
+            }
+            else
+            {
+                $gameObj = NEXUSController::getGameObj($round['gameId']);
+                
+                if (!$gameObj)
+                {
+                    $gameObj = NEXUSController::getGameObj($round['vendorKey']);
+                    if (!$gameObj)
+                    {
+                        Log::error('Nexus CallBack '. $callbackType .' : Game could not found. PARAMS= ' . json_encode($data));
+                        return response()->json([
+                            "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                            "msg" => 'Game could not found'  
+                        ]);
+                    }
+                }
+            }
+            $bet = 0;
+            $win = 0;
+            $type = 'bet';
+            if($round['type'] == 'turn_bet')
+            {
+                $bet = $round['amount'];
+            }
+            else if($round['type'] == 'turn_win' || $round['type'] == 'turn_draw' || $round['type'] == 'turn_lose' || $round['type'] == 'turn_out' || $round['type'] == 'turn_adjust')
+            {
+                $win = $round['amount'];
+                if(isset($round['updepositCash']) && $round['updepositCash'] > 0)
+                {
+                    $win -= $round['updepositCash'];
+                }
+                $type = 'win';
+            }
+            else if($round['type'] == 'turn_cancel')
+            {
+                $win = $round['amount'];
+                $type = 'cancel';
+            }
+            
+            $time = date('Y-m-d H:i:s',strtotime($round['createdAt']));
+
+            
+
+            $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+            $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
+
+            // if ($checkduplicate)
+            // {
+            $checkGameStat = \VanguardLTE\StatGame::where([
+                'user_id' => $userid, 
+                'bet' => $bet, 
+                'win' => $win, 
+                'date_time' => $time,
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+            ])->first();
+            if ($checkGameStat)
+            {
+                if($round['type'] == 'turn_adjust')
+                {
+                    $checkGameStat->update(['win' => $win]);
+                }
+                Log::error('Nexus CallBack '. $callbackType .' : Exist Transaction. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'Exist Transaction'  
+                ]);
+            }
+            \DB::beginTransaction();
+            $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
+            if (!$user)
+            {
+                Log::error('Nexus CallBack '. $callbackType .' : Not found User. PARAMS= ' . json_encode($data));
+                \DB::commit();
+                return response()->json([
+                    "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'Not found User'
+                ]);
+            }
+            $beforeBalance = $user->balance;
+            if($type == 'bet')
+            {
+                $user->balance = $user->balance - intval($amount);
+            }
+            else
+            {
+                $user->balance = $user->balance + intval($amount);
+            }
+            $user->save();
+            // }
+            $gamename = $gameObj['name'] . '_nexus';
+            if($round['type'] == 'turn_cancel')  // 취소처리된 경우
+            {
+                $gamename = $gameObj['name'] . '_nexus[C'.$time.']_' . $gameObj['href'];
+            }
+            \VanguardLTE\StatGame::create([
+                'user_id' => $userid, 
+                'balance' => $user->balance, 
+                'bet' => $bet, 
+                'win' => $win, 
+                'bet_type' => $type,
+                'game' => $gamename, 
+                'type' => $gameObj['type'],
+                'percent' => 0, 
+                'percent_jps' => 0, 
+                'percent_jpg' => 0, 
+                'profit' => 0, 
+                'denomination' => 0, 
+                'date_time' => $time,
+                'shop_id' => $shop?$shop->shop_id:-1,
+                'category_id' => $category?$category->original_id:0,
+                'game_id' =>  $gameObj['gamecode'],
+                // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+            ]);
+            \DB::commit();
             return response()->json([
                 "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
                 "data" => [
-                    "beforeBalance" => 9000,
-                    "balance" => 9000.0,       // 보유 금액 (Number)
+                    "beforeBalance" => $beforeBalance,
+                    "balance" => $user->balance,       // 보유 금액 (Number)
                     "currency" => 'KRW',    // 화폐 (String)
                 ]
             ]);

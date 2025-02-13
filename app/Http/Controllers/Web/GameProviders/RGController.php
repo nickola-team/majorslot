@@ -283,92 +283,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
 
         }
-        /*
-        public static function makelink($gamecode, $userid)
-        {
-            $token = config('app.rg_key');
-
-            $user = \VanguardLTE\User::where('id', $userid)->first();
-            if (!$user)
-            {
-                Log::error('RGMakeLink : Does not find user ' . $userid);
-                return null;
-            }
-
-            $game = RGController::getGameObj($gamecode);
-            if ($game == null)
-            {
-                Log::error('RGMakeLink : Game not find  ' . $gamecode);
-                return null;
-            }
-
-
-            $alreadyUser = 1;
-            $username = self::RG_PROVIDER . sprintf("%04d",$user->id);
-            $param = [
-                'username' => $username
-            ];
-            try
-            {
-                $response = Http::withHeaders([
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
-                    ])->withBody(json_encode($param),'application/json')->get(config('app.rg_api') . '/user');
-                if ($response->getStatusCode() != 200)
-                {
-                    // Log::error('RGmakelink : checkUser request failed. ' . $response->body());
-                    $alreadyUser = 0;
-                }
-                $data = $response->json();
-                if ($data==null || !isset($data['success']) || $data['success'] != 0)
-                {
-                    $alreadyUser = 0;
-                }
-            }
-            catch (\Exception $ex)
-            {
-                Log::error('RGcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
-                Log::error('RGcheckuser : checkUser Exception. PARAMS=' . $username);
-                return null;
-            }
-            if ($alreadyUser == 0){
-                //create honor account
-                try
-                {
-
-                    $url = config('app.rg_api') . '/user/create';
-                    $param = [
-                        'username' => $username
-                    ];
-                    $response = Http::withHeaders([
-                        'Accept' => 'application/json',
-                        'Content-Type' => 'application/json',
-                        'Authorization' => 'Bearer ' . $token
-                        ])->withBody(json_encode($param), 'application/json')->post($url);
-                    if ($response->getStatusCode() != 200)
-                    {
-                        Log::error('RGmakelink : createAccount request failed. ' . $response->body());
-                        return null;
-                    }
-                    $data = $response->json();
-                    if ($data==null || !isset($data['success']) || $data['success'] != 0)
-                    {
-                        Log::error('RGmakelink : createAccount request failed. ' . $response->body());
-                        return null;
-                    }
-                }
-                catch (\Exception $ex)
-                {
-                    Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
-                    Log::error('RGcheckuser : createAccount Exception. PARAMS=' . $str_param);
-                    return null;
-                }
-            }
-            return '/followgame/'.RGController::RG_PROVIDER.'/'.$gamecode;
-            
-        }
-        */
         public static function getgamelink($gamecode)
         {
             $gameObj = RGController::getGameObj($gamecode);
@@ -382,9 +296,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return ['error' => false, 'data' => ['url' => $url]];
             }
             return ['error' => true, 'msg' => '게임실행 오류입니다'];
-            // return ['error' => false, 'data' => ['url' => route('frontend.providers.waiting', [RGController::RG_PROVIDER, $gamecode])]];
         }
-
+        public static function getgamedetail(\VanguardLTE\StatGame $stat)
+        {
+            $betrounds = explode('#',$stat->roundid);
+            if (count($betrounds) < 3)
+            {
+                return null;
+            }
+            $transactionKey = $betrounds[2];
+            $url = config('app.rg_api') . '/history/details/' . $transactionKey;
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token
+                    ])->get($url);
+            if ($data==null || $data['code'] != 0)
+            {
+                return null;
+            }
+            else
+            {
+                return $data['url'];
+            }
+        }
         // Callback
         public function balance(\Illuminate\Http\Request $request)
         {
@@ -411,8 +346,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $username = isset($data['username'])?$data['username']:"";
             $transaction = isset($data['transaction'])?$data['transaction']:[];
             $type = isset($transaction['type'])?$transaction['type']:"";
+            $time = date('Y-m-d H:i:s',strtotime($transaction['processed_at']));
+            $transactionid = isset($transaction['id'])?$transaction['id']:'';
             $amount = isset($transaction['amount'])?$transaction['amount']:-1;
-            $roundid = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['id'].'_'.$transaction['details']['game']['round']:"";
+            $roundid = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['round']:"";
             $gametitle = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['title']:"";
             $vendor = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['vendor']:"";
             if ($username == "" || count($transaction) == 0 || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "")
@@ -451,7 +388,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $checkGameStat = \VanguardLTE\StatGame::where([
                 'user_id' => $userId, 
                 'bet_type' => $type, 
-                'roundid' => $roundid,
+                'date_time' => $time,
+                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ])->first();
             if ($checkGameStat)
             {
@@ -478,15 +416,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $user->save();
             
-
             $category = \VanguardLTE\Category::where(['provider' => RGController::RG_PROVIDER, 'shop_id' => 0, 'href' => $gameObj['href']])->first();
-            
+            $gamename = $gametitle . '_' . $gameObj['href'];
+            if($round['type'] == 'cancel')  // 취소처리된 경우
+            {
+                $gamename = $gametitle . '_rg[C]_' . $gameObj['href'];
+            }
             \VanguardLTE\StatGame::create([
                 'user_id' => $userId, 
                 'balance' => intval($user->balance), 
                 'bet' => $betAmount, 
                 'win' => $winAmount, 
-                'game' =>  $gametitle . '_' . $gameObj['href'], 
+                'game' =>  $gamename, 
                 'type' => 'table',
                 'bet_type' => $type,
                 'percent' => 0, 
@@ -495,9 +436,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'profit' => 0, 
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
+                'date_time' => $time,
                 'category_id' => isset($category)?$category->id:0,
                 'game_id' => $gameObj['gamecode'],
-                'roundid' => $roundid,
+                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ]);
             \DB::commit();
 
