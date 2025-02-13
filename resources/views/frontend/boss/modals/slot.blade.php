@@ -7,7 +7,7 @@
             <div class="game-button-container live">
 				@foreach($categories AS $index=>$category)
 				@if ($category->type =='slot')
-        @if ($category->status == 0)
+        {{-- @if ($category->status == 0)
         <a href="javascript:void(0);" onclick="swal('점검중입니다');" class="slot-btn gl-title-click">
         @else
 					<a href="javascript:void(0);" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');" class="slot-btn gl-title-click">
@@ -18,10 +18,19 @@
 							<span></span><span></span><span></span><span></span>
 							</div>
 							<div class="slot-cont">
-							<img class="slot-img" src="/frontend/jungle/images/slots/{{$category->title}}.png">
+							<img class="slot-img" src="/frontend/boss/assets/images/{{strtoupper($category->title)}}.png">
 							</div>
 						</div>
-					</a>
+					</a> --}}
+
+        @if ($category->status == 0)
+        <div class="slot-btn gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="swal('점검중입니다');">
+        @else
+        <div class="slot-btn gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');">
+        @endif
+            {{-- <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
+            <button class="btn btn-yellow pull-right" style="padding: 3px 35px;font-size: 12px;">플레이</button> --}}
+        </div>
 				@endif
 				@endforeach
 
