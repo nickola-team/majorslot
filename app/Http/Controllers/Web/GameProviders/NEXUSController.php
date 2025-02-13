@@ -1399,7 +1399,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'bet' => $bet, 
                 'win' => $win, 
                 'date_time' => $time,
-                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'] . '#' . $round['parentTransactionKey'],
             ])->first();
             if ($checkGameStat)
             {
@@ -1458,7 +1458,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'category_id' => $category?$category->original_id:0,
                 'game_id' =>  $gameObj['gamecode'],
                 // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
-                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId']. '#' . $round['transactionKey'] . '#' . $round['parentTransactionKey'],
             ]);
             \DB::commit();
             return response()->json([
