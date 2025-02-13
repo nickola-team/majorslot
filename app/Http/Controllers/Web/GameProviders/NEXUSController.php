@@ -1313,6 +1313,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function addGameRound($callbackType, $data)
         {
+            Log::error('---- Nexus CallBack '. $callbackType .' : Request PARAMS= ' . json_encode($data));
             if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
             {
                 Log::error('Nexus CallBack '. $callbackType .' : Invalid ApiKey. PARAMS= ' . json_encode($data));
