@@ -1366,6 +1366,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $bet = 0;
             $win = 0;
             $type = 'bet';
+            $transactionKey = $round['transactionKey'];
             if($round['type'] == 'turn_bet')
             {
                 $bet = $round['amount'];
@@ -1378,11 +1379,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     $win -= $round['updepositCash'];
                 }
                 $type = 'win';
+                $transactionKey = $round['parentTransactionKey'];
             }
             else if($round['type'] == 'turn_cancel')
             {
                 $win = $round['amount'];
                 $type = 'cancel';
+                $transactionKey = $round['parentTransactionKey'];
             }
             
             $time = date('Y-m-d H:i:s',strtotime($round['createdAt']));
@@ -1399,7 +1402,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'bet' => $bet, 
                 'win' => $win, 
                 'date_time' => $time,
-                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'] . '#' . $round['parentTransactionKey'],
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
             ])->first();
             if ($checkGameStat)
             {
@@ -1458,7 +1461,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'category_id' => $category?$category->original_id:0,
                 'game_id' =>  $gameObj['gamecode'],
                 // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
-                'roundid' => $round['vendorKey'] . '#' . $round['gameId']. '#' . $round['transactionKey'] . '#' . $round['parentTransactionKey'],
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $transactionKey,
             ]);
             \DB::commit();
             return response()->json([
