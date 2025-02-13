@@ -1277,7 +1277,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "msg" => 'No params'  
                 ]);
             }
-            $userid = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
+            $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
             if (!$user)
             {
@@ -1297,21 +1297,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public function betPlace(\Illuminate\Http\Request $request)
         {
-            return addGameRound('BetPlace', json_decode($request->getContent(), true));
+            return NEXUSController::addGameRound('BetPlace', json_decode($request->getContent(), true));
         }
         public function betResult(\Illuminate\Http\Request $request)
         {
-            return addGameRound('Result', json_decode($request->getContent(), true));
+            return NEXUSController::addGameRound('Result', json_decode($request->getContent(), true));
         }
         public function betCancel(\Illuminate\Http\Request $request)
         {
-            return addGameRound('Cancel', json_decode($request->getContent(), true));
+            return NEXUSController::addGameRound('Cancel', json_decode($request->getContent(), true));
         }
         public function betAdjust(\Illuminate\Http\Request $request)
         {
-            return addGameRound('Adjust', json_decode($request->getContent(), true));
+            return NEXUSController::addGameRound('Adjust', json_decode($request->getContent(), true));
         }
-        public function addGameRound($callbackType, $data)
+        public static function addGameRound($callbackType, $data)
         {
             if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
             {
@@ -1330,9 +1330,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $round = $data['params'];
-            $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER  .'(\d+)/', '$1', $round['siteUsername'])) ;
-            if($userid == 0){
-                $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
+            $userId = intval(preg_replace('/'. self::NEXUS_PROVIDER  .'(\d+)/', '$1', $round['siteUsername'])) ;
+            if($userId == 0){
+                $userId = intval(preg_replace('/'. self::NEXUS_PROVIDER . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
             }
             if($round['vendorKey'] == 'dreamgaming_casino')
             {
@@ -1389,13 +1389,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             
 
-            $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
+            $shop = \VanguardLTE\ShopUser::where('user_id', $userId)->first();
             $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();
 
             // if ($checkduplicate)
             // {
             $checkGameStat = \VanguardLTE\StatGame::where([
-                'user_id' => $userid, 
+                'user_id' => $userId, 
                 'bet' => $bet, 
                 'win' => $win, 
                 'date_time' => $time,
@@ -1427,11 +1427,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $beforeBalance = $user->balance;
             if($type == 'bet')
             {
-                $user->balance = $user->balance - intval($amount);
+                $user->balance = $user->balance - intval($bet);
             }
             else
             {
-                $user->balance = $user->balance + intval($amount);
+                $user->balance = $user->balance + intval($win);
             }
             $user->save();
             // }
@@ -1441,7 +1441,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $gamename = $gameObj['name'] . '_nexus[C'.$time.']_' . $gameObj['href'];
             }
             \VanguardLTE\StatGame::create([
-                'user_id' => $userid, 
+                'user_id' => $userId, 
                 'balance' => $user->balance, 
                 'bet' => $bet, 
                 'win' => $win, 
