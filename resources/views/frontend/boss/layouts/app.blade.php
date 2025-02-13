@@ -77,6 +77,9 @@
 
   <?php
     $detect = new \Detection\MobileDetect();
+    if(!isset($logo)){
+      $logo = 'boss';
+    }
   ?>
 @if( $detect->isMobile() || $detect->isTablet() ) 
   <link rel="stylesheet" href="/frontend/boss/V/app-mobile.css">

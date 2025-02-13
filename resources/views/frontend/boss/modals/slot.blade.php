@@ -18,7 +18,7 @@
 							<span></span><span></span><span></span><span></span>
 							</div>
 							<div class="slot-cont">
-							<img class="slot-img" src="/frontend/jungle/images/slots/{{$category->title}}.png">
+							<img class="slot-img" src="/frontend/boss/assets/images/{{strtoupper($category->title)}}.png">
 							</div>
 						</div>
 					</a>
