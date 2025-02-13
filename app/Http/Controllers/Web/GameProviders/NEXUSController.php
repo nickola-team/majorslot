@@ -1313,7 +1313,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function addGameRound($callbackType, $data)
         {
-            Log::error('---- Nexus CallBack '. $callbackType .' : Request PARAMS= ' . json_encode($data));
+            // Log::error('---- Nexus CallBack '. $callbackType .' : Request PARAMS= ' . json_encode($data));
             if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
             {
                 Log::error('Nexus CallBack '. $callbackType .' : Invalid ApiKey. PARAMS= ' . json_encode($data));
@@ -1400,10 +1400,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             // {
             $checkGameStat = \VanguardLTE\StatGame::where([
                 'user_id' => $userId, 
-                'bet' => $bet, 
-                'win' => $win, 
+                'bet_type' => $type, 
                 'date_time' => $time,
-                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+                'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' .  $transactionKey,
             ])->first();
             if ($checkGameStat)
             {
