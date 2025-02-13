@@ -29,8 +29,8 @@ class GameLaunchCommand extends Command
     const GAME_PROVIDERS = [
         // 'XMX',
         // 'TAISHAN',
-        'HONOR',
-        'NEXUS',        
+        // 'HONOR',
+        // 'NEXUS',        
         // 'WILDGAME',
         // 'HDLIVE',
         // 'KTEN',
