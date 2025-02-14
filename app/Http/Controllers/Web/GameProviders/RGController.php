@@ -306,11 +306,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transactionKey = $betrounds[2];
             $url = config('app.rg_api') . '/history/details/' . $transactionKey;
-                $response = Http::withHeaders([
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
-                    ])->get($url);
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . config('app.rg_key')
+                ])->get($url);
             if ($data==null || $data['code'] != 0)
             {
                 return null;
