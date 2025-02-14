@@ -306,18 +306,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transactionKey = $betrounds[2];
             $url = config('app.rg_api') . '/history/details/' . $transactionKey;
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . config('app.rg_key')
-                ])->get($url);
-            if ($data==null || $data['code'] != 0)
-            {
-                return null;
+            try{
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . config('app.rg_key')
+                    ])->get($url);
+                $data = $response->json();
+                if ($data==null || $data['code'] != 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return $data['url'];
+                }
             }
-            else
+            catch(\Exception $ex)
             {
-                return $data['url'];
+                Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                Log::error('RGcheckuser : createAccount Exception. PARAMS=' . json_encode($param));
+                return null;
             }
         }
         // Callback
