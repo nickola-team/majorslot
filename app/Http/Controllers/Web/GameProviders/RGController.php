@@ -343,6 +343,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => 0,
                 ]);
             }
+            if($user->api_token == 'playerterminate')
+            {
+                Log::error('RGchangeBalance CallBack Balance : terminated by admin. PARAMS= ' . $request->username);
+                return response()->json([
+                    'result' => false,
+                    'message' => 'terminated by admin',
+                    'balance' => 0,
+                ]);
+            }
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
