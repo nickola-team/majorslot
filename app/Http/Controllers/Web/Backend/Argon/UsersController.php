@@ -1163,7 +1163,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
                 {
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
-                    if($ct->provider == 'sc4' && $res != null){
+                    if(($ct->provider == 'nexus' || $ct->provider == 'rg') && $res != null){
                         return redirect($res);
                     }
                 }
