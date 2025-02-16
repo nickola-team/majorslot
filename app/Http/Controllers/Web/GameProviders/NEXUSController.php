@@ -1287,6 +1287,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "msg" => 'Not found user'  
                 ]);
             }
+            if($user->api_token == 'playerterminate')
+            {
+                Log::error('Nexus CallBack Balance : terminated by admin. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'terminated by admin'  
+                ]);
+            }
             return response()->json([
                 "code" => 0,               // 0: 정상, -1: 오류 메시지 확인
                 "data" => [
