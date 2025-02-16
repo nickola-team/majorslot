@@ -2,8 +2,11 @@
         'parentSection' => 'customer',
         'elementName' => 'message-list'
     ])
-
+@if ($type == 1)
+@section('page-title',  '계좌문의')
+@else
 @section('page-title',  '쪽지')
+@endif
 @push('css')
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.css" rel="stylesheet">
 <link type="text/css" href="{{ asset('back/argon') }}/css/jquery.treetable.theme.default.css" rel="stylesheet">
@@ -75,7 +78,11 @@
 						<a href="{{ argon_route('argon.msg.create', ['type'=>\Request::get('type')]) }}" class="btn btn-primary btn-sm">보내기</a>
                     @endif
 					</div>
+                    @if($type == 1)
+                    <h3 class="mb-0">계좌문의</h3>
+                    @else
                     <h3 class="mb-0">쪽지</h3>
+                    @endif
                 </div>
                 <div class="table-responsive">
                     <table class="table align-items-center table-flush" id="msglist">
