@@ -442,10 +442,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
-            if (strtotime($end_date) - strtotime($start_date) >= 90000)
-            {
-                return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
-            }
+            // if (strtotime($end_date) - strtotime($start_date) >= 90000)
+            // {
+            //     return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
+            // }
             $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
             $statistics = $statistics->where('deal_log.date_time', '<=', $end_date );
 
