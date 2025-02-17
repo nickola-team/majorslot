@@ -9,7 +9,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * UTILITY FUNCTION
         */
 
-        const NEXUS_PROVIDER = 'nexus_s';
+        const NEXUS_PROVIDER = 'nexus';
         const NEXUS_PPVERIFY_PROVIDER = 'nexusv';
         const NEXUS_PP_HREF = 'nexus-pp';
         const NEXUS_GAMEKEY = 'B';
@@ -1285,6 +1285,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([
                     "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
                     "msg" => 'Not found user'  
+                ]);
+            }
+            if($user->api_token == 'playerterminate')
+            {
+                Log::error('Nexus CallBack Balance : terminated by admin. PARAMS= ' . json_encode($data));
+                return response()->json([
+                    "code" => 1,               // 0: 정상, -1: 오류 메시지 확인
+                    "msg" => 'terminated by admin'  
                 ]);
             }
             return response()->json([

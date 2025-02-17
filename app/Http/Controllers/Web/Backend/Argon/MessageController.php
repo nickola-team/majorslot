@@ -40,7 +40,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 'MaxWin' => $win?$win->value:5000000
             ];
             $msgs = $msgs->paginate(20);
-            return view('backend.argon.messages.list', compact('msgs','data'));
+            return view('backend.argon.messages.list', compact('msgs','data', 'type'));
         }
         public function create(\Illuminate\Http\Request $request)
         {

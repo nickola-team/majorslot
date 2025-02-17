@@ -442,10 +442,10 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
-            if (strtotime($end_date) - strtotime($start_date) >= 90000)
-            {
-                return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
-            }
+            // if (strtotime($end_date) - strtotime($start_date) >= 90000)
+            // {
+            //     return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
+            // }
             $statistics = $statistics->where('deal_log.date_time', '>=', $start_date);
             $statistics = $statistics->where('deal_log.date_time', '<=', $end_date );
 
@@ -1163,7 +1163,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
                 {
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
-                    if($ct->provider == 'sc4' && $res != null){
+                    if(($ct->provider == 'nexus' || $ct->provider == 'rg') && $res != null){
                         return redirect($res);
                     }
                 }

@@ -306,18 +306,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             $transactionKey = $betrounds[2];
             $url = config('app.rg_api') . '/history/details/' . $transactionKey;
+            try{
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer ' . config('app.rg_key')
                     ])->get($url);
-            if ($data==null || $data['code'] != 0)
-            {
-                return null;
+                $data = $response->json();
+                if ($data==null || $data['code'] != 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return $data['url'];
+                }
             }
-            else
+            catch(\Exception $ex)
             {
-                return $data['url'];
+                Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
+                Log::error('RGcheckuser : createAccount Exception. PARAMS=' . json_encode($param));
+                return null;
             }
         }
         // Callback
@@ -331,6 +340,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return response()->json([
                     'result' => false,
                     'message' => 'Not found user',
+                    'balance' => 0,
+                ]);
+            }
+            if($user->api_token == 'playerterminate')
+            {
+                Log::error('RGchangeBalance CallBack Balance : terminated by admin. PARAMS= ' . $request->username);
+                return response()->json([
+                    'result' => false,
+                    'message' => 'terminated by admin',
                     'balance' => 0,
                 ]);
             }
@@ -437,7 +455,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0, 
                 'shop_id' => $user->shop_id,
                 'date_time' => $time,
-                'category_id' => isset($category)?$category->id:0,
+                'category_id' => isset($category)?$category->original_id:0,
                 'game_id' => $gameObj['gamecode'],
                 'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ]);
