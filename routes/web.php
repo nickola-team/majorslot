@@ -415,6 +415,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@checkId',
     ]);
 
+    Route::post('api/checkcode', [
+        'as' => 'frontend.api.checkcode',
+        'uses' => 'ApiController@checkCode',
+    ]);
+
     Route::post('api/join', [
         'as' => 'frontend.api.join',
         'uses' => 'ApiController@postJoin'
@@ -1674,6 +1679,20 @@ Route::group(['prefix' => 'spbt1'],function(){
     Route::post('creditcustomer','GameProviders\BTIController@creditcustomer');
     //for rendering
     Route::get('/golobby', 'GameProviders\BTIController@embedGACgame');
+});
+
+//for RG
+Route::group([ 'prefix' => 'rg',], function () {
+    Route::get('/balance', 'GameProviders\RGController@balance');
+    Route::post('/changeBalance', 'GameProviders\RGController@changeBalance');
+});
+//for RG
+Route::group([ 'prefix' => 'nexus',], function () {
+    Route::post('/balance', 'GameProviders\NEXUSController@balance');
+    Route::post('/betPlace', 'GameProviders\NEXUSController@betPlace');
+    Route::post('/betResult', 'GameProviders\NEXUSController@betResult');
+    Route::post('/betCancel', 'GameProviders\NEXUSController@betCancel');
+    Route::post('/betAdjust', 'GameProviders\NEXUSController@betAdjust');
 });
 
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');

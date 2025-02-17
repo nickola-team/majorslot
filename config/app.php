@@ -349,6 +349,12 @@ return [
     'bti_api' => env('BTI_API', ''),
     'bti_key' => env('BTI_KEY', ''),
     /*
+
+    /*
+    RG Auth key
+    */
+    'rg_api' => env('RG_API', ''),
+    'rg_key' => env('RG_KEY', ''),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

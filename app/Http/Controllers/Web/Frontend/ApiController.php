@@ -271,6 +271,22 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             return response()->json(['error' => true]);
         }
+
+        public function checkCode(\Illuminate\Http\Request $request)
+        {
+            if ($request->id){
+                $user = \VanguardLTE\User::where('account_no',$request->id)->get();
+                if (count($user) > 0)
+                {
+                    return response()->json(['error' => false, 'ok' => 0]);
+                }
+                else{
+                    return response()->json(['error' => false, 'ok' => 1]);
+                }
+            }
+            return response()->json(['error' => true]);
+        }
+
         public function postJoin(\Illuminate\Http\Request $request)
         {
             $comasters = \VanguardLTE\WebSite::where('domain', $request->root())->pluck('adminid')->toArray();
@@ -641,9 +657,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 if (method_exists('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller','getgamedetail'))
                 {
                     $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamedetail', $statgame);
-                    if($ct->provider == 'sc4'){
+                    if($ct->provider == 'rg' || $ct->provider == 'nexus'){
                         return response()->json(['error' => false, 'res' => [
-                            'href_sc4' => $res
+                            'origin_href' => $res
                         ]]);
                     }
                 }
@@ -1566,9 +1582,13 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $telegramId = $master->address;
                 if ($force==0 && $user->hasRole('user'))
                 {
+                    // return response()->json([
+                    //     'error' => false, 
+                    //     'msg' => '텔레그램 문의, 아이디 ' . $telegramId,
+                    // ], 200);
                     return response()->json([
                         'error' => false, 
-                        'msg' => '텔레그램 문의, 아이디 ' . $telegramId,
+                        'msg' => '입금계좌 문의가 전달되었습니다.',
                     ], 200);
                 }
                 else

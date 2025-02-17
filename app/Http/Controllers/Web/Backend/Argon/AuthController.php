@@ -183,7 +183,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
         }
         public function getLogout(\Illuminate\Http\Request $request,  \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
         {
-            $forceall = $request->all;
+            $forceall = $request->force;
             if ($forceall == '1')
             {
                 $sessionRepository->invalidateAllSessionsForUser(auth()->user()->id);
