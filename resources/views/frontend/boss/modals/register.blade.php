@@ -137,11 +137,16 @@
                 <div class="col-sm-3">
                   <label>
                     <span translate="" class="ng-scope">추천인코드</span>
-					<span>*</span>
+					          <span>*</span>
                   </label>
                 </div>
                 <div class="col-sm-5">
                   <input type="text" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength ng-valid-maxlength ng-touched" name="friend" id="reg-refercode" value="">
+                </div>
+                <div class="col-sm-4">
+                  <span style="padding-left: 15px">
+                    <button type="button" class="btn btn-sm btn-yellow ng-scope" id="btn-code">코드확인</button>
+                  </span>
                 </div>
                 <div class="clearfix"></div>
               </fieldset>
@@ -193,8 +198,8 @@
           success: function(result) {
             isSend = 0;
             if (result.ok === 1) {
-              $(".s-msg").html('확인');
-			        swal('확인');
+              $(".s-msg").html('사용 가능한 아이디입니다.');
+			        swal('사용 가능한 아이디입니다.');
               $("#reg-username").parent().parent().removeClass('has-error');
               $("#reg-username").parent().parent().addClass('has-success');
               // setTimeout(function() {
@@ -204,6 +209,51 @@
               $(".e-msg").text('중복된 아이디입니다');
 			        swal("Oops!", '중복된 아이디입니다', "error");
               $("#reg-username").parent().parent().addClass('has-error');
+            }
+            $('input[name="token"]').val(result.token)
+          },
+          error: function(err) {
+            $(".e-msg").text('검증 실패.');
+			      swal("Oops!", '검증 실패.', "error");
+            // setTimeout(function() {
+            //    $(".success-text").text('');
+            // }, 3500);
+            isSend = 0;
+          }
+        });
+      });
+
+      $("#btn-code").on('click', function() {
+        if (isSend == 1) return false;
+        let code = $("#reg-refercode").val();
+        if (code == '') {
+          $("#reg-refercode").parent().parent().addClass('has-error');
+          $("#reg-refercode").parent().parent().removeClass('has-success');
+          return false;
+        }
+        $(".e-msg").html('');
+        isSend = 1;
+        $.ajax({
+          url: '/api/checkcode',
+          type: 'POST',
+          data: {
+            "id": code
+          },
+          dataType: 'json',
+          success: function(result) {
+            isSend = 0;
+            if (result.ok === 0) {
+              $(".s-msg").html('사용 가능한 아이디입니다.');
+			        swal('사용 가능한 아이디입니다.');
+              $("#reg-refercode").parent().parent().removeClass('has-error');
+              $("#reg-refercode").parent().parent().addClass('has-success');
+              // setTimeout(function() {
+              //    $(".success-text").text('');
+              // }, 3500);
+            } else {
+              $(".e-msg").text('추천인아이디가 정확하지 않습니다.');
+			        swal("Oops!", '추천인아이디가 정확하지 않습니다.', "error");
+              $("#reg-refercode").parent().parent().addClass('has-error');
             }
             $('input[name="token"]').val(result.token)
           },

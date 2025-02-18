@@ -415,6 +415,11 @@ Route::namespace('Frontend')->middleware(['siteisclosed'])->group(function () {
         'uses' => 'ApiController@checkId',
     ]);
 
+    Route::post('api/checkcode', [
+        'as' => 'frontend.api.checkcode',
+        'uses' => 'ApiController@checkCode',
+    ]);
+
     Route::post('api/join', [
         'as' => 'frontend.api.join',
         'uses' => 'ApiController@postJoin'

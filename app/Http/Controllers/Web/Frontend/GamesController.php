@@ -32,6 +32,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $frontend = $site->frontend;
                 $title = $site->title;
                 $adminid = $site->adminid;
+                if($site->status == 0){
+                    return response()->view('system.pages.maintainsite', [], 200)->header('Content-Type', 'text/html');
+                }
                 if (count($sites) > 1)
                 {
                     $adminid = -1;
