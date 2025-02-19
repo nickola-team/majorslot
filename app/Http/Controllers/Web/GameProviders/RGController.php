@@ -305,14 +305,16 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $transactionKey = $betrounds[2];
-            $url = config('app.rg_api') . '/history/details/' . $transactionKey;
             try{
+                $url = config('app.rg_api') . '/details';
+                $param = [
+                    'id' => $transactionKey
+                ];
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . config('app.rg_key')
-                    ])->get($url);
-                $data = $response->json();
+                    ])->get($url, $param);
                 if ($data==null || $data['code'] != 0)
                 {
                     return null;
@@ -366,6 +368,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $type = isset($transaction['type'])?$transaction['type']:"";
             $time = date('Y-m-d H:i:s',strtotime($transaction['processed_at']));
             $transactionid = isset($transaction['id'])?$transaction['id']:'';
+            if($type != 'bet' && isset($transaction['referer_id']))
+            {
+                $transactionid = $transaction['referer_id'];
+            }
             $amount = isset($transaction['amount'])?$transaction['amount']:-1;
             $roundid = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['round']:"";
             $gametitle = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['title']:"";
