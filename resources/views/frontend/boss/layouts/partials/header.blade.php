@@ -143,7 +143,7 @@
                   @endif
                    class="ng-scope">
                     <p ng-show="$index == 1" class="ng-hide">
-                      <i class="fa fa-mobile"></i>
+                      <i classtartGameByProvider('nexus', 'bt1_sports')
                     </p>
                     <p class="ng-binding" style="margin-bottom: 0px;">미니게임</p>
                     <p class="ng-binding" style="font-size: 10px;">MINI GAME</p>

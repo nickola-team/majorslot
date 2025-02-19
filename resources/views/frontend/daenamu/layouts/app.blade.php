@@ -344,7 +344,7 @@
 									@elseif ($category->view == 0)
 										onclick="javascript:swal('지원하지 않는 게임입니다.');"
 									@else
-										onclick="startGameByProvider('bti', 'sports')"
+										onclick="startGameByProvider('nexus', 'bt1_sports')"
 									@endif 
 										{{$isSports = true}} 
 										@break
@@ -382,7 +382,7 @@
 									@if((!(isset ($errors) && count($errors) > 0) && !Session::get('success', false) && Auth::check()))
 										@if($category->type == 'sports')
 											@if($category->status == 1)
-											<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider('bti', 'sports');">
+											<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="startGameByProvider('nexus', 'bt1_sports');">
 											@else
 											<a href="#" onMouseOver="show_over(this);" onMouseOut="show_out(this);" onclick="javascript:swal('점검중입니다.');return false;">
 											@endif

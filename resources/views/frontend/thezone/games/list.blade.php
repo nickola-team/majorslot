@@ -228,7 +228,7 @@ function stopDrag() {
 				@if(!(isset ($errors) && count($errors) > 0) && !Session::get('success', false))
 					@if ($category->status == 1)
 						@if($category->type == 'sports')
-							<a href="javascript:void(0);" class="slot-btn" onclick="startGameByProvider('bti', 'sports')">
+							<a href="javascript:void(0);" class="slot-btn" onclick="startGameByProvider('nexus', 'bt1_sports')">
 						@else
 						<a href="javascript:void(0);" class="slot-btn" onclick="goSlot('{{ $category->title }}', '{{ $category->href }}', 0)">
 						@endif
