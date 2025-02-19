@@ -73,7 +73,7 @@
                                 @if($unreadmsg > 0)
                                 "showAlert();"
                                 @else                    
-                                "startGameByProvider('bti', 'sports')"
+                                "startGameByProvider('nexus', 'bt1_sports')"
                                 @endif
                             @endif 
                                 {{$isSports = true}} 
