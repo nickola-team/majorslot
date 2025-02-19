@@ -1,7 +1,12 @@
 
 <div class="game-buttons click-disable ng-scope live" onclick=
 @auth
+
+@if($unreadmsg > 0)
+"showAlert();"
+@else                    
 "navClick('casino-popup')"
+@endif
 @else
 "navClick('login-popup')"
 @endif
@@ -11,7 +16,11 @@
 </div>
 <div class="game-buttons click-disable ng-scope others" onclick=
 @auth
+@if($unreadmsg > 0)
+"showAlert();"
+@else                    
 "navClick('slots-popup')"
+@endif
 @else
 "navClick('login-popup')"
 @endif
@@ -60,8 +69,12 @@
                                 "swal('점검중입니다');"
                             @elseif ($category->view == 0)
                                 "swal('지원하지 않는 게임입니다.');"
-                            @else
+                            @else                                
+                                @if($unreadmsg > 0)
+                                "showAlert();"
+                                @else                    
                                 "startGameByProvider('nexus', 'bt1_sports')"
+                                @endif
                             @endif 
                                 {{$isSports = true}} 
                                 @break
