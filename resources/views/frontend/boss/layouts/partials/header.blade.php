@@ -80,7 +80,12 @@
                 <ul class="list-inline click-disable">
                   <li onclick=
                   @auth
+                    @if($unreadmsg > 0)
+                  
+                    "showAlert();"
+                    @else                    
                     "navClick('casino-popup')"
+                    @endif
                   @else
                     "navClick('login-popup')"
                   @endif
@@ -93,7 +98,12 @@
                   </li>
 				          <li onclick=
                   @auth
+                    @if($unreadmsg > 0)
+                    "showAlert();"
+                    @else                    
                     "navClick('slots-popup')"
+                    @endif
+                    
                   @else
                     "navClick('login-popup')"
                   @endif
@@ -114,7 +124,12 @@
                         @elseif ($category->status == 0)
                             "swal('점검중입니다');"
                         @else
-                            "minisGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
+                          @if($unreadmsg > 0)
+                          "showAlert();"
+                          @else                    
+                          "minisGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');"
+                          @endif
+                            
                         @endif
                         {{$isMini = true}}
                         @break
@@ -143,7 +158,12 @@
                         @elseif ($category->status == 0)
                             "swal('점검중입니다');"
                         @else
-                            "startGameByProvider('bti', 'sports');"
+                          @if($unreadmsg > 0)
+                          "showAlert();"
+                          @else                    
+                          "startGameByProvider('bti', 'sports');"
+                          @endif
+                            
                         @endif
                         {{$isSports = true}}
                         @break
@@ -245,5 +265,13 @@
       </navigation-page>
 
 <script>
-  
+  function showAlert() {
+      let userConfirmed = confirm("읽지 않은 쪽지가 있습니다.");
+      if (userConfirmed) {
+        navClick('msg-popup');
+        setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage();
+      } else {
+          console.log("취소 버튼 클릭됨!");
+      }
+  }
 </script>

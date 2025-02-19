@@ -15,8 +15,13 @@ function slotGame(category, title){
 		async: true,
 		success: function (data, status) {
 			if (data.error) {
-				alert(data.msg);
-				return;
+        if(data.msg == '읽지 않은 쪽지가 있습니다.'){
+          setTab('customer-set','#msg-popup &gt; div.ngdialog-content &gt; div.ngdialog-customer-page.ngdialog-main-default-page.ng-scope &gt; ul &gt; li:nth-child(3)');getCustomerPage();
+        }else{  
+          alert(data.msg);
+          return;
+        }
+				
 			}
 			if (data.games.length > 0) {
 				var htmldoc = ``;
@@ -323,7 +328,7 @@ function withdrawRealtime() {
     var html = ``;
     var date = new Date();
 
-    for (i=0;i<5;i++)
+    for (i=0;i<6;i++)
     {
         var delta = Math.floor(Math.random() * 10);
         var amount = Math.floor(Math.random() * 500) * 10000;
@@ -350,7 +355,7 @@ function withdrawRealtime() {
         var html = ``;
         var date = new Date();
 
-        for (i=0;i<5;i++)
+        for (i=0;i<6;i++)
         {
             var delta = Math.floor(Math.random() * 10);
             var amount = Math.floor(Math.random() * 500) * 10000;
