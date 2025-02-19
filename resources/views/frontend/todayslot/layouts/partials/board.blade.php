@@ -304,7 +304,7 @@
                                             @else
                                             @if($category->type =='sports')
                                                 <li>
-                                                    <a href="#" onclick="startGameByProvider('bti', 'sports')">
+                                                    <a href="#" onclick="startGameByProvider('nexus', 'bt1_sports')">
                                                             <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}" width = "100%" onerror="this.src='/frontend/thezone/img/slot/coming_soon.png';">
                                                     </a>
                                                 </li>
@@ -345,7 +345,7 @@
                                             </a>
                                             @else
                                                 @if($category->type =='sports')
-                                                <a href="#" onclick="startGameByProvider('bti', 'sports')" class=" slot-btn">
+                                                <a href="#" onclick="startGameByProvider('nexus', 'bt1_sports')" class=" slot-btn">
                                                     <div class="inner">
                                                         <img src="/frontend/thezone/img/slot/{{ $category->title.'.png' }}">
                                                     </div>
