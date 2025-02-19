@@ -114,7 +114,7 @@
                         @elseif ($category->status == 0)
                             "swal('점검중입니다');"
                         @else
-                            "startGameByProvider('bti', 'sports');"
+                            "startGameByProvider('nexus', 'bt1_sports');"
                         @endif
                         {{$isSports = true}}
                         @break

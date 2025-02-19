@@ -52,7 +52,7 @@
                               @elseif ($category->view == 0)
                                   "swal('지원하지 않는 게임입니다.');"
                               @else
-                                  "startGameByProvider('bti', 'sports')"
+                                  "startGameByProvider('nexus', 'bt1_sports')"
                               @endif 
                                   {{$isSports = true}} 
                                   @break
