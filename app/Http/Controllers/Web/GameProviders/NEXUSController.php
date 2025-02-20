@@ -225,7 +225,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $gameList = [];
             $data = NEXUSController::sendRequest('/games', $params);
             $view = 1;
-            if($category['type'] == 'casino'){
+            if($category['type'] == 'casino' || $category['type'] == 'sports'){
                 $view = 0;
             }
             if ($data && $data['code'] == 0)
@@ -260,7 +260,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     ]);
                 }
                 //add casino lobby
-                if($category['type'] == 'casino'){
+                if($category['type'] == 'casino' || $category['type'] == 'sports'){
                     array_push($gameList, [
                         'provider' => self::NEXUS_PROVIDER,
                         'vendorKey' => $vendorKey, 
