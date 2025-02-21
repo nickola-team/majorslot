@@ -125,6 +125,18 @@
 }
 
 .slot-btn {
+    width: 15.8%;
+	height: auto;
+    display: inline-block;
+    position: relative;
+    margin: 0 4.7px;
+    margin-bottom: 10px;
+    z-index: 0;
+    transition: 0.3s;
+    perspective: 900px;
+    border-radius: 1px;	overflow:hidden
+}
+.slot-btn1 {
     width: 32%;
 	height: 142px;
     display: inline-block;
