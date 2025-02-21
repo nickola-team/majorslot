@@ -24,9 +24,9 @@
 					</a> --}}
 
         @if ($category->status == 0)
-        <div class="slot-btn gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="swal('점검중입니다');">
+        <div class="slot-btn1 gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="swal('점검중입니다');">
         @else
-        <div class="slot-btn gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');">
+        <div class="slot-btn1 gl-title-click" style="background:url('/frontend/boss/assets/images/{{strtoupper($category->title)}}.png') no-repeat #000000;background-size:contain;" onclick="slotGame('{{$category->href}}','{{$category->trans?$category->trans->trans_title:$category->title}}');">
         @endif
             {{-- <span ng-bind="gameButton.gspName_krw" class="ng-binding">{{$category->trans?$category->trans->trans_title:$category->title}}</span>
             <button class="btn btn-yellow pull-right" style="padding: 3px 35px;font-size: 12px;">플레이</button> --}}
