@@ -342,11 +342,11 @@
       $(document).on('input', '#reg-accountnum', function() {
         let vl = $(this).val();
         if (vl == '') {
-          $(this).parent().parent().removeClass('has-success');
-          $(this).parent().parent().addClass('has-error');
+          $(this).parent().parent().parent().removeClass('has-success');
+          $(this).parent().parent().parent().addClass('has-error');
         } else {
-          $(this).parent().parent().addClass('has-success');
-          $(this).parent().parent().removeClass('has-error');
+          $(this).parent().parent().parent().addClass('has-success');
+          $(this).parent().parent().parent().removeClass('has-error');
         }
       });
 
@@ -361,7 +361,7 @@
         }
       })
       $(document).on('input', '#register-popup input', function() {
-        if ($('#register-popup .has-success').length == 8) {
+        if ($('#register-popup .has-success').length >= 7) {
           $('#reg-continue').removeAttr('disabled');
         } else {
           $('#reg-continue').attr('disabled', 'disabled');
