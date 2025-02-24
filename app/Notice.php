@@ -25,6 +25,7 @@ namespace VanguardLTE
         public static function popups()
         {
             return [
+                'all' => '팝업/일반',
                 'popup' => '팝업',
                 'general' => '일반',
             ];
