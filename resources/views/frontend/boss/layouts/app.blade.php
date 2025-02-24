@@ -134,7 +134,7 @@
       
     @endif
     @foreach ($noticelist as $ntc)
-      @if ($ntc->popup == 'popup')
+      @if ($ntc->popup != 'general')
         @include('frontend.boss.modals.popup',  ['notice' => $ntc])
         <script>
           if (getCookie('pop{{$ntc->id}}') === "done") {

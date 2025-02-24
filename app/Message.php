@@ -18,6 +18,7 @@ namespace VanguardLTE
         public $timestamps = false;
         const SYSTEM_MSG_ID = 1;
         const GROUP_MSG_ID = 99999;
+        const LIVE_MSG_ID = 99998;
         const RECV_NAME = [
             self::SYSTEM_MSG_ID => '시스템',
             self::GROUP_MSG_ID => '전체회원'

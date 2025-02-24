@@ -210,7 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             }
             $adminid = $parent->id;
-            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get();
             return response()->json(['error' => false, 'data' => $noticelist]);
         }
         public function inoutHistory(\Illuminate\Http\Request $request)
@@ -2241,7 +2241,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
             });
             $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
-            $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+            $livemsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::LIVE_MSG_ID, 'writer_id' => $adminid]);
+            $msgs = $grpmsgs->union($livemsgs)->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
             
             return response()->json(['error' => false, 'user_id'=>auth()->user()->id,'data' => $msgs]);
         }
