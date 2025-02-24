@@ -245,15 +245,15 @@
             if (result.ok === 0) {
               $(".s-msg").html('사용 가능한 아이디입니다.');
 			        swal('사용 가능한 아이디입니다.');
-              $("#reg-refercode").parent().parent().removeClass('has-error');
-              $("#reg-refercode").parent().parent().addClass('has-success');
+              // $("#reg-refercode").parent().parent().removeClass('has-error');
+              // $("#reg-refercode").parent().parent().addClass('has-success');
               // setTimeout(function() {
               //    $(".success-text").text('');
               // }, 3500);
             } else {
               $(".e-msg").text('추천인아이디가 정확하지 않습니다.');
 			        swal("Oops!", '추천인아이디가 정확하지 않습니다.', "error");
-              $("#reg-refercode").parent().parent().addClass('has-error');
+              // $("#reg-refercode").parent().parent().addClass('has-error');
             }
             $('input[name="token"]').val(result.token)
           },
@@ -395,7 +395,7 @@
         $('#register-popup input').trigger('input');
         $('#register-popup select').trigger('change');
         let err = $('#register-popup .has-success').length;
-        if (err < 8) {
+        if (err < 7) {
           return false;
         }
         $(this).addClass('is-loading disabled');
