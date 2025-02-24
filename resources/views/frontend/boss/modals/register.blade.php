@@ -395,7 +395,7 @@
         $('#register-popup input').trigger('input');
         $('#register-popup select').trigger('change');
         let err = $('#register-popup .has-success').length;
-        if (err < 7) {
+        if (err < 6) {
           return false;
         }
         $(this).addClass('is-loading disabled');
