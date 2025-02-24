@@ -14,7 +14,7 @@
                 </th>
             </tr>
             @foreach ($noticelist as $ntc)
-                @if($ntc->popup == 'general')
+                @if($ntc->popup != 'popup')
                 <tr role="button" class="ng-scope">
                     <td class="width30" style="width: 134px;">
                     <span class="ng-binding">{{date('Y-m-d', strtotime($ntc->date_time))}}</span>&nbsp;

@@ -30,7 +30,7 @@
                     <th translate="" class="width15 text-center ng-scope">작성일</th>
                   </tr>
                   @foreach ($noticelist as $ntc)
-                  @if($ntc->popup == 'general')
+                  @if($ntc->popup != 'popup')
                     <tr ng-repeat="announce in filteredPage" class="ng-scope">
                       <td ng-bind="announce.num" class="width12 text-center ng-binding">{{$ntc->id}}</td>
                       <td class="text-left width70">

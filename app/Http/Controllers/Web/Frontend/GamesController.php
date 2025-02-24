@@ -150,12 +150,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
-            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get();
             $msgs = [];
             $unreadmsg = 0;
             if ($notice==null || $shop_id != 0) { //it is logged in
                 $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for comaster's popup
-                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get(); //for comaster's popup
+                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get(); //for comaster's popup
             }
             $trhistory = [];
             if ($shop_id != 0)
@@ -165,7 +165,8 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                     $query->where('writer_id','=', auth()->user()->id)->orWhere('user_id','=', auth()->user()->id);
                 });
                 $grpmsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::GROUP_MSG_ID, 'writer_id' => $adminid]);
-                $msgs = $grpmsgs->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
+                $livemsgs = \VanguardLTE\Message::where(['user_id' => \VanguardLTE\Message::LIVE_MSG_ID, 'writer_id' => $adminid]);
+                $msgs = $grpmsgs->union($livemsgs)->union($personmsgs)->orderby('created_at', 'desc')->take(10)->get();
 
                 $unreadmsg = \VanguardLTE\Message::where('user_id', auth()->user()->id)->whereNull('read_at')->count();
                 //transaction history
