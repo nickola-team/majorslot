@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function checkCode(\Illuminate\Http\Request $request)
         {
             if ($request->id){
-                $user = \VanguardLTE\User::where('account_no',$request->id)->get();
+                $user = \VanguardLTE\User::where(['username'=>$request->id,'role_id'=>3])->get();
                 if (count($user) > 0)
                 {
                     return response()->json(['error' => false, 'ok' => 0]);
