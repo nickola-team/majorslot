@@ -21,13 +21,13 @@
 
 @section('content-header')
 <div class="row">
-    <div class="col-xl-3 col-lg-3">
+    <div class="col-xl-4 col-lg-4">
         <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-success mb-0 ">계좌충전 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['totalin'])}}</span>
+                        <h3 class="card-title text-success mb-0 ">배팅 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-success">{{number_format($total['totalbet'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-success text-white rounded-circle shadow">
@@ -38,13 +38,13 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-lg-3">
+    <div class="col-xl-4 col-lg-4">
         <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-warning mb-0 ">계좌환전 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['totalout'])}}</span>
+                        <h3 class="card-title text-warning mb-0 ">당첨 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-warning">{{number_format($total['totalwin'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -56,34 +56,17 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-lg-3">
+    <div class="col-xl-4 col-lg-4">
         <div class="card card-stats  mb-xl-0">
             <div class="card-body">
                 <div class="row">
                     <div class="col ">
-                        <h3 class="card-title text-primary mb-0 ">수동충전 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['moneyin'])}}</span>
+                        <h3 class="card-title text-primary mb-0 ">벳윈 합계</h3>
+                        <span class="h2 font-weight-bold mb-0 text-primary">{{number_format($total['total_ggr'])}}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
                             <i class="fas fa-chart-area"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-3">
-        <div class="card card-stats  mb-xl-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col ">
-                        <h3 class="card-title text-info mb-0 ">수동환전 합계</h3>
-                        <span class="h2 font-weight-bold mb-0 text-info">{{number_format($total['moneyout'])}}</span>
-                    </div>
-                    <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                            <i class="fas fa-chart-line"></i>
                         </div>
                     </div>
                 </div>
