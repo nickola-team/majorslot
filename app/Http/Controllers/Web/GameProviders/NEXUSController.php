@@ -339,7 +339,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'language' => 'ko',
                 'requestKey' => $user->generateCode(24)
             ];
-
+            Log::error('NEXUSMakeLink : Player Play ***, msg=  ' . $params);
             $data = NEXUSController::sendRequest('/play', $params);
             $url = null;
 
