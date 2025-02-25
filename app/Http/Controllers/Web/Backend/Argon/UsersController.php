@@ -973,7 +973,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
 
             $statistics = \VanguardLTE\StatGame::select('stat_game.*')->orderBy('stat_game.date_time', 'DESC')->orderBy('stat_game.id', 'DESC');
 
-            $start_date = date("Y-m-d H:i:s", strtotime("-7 days"));
+            $start_date = date("Y-m-d H:i:s", strtotime("-1 hours"));
             $end_date = date("Y-m-d H:i:s");
 
             if ($request->dates != '')
@@ -982,7 +982,7 @@ namespace VanguardLTE\Http\Controllers\Web\Backend\Argon
                 $start_date = preg_replace('/T/',' ', $request->dates[0]);
                 $end_date = preg_replace('/T/',' ', $request->dates[1]);            
             }
-            if (strtotime($end_date) - strtotime($start_date) >= 605000)
+            if (strtotime($end_date) - strtotime($start_date) >= 90000)
             {
                 return redirect()->back()->withErrors(['검색시간을 24시간 이내로 설정해주세요.']);
             }

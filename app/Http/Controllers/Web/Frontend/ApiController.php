@@ -210,7 +210,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             }
             $adminid = $parent->id;
-            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get();
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             return response()->json(['error' => false, 'data' => $noticelist]);
         }
         public function inoutHistory(\Illuminate\Http\Request $request)
@@ -275,7 +275,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function checkCode(\Illuminate\Http\Request $request)
         {
             if ($request->id){
-                $user = \VanguardLTE\User::where(['username'=>$request->id,'role_id'=>3])->get();
+                $user = \VanguardLTE\User::where('account_no',$request->id)->get();
                 if (count($user) > 0)
                 {
                     return response()->json(['error' => false, 'ok' => 0]);
