@@ -312,10 +312,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $user_code = $prefix  . sprintf("%04d",$user->id);
-            Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $user_code);
+            // Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $user_code);
             //유저정보 조회
             $data = NEXUSController::moneyInfo($user_code);
-            Log::error('NEXUSMakeLink : Player Money ***, code=  ' . $data['code'] . ' msg= ');
+            // Log::error('NEXUSMakeLink : Player Money ***, code=  ' . $data['code'] . ' msg= ');
             if($data == null || $data['code'] != 0)
             {
                 //새유저 창조
@@ -324,9 +324,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'nickname' => $user_code,
                     'siteUsername' => $user_code,
                 ];
-                Log::error('NEXUSMakeLink : Player before register ***, msg=  ' . $user_code);
+                // Log::error('NEXUSMakeLink : Player before register ***, msg=  ' . $user_code);
                 $data = NEXUSController::sendRequest('/register', $params);
-                Log::error('NEXUSMakeLink : Player register data ***, code=  ' . $data['code'] . ' msg=' . $data['msg']);
+                // Log::error('NEXUSMakeLink : Player register data ***, code=  ' . $data['code'] . ' msg=' . $data['msg']);
                 if ($data==null || $data['code'] != 0)
                 {
                     Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
