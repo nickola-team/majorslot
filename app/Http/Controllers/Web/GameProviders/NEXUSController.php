@@ -324,8 +324,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'nickname' => $user_code,
                     'siteUsername' => $user_code,
                 ];
-                Log::error('NEXUSMakeLink : Player Register ***, msg=  ' . $params);
+                Log::error('NEXUSMakeLink : Player Register ***, msg=  ' . $params['username']);
                 $data = NEXUSController::sendRequest('/register', $params);
+                Log::error('NEXUSMakeLink : Player Register data ***, msg=  ' . $data['code']);
                 if ($data==null || $data['code'] != 0)
                 {
                     Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
