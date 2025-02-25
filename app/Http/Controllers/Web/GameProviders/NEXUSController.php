@@ -190,7 +190,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $data;
         }
         
-        public static function getUserBalance($href, $user, $prefix=self::NEXUS_PROVIDER) {   
+        public static function getUserBalance($href, $user, $prefix=self::NEXUS_BLUEPREFIX) {   
 
             $balance = -1;
             $user_code = $prefix  . sprintf("%04d",$user->id);
@@ -299,7 +299,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode,  $prefix=self::NEXUS_PROVIDER) 
+        public static function makegamelink($gamecode,  $prefix=self::NEXUS_BLUEPREFIX) 
         {
             $game = NEXUSController::getGameObj($gamecode);
             if (!$game)
@@ -312,6 +312,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 return null;
             }
             $user_code = $prefix  . sprintf("%04d",$user->id);
+            Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $user_code);
             //유저정보 조회
             $data = NEXUSController::moneyInfo($user_code);
             if($data == null || $data['code'] != 0)
@@ -322,7 +323,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'nickname' => $user_code,
                     'siteUsername' => $user_code,
                 ];
-                Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $params['username']);
+                
                 $data = NEXUSController::sendRequest('/register', $params);
                 if ($data==null || $data['code'] != 0)
                 {
@@ -354,7 +355,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             return $url;
         }
         
-        public static function withdrawAll($href, $user, $prefix=self::NEXUS_PROVIDER)
+        public static function withdrawAll($href, $user, $prefix=self::NEXUS_BLUEPREFIX)
         {
             $balance = NEXUSController::getuserbalance($href,$user,$prefix);
             if ($balance < 0)
@@ -393,7 +394,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 Log::error('NEXUSMakeLink : Game not find  ' . $gamecode);
                 return null;
             }
-            $user_code = self::NEXUS_PROVIDER  . sprintf("%04d",$user->id);
+            $user_code = self::NEXUS_BLUEPREFIX  . sprintf("%04d",$user->id);
             $balance = 0;
 
             //유저정보 조회
@@ -594,9 +595,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     
                     $time = date('Y-m-d H:i:s',strtotime($round['createdAt']));
 
-                    $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER  .'(\d+)/', '$1', $round['siteUsername'])) ;
+                    $userid = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX  .'(\d+)/', '$1', $round['siteUsername'])) ;
                     if($userid == 0){
-                        $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
+                        $userid = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
                     }
 
                     $shop = \VanguardLTE\ShopUser::where('user_id', $userid)->first();
@@ -1278,7 +1279,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "msg" => 'No params'  
                 ]);
             }
-            $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
+            $userid = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
             if (!$user)
             {
@@ -1340,9 +1341,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $round = $data['params'];
-            $userId = intval(preg_replace('/'. self::NEXUS_PROVIDER  .'(\d+)/', '$1', $round['siteUsername'])) ;
+            $userId = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX  .'(\d+)/', '$1', $round['siteUsername'])) ;
             if($userId == 0){
-                $userId = intval(preg_replace('/'. self::NEXUS_PROVIDER . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
+                $userId = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
             }
             if($round['vendorKey'] == 'dreamgaming_casino')
             {
