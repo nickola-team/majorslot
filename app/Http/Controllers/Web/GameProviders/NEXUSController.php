@@ -315,7 +315,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
             //유저정보 조회
             $data = NEXUSController::moneyInfo($user_code);
-            Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $data['code']);
+            Log::error('NEXUSMakeLink : Player Create ***, msg=  ' . $user_code . ' code = ' . $data['code']);
             if($data == null || $data['code'] != 0)
             {
                 //새유저 창조
