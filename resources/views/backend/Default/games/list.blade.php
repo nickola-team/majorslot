@@ -85,7 +85,7 @@
 						<thead>
 						<tr>
 							<th>@lang('app.game')</th>
-{{--							<th>베팅금</th>
+{{--							<th>배팅금</th>
 							<th>당첨금</th>
 							<th>죽은금액</th>
 							<th>베팅횟수</th> --}}
@@ -105,7 +105,7 @@
 						<thead>
 						<tr>
 						<th>@lang('app.game')</th>
-{{--						<th>베팅금</th>
+{{--						<th>배팅금</th>
 							<th>당첨금</th>
 							<th>죽은금액</th>
 							<th>베팅횟수</th> --}}

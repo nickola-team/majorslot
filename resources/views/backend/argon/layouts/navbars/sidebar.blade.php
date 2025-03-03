@@ -151,14 +151,14 @@
                                 </a>
                             </li>
                             @endif
-                            @if (auth()->user()->isInoutPartner())
+                            {{-- @if (auth()->user()->isInoutPartner())
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.vlist')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
                                     개인유저목록
                                 </a>
                             </li>
-                            @endif
+                            @endif --}}
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.player.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
@@ -396,7 +396,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{argon_route('argon.notice.list')}}">
                                 <i class="far fa-circle text-white sub-i"></i>
-                                    공지
+                                    공지/팝업
                                 </a>
                             </li>
                             <li class="nav-item">
