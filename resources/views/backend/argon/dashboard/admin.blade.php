@@ -151,7 +151,7 @@
                 <div class="card-header bg-transparent">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h2 class="mb-0">게임사별베팅금</h2>
+                            <h2 class="mb-0">게임사별배팅금</h2>
                         </div>
                     </div>
                 </div>
