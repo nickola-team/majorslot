@@ -16,7 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_GAMEKEY = 'B';
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
-            'nexus-evo' => ['thirdname' =>'evolution-n','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],              //에볼루션
+            'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],              //에볼루션
             'nexus-ppl' => ['thirdname' =>'pragmatic_casino','type' => 'casino', 'symbol'=>'ppl', 'skin'=>'E'],         //프라그마틱 카지노
             'nexus-dg' => ['thirdname' =>'dreamgaming_casino','type' => 'casino', 'symbol'=>'dg', 'skin'=>'B'],         //드림게이밍
             'nexus-asia' => ['thirdname' =>'ag_casino','type' => 'casino', 'symbol'=>'asia', 'skin'=>'B'],              //아시안게이밍 카지노
@@ -333,9 +333,28 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     return null;
                 }
             }
+            $gameKey = $game['symbol'];
+            if($game['href'] == 'nexus-evo')
+            {
+                $parent = $user;
+                while ($parent)
+                {
+                    $provider_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'evo')->first();
+                    if ($provider_config)
+                    {
+                        $evoSkin = \VanguardLTE\EvoSkins::where('skin', $provider_config->config)->first();
+                        if(isset($evoSkin))
+                        {
+                            $gameKey = $evoSkin->nexus_skin;
+                        }
+                        break;
+                    }
+                    $parent = $parent->referral;
+                }
+            }
             $params = [
                 'vendorKey' => $game['vendorKey'],
-                'gameKey' => $game['symbol'],
+                'gameKey' => $gameKey,
                 'siteUsername' => $user_code,
                 'ip' => $user->last_name ?? '',
                 'language' => 'ko',
