@@ -1,6 +1,9 @@
-<?php 
+<?php
 namespace VanguardLTE
 {
+    use Log;
+    use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
+
     class StatGame extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'stat_game';
@@ -140,12 +143,12 @@ namespace VanguardLTE
                 if($model->category_id == 14)
                 {
                     \VanguardLTE\PPGameVerifyLog::updateOrCreate([
-                        'user_id'=>$model->user_id, 
+                        'user_id'=>$model->user_id,
                         'game_id'=>$model->game_id
                     ],[
-                        'game_id' => $model->game_id, 
-                        'user_id' => $model->user_id, 
-                        'bet' => $model->bet, 
+                        'game_id' => $model->game_id,
+                        'user_id' => $model->user_id,
+                        'bet' => $model->bet,
                         'label' => $gamecode,
                         'crid' => '',
                         'rid' => $model->roundid
@@ -162,16 +165,65 @@ namespace VanguardLTE
                     // else
                     // {
                     //     \VanguardLTE\PPGameVerifyLog::create([
-                    //         'game_id' => $model->game_id, 
-                    //         'user_id' => $model->user_id, 
-                    //         'bet' => $model->bet, 
+                    //         'game_id' => $model->game_id,
+                    //         'user_id' => $model->user_id,
+                    //         'bet' => $model->bet,
                     //         'label' => $gamecode,
                     //         'rid' => $model->roundid
                     //     ]);
                     // }
                 }
             // }
-            return $model;
+
+            $parent = $user->findAgent();
+
+            if($parent->callback) {
+                $username = explode("#P#", $user->username)[1];
+                // $username = $user->username;
+
+                $transaction = [
+                    'roundid' => $model->id,
+                    'datetime' => $model->date_time,
+                    'username' => $username,
+                    'bet' => $attributes['bet'],
+                    'win' => $attributes['win'],
+                    'balance' => $attributes['balance'],
+                    'gamecode' => $attributes['game_id'],
+                    'gamehall' => $attributes['category_id'],
+                ];
+    
+                $response = CallbackController::setTransaction($parent->callback, $transaction);
+
+                if($response['status'] == 1) {
+                    $user->balance = $response['balance'];
+                    $user->save();
+
+                    $model->balance = $response['balance'];
+                    $model->save();
+
+                    if (!$parent) {
+                        $parent->balance = $parent->balance - $attributes['bet'] + $attributes['win'];
+                        $parent->save();
+                    }
+
+                    return [
+                        'status' => 1,
+                        'balance' => $response['balance'],
+                        'beforeBalance' => $response['beforeBalance'],
+                    ];
+                }
+
+                return [
+                    'status' => 0,
+                    'msg' => $response['msg'],
+                ];
+            }
+
+            return [
+                'status' => 0,
+                'balance' => $user->balance,
+                'beforeBalance' => $user->balance - $attributes['win'] + $attributes['bet'],
+            ];
         }
     }
 

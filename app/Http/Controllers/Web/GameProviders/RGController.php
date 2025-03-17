@@ -84,7 +84,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             catch (\Exception $ex)
             {
                 Log::error('RGgetuserbalance : getUserBalance Excpetion. exception= ' . $ex->getMessage());
-                Log::error('RGgamerounds : getUserBalance Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('RGgamerounds : getUserBalance Excpetion. PARAMS= ' . json_encode($param));
             }
             
             return intval($balance);
@@ -315,13 +315,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . config('app.rg_key')
                     ])->get($url, $param);
-                if ($data==null || $data['code'] != 0)
+                if ($response==null || $response['code'] != 0)
                 {
                     return null;
                 }
                 else
                 {
-                    return $data['url'];
+                    return $response['url'];
                 }
             }
             catch(\Exception $ex)
