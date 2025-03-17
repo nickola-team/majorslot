@@ -92,7 +92,7 @@
 						<th>죽장수익</th>
 						<th>죽장전환</th>
 						@endif
-						<th>베팅금</th>
+						<th>배팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if ($type=='daily')
@@ -178,7 +178,7 @@
 						<th>죽장수익</th>
 						<th>죽장전환</th>
 						@endif
-						<th>베팅금</th>
+						<th>배팅금</th>
 						<th>당첨금</th>
 						<th>죽은금액</th>
 						@if ($type=='daily')

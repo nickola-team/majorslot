@@ -245,10 +245,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $category = RGController::RG_GAME_IDENTITY[$game['href']];
             // $real_code = explode('_', $game['gamecode'])[1];
             $real_code = $game['symbol'];
+            $skin = 1;
+            if($game['href'] == 'rg-evol')
+            {
+                $parent = $user;
+                while ($parent)
+                {
+                    $provider_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'evo')->first();
+                    if ($provider_config)
+                    {
+                        $evoSkin = \VanguardLTE\EvoSkins::where('skin', $provider_config->config)->first();
+                        if(isset($evoSkin))
+                        {
+                            $skin = $evoSkin->rg_skin;
+                        }
+                        break;
+                    }
+                    $parent = $parent->referral;
+                }
+            }
             $param = [
                 'username' => $username,                
                 'vendor' => $category['vendor'],
-                'game_code' => '' . $real_code
+                'game_code' => '' . $real_code,
+                'skin' => '' . $skin
             ];
 
             try

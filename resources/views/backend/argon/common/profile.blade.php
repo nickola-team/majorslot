@@ -339,7 +339,7 @@
 
                         
                         
-                        @if (auth()->user()->isInOutPartner())
+                        {{-- @if (auth()->user()->isInOutPartner())
                         <hr class="my-4" />
                         <h6 class="heading-small text-muted mb-4">환전비밀번호</h6>
                         <div class="pl-lg-4">
@@ -374,7 +374,7 @@
                                 </div>
                             </div>
                         </form>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>

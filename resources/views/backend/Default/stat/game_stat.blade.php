@@ -75,13 +75,13 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최소베팅금액</label>
+								<label>최소배팅금액</label>
 								<input type="text" class="form-control" name="bet_from" value="{{ Request::get('bet_from') }}">
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>최대베팅금액</label>
+								<label>최대배팅금액</label>
 								<input type="text" class="form-control" name="bet_to" value="{{ Request::get('bet_to') }}">
 							</div>
 						</div>
@@ -151,7 +151,7 @@
 						<th>게임명</th>
 						<th>아이디</th>
 						<th>보유금액</th>
-						<th>베팅금액</th>
+						<th>배팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>
 						<th>@lang('app.in_jps')</th>
@@ -177,7 +177,7 @@
 						<th>게임명</th>
 						<th>아이디</th>
 						<th>보유금액</th>
-						<th>베팅금액</th>
+						<th>배팅금액</th>
 						<th>당첨금액</th>
 						{{-- <th>@lang('app.in_game')</th>
 						<th>@lang('app.in_jps')</th>

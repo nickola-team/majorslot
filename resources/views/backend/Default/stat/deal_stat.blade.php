@@ -34,13 +34,13 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>최소베팅금액</label>
+								<label>최소배팅금액</label>
 								<input type="text" class="form-control" name="bet_from" value="{{ Request::get('bet_from') }}">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>최대베팅금액</label>
+								<label>최대배팅금액</label>
 								<input type="text" class="form-control" name="bet_to" value="{{ Request::get('bet_to') }}">
 							</div>
 						</div>
