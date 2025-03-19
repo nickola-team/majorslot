@@ -1319,12 +1319,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     "msg" => 'No params',
                 ]);
             }
-<<<<<<< HEAD
-            $userid = intval(preg_replace('/'. self::NEXUS_PROVIDER .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
-=======
-            $userid = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
-
->>>>>>> bdd382a6f73b51cd29493bcfa6022832ced49a2e
+	    $userid = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX .'(\d+)/', '$1', $data['params']['siteUsername'])) ;
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
 
             if (!$user)
