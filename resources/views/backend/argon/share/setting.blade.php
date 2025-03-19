@@ -61,7 +61,7 @@
                                         <th>게임사</th>
                                         <th>게임타입</th>
                                         <th>베팅판</th>
-                                        <th>최소베팅금</th>
+                                        <th>최소배팅금</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -121,9 +121,9 @@
                                     </tbody>
                                 </table>
                                 @if ($partner->id == auth()->user()->id)
-                                <span class="text-red" style="font-size:.9rem;">*** 최소베팅금이 0이면 받치기가 적용되지 않습니다.</span>
+                                <span class="text-red" style="font-size:.9rem;">*** 최소배팅금이 0이면 받치기가 적용되지 않습니다.</span>
                                 @else
-                                <span class="text-red" style="font-size:.9rem;">*** 최소베팅금에 0을 입력하면 받치기적용을 하지 않습니다.</span>
+                                <span class="text-red" style="font-size:.9rem;">*** 최소배팅금에 0을 입력하면 받치기적용을 하지 않습니다.</span>
                                 @endif
                             </div>
                         </div>

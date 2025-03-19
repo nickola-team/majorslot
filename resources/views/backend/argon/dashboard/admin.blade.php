@@ -41,13 +41,13 @@
                     <div class="col">
                         <div class="row">
                             <div class="col-6">
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충전금</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 계좌충전금</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todayin'])}}</span>
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 환전금</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 계좌환전금</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todayout'])}}</span>
                             </div>
                             <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 충환수익</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">오늘 계좌충환수익</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['todaydw'])}}</span>
                             </div>
                         </div>
@@ -101,13 +101,13 @@
                     <div class="col">
                     <div class="row">
                         <div class="col-6">
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 충전금</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 계좌충전금</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthin'])}}</span>
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 환전금</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 계좌환전금</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthout'])}}</span>
                             </div>
                             <div class="col-6" style="display: flex;align-items: flex-end;flex-direction: column;/* align-content: flex-start; */justify-content: center;">
-                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 충환수익</h5>
+                                <h5 class="card-title text-uppercase text-muted mb-0 text-white">이달 계좌충환수익</h5>
                                 <span class="h2 font-weight-bold mb-0 text-white">{{number_format($stats['monthin'] - $stats['monthout'])}}</span>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                 <div class="card-header bg-transparent">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h2 class="mb-0">게임사별베팅금</h2>
+                            <h2 class="mb-0">게임사별배팅금</h2>
                         </div>
                     </div>
                 </div>
