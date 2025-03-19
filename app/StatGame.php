@@ -187,6 +187,7 @@ namespace VanguardLTE
                     'username' => $username,
                     'bet' => $attributes['bet'],
                     'win' => $attributes['win'],
+                    'type' => $attributes['bet_type'],
                     'balance' => $attributes['balance'],
                     'gamecode' => $attributes['game_id'],
                     'gamehall' => $attributes['category_id'],
@@ -202,7 +203,16 @@ namespace VanguardLTE
                     $model->save();
 
                     if (!$parent) {
-                        $parent->balance = $parent->balance - $attributes['bet'] + $attributes['win'];
+                        $newParentBalance = $parent->balance - $attributes['bet'] + $attributes['win'];
+
+                        if($newParentBalance < 0) {
+                            return [
+                                'status' => 0,
+                                'msg' => "operator's balance is not enough",
+                            ];
+                        }
+
+                        $parent->balance = $newParentBalance;
                         $parent->save();
                     }
 

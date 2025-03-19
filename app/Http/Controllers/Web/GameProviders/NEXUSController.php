@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
@@ -16,6 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_PPVERIFY_PROVIDER = 'nexusv';
         const NEXUS_PP_HREF = 'nexus-pp';
         const NEXUS_GAMEKEY = 'B';
+        const EVO_CODE = 34;
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
             'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],              //에볼루션
@@ -95,12 +96,10 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         if ($game['gamecode'] == $uuid)
                         {
                             return $game;
-                            break;
                         }
                         if ($game['gameid'] == $uuid)
                         {
                             return $game;
-                            break;
                         }
                     }
                 }
@@ -157,7 +156,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $url = config('app.nexus_api') ;
             $agent = config('app.nexus_agent');
             $hash = NEXUSController::generateHash($param);
-            try {       
+            try {
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/x-www-form-urlencoded',
@@ -248,7 +247,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     array_push($gameList, [
                         'provider' => self::NEXUS_PROVIDER,
-                        'vendorKey' => $vendorKey, 
+                        'vendorKey' => $vendorKey,
                         'href' => $href,
                         'gameid' => $game['id'],
                         'gamecode' => $vendorKey.'_'.$game['key'],
@@ -265,7 +264,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 if($category['type'] == 'casino' || $category['type'] == 'sports'){
                     array_push($gameList, [
                         'provider' => self::NEXUS_PROVIDER,
-                        'vendorKey' => $vendorKey, 
+                        'vendorKey' => $vendorKey,
                         'gameid' => $category['symbol'],
                         'href' => $href,
                         'gamecode' => $vendorKey,
@@ -283,7 +282,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             //add Unknown Game item
             array_push($gameList, [
                 'provider' => self::NEXUS_PROVIDER,
-                'vendorKey' => $vendorKey, 
+                'vendorKey' => $vendorKey,
                 'href' => $href,
                 'gameid' => 'Unknown',
                 'symbol' => 'Unknown',
@@ -296,6 +295,24 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'type' => ($category['type']=='slot')?'slot':'table',
                 'view' => 0
             ]);
+
+            if ($href == 'nexus-evo') {
+                $gameList = [];
+                array_push($gameList, [
+                    'provider' => self::NEXUS_PROVIDER,
+                    'vendorKey' => $vendorKey,
+                    'href' => $href,
+                    'gamecode' => self::EVO_CODE,
+                    'symbol' => 'Lobby',
+                    'enname' => 'Evolution',
+                    'name' => 'Evolution',
+                    'title' => '에볼루션',
+                    'icon' => '',
+                    'type' => 'live',
+                    'view' => 1
+                ]);
+            }
+
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
             
