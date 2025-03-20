@@ -152,6 +152,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         * FROM CONTROLLER, API
         */
         public static function sendRequest($sub_url, $param) {
+            Log::info($sub_url);
+            Log::info(json_encode($param));
 
             $url = config('app.nexus_api') ;
             $agent = config('app.nexus_agent');
@@ -308,7 +310,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'name' => 'Evolution',
                     'title' => '에볼루션',
                     'icon' => '',
-                    'type' => 'live',
+                    'type' => 'table',
                     'view' => 1
                 ]);
             }
@@ -1388,7 +1390,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
         public static function addGameRound($callbackType, $data)
         {
-            // Log::error('---- Nexus CallBack '. $callbackType .' : Request PARAMS= ' . json_encode($data));
+            Log::info('---- Nexus CallBack '. $callbackType .' : Request PARAMS= ' . json_encode($data));
 
             if(!isset($data['apiKey']) || $data['apiKey'] != config('app.nexus_secretkey'))
             {
@@ -1411,8 +1413,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             if($userId == 0){
                 $userId = intval(preg_replace('/'. self::NEXUS_BLUEPREFIX . 'user' .'(\d+)/', '$1', $round['siteUsername'])) ;
             }
-            if($round['vendorKey'] == 'dreamgaming_casino')
-            {
+            if($round['vendorKey'] == 'dreamgaming_casino') {
                 $gameObj = NEXUSController::getGameObj($round['vendorKey']);
                 if (!$gameObj)
                 {
@@ -1422,9 +1423,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         "msg" => 'Game could not found'
                     ]);
                 }
-            }
-            else
-            {
+            } elseif ($round['vendorKey'] == 'evolution_casino') {
+                $gameObj = NEXUSController::getGameObj(self::EVO_CODE);
+            } else {
                 $gameObj = NEXUSController::getGameObj($round['gameId']);
                 
                 if (!$gameObj)
@@ -1466,8 +1467,6 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             
             $time = date('Y-m-d H:i:s',strtotime($round['createdAt']));
-
-            
 
             $shop = \VanguardLTE\ShopUser::where('user_id', $userId)->first();
             $category = \VanguardLTE\Category::where('href', $gameObj['href'])->first();

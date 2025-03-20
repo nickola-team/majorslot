@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
@@ -174,7 +174,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'name' => 'Evolution',
                     'title' => '에볼루션',
                     'icon' => '',
-                    'type' => 'live',
+                    'type' => 'table',
                     'view' => 1
                 ]);
             }
@@ -283,6 +283,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     $parent = $parent->referral;
                 }
+
+                $real_code = self::RG_EVOCODE;
             }
             $param = [
                 'username' => $username,
@@ -374,6 +376,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         // Callback
         public function balance(\Illuminate\Http\Request $request)
         {
+            $data = json_decode($request->getContent(), true);
+            Log::info('---- RG Balance CallBack '.' : Request PARAMS= ' . json_encode($data));
+
             $userid = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', isset($request->username)?$request->username:"")) ;
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
             if (!$user)
@@ -427,6 +432,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function changeBalance(\Illuminate\Http\Request $request)
         {
             $data = json_decode($request->getContent(), true);
+
+            Log::info('---- RG ChangeBalance CallBack '.' : Request PARAMS= ' . json_encode($data));
+
             $username = isset($data['username'])?$data['username']:"";
             $transaction = isset($data['transaction'])?$data['transaction']:[];
             $type = isset($transaction['type'])?$transaction['type']:"";

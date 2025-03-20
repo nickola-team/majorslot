@@ -2,6 +2,7 @@
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
     use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
+    use Log;
 
     class GamesController extends \VanguardLTE\Http\Controllers\Controller
     {
@@ -474,6 +475,10 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
                 if ($gameobj && $gameobj['href'] == $ct->href)
                 {
+
+                    Log::info(json_encode($ct));
+                    Log::info(json_encode($gameobj));
+
                     //check if game is visible
                     if (isset($gameobj['view']) && $gameobj['view'] == 1)
                     {
