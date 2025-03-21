@@ -108,9 +108,6 @@ namespace VanguardLTE
                 }
             }
 
-            $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $attributes['category_id'] ])->first();
-            $attributes['category_id'] = $category->code;
-
             $model = static::query()->create($attributes);
 
             $user = \VanguardLTE\User::where('id',$model->user_id)->first();
@@ -125,6 +122,8 @@ namespace VanguardLTE
             if($parent->callback) {
                 $username = explode("#P#", $user->username)[1];
 
+                $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id ])->first();
+
                 $transaction = [
                     'roundid' => $model->id,
                     'datetime' => $model->date_time,
@@ -134,7 +133,7 @@ namespace VanguardLTE
                     'type' => $model->bet_type,
                     'balance' => $model->balance,
                     'gamecode' => $model->game_id,
-                    'gamehall' => $model->category_id,
+                    'gamehall' => $category->code,
                 ];
     
                 $response = CallbackController::setTransaction($parent->callback, $transaction);
