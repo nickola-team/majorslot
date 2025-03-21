@@ -145,7 +145,7 @@
                             </div>
                             <label for="dates" class="col-md-2 col-form-label form-control-label text-center">배팅시간</label>
                             <div class="col-md-2">
-                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-d\TH:i', strtotime('-7days'))}}" id="dates" name="dates[]">
+                            <input class="form-control" type="datetime-local" value="{{Request::get('dates')[0]??date('Y-m-d\TH:i', strtotime('-1 hours'))}}" id="dates" name="dates[]">
                             </div>
                             <label for="dates" class="col-form-label form-control-label" >~</label>
                             <div class="col-md-2">

@@ -1,25 +1,26 @@
-<?php 
+<?php
 namespace VanguardLTE
 {
+    use Log;
+    use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
+
     class StatGame extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'stat_game';
         protected $fillable = [
-            'date_time', 
-            'user_id', 
-            'balance', 
-            'bet', 
-            'win', 
-            'game', 
-            'type', 
-            'bet_type', 
-            'denomination', 
-            'percent', 
-            'percent_jps', 
-            'percent_jpg', 
-            'profit', 
-            'game_bank', 
-            'jack_balance', 
+            'date_time',
+            'user_id',
+            'balance',
+            'bet',
+            'win',
+            'game',
+            'type',
+            'bet_type',
+            'denomination',
+            'percent',
+            'percent_jps',
+            'percent_jpg',
+            'profit',
             'shop_id',
             'category_id',
             'game_id',
@@ -89,14 +90,6 @@ namespace VanguardLTE
 
         public static function create(array $attributes = [])
         {
-            // $filterGames = [' FG', ' FG1', ' respin', ' RS', ' doBonus'];
-            // foreach($filterGames as $ignoreGame) 
-            // {
-            //     if (strlen($attributes['game']) >= strlen($ignoreGame) && substr_compare($attributes['game'], $ignoreGame, -strlen($ignoreGame)) === 0)
-            //     {
-            //         $attributes['bet'] = 0;
-            //     }
-            // }
             $gamecode = '';
             if (empty($attributes['category_id']) || empty($attributes['game_id']))
             {
@@ -113,65 +106,91 @@ namespace VanguardLTE
                     }
                     $gamecode = $game->label;
                 }
-                else
-                {
-                    
-                }
             }
 
             $model = static::query()->create($attributes);
-            $filterGames = [' FG', ' FG1', ' respin', ' RS', ' JP', ' debit', ' credit', ' refund', ' payoff', ' RB', ' recredit'];
-            /*foreach($filterGames as $ignoreGame) 
+
+            $user = \VanguardLTE\User::where('id',$model->user_id)->first();
+
+            if (($model->type != 'table' || $model->bet != $model->win) && $user) // if live game and tie, then don't process deal
             {
-                if (substr_compare($model->game, $ignoreGame, -strlen($ignoreGame)) === 0)
-                {
-                    return $model;
-                }
-            } */
-            if (($model->type == 'table') && ($model->bet==$model->win)) // if live game and tie, then don't process deal
-            {
-                return $model;
+                $user->processBetDealerMoney_Queue($model);
             }
-            // if ($model->bet > 0) {
-                $user = \VanguardLTE\User::where('id',$model->user_id)->first();
-                if ($user){
-                    $user->processBetDealerMoney_Queue($model);
+
+            $parent = $user->findAgent();
+
+            if($parent->callback) {
+                $username = explode("#P#", $user->username)[1];
+
+                $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id ])->first();
+
+                $transaction = [
+                    'roundid' => $model->id,
+                    'datetime' => $model->date_time,
+                    'username' => $username,
+                    'bet' => $model->bet,
+                    'win' => $model->win,
+                    'type' => $model->bet_type,
+                    'balance' => $model->balance,
+                    'gamecode' => $model->game_id,
+                    'gamehall' => $category->code,
+                ];
+    
+                $response = CallbackController::setTransaction($parent->callback, $transaction);
+
+                if($response['status'] == 1) {
+                    $user->balance = $response['balance'];
+                    $user->save();
+
+                    $model->balance = $response['balance'];
+                    $model->save();
+
+                    if (!$parent) {
+                        $newParentBalance = $parent->balance - $attributes['bet'] + $attributes['win'];
+
+                        if($newParentBalance < 0) {
+                            return [
+                                'status' => 0,
+                                'msg' => "operator's balance is not enough",
+                            ];
+                        }
+
+                        $parent->balance = $newParentBalance;
+                        $parent->save();
+                    }
+
+                    return [
+                        'status' => 1,
+                        'balance' => $response['balance'],
+                        'beforeBalance' => $response['beforeBalance'],
+                    ];
                 }
-                if($model->category_id == 14)
-                {
-                    \VanguardLTE\PPGameVerifyLog::updateOrCreate([
-                        'user_id'=>$model->user_id, 
-                        'game_id'=>$model->game_id
-                    ],[
-                        'game_id' => $model->game_id, 
-                        'user_id' => $model->user_id, 
-                        'bet' => $model->bet, 
-                        'label' => $gamecode,
-                        'crid' => '',
-                        'rid' => $model->roundid
-                    ]);
-                    // $ppverify = \VanguardLTE\PPGameVerifyLog::where(['user_id'=>$model->user_id, 'game_id'=>$model->game_id])->first();
-                    // if(isset($ppverify))
-                    // {
-                    //     // $ppverify->update(['bet'=>$model->bet, 'rid'=>$model->roundid, 'crid'=>'']);
-                    //     $ppverify->bet = $model->bet;
-                    //     $ppverify->rid = $model->roundid;
-                    //     $ppverify->crid = '1';
-                    //     $ppverify->save();
-                    // }
-                    // else
-                    // {
-                    //     \VanguardLTE\PPGameVerifyLog::create([
-                    //         'game_id' => $model->game_id, 
-                    //         'user_id' => $model->user_id, 
-                    //         'bet' => $model->bet, 
-                    //         'label' => $gamecode,
-                    //         'rid' => $model->roundid
-                    //     ]);
-                    // }
-                }
-            // }
-            return $model;
+
+                return [
+                    'status' => 0,
+                    'msg' => $response['msg'],
+                ];
+            }
+
+            if($model->category_id == 14) {
+                \VanguardLTE\PPGameVerifyLog::updateOrCreate([
+                    'user_id'=>$model->user_id,
+                    'game_id'=>$model->game_id
+                ],[
+                    'game_id' => $model->game_id,
+                    'user_id' => $model->user_id,
+                    'bet' => $model->bet,
+                    'label' => $gamecode,
+                    'crid' => '',
+                    'rid' => $model->roundid
+                ]);
+            }
+
+            return [
+                'status' => 1,
+                'balance' => $user->balance,
+                'beforeBalance' => $user->balance - $attributes['win'] + $attributes['bet'],
+            ];
         }
     }
 

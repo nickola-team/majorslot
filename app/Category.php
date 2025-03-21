@@ -1,16 +1,17 @@
-<?php 
+<?php
 namespace VanguardLTE
 {
     class Category extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'categories';
         protected $fillable = [
-            'title', 
-            'parent', 
-            'position', 
-            'href', 
+            'title',
+            'code',
+            'parent',
+            'position',
+            'href',
             'provider',
-            'original_id', 
+            'original_id',
             'shop_id',
             'site_id',
             'view',

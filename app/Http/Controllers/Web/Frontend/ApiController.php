@@ -3,6 +3,8 @@
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
     use Illuminate\Support\Facades\Http;
+    use Illuminate\Support\Facades\Log;
+    
     class ApiController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function login(\VanguardLTE\Http\Requests\Auth\LoginRequest $request, \VanguardLTE\Repositories\Session\SessionRepository $sessionRepository)
@@ -210,7 +212,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             }
             $adminid = $parent->id;
-            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get();
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             return response()->json(['error' => false, 'data' => $noticelist]);
         }
         public function inoutHistory(\Illuminate\Http\Request $request)
@@ -275,7 +277,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
         public function checkCode(\Illuminate\Http\Request $request)
         {
             if ($request->id){
-                $user = \VanguardLTE\User::where(['username'=>$request->id,'role_id'=>3])->get();
+                $user = \VanguardLTE\User::where('account_no',$request->id)->get();
                 if (count($user) > 0)
                 {
                     return response()->json(['error' => false, 'ok' => 0]);
@@ -627,6 +629,9 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'href' => $category, 
                 'shop_id' => 0
             ])->first();
+
+            Log::info(json_encode($cat1));
+
             if( !$cat1) 
             {
                 return response()->json(['error' => true, 'msg' => '존재하지 않는 카테고리입니다.', 'code' => '002']);

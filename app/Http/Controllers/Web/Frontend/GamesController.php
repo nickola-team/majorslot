@@ -1,6 +1,9 @@
 <?php 
 namespace VanguardLTE\Http\Controllers\Web\Frontend
 {
+    use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
+    use Log;
+
     class GamesController extends \VanguardLTE\Http\Controllers\Controller
     {
         public function index(\Illuminate\Http\Request $request, $category1 = '', $category2 = '')
@@ -150,12 +153,12 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
 
             $superadminId = \VanguardLTE\User::where('role_id',9)->first()->id;
             $notice = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for admin's popup
-            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get();
+            $noticelist = \VanguardLTE\Notice::where(['user_id' => $superadminId, 'active' => 1])->whereIn('type' , ['user', 'all'])->get();
             $msgs = [];
             $unreadmsg = 0;
             if ($notice==null || $shop_id != 0) { //it is logged in
                 $notice = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->first(); //for comaster's popup
-                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->orderby('order', 'asc')->get(); //for comaster's popup
+                $noticelist = \VanguardLTE\Notice::where(['user_id' => $adminid, 'active' => 1])->whereIn('type' , ['user', 'all'])->get(); //for comaster's popup
             }
             $trhistory = [];
             if ($shop_id != 0)
@@ -472,9 +475,27 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 $gameobj = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getGameObj', $gamecode);
                 if ($gameobj && $gameobj['href'] == $ct->href)
                 {
+
+                    Log::info(json_encode($ct));
+                    Log::info(json_encode($gameobj));
+
                     //check if game is visible
                     if (isset($gameobj['view']) && $gameobj['view'] == 1)
                     {
+                        $parent = $user->findAgent();
+
+                        if($parent->callback) {
+                            $username = explode("#P#", $user->username)[1];
+
+                            $response = CallbackController::userBalance( $parent->callback, $username);
+            
+                            if($response['status'] == 1) {
+                                $user->balance = $response['balance'];
+                                $user->save();
+                            }
+                        }
+
+                        
                         $res = call_user_func('\\VanguardLTE\\Http\\Controllers\\Web\\GameProviders\\' . strtoupper($ct->provider) . 'Controller::getgamelink', $gamecode);
                         if ($res['error'] == false)
                         {

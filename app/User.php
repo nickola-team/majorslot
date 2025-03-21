@@ -55,6 +55,7 @@ namespace VanguardLTE
             'recommender',
             'account_no',
             'api_token',
+            'callback',
             'ggr_percent',
             'table_ggr_percent',
             'ggr_mileage',
@@ -300,6 +301,18 @@ namespace VanguardLTE
             }
             return $users;
         }
+
+        public function findAgent() {
+            $parent = $this;
+            
+            while ($parent && $parent->role_id < 5)
+            {
+                $parent = $parent->referral;
+            }
+
+            return $parent;
+        }
+
         public function hierarchyUsers()
         {
             return $this->availableUsers();

@@ -27,7 +27,7 @@ namespace VanguardLTE
             return [
                 'all' => '팝업/공지',
                 'popup' => '팝업',
-                'general' => '공지',
+                'general' => '일반',
             ];
         }
         public static function boot()
