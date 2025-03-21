@@ -12,7 +12,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         // RG => RealGates
         const RG_PROVIDER = 'rg';
         const RG_EVOCODE = 756;
-        const EVO_CODE = 34;
+        const EVO_CODE = 'evolution';
 
         const RG_GAME_IDENTITY = [
             //==== SLOT ====
@@ -165,8 +165,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'provider' => self::RG_PROVIDER,
                     'vendorKey' => "evolution_casino",
                     'href' => $href,
-                    'gamecode' => self::EVO_CODE,
+                    'gameid' => self::EVO_CODE,
                     'symbol' => 'Lobby',
+                    'gamecode' => self::EVO_CODE,
                     'enname' => 'Evolution',
                     'name' => 'Evolution',
                     'title' => '에볼루션',

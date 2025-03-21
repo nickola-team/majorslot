@@ -16,7 +16,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         const NEXUS_PPVERIFY_PROVIDER = 'nexusv';
         const NEXUS_PP_HREF = 'nexus-pp';
         const NEXUS_GAMEKEY = 'B';
-        const EVO_CODE = 34;
+        const EVO_CODE = 'evolution';
         const NEXUS_GAME_IDENTITY = [
             //==== CASINO ====
             'nexus-evo' => ['thirdname' =>'evolution_casino','type' => 'casino', 'symbol'=>'evo', 'skin'=>'B'],              //에볼루션
@@ -304,10 +304,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'provider' => self::NEXUS_PROVIDER,
                     'vendorKey' => $vendorKey,
                     'href' => $href,
-                    'gamecode' => self::EVO_CODE,
+                    'gameid' => self::EVO_CODE,
                     'symbol' => 'Lobby',
+                    'gamecode' => self::EVO_CODE,
                     'enname' => 'Evolution',
                     'name' => 'Evolution',
+                    'skin' => $skin,
                     'title' => '에볼루션',
                     'icon' => '',
                     'type' => 'table',

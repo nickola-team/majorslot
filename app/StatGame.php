@@ -126,12 +126,12 @@ namespace VanguardLTE
                     'roundid' => $model->id,
                     'datetime' => $model->date_time,
                     'username' => $username,
-                    'bet' => $attributes['bet'],
-                    'win' => $attributes['win'],
-                    'type' => $attributes['bet_type'],
-                    'balance' => $attributes['balance'],
-                    'gamecode' => $attributes['game_id'],
-                    'gamehall' => $attributes['category_id'],
+                    'bet' => $model->bet,
+                    'win' => $model->win,
+                    'type' => $model->bet_type,
+                    'balance' => $model->balance,
+                    'gamecode' => $model->game_id,
+                    'gamehall' => $model->category_id,
                 ];
     
                 $response = CallbackController::setTransaction($parent->callback, $transaction);
