@@ -108,6 +108,9 @@ namespace VanguardLTE
                 }
             }
 
+            $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $attributes['category_id'] ])->first();
+            $attributes['category_id'] = $category->code;
+
             $model = static::query()->create($attributes);
 
             $user = \VanguardLTE\User::where('id',$model->user_id)->first();
