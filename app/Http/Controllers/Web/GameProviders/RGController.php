@@ -1,16 +1,18 @@
-<?php 
+<?php
 namespace VanguardLTE\Http\Controllers\Web\GameProviders
 {
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Facades\Log;
+    use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
     class RGController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
         * UTILITY FUNCTION
         */
         // RG => RealGates
-        const RG_PROVIDER = 'rg'; 
+        const RG_PROVIDER = 'rg';
         const RG_EVOCODE = 756;
+        const EVO_CODE = 'evolution';
 
         const RG_GAME_IDENTITY = [
             //==== SLOT ====
@@ -26,12 +28,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 {
                     foreach($gamelist as $game)
                     {
-                        if($isvendor == true)
+                        if($isvendor && $game['view'] == 1 && $game['vendor'] == $uuid)
                         {
-                            if ($game['view'] == 1 && $game['vendor'] == $uuid)
-                            {
-                                return $game;
-                            }
+                            return $game;
                         }
                         if ($game['gamecode'] == $uuid)
                         {
@@ -84,7 +83,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             catch (\Exception $ex)
             {
                 Log::error('RGgetuserbalance : getUserBalance Excpetion. exception= ' . $ex->getMessage());
-                Log::error('RGgamerounds : getUserBalance Excpetion. PARAMS= ' . json_encode($params));
+                Log::error('RGgamerounds : getUserBalance Excpetion. PARAMS= ' . json_encode($param));
             }
             
             return intval($balance);
@@ -159,6 +158,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'type' => 'Unknown',
                 'view' => 0
             ]);
+
+            if ($href == 'rg-evol') {
+                $gameList = [];
+                array_push($gameList, [
+                    'provider' => self::RG_PROVIDER,
+                    'vendorKey' => "evolution_casino",
+                    'href' => $href,
+                    'gameid' => self::EVO_CODE,
+                    'symbol' => 'Lobby',
+                    'gamecode' => self::EVO_CODE,
+                    'enname' => 'Evolution',
+                    'name' => 'Evolution',
+                    'title' => '에볼루션',
+                    'icon' => '',
+                    'type' => 'table',
+                    'view' => 1
+                ]);
+            }
+
             \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
             return $gameList;
             
@@ -245,7 +263,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $category = RGController::RG_GAME_IDENTITY[$game['href']];
             // $real_code = explode('_', $game['gamecode'])[1];
             $real_code = $game['symbol'];
-            $skin = 1;
+            $skin = 'A';
             if($game['href'] == 'rg-evol')
             {
                 $parent = $user;
@@ -263,9 +281,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     }
                     $parent = $parent->referral;
                 }
+
+                $real_code = self::RG_EVOCODE;
             }
             $param = [
-                'username' => $username,                
+                'username' => $username,
                 'vendor' => $category['vendor'],
                 'game_code' => '' . $real_code,
                 'skin' => '' . $skin
@@ -335,13 +355,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . config('app.rg_key')
                     ])->get($url, $param);
-                if ($data==null || $data['code'] != 0)
+                $data = $response->json();
+                if ($data==null || $data['data'] == "")
                 {
                     return null;
                 }
                 else
                 {
-                    return $data['url'];
+                    return $data['data'];
                 }
             }
             catch(\Exception $ex)
@@ -354,8 +375,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         // Callback
         public function balance(\Illuminate\Http\Request $request)
         {
+            Log::info('---- RG Balance CallBack '.' : Request PARAMS= ' .$request->username);
+            
             $userid = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', isset($request->username)?$request->username:"")) ;
             $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
+            
             if (!$user)
             {
                 Log::error('RGchangeBalance : Not found user. PARAMS= ' . $request->username);
@@ -374,6 +398,30 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => 0,
                 ]);
             }
+
+            $parent = $user->findAgent();
+
+            if($parent->callback) {
+                $username = explode("#P#", $user->username)[1];
+                $response = CallbackController::userBalance( $parent->callback, $username);
+
+                if($response['status'] == 1) {
+                    $user->balance = $response['balance'];
+                    $user->save();
+
+                    return response()->json([
+                        'result' => true,
+                        'message' => 'OK',
+                        'balance' => intval($response['balance']),
+                    ]);
+                }
+
+                return response()->json([
+                    'result' => false,
+                    'message' => $response['msg'],
+                ]);
+            }
+
             return response()->json([
                 'result' => true,
                 'message' => 'OK',
@@ -383,10 +431,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public function changeBalance(\Illuminate\Http\Request $request)
         {
             $data = json_decode($request->getContent(), true);
+
+            Log::info('---- RG ChangeBalance CallBack '.' : Request PARAMS= ' . json_encode($data));
+
             $username = isset($data['username'])?$data['username']:"";
             $transaction = isset($data['transaction'])?$data['transaction']:[];
             $type = isset($transaction['type'])?$transaction['type']:"";
-            $time = date('Y-m-d H:i:s',strtotime($transaction['processed_at']));
+            // 응답에 없는 필드 이용 $time = date('Y-m-d H:i:s',strtotime($transaction['processed_at']));
+            $time = date('Y-m-d H:i:s', time());
             $transactionid = isset($transaction['id'])?$transaction['id']:'';
             if($type != 'bet' && isset($transaction['referer_id']))
             {
@@ -396,7 +448,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $roundid = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['round']:"";
             $gametitle = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['title']:"";
             $vendor = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['vendor']:"";
-            if ($username == "" || count($transaction) == 0 || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "")
+            if ($username == "" || empty($transaction) || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "")
             {
                 Log::error('RGchangeBalance : callback param Error. PARAMS= ' . json_encode($data));
                 return response()->json([
@@ -405,7 +457,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => 0,
                 ]);
             }
-            $gameObj = RGController::getGameObj($vendor, true);
+            
+            if ($vendor == 'evolution') {
+                $gameObj = RGController::getGameObj(self::EVO_CODE);
+            } else {
+                $gameObj = RGController::getGameObj($vendor, true);
+            }
             if (!$gameObj)
             {
                 Log::error('RGchangeBalance : Not found gameObj. PARAMS= ' . json_encode($data));
@@ -419,6 +476,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $userId = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', $username)) ;
             $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
+
+            Log::info(json_encode($user));
+
             if (!$user)
             {
                 Log::error('RGchangeBalance : Not found User. PARAMS= ' . json_encode($data));
@@ -430,11 +490,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
             $checkGameStat = \VanguardLTE\StatGame::where([
-                'user_id' => $userId, 
-                'bet_type' => $type, 
+                'user_id' => $userId,
+                'bet_type' => $type,
                 'date_time' => $time,
                 'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ])->first();
+
+            Log::info($checkGameStat);
+
             if ($checkGameStat)
             {
                 Log::error('RGchangeBalance : Not Game History. Roundid= ' . $roundid);
@@ -466,19 +529,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             {
                 $gamename = $gametitle . '_rg[C]_' . $gameObj['href'];
             }
-            \VanguardLTE\StatGame::create([
-                'user_id' => $userId, 
-                'balance' => intval($user->balance), 
-                'bet' => $betAmount, 
-                'win' => $winAmount, 
-                'game' =>  $gamename, 
+
+            $result = \VanguardLTE\StatGame::create([
+                'user_id' => $userId,
+                'balance' => intval($user->balance),
+                'bet' => $betAmount,
+                'win' => $winAmount,
+                'game' =>  $gamename,
                 'type' => 'table',
                 'bet_type' => $type,
-                'percent' => 0, 
-                'percent_jps' => 0, 
-                'percent_jpg' => 0, 
-                'profit' => 0, 
-                'denomination' => 0, 
+                'percent' => 0,
+                'percent_jps' => 0,
+                'percent_jpg' => 0,
+                'profit' => 0,
+                'denomination' => 0,
                 'shop_id' => $user->shop_id,
                 'date_time' => $time,
                 'category_id' => isset($category)?$category->original_id:0,
@@ -487,10 +551,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             ]);
             \DB::commit();
 
+            Log::info(json_encode($result));
+
+            if ($result['status'] == 1) {
+                return response()->json([
+                    'result' => true,
+                    'message' => 'OK',
+                    'balance' => intval($result['balance'])
+                ]);
+            }
+
             return response()->json([
-                'result' => true,
-                'message' => 'OK',
-                'balance' => intval($user->balance)
+                'result' => false,
+                'message' => $result["msg"],
             ]);
         }
 
