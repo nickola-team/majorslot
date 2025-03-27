@@ -263,7 +263,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $category = RGController::RG_GAME_IDENTITY[$game['href']];
             // $real_code = explode('_', $game['gamecode'])[1];
             $real_code = $game['symbol'];
-            $skin = 1;
+            $skin = 'A';
             if($game['href'] == 'rg-evol')
             {
                 $parent = $user;

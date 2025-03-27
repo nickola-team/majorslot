@@ -120,7 +120,13 @@ namespace VanguardLTE
             $parent = $user->findAgent();
 
             if($parent->callback) {
-                $username = explode("#P#", $user->username)[1];
+                $parts = explode("#P#", $user->username);
+
+                if (count($parts) > 1) {
+                    $username = explode("#P#", $user->username)[1];
+                } else {
+                    $username = $user->username;
+                }
 
                 $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id ])->first();
 
