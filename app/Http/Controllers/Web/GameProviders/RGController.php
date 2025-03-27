@@ -355,13 +355,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . config('app.rg_key')
                     ])->get($url, $param);
-                if ($response==null || $response['code'] != 0)
+                $data = $response->json();
+                if ($data==null || $data['data'] == "")
                 {
                     return null;
                 }
                 else
                 {
-                    return $response['url'];
+                    return $data['data'];
                 }
             }
             catch(\Exception $ex)
