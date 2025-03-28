@@ -322,19 +322,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             
         }
 
-        public static function makegamelink($gamecode,  $prefix=self::NEXUS_BLUEPREFIX) 
+        public static function makegamelink($gamecode,  $prefix=self::NEXUS_BLUEPREFIX, $user = null)
         {
             $game = NEXUSController::getGameObj($gamecode);
             if (!$game)
             {
                 return null;
             }
-            $user = auth()->user();
+
+            if ($user == null) {
+                $user = auth()->user();
+            }
+            
             if ($user == null)
             {
                 return null;
             }
+
             $user_code = $prefix  . sprintf("%04d",$user->id);
+            
             //유저정보 조회
             $data = NEXUSController::moneyInfo($user_code);
             if($data == null || $data['code'] != 0)
@@ -349,7 +355,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = NEXUSController::sendRequest('/register', $params);
                 if ($data==null || $data['code'] != 0)
                 {
-                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
+                    Log::error('NEXUSMakeLink (makegamelink User Id) Input Data'.$user->id);
+                    Log::error('NEXUSMakeLink (makegamelink User Code) Input Data'.$user_code);
+                    Log::error('NEXUSMakeLink (makegamelink) : Player Create, msg=  ' . $data['msg']);
                     return null;
                 }
             }
@@ -452,7 +460,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = NEXUSController::sendRequest('/register', $params);
                 if ($data==null || $data['code'] != 0)
                 {
-                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
+                    Log::error('NEXUSMakeLink (makelink) : Player Create, msg=  ' . $data['msg'] . json_encode($params));
                     return null;
                 }
             }
@@ -647,9 +655,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     // if ($checkduplicate)
                     // {
                         $checkGameStat = \VanguardLTE\StatGame::where([
-                            'user_id' => $userid, 
-                            'bet' => $bet, 
-                            'win' => $win, 
+                            'user_id' => $userid,
+                            'bet' => $bet,
+                            'win' => $win,
                             'date_time' => $time,
                             'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
                         ])->first();
@@ -667,24 +675,25 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     {
                         $gamename = $gameObj['name'] . '_nexus[C'.$time.']_' . $gameObj['href'];
                     }
+
                     \VanguardLTE\StatGame::create([
-                        'user_id' => $userid, 
-                        'balance' => $balance, 
-                        'bet' => $bet, 
-                        'win' => $win, 
-                        'game' => $gamename, 
+                        'user_id' => $userid,
+                        'balance' => $balance,
+                        'bet' => $bet,
+                        'win' => $win,
+                        'game' => $gamename,
                         'type' => $gameObj['type'],
-                        'percent' => 0, 
-                        'percent_jps' => 0, 
-                        'percent_jpg' => 0, 
-                        'profit' => 0, 
-                        'denomination' => 0, 
+                        'percent' => 0,
+                        'percent_jps' => 0,
+                        'percent_jpg' => 0,
+                        'profit' => 0,
+                        'denomination' => 0,
                         'date_time' => $time,
                         'shop_id' => $shop?$shop->shop_id:-1,
                         'category_id' => $category?$category->original_id:0,
                         'game_id' =>  $gameObj['gamecode'],
                         // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
-                        'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'],
+                        'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $round['transactionKey'] . $round['gameKey'],
                     ]);
                     $count = $count + 1;
                 }
@@ -780,7 +789,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $data = NEXUSController::sendRequest('/register', $params);
                 if ($data==null || $data['code'] != 0)
                 {
-                    Log::error('NEXUSMakeLink : Player Create, msg=  ' . $data['msg']);
+                    Log::error('NEXUSMakeLink (syncpromo) : Player Create, msg=  ' . $data['msg'] . json_encode($params));
                     return null;
                 }
             }
@@ -789,7 +798,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 $balance = $data['balance'];
             }
 
-            $url = NEXUSController::makegamelink($gamecode, $user, self::NEXUS_PPVERIFY_PROVIDER);
+            $url = NEXUSController::makegamelink($gamecode, self::NEXUS_PPVERIFY_PROVIDER, $user);
             if ($url == null)
             {
                 return ['error' => true, 'msg' => 'game link error '];
