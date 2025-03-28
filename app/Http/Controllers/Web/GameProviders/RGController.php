@@ -399,7 +399,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $amount = isset($transaction['amount']) ? $transaction['amount'] : -1;
             $roundid = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['round'] : "";
             $gametitle = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['title'] : "";
-            $gamekey = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['id'] : "";
+            $tablekey = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['id'] : "";
             $vendor = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['vendor'] : "";
             if ($username == "" || empty($transaction) || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "") {
                 Log::error('RGchangeBalance : callback param Error. PARAMS= ' . json_encode($data));
@@ -443,7 +443,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'user_id' => $userId,
                 'bet_type' => $type,
                 'date_time' => $time,
-                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid . $gamekey,
+                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ])->first();
 
             Log::info($checkGameStat);
@@ -493,7 +493,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'date_time' => $time,
                 'category_id' => isset($category) ? $category->original_id : 0,
                 'game_id' => $gameObj['gamecode'],
-                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
+                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid . '#' . $tablekey,
             ]);
             \DB::commit();
 
