@@ -493,7 +493,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'date_time' => $time,
                 'category_id' => isset($category) ? $category->original_id : 0,
                 'game_id' => $gameObj['gamecode'],
-                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid . '#' . $tablekey,
+                'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
+                'transactionid' => $transactionid,
+                'tablekey' => $gameObj['gamecode'] == 'evolution' ? $tablekey : '',
             ]);
             \DB::commit();
 

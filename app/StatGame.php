@@ -24,6 +24,8 @@ namespace VanguardLTE {
             'category_id',
             'game_id',
             'roundid',
+            'transactionid',
+            'tablekey',
             'status'
         ];
         public $timestamps = false;
@@ -104,6 +106,11 @@ namespace VanguardLTE {
                 }
             }
 
+            // if self version transactionid is null
+            if (!isset($attributes['transactionid'])) {
+                $attributes['transactionid'] = $attributes['roundid'];
+            }
+
             $model = static::query()->create($attributes);
 
             $user = \VanguardLTE\User::where('id', $model->user_id)->first();
@@ -126,15 +133,8 @@ namespace VanguardLTE {
 
                 $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id])->first();
 
-                $tablekey = '';
-
-                if ($model->type == 'table') {
-                    $roundParts = explode("#", $model->roundid);
-                    $tablekey = $roundParts[count($roundParts) - 1];
-                }
-
                 $transaction = [
-                    'roundid' => $model->id,
+                    'roundid' => $model->transactionid,
                     'datetime' => $model->date_time,
                     'username' => $username,
                     'bet' => $model->bet,
@@ -143,7 +143,7 @@ namespace VanguardLTE {
                     'balance' => $model->balance,
                     'gamecode' => $model->game_id,
                     'gamehall' => $category->code,
-                    'tablekey' => $tablekey,
+                    'tablekey' => $model->tablekey,
                 ];
 
                 $response = CallbackController::setTransaction($parent->callback, $transaction);
