@@ -1550,7 +1550,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 // 'status' =>  $gameObj['isFinished']==true ? 1 : 0,
                 'roundid' => $round['vendorKey'] . '#' . $round['gameId'] . '#' . $transactionKey,
                 'transactionid' => $transactionKey,
-                'tablekey' => $gameObj['gamecode'] == 'evolution' ? $round['tablekey'] : '',
+                'tablekey' => $gameObj['gamecode'] == 'evolution' ? $round['gameKey'] : '',
             ]);
             \DB::commit();
 
