@@ -555,11 +555,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $original_id = $category->original_id ?? 64;
 
             $result = \VanguardLTE\StatGame::where([
-                'original_id' => $original_id,
+                'category_id' => $original_id,
                 'bet_type' => 'win',
             ])
                 ->whereNull('detail')->orderBy('date_time', 'asc')
                 ->first();
+
+            Log::info('In RG Controller Transaction Detail');
+            Log::info(json_encode($result));
 
             if (!$result) {
                 Log::info('No result found for transaction detail.');
@@ -569,9 +572,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             try {
                 $url = config('app.rg_api') . '/transactions';
                 $token = config('app.rg_key');
+
+                $dateTime = new \DateTime();
+                $dateTime->setTime(23, 59, 59);
+                $endOfDay = $dateTime->format('Y-m-d H:i:s');
+
                 $param = [
                     'start' => $result->date_time,
-                    'end' => '',
+                    'end' => $endOfDay,
                     'page' => 0,
                     'perPage' => 1000,
                 ];
@@ -595,8 +603,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 $transactionIds = [];
 
                 foreach ($transactions as $transaction) {
-                    $transactionKey = addslashes($transaction['id']);
-                    $detail = addslashes($transaction['external']);
+                    $transactionKey = $transaction['id'];
+                    $detail = json_encode($transaction['external']);
 
                     $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
                     $transactionIds[] = "'{$transactionKey}'";

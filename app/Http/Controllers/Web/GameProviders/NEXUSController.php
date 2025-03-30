@@ -1429,7 +1429,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $original_id = $category->original_id ?? 56;
 
             \VanguardLTE\StatGame::where([
-                'original_id' => $original_id,
+                'category_id' => $original_id,
                 'bet_type' => 'win'
             ])
                 ->whereNull('detail')
@@ -1447,8 +1447,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                         $transactionIds = [];
 
                         foreach ($transactions as $transaction) {
-                            $transactionKey = addslashes($transaction['transactionKey']);
-                            $detail = addslashes($transaction['detail']);
+                            $transactionKey = $transaction['transactionKey'];
+                            $detail = json_encode($transaction['detail']);
 
                             $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
                             $transactionIds[] = "'{$transactionKey}'";

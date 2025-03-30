@@ -28,6 +28,8 @@ namespace VanguardLTE\Console
             \VanguardLTE\Console\Commands\PowerBall\GameRoundGen::class,
             \VanguardLTE\Console\Commands\PowerBall\GameRoundProcess::class,
             \VanguardLTE\Console\Commands\PowerBall\GameList::class,
+
+            \VanguardLTE\Console\Commands\TransactionDetail::class,
             
         ];
         protected function schedule(\Illuminate\Console\Scheduling\Schedule $schedule)
@@ -103,7 +105,7 @@ namespace VanguardLTE\Console
             })->dailyAt('08:00');
 
             // Transaction Detail
-            $schedule->command('transaction:detail')->everyFiveMinutes()->withoutOverlapping()->runInBackground();
+            $schedule->command('transaction:detail')->everyMinute()->withoutOverlapping()->runInBackground();
 
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:sharesummary')->dailyAt('03:00')->runInBackground();
