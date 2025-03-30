@@ -26,6 +26,7 @@ namespace VanguardLTE {
             'roundid',
             'transactionid',
             'tablekey',
+            'detail',
             'status'
         ];
         public $timestamps = false;

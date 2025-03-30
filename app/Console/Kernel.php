@@ -102,6 +102,9 @@ namespace VanguardLTE\Console
 
             })->dailyAt('08:00');
 
+            // Transaction Detail
+            $schedule->command('transaction:detail')->everyFiveMinutes()->withoutOverlapping()->runInBackground();
+
             $schedule->command('daily:snapshot')->dailyAt('00:00')->runInBackground();
             $schedule->command('daily:sharesummary')->dailyAt('03:00')->runInBackground();
             $schedule->command('daily:summary')->dailyAt('01:00')->runInBackground();

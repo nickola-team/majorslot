@@ -442,7 +442,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $checkGameStat = \VanguardLTE\StatGame::where([
                 'user_id' => $userId,
                 'bet_type' => $type,
-                'date_time' => $time,
+                // 'date_time' => $time,
                 'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ])->first();
 
@@ -541,6 +541,77 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 return -1;
             }
 
+        }
+
+        public static function transactionDetail()
+        {
+            $category = \VanguardLTE\Category::where([
+                'code' => self::EVO_CODE,
+                'href' => 'rg-evol',
+                'shop_id' => 0,
+                'site_id' => 0
+            ])->first();
+
+            $original_id = $category->original_id ?? 64;
+
+            $result = \VanguardLTE\StatGame::where([
+                'original_id' => $original_id,
+                'bet_type' => 'win',
+            ])
+                ->whereNull('detail')->orderBy('date_time', 'asc')
+                ->first();
+
+            if (!$result) {
+                Log::info('No result found for transaction detail.');
+                return;
+            }
+
+            try {
+                $url = config('app.rg_api') . '/transactions';
+                $token = config('app.rg_key');
+                $param = [
+                    'start' => $result->date_time,
+                    'end' => '',
+                    'page' => 0,
+                    'perPage' => 1000,
+                ];
+
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token
+                ])->get($url, $param);
+
+                if (!$response->successful()) {
+                    Log::error('RG Transacton Detail Exception. Status code=' . $response->status());
+                    return;
+                }
+
+                $data = $response->json();
+
+                $transactions = $data['data'];
+
+                $cases = [];
+                $transactionIds = [];
+
+                foreach ($transactions as $transaction) {
+                    $transactionKey = addslashes($transaction['id']);
+                    $detail = addslashes($transaction['external']);
+
+                    $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
+                    $transactionIds[] = "'{$transactionKey}'";
+                }
+
+                if (!empty($cases)) {
+                    $cases = implode(' ', $cases);
+                    $transactionIds = implode(',', $transactionIds);
+
+                    $query = "UPDATE w_stat_game SET detail = CASE {$cases} END WHERE transactionid IN ({$transactionIds}) AND bet_type = 'win'";
+                    \DB::statement($query);
+                }
+            } catch (\Exception $ex) {
+                Log::error('RG Transacton Detail Exception. Exception=' . $ex->getMessage());
+            }
         }
     }
 
