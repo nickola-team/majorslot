@@ -581,7 +581,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                     'start' => $result->date_time,
                     'end' => $endOfDay,
                     'page' => 0,
-                    'perPage' => 1000,
+                    'perPage' => 100,
                 ];
 
                 $response = Http::withHeaders([
