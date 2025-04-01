@@ -1448,7 +1448,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
 
                         foreach ($transactions as $transaction) {
                             $transactionKey = $transaction['transactionKey'];
-                            $detail = json_encode($transaction['detail']);
+                            $detail = addslashes(json_encode($transaction['detail']));
 
                             $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
                             $transactionIds[] = "'{$transactionKey}'";

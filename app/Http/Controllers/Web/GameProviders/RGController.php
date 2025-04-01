@@ -581,7 +581,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                     'start' => $result->date_time,
                     'end' => $endOfDay,
                     'page' => 0,
-                    'perPage' => 100,
+                    'perPage' => 1000,
                 ];
 
                 $response = Http::withHeaders([
@@ -599,24 +599,33 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
 
                 $transactions = $data['data'];
 
-                $cases = [];
-                $transactionIds = [];
+                $chunkSize = 50; // 한 번에 처리할 $transactions의 크기
+                $transactionsChunks = array_chunk($transactions, $chunkSize);
 
-                foreach ($transactions as $transaction) {
-                    $transactionKey = $transaction['id'];
-                    $detail = json_encode($transaction['external']);
+                foreach ($transactionsChunks as $chunk) {
+                    $cases = [];
+                    $transactionIds = [];
 
-                    $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
-                    $transactionIds[] = "'{$transactionKey}'";
+                    foreach ($chunk as $transaction) {
+                        $transactionKey = $transaction['id'];
+
+                        // $detail에 이스케이프 적용
+                        $detail = addslashes(json_encode($transaction['external']));
+
+                        $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
+                        $transactionIds[] = "'{$transactionKey}'";
+                    }
+
+                    if (!empty($cases)) {
+                        $casesString = implode(' ', $cases);
+                        $transactionIdsString = implode(',', $transactionIds);
+
+                        $query = "UPDATE w_stat_game SET detail = CASE {$casesString} END WHERE transactionid IN ({$transactionIdsString}) AND bet_type = 'win'";
+                        \DB::statement($query);
+                    }
                 }
 
-                if (!empty($cases)) {
-                    $cases = implode(' ', $cases);
-                    $transactionIds = implode(',', $transactionIds);
 
-                    $query = "UPDATE w_stat_game SET detail = CASE {$cases} END WHERE transactionid IN ({$transactionIds}) AND bet_type = 'win'";
-                    \DB::statement($query);
-                }
             } catch (\Exception $ex) {
                 Log::error('RG Transacton Detail Exception. Exception=' . $ex->getMessage());
             }
