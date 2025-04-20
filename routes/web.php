@@ -1484,7 +1484,7 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::get('/promo/race/v2/winners', 'GameProviders\PPController@promoracewinners');
     Route::get('/promo/tournament/details', 'GameProviders\PPController@promotournamentdetails');
     Route::get('/promo/tournament/v3/leaderboard', 'GameProviders\PPController@promotournamentleaderboard');
-    Route::get('/promo/frb/available', 'GameProviders\PPController@promofrbavailable');  
+    Route::get('/promo/frb/available', 'GameProviders\PPController@promofrbavailable');
     Route::get('/announcements/unread', 'GameProviders\PPController@announcementsunread');
     Route::get('/promo/tournament/scores', 'GameProviders\PPController@promotournamentscores');
     Route::get('/minilobby/games.json', 'GameProviders\PPController@minilobby_games_json');
@@ -1494,21 +1494,27 @@ Route::group(['prefix' => 'gs2c',], function () {
     Route::post('api/history/v2/settings/general', 'GameProviders\PPController@general');
     Route::get('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
     Route::post('api/history/v2/play-session/last-items', 'GameProviders\PPController@last_items');
-    Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');    
-    Route::post('api/history/v2/action/children', 'GameProviders\PPController@children');    
-    Route::get('api/history/v3/action/children', 'GameProviders\PPController@children_v3');    
-    Route::post('api/history/v3/action/children', 'GameProviders\PPController@children_v3');  
-    Route::get('session/play-verify/{gamecode}', 'GameProviders\PPController@verify');    
-    Route::get('session/verify/{gamecode}', 'GameProviders\NEXUSController@ppverify'); 
-    Route::get('{game}/reloadBalance.do', 'GameProviders\PPController@pp_update'); 
+    Route::get('api/history/v2/action/children', 'GameProviders\PPController@children');
+    Route::post('api/history/v2/action/children', 'GameProviders\PPController@children');
+    Route::get('api/history/v3/action/children', 'GameProviders\PPController@children_v3');
+    Route::post('api/history/v3/action/children', 'GameProviders\PPController@children_v3');
+    Route::get('session/play-verify/{gamecode}', 'GameProviders\PPController@verify');
+    Route::get('session/verify/{gamecode}', 'GameProviders\NEXUSController@ppverify');
+    Route::get('{game}/reloadBalance.do', 'GameProviders\PPController@pp_update');
     Route::post('{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
     Route::post('stats.do', 'GameProviders\PPController@pp_stats');
 });
-Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');    
-Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');    
+Route::get('pphistory/{symbol}/{filename}.{hash}.min.css', 'GameProviders\PPController@historymaincss');
+Route::get('pphistory/{symbol}/{filename}.{hash}.min.js', 'GameProviders\PPController@historymainjs');
 Route::get('games/{game}/common/v5/games-html5/operator_logos/logo_info.js', 'GameProviders\PPController@logoinfojs');
 
 Route::post('games/{ppgame}/saveSettings.do', 'GameProviders\PPController@savesettings');
+
+/**
+ * Evolution Game Provider
+ */
+
+Route::get('evol/history', 'GameProviders\Evolution@history');
 
 
 /**

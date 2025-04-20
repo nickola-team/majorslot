@@ -1,6 +1,5 @@
 <?php
-namespace VanguardLTE
-{
+namespace VanguardLTE {
     use Log;
     use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
 
@@ -25,6 +24,9 @@ namespace VanguardLTE
             'category_id',
             'game_id',
             'roundid',
+            'transactionid',
+            'tablekey',
+            'detail',
             'status'
         ];
         public $timestamps = false;
@@ -91,26 +93,28 @@ namespace VanguardLTE
         public static function create(array $attributes = [])
         {
             $gamecode = '';
-            if (empty($attributes['category_id']) || empty($attributes['game_id']))
-            {
+            if (empty($attributes['category_id']) || empty($attributes['game_id'])) {
                 //search manually category_id and game_id
                 $real_game = explode(' ', $attributes['game']);
                 $game = \VanguardLTE\Game::where(['name' => $real_game[0], 'shop_id' => 0])->first();
-                if ($game)
-                {
+                if ($game) {
                     $attributes['game_id'] = $game->id;
                     $category = $game->categories->first();
-                    if ($category)
-                    {
+                    if ($category) {
                         $attributes['category_id'] = $category->category_id;
                     }
                     $gamecode = $game->label;
                 }
             }
 
+            // if self version transactionid is null
+            if (!isset($attributes['transactionid'])) {
+                $attributes['transactionid'] = $attributes['roundid'];
+            }
+
             $model = static::query()->create($attributes);
 
-            $user = \VanguardLTE\User::where('id',$model->user_id)->first();
+            $user = \VanguardLTE\User::where('id', $model->user_id)->first();
 
             if (($model->type != 'table' || $model->bet != $model->win) && $user) // if live game and tie, then don't process deal
             {
@@ -119,7 +123,7 @@ namespace VanguardLTE
 
             $parent = $user->findAgent();
 
-            if($parent->callback) {
+            if ($parent->callback) {
                 $parts = explode("#P#", $user->username);
 
                 if (count($parts) > 1) {
@@ -128,10 +132,10 @@ namespace VanguardLTE
                     $username = $user->username;
                 }
 
-                $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id ])->first();
+                $category = \VanguardLTE\Category::where(['shop_id' => 0, 'site_id' => 0, 'original_id' => $model->category_id])->first();
 
                 $transaction = [
-                    'roundid' => $model->id,
+                    'roundid' => $model->transactionid,
                     'datetime' => $model->date_time,
                     'username' => $username,
                     'bet' => $model->bet,
@@ -140,11 +144,12 @@ namespace VanguardLTE
                     'balance' => $model->balance,
                     'gamecode' => $model->game_id,
                     'gamehall' => $category->code,
+                    'tablekey' => $model->tablekey,
                 ];
-    
+
                 $response = CallbackController::setTransaction($parent->callback, $transaction);
 
-                if($response['status'] == 1) {
+                if ($response['status'] == 1) {
                     $user->balance = $response['balance'];
                     $user->save();
 
@@ -154,7 +159,7 @@ namespace VanguardLTE
                     if (!$parent) {
                         $newParentBalance = $parent->balance - $attributes['bet'] + $attributes['win'];
 
-                        if($newParentBalance < 0) {
+                        if ($newParentBalance < 0) {
                             return [
                                 'status' => 0,
                                 'msg' => "operator's balance is not enough",
@@ -178,11 +183,11 @@ namespace VanguardLTE
                 ];
             }
 
-            if($model->category_id == 14) {
+            if ($model->category_id == 14) {
                 \VanguardLTE\PPGameVerifyLog::updateOrCreate([
-                    'user_id'=>$model->user_id,
-                    'game_id'=>$model->game_id
-                ],[
+                    'user_id' => $model->user_id,
+                    'game_id' => $model->game_id
+                ], [
                     'game_id' => $model->game_id,
                     'user_id' => $model->user_id,
                     'bet' => $model->bet,

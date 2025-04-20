@@ -1,14 +1,13 @@
 <?php
-namespace VanguardLTE\Http\Controllers\Web\GameProviders
-{
+namespace VanguardLTE\Http\Controllers\Web\GameProviders {
     use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Facades\Log;
     use VanguardLTE\Http\Controllers\Web\Frontend\CallbackController;
     class RGController extends \VanguardLTE\Http\Controllers\Controller
     {
         /*
-        * UTILITY FUNCTION
-        */
+         * UTILITY FUNCTION
+         */
         // RG => RealGates
         const RG_PROVIDER = 'rg';
         const RG_EVOCODE = 756;
@@ -16,24 +15,19 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
         const RG_GAME_IDENTITY = [
             //==== SLOT ====
-            'rg-evol' => ['vendor' =>'evolution']
+            'rg-evol' => ['vendor' => 'evolution']
         ];
 
-        public static function getGameObj($uuid, $isvendor=false)
+        public static function getGameObj($uuid, $isvendor = false)
         {
-            foreach (RGController::RG_GAME_IDENTITY as $ref => $value)
-            {
+            foreach (RGController::RG_GAME_IDENTITY as $ref => $value) {
                 $gamelist = RGController::getgamelist($ref);
-                if ($gamelist)
-                {
-                    foreach($gamelist as $game)
-                    {
-                        if($isvendor && $game['view'] == 1 && $game['vendor'] == $uuid)
-                        {
+                if ($gamelist) {
+                    foreach ($gamelist as $game) {
+                        if ($isvendor && $game['view'] == 1 && $game['vendor'] == $uuid) {
                             return $game;
                         }
-                        if ($game['gamecode'] == $uuid)
-                        {
+                        if ($game['gamecode'] == $uuid) {
                             return $game;
                         }
                     }
@@ -43,58 +37,52 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         }
 
         /*
-        */
+         */
 
-        
+
         /*
-        * FROM CONTROLLER, API
-        */
-        public static function getUserBalance($href, $user, $prefix=self::RG_PROVIDER) {
+         * FROM CONTROLLER, API
+         */
+        public static function getUserBalance($href, $user, $prefix = self::RG_PROVIDER)
+        {
             $url = config('app.rg_api') . '/user';
             $token = config('app.rg_key');
 
             $param = [
-                'username' => $prefix . sprintf("%04d",$user->id)
+                'username' => $prefix . sprintf("%04d", $user->id)
             ];
             $balance = -1;
 
-            try {                   
+            try {
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->withBody(json_encode($param),'application/json')->post($url);
+                ])->withBody(json_encode($param), 'application/json')->post($url);
                 if ($response->getStatusCode() == 200) {
                     $res = $response->json();
-        
+
                     if (isset($res['success']) && $res['success'] == 0 && isset($res['data'])) {
                         $balance = $res['data']['user_money'];
-                    }
-                    else
-                    {
+                    } else {
                         Log::error('RGgetuserbalance : return failed. ' . $res['message']);
                     }
-                }
-                else
-                {
+                } else {
                     Log::error('RGgetuserbalance : response is not okay. ' . $response->body());
                 }
-            }
-            catch (\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 Log::error('RGgetuserbalance : getUserBalance Excpetion. exception= ' . $ex->getMessage());
                 Log::error('RGgamerounds : getUserBalance Excpetion. PARAMS= ' . json_encode($param));
             }
-            
+
             return intval($balance);
         }
         public static function getgamelist($href)
         {
-            $gameList = \Illuminate\Support\Facades\Redis::get($href.'list');
-            if ($gameList)
-            {
+            $gameList = \Illuminate\Support\Facades\Redis::get($href . 'list');
+            if ($gameList) {
                 $games = json_decode($gameList, true);
-                if ($games!=null && count($games) > 0){
+                if ($games != null && count($games) > 0) {
                     return $games;
                 }
             }
@@ -107,27 +95,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'vendor' => $category['vendor']
             ];
 
-    
+
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $token
-                ])->get($url , $param);
-            if ($response->getStatusCode() != 200)
-            {
+            ])->get($url, $param);
+            if ($response->getStatusCode() != 200) {
                 return [];
             }
             $data = $response->json();
-            if(isset($data['success']) && $data['success'] != 0)
-            {
+            if (isset($data['success']) && $data['success'] != 0) {
                 return [];
             }
             $gameList = [];
-            foreach ($data['data'] as $game)
-            {
+            foreach ($data['data'] as $game) {
                 $view = 0;
-                if($game['game_code'] == self::RG_EVOCODE)
-                {
+                if ($game['game_code'] == self::RG_EVOCODE) {
                     $view = 1;
                 }
                 array_push($gameList, [
@@ -140,7 +124,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'name' => preg_replace('/\s+/', '', $game['game_name']),
                     'title' => $game['game_name'],
                     'icon' => $game['thumbnail'],
-                    'type' => ($game['game_type']=='slot')?'slot':'table',
+                    'type' => ($game['game_type'] == 'slot') ? 'slot' : 'table',
                     'view' => $view
                 ]);
             }
@@ -177,59 +161,51 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 ]);
             }
 
-            \Illuminate\Support\Facades\Redis::set($href.'list', json_encode($gameList));
+            \Illuminate\Support\Facades\Redis::set($href . 'list', json_encode($gameList));
             return $gameList;
-            
+
         }
 
-        public static function makegamelink($gamecode,  $prefix=self::RG_PROVIDER) 
+        public static function makegamelink($gamecode, $prefix = self::RG_PROVIDER)
         {
 
             $token = config('app.rg_key');
-            
+
             $game = RGController::getGameObj($gamecode);
-            if (!$game)
-            {
+            if (!$game) {
                 return null;
             }
             $user = auth()->user();
-            if ($user == null)
-            {
+            if ($user == null) {
                 return null;
             }
             $alreadyUser = 1;
-            $username = self::RG_PROVIDER . sprintf("%04d",$user->id);
+            $username = self::RG_PROVIDER . sprintf("%04d", $user->id);
             $param = [
                 'username' => $username
             ];
-            try
-            {
+            try {
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->withBody(json_encode($param),'application/json')->post(config('app.rg_api') . '/user');
-                if ($response->getStatusCode() != 200)
-                {
+                ])->withBody(json_encode($param), 'application/json')->post(config('app.rg_api') . '/user');
+                if ($response->getStatusCode() != 200) {
                     // Log::error('RGmakelink : checkUser request failed. ' . $response->body());
                     $alreadyUser = 0;
                 }
                 $data = $response->json();
-                if ($data==null || !isset($data['success']) || $data['success'] != 0)
-                {
+                if ($data == null || !isset($data['success']) || $data['success'] != 0) {
                     $alreadyUser = 0;
                 }
-            }
-            catch (\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 Log::error('RGcheckuser : checkUser Exception. Exception=' . $ex->getMessage());
                 Log::error('RGcheckuser : checkUser Exception. PARAMS=' . $username);
                 return null;
             }
-            if ($alreadyUser == 0){
+            if ($alreadyUser == 0) {
                 //create honor account
-                try
-                {
+                try {
 
                     $url = config('app.rg_api') . '/user/create';
                     $param = [
@@ -239,21 +215,17 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => 'Bearer ' . $token
-                        ])->withBody(json_encode($param), 'application/json')->post($url);
-                    if ($response->getStatusCode() != 200)
-                    {
+                    ])->withBody(json_encode($param), 'application/json')->post($url);
+                    if ($response->getStatusCode() != 200) {
                         Log::error('RGmakelink : createAccount request failed. ' . $response->body());
                         return null;
                     }
                     $data = $response->json();
-                    if ($data==null || !isset($data['success']) || $data['success'] != 0)
-                    {
+                    if ($data == null || !isset($data['success']) || $data['success'] != 0) {
                         Log::error('RGmakelink : createAccount request failed. ' . $response->body());
                         return null;
                     }
-                }
-                catch (\Exception $ex)
-                {
+                } catch (\Exception $ex) {
                     Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
                     Log::error('RGcheckuser : createAccount Exception. PARAMS=' . json_encode($param));
                     return null;
@@ -264,17 +236,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             // $real_code = explode('_', $game['gamecode'])[1];
             $real_code = $game['symbol'];
             $skin = 'A';
-            if($game['href'] == 'rg-evol')
-            {
+            if ($game['href'] == 'rg-evol') {
                 $parent = $user;
-                while ($parent)
-                {
+                while ($parent) {
                     $provider_config = \VanguardLTE\ProviderInfo::where('user_id', $parent->id)->where('provider', 'evo')->first();
-                    if ($provider_config)
-                    {
+                    if ($provider_config) {
                         $evoSkin = \VanguardLTE\EvoSkins::where('skin', $provider_config->config)->first();
-                        if(isset($evoSkin))
-                        {
+                        if (isset($evoSkin)) {
                             $skin = $evoSkin->rg_skin;
                         }
                         break;
@@ -291,32 +259,27 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'skin' => '' . $skin
             ];
 
-            try
-            {
+            try {
                 $url = config('app.rg_api') . '/game-url';
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->withBody(json_encode($param),'application/json')->post($url);
-                if ($response->getStatusCode() != 200)
-                {
+                ])->withBody(json_encode($param), 'application/json')->post($url);
+                if ($response->getStatusCode() != 200) {
                     Log::error('RGGetLink : Game url request failed. status=' . $response->status());
                     Log::error('RGGetLink : Game url request failed. param=' . json_encode($param));
-    
+
                     return null;
                 }
                 $data = $response->json();
-                if ($data==null || !isset($data['success']) || $data['success'] != 0 || !isset($data['data']))
-                {
-                    Log::error('RGGetLink : Game url result failed. ' . ($data==null?'null':json_encode($data)));
+                if ($data == null || !isset($data['success']) || $data['success'] != 0 || !isset($data['data'])) {
+                    Log::error('RGGetLink : Game url result failed. ' . ($data == null ? 'null' : json_encode($data)));
                     return null;
                 }
                 $url = $data['data']['url'];
                 return $url;
-            }
-            catch(\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
                 Log::error('RGcheckuser : createAccount Exception. PARAMS=' . json_encode($param));
                 return null;
@@ -326,26 +289,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getgamelink($gamecode)
         {
             $gameObj = RGController::getGameObj($gamecode);
-            if (!$gameObj)
-            {
+            if (!$gameObj) {
                 return ['error' => true, 'msg' => '게임이 없습니다'];
             }
             $url = RGController::makegamelink($gamecode);
-            if ($url)
-            {
+            if ($url) {
                 return ['error' => false, 'data' => ['url' => $url]];
             }
             return ['error' => true, 'msg' => '게임실행 오류입니다'];
         }
         public static function getgamedetail(\VanguardLTE\StatGame $stat)
         {
-            $betrounds = explode('#',$stat->roundid);
-            if (count($betrounds) < 3)
-            {
+            $betrounds = explode('#', $stat->roundid);
+            if (count($betrounds) < 3) {
                 return null;
             }
             $transactionKey = $betrounds[2];
-            try{
+            try {
                 $url = config('app.rg_api') . '/details';
                 $param = [
                     'id' => $transactionKey
@@ -354,19 +314,14 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . config('app.rg_key')
-                    ])->get($url, $param);
+                ])->get($url, $param);
                 $data = $response->json();
-                if ($data==null || $data['data'] == "")
-                {
+                if ($data == null || $data['data'] == "") {
                     return null;
-                }
-                else
-                {
+                } else {
                     return $data['data'];
                 }
-            }
-            catch(\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 Log::error('RGcheckuser : createAccount Exception. Exception=' . $ex->getMessage());
                 Log::error('RGcheckuser : createAccount Exception. PARAMS=' . json_encode($param));
                 return null;
@@ -375,13 +330,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         // Callback
         public function balance(\Illuminate\Http\Request $request)
         {
-            Log::info('---- RG Balance CallBack '.' : Request PARAMS= ' .$request->username);
-            
-            $userid = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', isset($request->username)?$request->username:"")) ;
-            $user = \VanguardLTE\User::where(['id'=> $userid, 'role_id' => 1])->first();
-            
-            if (!$user)
-            {
+            Log::info('---- RG Balance CallBack ' . ' : Request PARAMS= ' . $request->username);
+
+            $userid = intval(preg_replace('/' . self::RG_PROVIDER . '(\d+)/', '$1', isset($request->username) ? $request->username : ""));
+            $user = \VanguardLTE\User::where(['id' => $userid, 'role_id' => 1])->first();
+
+            if (!$user) {
                 Log::error('RGchangeBalance : Not found user. PARAMS= ' . $request->username);
                 return response()->json([
                     'result' => false,
@@ -389,8 +343,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => 0,
                 ]);
             }
-            if($user->api_token == 'playerterminate')
-            {
+            if ($user->api_token == 'playerterminate') {
                 Log::error('RGchangeBalance CallBack Balance : terminated by admin. PARAMS= ' . $request->username);
                 return response()->json([
                     'result' => false,
@@ -401,11 +354,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $parent = $user->findAgent();
 
-            if($parent->callback) {
+            if ($parent->callback) {
                 $username = explode("#P#", $user->username)[1];
-                $response = CallbackController::userBalance( $parent->callback, $username);
+                $response = CallbackController::userBalance($parent->callback, $username);
 
-                if($response['status'] == 1) {
+                if ($response['status'] == 1) {
                     $user->balance = $response['balance'];
                     $user->save();
 
@@ -432,24 +385,23 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         {
             $data = json_decode($request->getContent(), true);
 
-            Log::info('---- RG ChangeBalance CallBack '.' : Request PARAMS= ' . json_encode($data));
+            Log::info('---- RG ChangeBalance CallBack ' . ' : Request PARAMS= ' . json_encode($data));
 
-            $username = isset($data['username'])?$data['username']:"";
-            $transaction = isset($data['transaction'])?$data['transaction']:[];
-            $type = isset($transaction['type'])?$transaction['type']:"";
+            $username = isset($data['username']) ? $data['username'] : "";
+            $transaction = isset($data['transaction']) ? $data['transaction'] : [];
+            $type = isset($transaction['type']) ? $transaction['type'] : "";
             // 응답에 없는 필드 이용 $time = date('Y-m-d H:i:s',strtotime($transaction['processed_at']));
             $time = date('Y-m-d H:i:s', time());
-            $transactionid = isset($transaction['id'])?$transaction['id']:'';
-            if($type != 'bet' && isset($transaction['referer_id']))
-            {
+            $transactionid = isset($transaction['id']) ? $transaction['id'] : '';
+            if ($type != 'bet' && isset($transaction['referer_id'])) {
                 $transactionid = $transaction['referer_id'];
             }
-            $amount = isset($transaction['amount'])?$transaction['amount']:-1;
-            $roundid = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['round']:"";
-            $gametitle = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['title']:"";
-            $vendor = (isset($transaction['details']) && isset($transaction['details']['game']))?$transaction['details']['game']['vendor']:"";
-            if ($username == "" || empty($transaction) || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "")
-            {
+            $amount = isset($transaction['amount']) ? $transaction['amount'] : -1;
+            $roundid = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['round'] : "";
+            $gametitle = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['title'] : "";
+            $tablekey = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['id'] : "";
+            $vendor = (isset($transaction['details']) && isset($transaction['details']['game'])) ? $transaction['details']['game']['vendor'] : "";
+            if ($username == "" || empty($transaction) || $type == "" || $amount == -1 || $roundid == "" || $gametitle == "" || $vendor == "") {
                 Log::error('RGchangeBalance : callback param Error. PARAMS= ' . json_encode($data));
                 return response()->json([
                     'result' => false,
@@ -457,14 +409,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                     'balance' => 0,
                 ]);
             }
-            
+
             if ($vendor == 'evolution') {
                 $gameObj = RGController::getGameObj(self::EVO_CODE);
             } else {
                 $gameObj = RGController::getGameObj($vendor, true);
             }
-            if (!$gameObj)
-            {
+            if (!$gameObj) {
                 Log::error('RGchangeBalance : Not found gameObj. PARAMS= ' . json_encode($data));
                 return response()->json([
                     'result' => false,
@@ -474,13 +425,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             }
             \DB::beginTransaction();
 
-            $userId = intval(preg_replace('/'. self::RG_PROVIDER .'(\d+)/', '$1', $username)) ;
-            $user = \VanguardLTE\User::lockforUpdate()->where(['id'=> $userId, 'role_id' => 1])->first();
+            $userId = intval(preg_replace('/' . self::RG_PROVIDER . '(\d+)/', '$1', $username));
+            $user = \VanguardLTE\User::lockforUpdate()->where(['id' => $userId, 'role_id' => 1])->first();
 
             Log::info(json_encode($user));
 
-            if (!$user)
-            {
+            if (!$user) {
                 Log::error('RGchangeBalance : Not found User. PARAMS= ' . json_encode($data));
                 \DB::commit();
                 return response()->json([
@@ -492,14 +442,13 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
             $checkGameStat = \VanguardLTE\StatGame::where([
                 'user_id' => $userId,
                 'bet_type' => $type,
-                'date_time' => $time,
+                // 'date_time' => $time,
                 'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
             ])->first();
 
             Log::info($checkGameStat);
 
-            if ($checkGameStat)
-            {
+            if ($checkGameStat) {
                 Log::error('RGchangeBalance : Not Game History. Roundid= ' . $roundid);
                 \DB::commit();
                 return response()->json([
@@ -511,21 +460,18 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
 
             $betAmount = 0;
             $winAmount = 0;
-            if($type == 'bet')
-            {
+            if ($type == 'bet') {
                 $betAmount = $amount;
                 $user->balance = $user->balance - intval($amount);
-            }
-            else
-            {
+            } else {
                 $winAmount = $amount;
                 $user->balance = $user->balance + intval($amount);
             }
             $user->save();
-            
+
             $category = \VanguardLTE\Category::where(['provider' => RGController::RG_PROVIDER, 'shop_id' => 0, 'href' => $gameObj['href']])->first();
             $gamename = $gametitle . '_' . $gameObj['href'];
-            if($type == 'cancel')  // 취소처리된 경우
+            if ($type == 'cancel')  // 취소처리된 경우
             {
                 $gamename = $gametitle . '_rg[C]_' . $gameObj['href'];
             }
@@ -535,7 +481,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'balance' => intval($user->balance),
                 'bet' => $betAmount,
                 'win' => $winAmount,
-                'game' =>  $gamename,
+                'game' => $gamename,
                 'type' => 'table',
                 'bet_type' => $type,
                 'percent' => 0,
@@ -545,9 +491,11 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
                 'denomination' => 0,
                 'shop_id' => $user->shop_id,
                 'date_time' => $time,
-                'category_id' => isset($category)?$category->original_id:0,
+                'category_id' => isset($category) ? $category->original_id : 0,
                 'game_id' => $gameObj['gamecode'],
                 'roundid' => $vendor . '#' . $roundid . '#' . $transactionid,
+                'transactionid' => $transactionid,
+                'tablekey' => $gameObj['gamecode'] == 'evolution' ? $tablekey : '',
             ]);
             \DB::commit();
 
@@ -570,34 +518,117 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders
         public static function getAgentBalance()
         {
             $token = config('app.rg_key');
-            try
-            {
+            try {
                 $url = config('app.rg_api') . '/my-info';
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
-                    ])->get($url);
-                if ($response->getStatusCode() != 200)
-                {
+                ])->get($url);
+                if ($response->getStatusCode() != 200) {
                     Log::error('RGAgentBalance : agentbalance request failed. ' . $response->body());
                     return -1;
                 }
                 $data = $response->json();
-                if (($data==null) || isset($data['message']))
-                {
-                    Log::error('RGAgentBalance : agentbalance result failed. ' . ($data==null?'null':$data['message']));
+                if (($data == null) || isset($data['message'])) {
+                    Log::error('RGAgentBalance : agentbalance result failed. ' . ($data == null ? 'null' : $data['message']));
                     return -1;
                 }
                 return $data['balance'];
-            }
-            catch (\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 Log::error('RGAgentBalance : agentbalance Exception. Exception=' . $ex->getMessage());
                 Log::error('RGAgentBalance : agentbalance Exception. PARAMS=');
                 return -1;
             }
 
+        }
+
+        public static function transactionDetail()
+        {
+            $category = \VanguardLTE\Category::where([
+                'code' => self::EVO_CODE,
+                'href' => 'rg-evol',
+                'shop_id' => 0,
+                'site_id' => 0
+            ])->first();
+
+            $original_id = $category->original_id ?? 64;
+
+            $result = \VanguardLTE\StatGame::where([
+                'category_id' => $original_id,
+                'bet_type' => 'win',
+            ])
+                ->whereNull('detail')->orderBy('date_time', 'asc')
+                ->first();
+
+            Log::info('In RG Controller Transaction Detail');
+            Log::info(json_encode($result));
+
+            if (!$result) {
+                Log::info('No result found for transaction detail.');
+                return;
+            }
+
+            try {
+                $url = config('app.rg_api') . '/transactions';
+                $token = config('app.rg_key');
+
+                $dateTime = new \DateTime();
+                $dateTime->setTime(23, 59, 59);
+                $endOfDay = $dateTime->format('Y-m-d H:i:s');
+
+                $param = [
+                    'start' => $result->date_time,
+                    'end' => $endOfDay,
+                    'page' => 0,
+                    'perPage' => 1000,
+                ];
+
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token
+                ])->get($url, $param);
+
+                if (!$response->successful()) {
+                    Log::error('RG Transacton Detail Exception. Status code=' . $response->status());
+                    return;
+                }
+
+                $data = $response->json();
+
+                $transactions = $data['data'];
+
+                $chunkSize = 50; // 한 번에 처리할 $transactions의 크기
+                $transactionsChunks = array_chunk($transactions, $chunkSize);
+
+                foreach ($transactionsChunks as $chunk) {
+                    $cases = [];
+                    $transactionIds = [];
+
+                    foreach ($chunk as $transaction) {
+                        $transactionKey = $transaction['id'];
+
+                        // $detail에 이스케이프 적용
+                        $detail = addslashes(json_encode($transaction['external']));
+
+                        $cases[] = "WHEN transactionid = '{$transactionKey}' THEN '{$detail}'";
+                        $transactionIds[] = "'{$transactionKey}'";
+                    }
+
+                    if (!empty($cases)) {
+                        $casesString = implode(' ', $cases);
+                        $transactionIdsString = implode(',', $transactionIds);
+
+                        $query = "UPDATE w_stat_game SET detail = CASE {$casesString} END WHERE transactionid IN ({$transactionIdsString}) AND bet_type = 'win'";
+                        \DB::statement($query);
+                    }
+                }
+
+
+            } catch (\Exception $ex) {
+                Log::error('RG Transacton Detail Exception. Exception=' . $ex->getMessage());
+            }
         }
     }
 
