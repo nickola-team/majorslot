@@ -20,7 +20,10 @@
 </div>
 
 <div class="game-buttons-container">
-    <div class="game-buttons ng-scope live" onclick=@auth "javascript:casinoGameStart('gvo');" @else "navClick('login-popup')"
+    <div class="game-buttons ng-scope live" onclick=@auth
+    "navClick('casino-popup')"
+    @else
+    "navClick('login-popup')"
         @endif>
         <div class="title-container">
             <span ng-bind="mainButton.title" class="ng-binding">라이브 카지노</span>
