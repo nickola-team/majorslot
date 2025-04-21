@@ -80,10 +80,10 @@
                 <ul class="list-inline click-disable">
                   <li onclick=
                   @auth
-                  "javascript:casinoGameStart('gvo');"
+                  "navClick('casino-popup')"
                   @else
-                    "navClick('login-popup')"
-                  @endif
+                  "navClick('login-popup')"
+                  @endif 
                    class="ng-scope">
                     <p ng-show="$index == 1" class="ng-hide">
                       <i class="fa fa-mobile"></i>
