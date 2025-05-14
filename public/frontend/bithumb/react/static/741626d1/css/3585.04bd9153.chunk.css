@@ -1,0 +1,1443 @@
+.LendingApplication_lending-application--page__h86TU {
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 104px 24px 82px;
+    width: 460px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__title__Wn5As {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__notice-button__vUx4c {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-detail-line-gray.72dcc37954e60313e9a5.svg) no-repeat 0 0;
+    background-size: 20px 20px;
+    display: inline-block;
+    height: 20px;
+    margin: 5px 0 0 4px;
+    vertical-align: top;
+    width: 20px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--input__ebmU1 {
+    margin-top: 32px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--input__ebmU1+.LendingApplication_lending-application__type-box--input__ebmU1 {
+    margin-top: 24px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--range__pKRhd {
+    margin-top: 5px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--date__NXfP0 {
+    margin-top: 28px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--result__RtpKz {
+    margin-top: 32px
+}
+
+.LendingApplication_lending-application--page__h86TU .LendingApplication_lending-application__type-box--bottom__eeaM5 {
+    margin-top: 40px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__title__Wn5As {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__notice-button__vUx4c {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-detail-line-gray.72dcc37954e60313e9a5.svg) no-repeat 0 0;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    margin: 4px 0 0 4px;
+    vertical-align: top;
+    width: 16px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__type-box--input__ebmU1 {
+    margin-top: 24px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__type-box--range__pKRhd {
+    margin-top: 5px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__type-box--date__NXfP0 {
+    margin-top: 19px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__type-box--result__RtpKz {
+    margin-top: 24px
+}
+
+.LendingApplication_lending-application--layer__dd0sh .LendingApplication_lending-application__type-box--bottom__eeaM5 {
+    margin-top: 20px
+}
+
+.LendingApplication_lending-application-select__KywmM {
+    margin-top: 56px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__title__aV-lC {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 14px;
+    line-height: 20px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__box__Qwd4Q {
+    margin-top: 8px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__selected__ZrqKF {
+    box-sizing: border-box;
+    min-height: 72px;
+    padding: 15px 38px 16px 16px;
+    position: relative
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__wVl7e {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 38px;
+    position: relative
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__wVl7e .LendingApplication_lending-application-select-info__img__1SBEZ {
+    height: 32px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__wVl7e .LendingApplication_lending-application-select-info__name__\+33VB {
+    color: var(--G-bithumb-new-gray_01);
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 23px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__wVl7e .LendingApplication_ending-application-select-info__symbol__CHl52 {
+    color: var(--G-bithumb-new-gray_06);
+    display: block;
+    font-size: 12px;
+    line-height: 18px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__right__7LrlU {
+    text-align: right
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__price__EOBvm {
+    color: var(--G-bithumb-new-gray_01);
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 23px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__rate__SZ3kV {
+    color: var(--G-bithumb-new-gray_02);
+    display: block;
+    font-size: 12px;
+    line-height: 18px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__rate__SZ3kV.LendingApplication_lending-application-select-info__rate--up__0MHic {
+    color: var(--G-bithumb-new-trade_buy_01)
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__rate__SZ3kV.LendingApplication_lending-application-select-info__rate--up__0MHic:before {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-rate-up.4fa50ad09c35203f67b7.svg) no-repeat 0 0;
+    background-size: 9px 8px;
+    content: "";
+    display: inline-block;
+    height: 8px;
+    margin: 5px 2px 0 0;
+    vertical-align: top;
+    width: 9px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__rate__SZ3kV.LendingApplication_lending-application-select-info__rate--down__kgyq0 {
+    color: var(--G-bithumb-new-trade_sell_01)
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select-info__rate__SZ3kV.LendingApplication_lending-application-select-info__rate--down__kgyq0:before {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-rate-down.54da1dcc9ac7f792c7c2.svg) no-repeat 0 0;
+    background-size: 9px 8px;
+    content: "";
+    display: inline-block;
+    height: 8px;
+    margin: 5px 2px 0 0;
+    vertical-align: top;
+    width: 9px
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__link__4xYBo {
+    border: 1px solid var(--G-bithumb-new-line_03);
+    border-radius: 8px;
+    box-sizing: border-box;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__link__4xYBo:after {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 7px solid #727881;
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-2px);
+    transition: transform .2s ease-out
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__link__4xYBo[aria-expanded=true] {
+    border-color: var(--G-bithumb-new-line_06)
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__link__4xYBo[aria-expanded=true]:after {
+    transform: translateY(-4px) rotate(180deg)
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__layer__5FWdB {
+    background-color: var(--G-bithumb-new-surface_01);
+    border: 1px solid var(--G-bithumb-new-line_02);
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: none;
+    left: 0;
+    padding: 7px 0;
+    position: absolute;
+    top: 76px;
+    width: 100%;
+    z-index: 90
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__layer__5FWdB[aria-hidden=false] {
+    display: block
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__layer-item__9bn8U {
+    padding: 8px 15px;
+    position: relative
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__layer-item__9bn8U:hover {
+    background-color: var(--G-bithumb-new-pressed_01)
+}
+
+.LendingApplication_lending-application-select__KywmM .LendingApplication_lending-application-select__layer-link__6vjMv {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__top__ktk4- {
+    display: flex;
+    justify-content: space-between
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__title__8pw00 {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__top-right__AsC9j {
+    display: flex;
+    overflow: hidden
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-top__text__GSem4 {
+    color: var(--G-bithumb-new-gray_02);
+    display: flex;
+    flex: 1 1;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 8px;
+    overflow: hidden
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-top__text__GSem4 em {
+    font-weight: 600
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-top__add__G02qo {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-add-plus.5da35b413af83028afdc.svg) no-repeat 0 0;
+    background-size: 20px 20px;
+    height: 20px;
+    margin-left: 4px;
+    min-width: 20px;
+    width: 20px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__box__CZ7aM {
+    align-items: center;
+    display: flex;
+    margin-top: 8px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__sub-label__9znd3 {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 16px;
+    line-height: 24px
+}
+
+.LendingApplication_lending-application-input__zyqKg input:disabled {
+    -webkit-text-fill-color: var(--G-bithumb-new-gray_04) !important;
+    color: var(--G-bithumb-new-gray_04) !important
+}
+
+.LendingApplication_lending-application-input__zyqKg input:disabled+span .LendingApplication_lending-application-input__sub-label__9znd3 {
+    color: var(--G-bithumb-new-gray_04)
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__notice__\+Kdh7 {
+    color: var(--G-bithumb-new-gray_06);
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 8px;
+    min-height: 28px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__check__jIPKW {
+    margin-left: 16px;
+    white-space: nowrap
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__check__jIPKW label span {
+    color: var(--G-bithumb-new-gray_01) !important;
+    font-size: 16px !important
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__speech-bubble__J-uwb {
+    position: relative;
+    width: 24px;
+    z-index: 20
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input__speech-bubble__inner__LyCO2 {
+    left: 50%;
+    position: absolute;
+    top: -35px;
+    transform: translateX(-50%)
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 {
+    background-color: var(--G-bithumb-new-surface_01);
+    max-height: 0;
+    opacity: 0;
+    position: relative;
+    transition: opacity .2s cubic-bezier(.65, 0, .5, 1), visibility .2s cubic-bezier(.65, 0, .5, 1), max-height .3s cubic-bezier(.65, 0, .5, 1);
+    visibility: hidden;
+    z-index: 10
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59:before {
+    content: "";
+    display: block;
+    height: 8px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__row__1p6ul {
+    display: flex;
+    height: 20px;
+    justify-content: space-between
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__row__1p6ul+.LendingApplication_lending-application-input-result__row__1p6ul {
+    margin-top: 6px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__row__1p6ul:last-child {
+    margin-bottom: 4px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__text__yJQMT,
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 13px;
+    line-height: 20px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA {
+    padding-left: 10px;
+    position: relative;
+    white-space: nowrap
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA:after,
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA:before {
+    background-color: var(--G-bithumb-new-gray_06);
+    border-radius: 6px;
+    content: "";
+    left: 0;
+    position: absolute
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA:before {
+    height: 6px;
+    top: 5px;
+    width: 1px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__title__08TEA:after {
+    content: "";
+    height: 1px;
+    top: 10px;
+    width: 6px
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59 .LendingApplication_lending-application-input-result__text__yJQMT {
+    margin-left: 4px;
+    text-align: right;
+    word-break: break-all
+}
+
+.LendingApplication_lending-application-input__zyqKg .LendingApplication_lending-application-input-result__v8K59.LendingApplication_lending-application-input-result--active__E5n\+s {
+    max-height: 90px;
+    opacity: 1;
+    overflow: visible;
+    visibility: visible
+}
+
+.LendingApplication_lending-application-range__GtNjW {
+    padding-bottom: 20px
+}
+
+.LendingApplication_lending-application-range__GtNjW [data-button-num="1"] {
+    left: 0 !important
+}
+
+.LendingApplication_lending-application-range__GtNjW [data-button-num="20"] span,
+.LendingApplication_lending-application-range__GtNjW [data-button-num="40"] span,
+.LendingApplication_lending-application-range__GtNjW [data-button-num="60"] span {
+    display: none !important
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__title__l4K\+Q {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 14px;
+    line-height: 20px
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__box__AfcoE {
+    display: flex;
+    margin-top: 12px
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__check__-VKEd {
+    flex: 1 1
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__check__-VKEd label span {
+    color: var(--G-bithumb-new-gray_04) !important;
+    font-size: 16px !important
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__check__-VKEd input:checked+label span {
+    color: var(--G-bithumb-new-gray_01) !important
+}
+
+.LendingApplication_lending-application-date__Oi8fg .LendingApplication_lending-application-date__text__bV6\+t {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 12px
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 {
+    grid-gap: 8px;
+    border-top: 1px solid var(--G-bithumb-new-line_02);
+    display: grid;
+    gap: 8px;
+    grid-template-columns: minmax(100px, auto) 1fr;
+    padding-top: 16px
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__title__kzK5j {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 16px;
+    line-height: 24px
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__title__kzK5j:last-of-type {
+    font-weight: 600
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__text__S97-m {
+    text-align: right
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__text-normal__CQA9L {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 16px;
+    line-height: 24px
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__price__IV4Py {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 24px;
+    overflow-wrap: anywhere
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__price__IV4Py em {
+    font-size: 16px;
+    font-weight: 500
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__notice__igHCS {
+    color: var(--G-bithumb-new-gray_05);
+    font-size: 13px;
+    line-height: 20px
+}
+
+.LendingApplication_lending-application-result__Hc\+s5 .LendingApplication_lending-application-result__button__83LwK {
+    color: var(--G-bithumb-new-gray_05);
+    font-size: 13px;
+    line-height: 20px;
+    text-decoration: underline
+}
+
+.LendingApplication_lending-application-bottom__DNhQf {
+    display: flex
+}
+
+.LendingIntroModal_lending-intro__wrap__QHJ9j {
+    padding: 32px 16px 0 0 !important
+}
+
+.LendingIntroModal_lending-intro__FZqAX {
+    box-sizing: border-box;
+    flex: 1 1;
+    overflow-y: auto
+}
+
+.LendingIntroModal_lending-intro__FZqAX::-webkit-scrollbar {
+    width: 12px
+}
+
+.LendingIntroModal_lending-intro__FZqAX::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: rgba(28, 32, 40, .2);
+    border: 4px solid transparent;
+    border-radius: 15px
+}
+
+.LendingIntroModal_lending-intro__FZqAX::-webkit-scrollbar-thumb:hover {
+    background-clip: padding-box;
+    background-color: rgba(28, 32, 40, .3);
+    border: 4px solid transparent;
+    border-radius: 15px
+}
+
+.LendingIntroModal_lending-intro__FZqAX::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0
+}
+
+.LendingIntroModal_lending-intro__inner__TY0jm {
+    padding: 0 8px 40px 32px
+}
+
+.LendingIntroModal_lending-intro__title__MoJzE {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    margin-bottom: 40px;
+    padding: 4px 0 0 32px
+}
+
+.LendingIntroModal_lending-intro__title__MoJzE:before {
+    background: url(/frontend/bithumb/react/static/741626d1/media/bg-lending-intro-upturn.2a74a58060ff47eaf425.svg) no-repeat 0 0;
+    background-size: 56px 56px;
+    content: "";
+    display: block;
+    height: 56px;
+    margin-bottom: 16px;
+    width: 56px
+}
+
+.LendingIntroModal_lending-intro__title__MoJzE.LendingIntroModal_lending-intro__title--down-turn__HpAgc:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/bg-lending-intro-downturn.8080e79db33102262d31.svg)
+}
+
+.LendingIntroModal_lending-intro-tab__sF0cH {
+    background-color: var(--G-bithumb-new-surface_01);
+    padding: 0 8px 0 32px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 110
+}
+
+.LendingIntroModal_lending-intro-tab__sF0cH:after {
+    background-color: var(--G-bithumb-new-line_02);
+    clear: both;
+    content: "";
+    display: block;
+    height: 1px
+}
+
+.LendingIntroModal_lending-intro-tab__sF0cH .LendingIntroModal_lending-intro-tab__button__hhvXl {
+    color: var(--G-bithumb-new-gray_05);
+    display: block;
+    float: left;
+    font-size: 18px;
+    line-height: 28px;
+    padding: 8px 0 9px;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    width: 50%;
+    z-index: 10
+}
+
+.LendingIntroModal_lending-intro-tab__sF0cH .LendingIntroModal_lending-intro-tab__button__hhvXl[aria-selected=true] {
+    color: var(--G-bithumb-new-gray_01);
+    font-weight: 600
+}
+
+.LendingIntroModal_lending-intro-tab__sF0cH .LendingIntroModal_lending-intro-tab__button__hhvXl[aria-selected=true]:after {
+    border-bottom: 2px solid var(--G-bithumb-new-line_06);
+    bottom: -1px;
+    content: "";
+    left: 0;
+    position: absolute;
+    width: 100%
+}
+
+.LendingIntroModal_lending-intro-spot__NgKX2 {
+    padding: 40px 0
+}
+
+.LendingIntroModal_lending-intro-spot__NgKX2 .LendingIntroModal_lending-intro-spot__title__-b\+cM {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px
+}
+
+.LendingIntroModal_lending-intro-spot__NgKX2 .LendingIntroModal_lending-intro-spot__text__E1pj6 {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 16px
+}
+
+.LendingIntroModal_lending-intro-spot__NgKX2 .LendingIntroModal_lending-intro-spot__text__E1pj6 strong {
+    color: var(--G-bithumb-new-gray_03);
+    font-weight: 600;
+    text-decoration: underline;
+    vertical-align: top
+}
+
+.LendingIntroModal_lending-intro-order__zGofP {
+    border-top: 1px solid var(--G-bithumb-new-line_01);
+    padding: 60px 0 48px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__title__LOJLc {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__WAPug {
+    counter-reset: list-counter;
+    margin-top: 32px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__item__YkVTN {
+    padding: 0 0 40px 52px;
+    position: relative
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__item__YkVTN:before {
+    background-color: var(--G-bithumb-new-btn_secondary);
+    border-radius: 8px;
+    color: var(--G-bithumb-new-btn_secondary_onsolid);
+    content: counter(list-counter);
+    counter-increment: list-counter;
+    font-size: 16px;
+    font-weight: 700;
+    height: 32px;
+    left: 0;
+    line-height: 32px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 32px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__item__YkVTN:after {
+    background-color: var(--G-bithumb-new-line_02);
+    border-radius: 2px;
+    bottom: 16px;
+    content: "";
+    left: 15px;
+    position: absolute;
+    top: 48px;
+    width: 2px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__item__YkVTN:last-child {
+    padding-bottom: 0
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order__item__YkVTN:last-child:after {
+    display: none
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__title__opRcc {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 32px;
+    margin-bottom: -4px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__text__UVQ3E {
+    word-wrap: break-word;
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 16px;
+    word-break: keep-all
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__text__UVQ3E+.LendingIntroModal_lending-intro-order-list__text__UVQ3E {
+    margin-top: 8px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__text__UVQ3E.LendingIntroModal_lending-intro-order-list__text--notice__yaKNb {
+    color: #fd5a5a;
+    margin-top: 8px;
+    padding-left: 17px;
+    position: relative
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__text__UVQ3E.LendingIntroModal_lending-intro-order-list__text--notice__yaKNb:before {
+    content: "â€»";
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 13px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__img__pKF96 {
+    display: block;
+    margin-top: 16px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__a\+oko,
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list__img__pKF96+.LendingIntroModal_lending-intro-order-list__text__UVQ3E {
+    margin-top: 16px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg {
+    background-color: var(--G-bithumb-new-surface_02);
+    border-radius: 10px;
+    padding: 16px 21px 16px 60px;
+    position: relative
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg:before {
+    content: "";
+    height: 24px;
+    left: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg+.LendingIntroModal_lending-intro-order-list-notice__item__-x8lg {
+    margin-top: 8px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg.LendingIntroModal_lending-intro-order-list-notice__item--rate__awQmj:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-rate.f35f25a43e37df7896ea.svg)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg.LendingIntroModal_lending-intro-order-list-notice__item--period__EeeSk:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-period.60dc1f7d1347800291e9.svg)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg.LendingIntroModal_lending-intro-order-list-notice__item--return__WEwbM:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-return.850bbb56284bb736fd9b.svg)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg.LendingIntroModal_lending-intro-order-list-notice__item--return-pause__WwpwD:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-return-pause.36bb14e7b64170e13971.svg)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__item__-x8lg.LendingIntroModal_lending-intro-order-list-notice__item--return-stop__52wrJ:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-return-stop.4c7212f7627d2ad6d589.svg)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__header__8D4bM {
+    display: flex
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__title__L6AuE {
+    color: var(--G-bithumb-new-gray_02);
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice__text__VAeUq {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 15px;
+    line-height: 23px;
+    margin-top: 2px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__jfFsK {
+    font-size: 0;
+    line-height: 0;
+    margin: 3px 0 0 4px;
+    position: relative;
+    white-space: nowrap;
+    z-index: 30
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__jfFsK:hover .LendingIntroModal_lending-intro-order-list-notice-tip__button__esF3F+.LendingIntroModal_lending-intro-order-list-notice-tip__balloon__4HnZR {
+    opacity: 1;
+    visibility: visible
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__button-inner__RFxST {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-detail.c28df76aa858ed84c248.svg) 50% no-repeat;
+    background-size: 16px 16px;
+    box-sizing: content-box;
+    display: block;
+    height: 16px;
+    width: 16px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__balloon__4HnZR {
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    top: 31px;
+    transform: translateX(-50%);
+    transition: opacity .2s ease-out, visibility .2s ease-out;
+    visibility: hidden
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__balloon-tail__uysVv {
+    left: 50%;
+    margin: 0 0 0 -9px;
+    position: absolute;
+    top: -9px;
+    transform: scaleX(.7)
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__balloon-tail__uysVv:before {
+    background-color: var(--G-bithumb-new-dimmed_dim_primary);
+    border-radius: 0 0 0 5px;
+    -webkit-clip-path: polygon(0 0, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    content: "";
+    display: block;
+    height: 18px;
+    transform: rotate(135deg);
+    width: 18px
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__balloon-inner__G1rlM {
+    background-color: var(--G-bithumb-new-dimmed_dim_primary);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left
+}
+
+.LendingIntroModal_lending-intro-order__zGofP .LendingIntroModal_lending-intro-order-list-notice-tip__balloon-text__uY1lP {
+    color: var(--G-bithumb-new-gray_onsolid_01);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    opacity: .8
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD {
+    border-top: 1px solid var(--G-bithumb-new-line_01);
+    padding: 60px 0 0
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice__title__N2BmP {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 34px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice__text__Z7Ly3 {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 12px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__K6sFk {
+    margin-top: 32px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s {
+    padding: 0 0 40px 52px;
+    position: relative
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s:before {
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 32px 32px;
+    content: "";
+    height: 32px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 32px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s:after {
+    background-color: var(--G-bithumb-new-line_02);
+    border-radius: 2px;
+    bottom: 16px;
+    content: "";
+    left: 15px;
+    position: absolute;
+    top: 48px;
+    width: 2px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s:last-child {
+    padding-bottom: 0
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s:last-child:after {
+    display: none
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s.LendingIntroModal_lending-intro-notice-list__item--middle__VbDOz:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-gauge-middle.416e87797ee98a5620b2.svg)
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s.LendingIntroModal_lending-intro-notice-list__item--high__NAaDO:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-gauge-high.ae27915b63dd912566d7.svg)
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__item__M2w4s.LendingIntroModal_lending-intro-notice-list__item--max__E7g5y:before {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-intro-gauge-max.2a7675db65ac40b415ab.svg)
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__title__5Bwph {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 32px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__text__wCPXL {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 16px;
+    line-height: 24px
+}
+
+.LendingIntroModal_lending-intro-notice__7d9FD .LendingIntroModal_lending-intro-notice-list__text__wCPXL strong {
+    color: var(--G-bithumb-new-gray_02);
+    display: block;
+    font-weight: 600
+}
+
+.LendingIntroModal_lending-intro-spot-slide__wcu2b .LendingIntroModal_lending-intro-spot-slide__img__2VWBL img {
+    vertical-align: top
+}
+
+.LendingIntroModal_lending-intro-spot-slide__wcu2b .LendingIntroModal_lending-intro-spot-slide__box__ssiBK {
+    align-items: center;
+    box-sizing: content-box;
+    display: flex;
+    justify-content: center;
+    min-height: 75px;
+    padding: 8px 0 1px
+}
+
+.LendingIntroModal_lending-intro-spot-slide__wcu2b .LendingIntroModal_lending-intro-spot-slide__text__mRu4L {
+    background-color: var(--G-bithumb-new-dimmed_dim);
+    border-radius: 8px;
+    color: var(--G-bithumb-new-dimmed_dim_onsolid);
+    display: inline-block;
+    font-size: 14px;
+    line-height: 21px;
+    max-width: 280px;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: top
+}
+
+.LendingIntroModal_lending-intro-bottom__EhA2P {
+    display: flex;
+    padding: 0 16px 32px 32px;
+    position: relative;
+    z-index: 110
+}
+
+.LendingIntroModal_lending-intro-bottom__EhA2P:after,
+.LendingIntroModal_lending-intro-bottom__EhA2P:before {
+    content: "";
+    height: 8px;
+    left: 0;
+    position: absolute;
+    width: 100%
+}
+
+.LendingIntroModal_lending-intro-bottom__EhA2P:before {
+    background-image: var(--G-bithumb-new-gradient_01_bottom);
+    content: "";
+    height: 9px;
+    top: -15px
+}
+
+.LendingIntroModal_lending-intro-bottom__EhA2P:after {
+    background-color: var(--G-bithumb-new-surface_01);
+    content: "";
+    top: -8px
+}
+
+.SlideContent_lending-intro-lottie__L6Vc0 {
+    position: relative
+}
+
+.SlideContent_lending-intro-lottie__L6Vc0 div {
+    height: 279px
+}
+
+.SlideContent_lending-intro-lottie__L6Vc0 svg {
+    height: 100% !important;
+    vertical-align: top;
+    width: 100% !important
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME {
+    margin-top: 20px
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row__5G2T1 {
+    align-items: center;
+    display: flex
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row__5G2T1+.LendingConfirmModal_lending-confirm-info__row__5G2T1 {
+    margin-top: 20px
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__title__OMlzU {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 16px;
+    line-height: 24px
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__text__wK3XZ {
+    color: var(--G-bithumb-new-gray_01);
+    flex: 1 1;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 24px;
+    margin-left: 8px;
+    text-align: right
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__sub-text__eNVEf {
+    color: var(--G-bithumb-new-gray_05);
+    display: block;
+    font-size: 13px;
+    line-height: 20px
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row--result__zGWhG {
+    align-items: flex-start !important
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row--result__zGWhG .LendingConfirmModal_lending-confirm-info__title__OMlzU {
+    color: var(--G-bithumb-new-gray_01);
+    font-weight: 600
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row--result__zGWhG .LendingConfirmModal_lending-confirm-info__text__wK3XZ {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 24px
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__row--result__zGWhG .LendingConfirmModal_lending-confirm-info__text__wK3XZ em {
+    font-weight: 500
+}
+
+.LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__tip__AOMYE {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-detail.c28df76aa858ed84c248.svg) no-repeat 0 0;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    margin: 3px 0 0 4px;
+    vertical-align: top;
+    width: 16px
+}
+
+html[data-theme=dark] .LendingConfirmModal_lending-confirm-info__5jKME .LendingConfirmModal_lending-confirm-info__tip__AOMYE {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-detail__dark.fe8b399cad59ba9fbf33.svg)
+}
+
+.LendingConfirmModal_lending-confirm-bottom__lcUXT {
+    border-top: 1px solid var(--G-bithumb-new-line_01);
+    margin-top: 20px;
+    padding-top: 20px
+}
+
+.LendingConfirmModal_lending-confirm-bottom-check__DsbH1 .LendingConfirmModal_lending-confirm-bottom-check__row__sxYCo {
+    align-items: center;
+    display: flex;
+    height: 44px;
+    justify-content: space-between;
+    position: relative
+}
+
+.LendingConfirmModal_lending-confirm-bottom-check__DsbH1 .LendingConfirmModal_lending-confirm-bottom-check__row__sxYCo.LendingConfirmModal_lending-confirm-bottom-check__row--all__L83OK label span {
+    color: var(--G-bithumb-new-gray_01) !important;
+    font-size: 17px !important;
+    font-weight: 500 !important
+}
+
+.LendingConfirmModal_lending-confirm-bottom-check__DsbH1 .LendingConfirmModal_lending-confirm-bottom__agree__md-uC {
+    background: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-agree-arrow.7f50eb04987bd22471aa.svg) no-repeat 0 0;
+    background-size: 20px 20px;
+    display: block;
+    height: 20px;
+    width: 20px
+}
+
+html[data-theme=dark] .LendingConfirmModal_lending-confirm-bottom-check__DsbH1 .LendingConfirmModal_lending-confirm-bottom__agree__md-uC {
+    background-image: url(/frontend/bithumb/react/static/741626d1/media/icon-lending-agree-arrow-dark.0a63f00dbc53d1035792.svg)
+}
+
+.LendingConfirmModal_lending-confirm-bottom-button__fB0Cg {
+    display: flex;
+    margin-top: 24px
+}
+
+.LendingConfirmModal_lending-confirm-bottom-button__fB0Cg .LendingConfirmModal_lending-confirm-bottom-button__button__\+WlkF+.LendingConfirmModal_lending-confirm-bottom-button__button__\+WlkF {
+    margin-left: 8px
+}
+
+.LendingFeeModal_lending-fee__KX2CG {
+    padding-top: 26px
+}
+
+.LendingFeeModal_lending-fee-info__title__Rljv- {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px
+}
+
+.LendingFeeModal_lending-fee-info__Cqi7a {
+    display: flex;
+    margin-top: 16px
+}
+
+.LendingFeeModal_lending-fee-info__Cqi7a .LendingFeeModal_lending-fee-info__cell__ZAF5L {
+    flex: 1 1;
+    position: relative;
+    text-align: center
+}
+
+.LendingFeeModal_lending-fee-info__Cqi7a .LendingFeeModal_lending-fee-info__cell__ZAF5L+.LendingFeeModal_lending-fee-info__cell__ZAF5L:before {
+    background-color: var(--G-bithumb-new-line_01);
+    content: "";
+    height: 28px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px
+}
+
+.LendingFeeModal_lending-fee-info__Cqi7a .LendingFeeModal_lending-fee-info__title__Rljv- {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 12px;
+    line-height: 15px
+}
+
+.LendingFeeModal_lending-fee-info__Cqi7a .LendingFeeModal_lending-fee-info__text__GTTHh {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+    margin-top: 3px
+}
+
+.LendingFeeModal_lending-fee-info__button__4J5CD {
+    display: flex;
+    margin-top: 24px
+}
+
+.LendingNoticeModal_lending-notice-modal-tab__6qzo6 {
+    border-bottom: 1px solid var(--G-bithumb-new-line_02);
+    display: flex;
+    margin: 28px 8px 0 0
+}
+
+.LendingNoticeModal_lending-notice-modal-tab__6qzo6 .LendingNoticeModal_lending-notice-modal-tab__item__zoSIa {
+    flex: 1 1
+}
+
+.LendingNoticeModal_lending-notice-modal-tab__6qzo6 .LendingNoticeModal_lending-notice-modal-tab__button__c-cha {
+    color: var(--G-bithumb-new-gray_05);
+    display: block;
+    font-size: 15px;
+    line-height: 23px;
+    padding: 8px 0;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    width: 100%
+}
+
+.LendingNoticeModal_lending-notice-modal-tab__6qzo6 .LendingNoticeModal_lending-notice-modal-tab__item__zoSIa[aria-selected=true] .LendingNoticeModal_lending-notice-modal-tab__button__c-cha {
+    color: var(--G-bithumb-new-gray_01);
+    font-weight: 600
+}
+
+.LendingNoticeModal_lending-notice-modal-tab__6qzo6 .LendingNoticeModal_lending-notice-modal-tab__item__zoSIa[aria-selected=true] .LendingNoticeModal_lending-notice-modal-tab__button__c-cha:after {
+    border-bottom: 2px solid var(--G-bithumb-new-line_06);
+    bottom: -1px;
+    content: "";
+    left: 0;
+    position: absolute;
+    width: 100%
+}
+
+.LendingNoticeModal_lending-notice-modal__scroll__6eamE:before {
+    background: none !important;
+    display: none !important
+}
+
+.LendingNoticeModal_lending-notice-modal__box__ETlYe {
+    padding: 40px 0 24px
+}
+
+.LendingNoticeModal_lending-notice-modal-info__doxYz {
+    margin-top: 26px
+}
+
+.LendingNoticeModal_lending-notice-modal-info__doxYz+.LendingNoticeModal_lending-notice-modal-info__doxYz {
+    margin-top: 24px
+}
+
+.LendingNoticeModal_lending-notice-modal-info__title__-VAbh {
+    color: var(--G-bithumb-new-gray_01);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD {
+    counter-reset: number-list;
+    margin-top: 8px
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 14px;
+    line-height: 23px;
+    padding-left: 18px;
+    position: relative
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo+.LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo {
+    margin-top: 4px
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:before {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 14px;
+    left: 0;
+    line-height: 23px;
+    position: absolute;
+    top: 0
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:first-child:before {
+    content: "â‘ "
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(2):before {
+    content: "â‘¡"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(3):before {
+    content: "â‘¢"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(4):before {
+    content: "â‘£"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(5):before {
+    content: "â‘¤"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(6):before {
+    content: "â‘¥"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(7):before {
+    content: "â‘¦"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(8):before {
+    content: "â‘§"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(9):before {
+    content: "â‘¨"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(10):before {
+    content: "â‘©"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__RQ7jD .LendingNoticeModal_lending-notice-modal-info-circle-list__item__4AzAo:nth-child(11):before {
+    content: "â‘ª"
+}
+
+.LendingNoticeModal_lending-notice-modal-info-number-list__Xx4RV {
+    counter-reset: number-list;
+    margin-top: 4px
+}
+
+.LendingNoticeModal_lending-notice-modal-info-number-list__Xx4RV .LendingNoticeModal_lending-notice-modal-info-number-list__item__UgSMi {
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 14px;
+    line-height: 21px;
+    padding-left: 20px;
+    position: relative
+}
+
+.LendingNoticeModal_lending-notice-modal-info-number-list__Xx4RV .LendingNoticeModal_lending-notice-modal-info-number-list__item__UgSMi+.LendingNoticeModal_lending-notice-modal-info-number-list__item__UgSMi {
+    margin-top: 4px
+}
+
+.LendingNoticeModal_lending-notice-modal-info-number-list__Xx4RV .LendingNoticeModal_lending-notice-modal-info-number-list__item__UgSMi:before {
+    color: var(--G-bithumb-new-gray_04);
+    content: counter(number-list) ".";
+    counter-increment: number-list;
+    font-size: 14px;
+    left: 0;
+    line-height: 21px;
+    position: absolute;
+    top: 0
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm {
+    border: 1px solid var(--G-bithumb-new-line_02);
+    border-collapse: separate;
+    margin: 12px 0 24px;
+    table-layout: fixed;
+    width: 100%
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm th {
+    background-color: var(--G-bithumb-new-surface_02);
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 13px;
+    height: 48px;
+    line-height: 20px;
+    text-align: center
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm th+th {
+    border-left: 1px solid var(--G-bithumb-new-line_02)
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm td {
+    border-top: 1px solid var(--G-bithumb-new-line_02);
+    color: var(--G-bithumb-new-gray_04);
+    font-size: 13px;
+    height: 48px;
+    line-height: 20px;
+    text-align: center
+}
+
+.LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm td+td {
+    border-left: 1px solid var(--G-bithumb-new-line_02)
+}
+
+ul .LendingNoticeModal_lending-notice-modal-info-circle-list__table__R4kWm {
+    margin-top: 8px
+}
+
+.LendingNoticeModal_lending-notice-modal-notice__mNEMb {
+    border-top: 1px solid var(--G-bithumb-new-line_02);
+    margin-top: 32px;
+    padding: 32px 0 20px
+}
+
+.LendingNoticeModal_lending-notice-modal-notice__title__qlAKp {
+    color: var(--G-bithumb-new-gray_02);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 21px
+}
+
+.LendingNoticeModal_lending-notice-modal-notice-list__tnYsf .LendingNoticeModal_lending-notice-modal-notice-list__item__142Xb {
+    color: var(--G-bithumb-new-gray_05);
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: 4px;
+    padding-left: 11px;
+    position: relative;
+    word-break: break-all
+}
+
+.LendingNoticeModal_lending-notice-modal-notice-list__tnYsf .LendingNoticeModal_lending-notice-modal-notice-list__item__142Xb:before {
+    content: "âˆ™";
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 7px
+}
+
+.LendingNoticeModal_lending-notice-modal-notice-list__tnYsf .LendingNoticeModal_lending-notice-modal-notice-list__item__142Xb strong {
+    color: var(--G-bithumb-new-gray_04);
+    font-weight: 600
+}
