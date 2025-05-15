@@ -494,7 +494,7 @@
                     <div class="MainSpot_main-spot-content__UoDJQ">
                       <h1 class="MainSpot_main-spot-content__title__05EVF" data-spot-swiper="title">대한민국 <br><em>대표 거래소, 빗썸</em></h1>
                       <p class="MainSpot_main-spot-content__text__NU7VB" data-spot-swiper="text">#유동성 1위 <span>#가입자수 1위</span> #브랜드평판 1위</p>
-                      <div class="MainSpot_main-spot-content-link__AFMaw" data-spot-swiper="link"><button class="MainSpot_main-spot-content-link__button__fkOX-">거래소 바로가기</button>
+                      <div class="MainSpot_main-spot-content-link__AFMaw" data-spot-swiper="link"><button class="MainSpot_main-spot-content-link__button__fkOX" onclick="javascript:casinoGameStart('nexus-evo');">거래소 바로가기</button>
                       </div>
                     </div>
                     <div class="MainSpot_main-spot-img__2qEZz">
