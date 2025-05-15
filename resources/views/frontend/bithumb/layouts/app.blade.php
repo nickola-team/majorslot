@@ -109,7 +109,7 @@
     <meta name="twitter:description" content="쉽고 안전한 가상자산 플랫폼 빗썸은 비트코인, 이더리움, 리플 등 가상자산 거래와 코인시세 확인, 자동매매, 스테이킹 등 다양한 가상자산 서비스를 제공합니다. | 빗썸" data-react-helmet="true">
   </head>
   <body>
-    <div id="root"><div id="bannerContainer">
+    <div id="root" style="min-height: 18vh;"><div id="bannerContainer">
       <div class="main-banner-belt" style="background-color: rgb(23, 23, 28);">
         <div class="FixedTopBanner_banner-belt-content__Q8eFg global-width">
           <button class="" title="메인 띠 배너 이미지">
@@ -314,14 +314,13 @@
           <div class="Header_login-area__TNY9b">
             <div class="Header_login-before__kXFtM">
               <strong class="guest_name">{{auth()->user()->username}}</strong>
-              <strong class="text-uppercase ng-scope">보유머니</strong>
-              <strong class="text-uppercase font-white pull-right ng-binding ng-hide">0</strong>
-              <strong class="text-uppercase font-white pull-right ng-binding ">
+              <strong class="text-uppercase ng-scope" style="align-content: center;">보유머니</strong>
+              <strong class="text-uppercase font-white pull-right ng-binding " style="align-content: center;">
                 <span class="mbalance" id="_top_money">{{number_format(auth()->user()->balance,0)}}</span> 원 </strong>
-              <a class="Header_log-in__1rpOs" data-testid="login-button" href="/frontend/bithumb/react/login"  onclick="return false;">로그아웃</a>
+              <a class="Header_log-in__1rpOs" data-testid="login-button" href="/frontend/bithumb/react/login"  onclick="return false;" style="align-content: center;">로그아웃</a>
             </div>
           </div>
-          <div class="Header_language-area__mFHxT">
+          <div class="Header_language-area__mFHxT" style="align-content: center;">
             <div class="Header_language-selected__x1QZc">KR</div><div class="Header_language-list-wrap__DwKNV">
               <div class="Header_language-list-inner__ywp8s">
                 <ul>
@@ -339,7 +338,7 @@
               </div>
             </div>
           </div>
-          <div class="Header_app-download__F-RPG">
+          <div class="Header_app-download__F-RPG" style="align-content: center;">
             <div class="Header_app-download__menu__58+YI">앱 다운로드</div>
             <div class="Header_app-download-wrap__-nFFc">
               <div class="Header_app-download-list-inner__3pSnv">
