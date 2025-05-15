@@ -365,7 +365,7 @@
               <input type="text" placeholder="아이디" ng-model="loginForm.nickname" id="sID2" style="background-color: lavender;">
               <input type="password" placeholder="비밀번호" autocomplete="new-password" ng-model="loginForm.password" id="sPASS2" style="background-color: lavender;">
                <button type="button" class="btn btn-login Header_log-in__1rpOs sbmt-login2" data-testid="login-button">로그인</button>
-              <a class="Header_sign-up__ZH0BD" href="/frontend/bithumb/react/legacy/member_operation/join" >회원가입</a>
+              <a class="Header_sign-up__ZH0BD" href="/frontend/bithumb/react/legacy/member_operation/join" onclick="return false;" >회원가입</a>
             </div>
           </div>
           <div class="Header_language-area__mFHxT">
