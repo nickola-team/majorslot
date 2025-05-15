@@ -313,7 +313,7 @@
         @if (Auth::check())
           <div class="Header_login-area__TNY9b">
             <div class="Header_login-before__kXFtM">
-              <strong class="guest_name">{{auth()->user()->username}}</strong>
+              <strong class="guest_name" style="align-content: center;">{{auth()->user()->username}}</strong>
               <strong class="text-uppercase ng-scope" style="align-content: center;">보유머니</strong>
               <strong class="text-uppercase font-white pull-right ng-binding " style="align-content: center;">
                 <span class="mbalance" id="_top_money">{{number_format(auth()->user()->balance,0)}}</span> 원 </strong>
