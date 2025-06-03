@@ -97,6 +97,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 }
             } catch (\Exception $ex) {
                 Log::error('Tower Game List Request :  Excpetion. exception= ' . $ex->getMessage());
+                Log::error('Tower Game List Request :  Excpetion. URL= ' . $url);
                 Log::error('Tower Game List Request :  Excpetion. PARAMS= ' . json_encode($query));
             }
 
@@ -197,20 +198,20 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
 
         public function balance(Request $request)
         {
-            $data = json_decode($request->getContent(), true);
+            $query = $request->all();
 
-            Log::info('---- Tower Balance CallBack  : Request PARAMS= ' . json_encode($data));
+            Log::info('---- Tower Balance CallBack  : Request PARAMS= ' . json_encode($query));
 
-            $user_id = $data['user_id'];
+            $user_id = $query['user_id'];
             $userid = intval(preg_replace('/' . self::TOWER_BLUEPREFIX . '(\d+)/', '$1', $user_id));
             $user = \VanguardLTE\User::where(['id' => $userid, 'role_id' => 1])->first();
 
             if (!$user) {
-                Log::error('Tower Balance Callback : Not found user. PARAMS= ' . json_encode($data));
+                Log::error('Tower Balance Callback : Not found user. PARAMS= ' . json_encode($query));
                 return response('Not found user');
             }
             if ($user->api_token == 'playerterminate') {
-                Log::error('Tower Balance Callback : terminated by admin. PARAMS= ' . json_encode($data));
+                Log::error('Tower Balance Callback : terminated by admin. PARAMS= ' . json_encode($query));
                 return response('Not found user');
             }
 
@@ -235,15 +236,15 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
 
         public function bet(Request $request)
         {
-            $data = json_decode($request->getContent(), true);
+            $query = $request->all();
 
-            Log::info('---- Tower Bet CallBack  : Request PARAMS= ' . json_encode($data));
+            Log::info('---- Tower Bet CallBack  : Request PARAMS= ' . json_encode($query));
 
-            $user_id = $data['user_id'];
-            $transaction_id = $data['transaction_id'];
-            $vendor_code = $data['vendorCode'];
-            $game_code = $data['gameCode'];
-            $amount = $data['amount'];
+            $user_id = $query['user_id'];
+            $transaction_id = $query['transaction_id'];
+            $vendor_code = $query['vendorCode'];
+            $game_code = $query['gameCode'];
+            $amount = $query['amount'];
 
             $type = 'bet';
             $transaction_type = 'BET';
@@ -271,7 +272,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $user = \VanguardLTE\User::lockforUpdate()->where(['id' => $user_id, 'role_id' => 1])->first();
 
             if (!$user) {
-                Log::error('Tower Bet Callback : Not found User. PARAMS= ' . json_encode($data));
+                Log::error('Tower Bet Callback : Not found User. PARAMS= ' . json_encode($query));
                 \DB::commit();
                 return response()->json([
                     'status' => 'Error',
@@ -325,21 +326,21 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
 
         public function result(Request $request)
         {
-            $data = json_decode($request->getContent(), true);
+            $query = $request->all();
 
-            Log::info('---- Tower Result CallBack  : Request PARAMS= ' . json_encode($data));
+            Log::info('---- Tower Result CallBack  : Request PARAMS= ' . json_encode($query));
 
-            $user_id = $data['user_id'];
-            $transaction_type = $data['transaction_type'];
-            $transaction_id = $data['transaction_id'];
-            $round_id = $data['game_id'];
-            $vendor_code = $data['vendorCode'];
-            $game_code = $data['gameCode'];
-            $amount = $data['amount'];
-            $over_win = $data['overWin'];
-            $reference = $data['reference'];
-            $reference_for_cancel = $data['reference_for_cancel'];
-            $detail = $data['betting_data'];
+            $user_id = $query['user_id'];
+            $transaction_type = $query['transaction_type'];
+            $transaction_id = $query['transaction_id'];
+            $round_id = $query['game_id'];
+            $vendor_code = $query['vendorCode'];
+            $game_code = $query['gameCode'];
+            $amount = $query['amount'];
+            $over_win = $query['overWin'];
+            $reference = $query['reference'];
+            $reference_for_cancel = $query['reference_for_cancel'];
+            $detail = $query['betting_data'];
 
             $type = 'win';
             $bet = 0;
@@ -365,7 +366,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $user = \VanguardLTE\User::lockforUpdate()->where(['id' => $user_id, 'role_id' => 1])->first();
 
             if (!$user) {
-                Log::error('Tower Result Callback : Not found User. PARAMS= ' . json_encode($data));
+                Log::error('Tower Result Callback : Not found User. PARAMS= ' . json_encode($query));
                 \DB::commit();
                 return response()->json([
                     'status' => 'Error',

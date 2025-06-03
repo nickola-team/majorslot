@@ -1704,9 +1704,9 @@ Route::group([ 'prefix' => 'nexus',], function () {
 
 //for tower
 Route::group([ 'prefix' => 'tower',], function () {
-    Route::post('/balance', 'GameProviders\TOWERController@balance');
-    Route::post('/bet', 'GameProviders\TOWERController@bet');
-    Route::post('/result', 'GameProviders\TOWERController@result');
+    Route::get('/balance', 'GameProviders\TOWERController@balance');
+    Route::get('/bet', 'GameProviders\TOWERController@bet');
+    Route::get('/result', 'GameProviders\TOWERController@result');
 });
 
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
