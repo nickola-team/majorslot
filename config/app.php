@@ -283,6 +283,14 @@ return [
     'wildgame_api' => env('WILDGAME_API', ''),
     'wildgame_opcode' => env('WILDGAME_OP', ''),
     'wildgame_opkey' => env('WILDGAME_KEY', ''),
+
+    /*
+    Tower API
+    */
+    'tower_api' => env('TOWER_API', ''),
+    'tower_site' => env('TOWER_SITE', ''),
+    'tower_key' => env('TOWER_KEY', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
