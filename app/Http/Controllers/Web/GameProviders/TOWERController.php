@@ -18,6 +18,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             //==== SLOT ====
             'tower-pp' => ['thirdname' => 'pp', 'type' => 'slot', 'symbol' => 'pp', 'skin' => 'SLOT'],                                  // 프라그마틱
             'tower-pgsoft' => ['thirdname' => 'h_PGSoft', 'type' => 'slot', 'symbol' => 'pgsoft', 'skin' => 'SLOT'],                    // 피지소프트
+            'tower-rtg' => ['thirdname' => 'v_redtiger', 'type' => 'slot', 'symbol' => 'rtg', 'skin' => 'SLOT'],                        // 레드타이거
             'tower-skywind' => ['thirdname' => 'h_SkywindSlot', 'type' => 'slot', 'symbol' => 'skywind', 'skin' => 'SLOT'],             // 스카이윈드
             'tower-mg' => ['thirdname' => 'h_MicroGamingPlusSlo', 'type' => 'slot', 'symbol' => 'mg', 'skin' => 'SLOT'],                // 마이크로게이밍
             'tower-ag' => ['thirdname' => 'h_AsiaGamingSlot', 'type' => 'slot', 'symbol' => 'ag', 'skin' => 'SLOT'],                    // 아시안게이밍
