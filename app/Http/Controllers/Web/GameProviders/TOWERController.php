@@ -184,7 +184,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 $data = $response->json();
 
                 if ($data['result'] != 'Error') {
-                    return $data['result'];
+                    return $data['url'];
                 } else {
                     Log::error('Tower Game Launch Response Error, msg=  ' . $data['msg']);
 
@@ -193,6 +193,8 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             } catch (\Exception $ex) {
                 Log::error('Tower Game Launch Request :  Excpetion. exception= ' . $ex->getMessage());
                 Log::error('Tower Game Launch Request :  Excpetion. PARAMS= ' . json_encode($query));
+
+                return null;
             }
         }
 
@@ -243,7 +245,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $user_id = $query['user_id'];
             $transaction_id = $query['transaction_id'];
             $vendor_code = $query['vendorCode'];
-            $game_code = $query['gameCode'];
+            $game_code = $query['vendorCode'] . '_' . $query['gameCode'];
             $amount = $query['amount'];
 
             $type = 'bet';
@@ -260,13 +262,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'roundid' => $round_id,
             ])->first();
 
-            if (!$checkGameStat) {
+            if ($checkGameStat) {
                 return response()->json([
                     'status' => 'OK',
                     'balance' => $checkGameStat->balance,
                 ]);
             }
-
 
             \DB::beginTransaction();
             $user = \VanguardLTE\User::lockforUpdate()->where(['id' => $user_id, 'role_id' => 1])->first();
@@ -335,12 +336,12 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
             $transaction_id = $query['transaction_id'];
             $round_id = $query['game_id'];
             $vendor_code = $query['vendorCode'];
-            $game_code = $query['gameCode'];
+            $game_code = $query['vendorCode'] . '_' . $query['gameCode'];
             $amount = $query['amount'];
-            $over_win = $query['overWin'];
+            $over_win = $query['overWin'] ?? 0;
             $reference = $query['reference'];
-            $reference_for_cancel = $query['reference_for_cancel'];
-            $detail = $query['betting_data'];
+            $reference_for_cancel = $query['reference_for_cancel'] ?? '';
+            $detail = $query['betting_data'] ?? '';
 
             $type = 'win';
             $bet = 0;
@@ -355,7 +356,7 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'roundid' => $round_id,
             ])->first();
 
-            if (!$checkGameStat) {
+            if ($checkGameStat) {
                 return response()->json([
                     'status' => 'OK',
                     'balance' => $checkGameStat->balance,
