@@ -11,8 +11,9 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
     {
 
         const TOWER_PROVIDER = 'tower';
-
         const TOWER_BLUEPREFIX = 'blue';
+        const TOWER_PPVERIFY_PROVIDER = 'towerv';
+        const TOWER_PP_HREF = 'tower-pp';
 
         const TOWER_GAME_IDENTITY = [
             //==== SLOT ====
@@ -419,6 +420,139 @@ namespace VanguardLTE\Http\Controllers\Web\GameProviders {
                 'status' => 'Error',
                 'msg' => $result['msg'],
             ]);
+        }
+
+        public static function syncpromo()
+        {
+            $user = \VanguardLTE\User::where('role_id', 1)->whereNull('playing_game')->first();
+            if (!$user) {
+                return ['error' => true, 'msg' => 'not found any available user.'];
+            }
+
+            $gamelist = self::getgamelist(self::TOWER_PP_HREF);
+
+            $len = count($gamelist);
+
+            if ($len > 10) {
+                $len = 10;
+            }
+
+            if ($len == 0) {
+                return ['error' => true, 'msg' => 'not found any available game.'];
+            }
+
+            $rand = mt_rand(0, $len);
+            $gamecode = $gamelist[$rand]['gamecode'];
+
+            $url = self::makegamelink($gamecode, self::TOWER_BLUEPREFIX, $user);
+
+            if ($url == null) {
+                return ['error' => true, 'msg' => 'game link error '];
+            }
+
+            $parse = parse_url($url);
+            $ppgameserver = $parse['scheme'] . '://' . $parse['host'];
+
+            //emulate client
+            $response = Http::withOptions(['allow_redirects' => false, 'proxy' => config('app.ppproxy')])->get($url);
+            if ($response->status() == 302) {
+                $location = $response->header('location');
+                $keys = explode('&', $location);
+                $mgckey = null;
+                foreach ($keys as $key) {
+                    if (str_contains($key, 'mgckey=')) {
+                        $mgckey = $key;
+                    }
+                    if (str_contains($key, 'symbol=')) {
+                        $gamecode = $key;
+                    }
+                }
+                if (!$mgckey) {
+                    return ['error' => true, 'msg' => 'could not find mgckey value'];
+                }
+
+                $promo = \VanguardLTE\PPPromo::take(1)->first();
+                if (!$promo) {
+                    $promo = \VanguardLTE\PPPromo::create();
+                }
+                $raceIds = [];
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/active/?' . $gamecode . '&' . $mgckey);
+                if ($response->ok()) {
+                    $promo->active = $response->body();
+                    $json_data = $response->json();
+                    if (isset($json_data['races'])) {
+                        foreach ($json_data['races'] as $race) {
+                            $raceIds[$race['id']] = null;
+                        }
+                    }
+                }
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/details/?' . $gamecode . '&' . $mgckey);
+                if ($response->ok()) {
+                    $promo->tournamentdetails = $response->body();
+                }
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/details/?' . $gamecode . '&' . $mgckey);
+                if ($response->ok()) {
+                    $promo->racedetails = $response->body();
+                }
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/tournament/v3/leaderboard/?' . $gamecode . '&' . $mgckey);
+                if ($response->ok()) {
+                    $promo->tournamentleaderboard = $response->body();
+                }
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/gs2c/promo/race/prizes/?' . $gamecode . '&' . $mgckey);
+                if ($response->ok()) {
+                    $promo->raceprizes = $response->body();
+                }
+
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->post($ppgameserver . '/gs2c/promo/race/v2/winners/?' . $gamecode . '&' . $mgckey, ['latestIdentity' => $raceIds]);
+                if ($response->ok()) {
+                    $promo->racewinners = $response->body();
+                }
+
+                $response = Http::withOptions(['proxy' => config('app.ppproxy')])->get($ppgameserver . '/ClientAPI/minilobby/common/games?' . $mgckey);
+                if ($response->ok()) {
+                    $json_data = $response->json();
+                    //disable not own games
+                    $ownCats = \VanguardLTE\Category::where(['href' => 'pragmatic', 'shop_id' => 0, 'site_id' => 0])->first();
+                    $gIds = $ownCats->games->pluck('game_id')->toArray();
+                    $ownGames = \VanguardLTE\Game::whereIn('id', $gIds)->where('view', 1)->get();
+                    $multiLobby = 0;
+                    if (isset($json_data['lobbyCategories']) || isset($json_data['gameLaunchURL'])) {
+                        $lobbyCats = $json_data['lobbyCategories'];
+                        $filteredCats = [];
+                        foreach ($lobbyCats as $cat) {
+                            $lobbyGames = $cat['lobbyGames'];
+                            $filteredGames = [];
+                            foreach ($lobbyGames as $game) {
+                                foreach ($ownGames as $og) {
+                                    if ($og->label == $game['symbol']) {
+                                        $filteredGames[] = $game;
+                                        break;
+                                    }
+                                }
+                            }
+                            $cat['lobbyGames'] = $filteredGames;
+                            $filteredCats[] = $cat;
+                        }
+                        $json_data['lobbyCategories'] = $filteredCats;
+                        $json_data['gameLaunchURL'] = "/gs2c/minilobby/start";
+                    } else if (isset($json_data['data']) && count($json_data['data']) > 0) {
+                        $multiLobby = 1;
+                        $multi_json = $json_data['data'][0];
+                        if (isset($multi_json['vendorConfig']) && isset($multi_json['vendorConfig']['gameLaunchURL'])) {
+                            $multi_json['vendorConfig']['gameLaunchURL'] = "/gs2c/minilobby/start";
+                            $json_data['data'][0] = $multi_json;
+                        }
+                    }
+                    $promo->games = json_encode($json_data);
+                    $promo->multiminilobby = $multiLobby;
+                }
+
+                $promo->save();
+                return ['error' => false, 'msg' => 'synchronized successfully.'];
+            } else {
+                return ['error' => true, 'msg' => 'server response is not 302.'];
+            }
+
         }
     }
 }
