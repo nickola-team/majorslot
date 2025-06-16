@@ -296,7 +296,7 @@
         <div class="btn_top"><img src="/frontend/me2on/assets/images/common/btn_top.png" alt="" /></div>
         <div id="footer">
             <div class="foot">
-                <h1><img src="/frontend/me2on/assets/images/common/foot_logo.jpg" alt="" /></h1>
+                <h1><img src="/frontend/me2on/assets/images/common/foot_logo.jpg"  alt="" /></h1>
                 <div class="copy">COPYRIGHT (C) ME2ON Co.,Ltd. All Rights Reserved.</div>
                 <div class="links">
                     <ul class="sns">
