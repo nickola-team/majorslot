@@ -292,7 +292,7 @@
         <!-- // 인덱스 신규 코드 -->
 
 
-        <!-- 기존 사이트 소스 -->
+        <!-- 기존 사이트 소 -->
         <div class="btn_top"><img src="/frontend/me2on/assets/images/common/btn_top.png" alt="" /></div>
         <div id="footer">
             <div class="foot">
