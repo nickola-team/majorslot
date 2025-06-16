@@ -1,0 +1,191 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500,700,900&display=swap&subset=korean');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap');
+/*Common*/
+
+* {
+    margin: 0;
+    padding: 0
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%
+}
+
+html {
+    overflow-y: scroll
+}
+
+body {
+    background-color: #fff;
+    word-break: break-all;
+    -ms-word-break: break-all;
+    -webkit-text-size-adjust: 100% !important;
+    -moz-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th,
+td,
+li,
+dt,
+dd,
+a,
+p,
+input,
+textarea,
+select,
+option {
+    color: #555;
+    font-family: "Noto Sans KR", "돋움", dotum, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    word-break: keep-all;
+}
+
+img,
+fieldset,
+iframe {
+    border: 0 none
+}
+
+ul,
+ol,
+li {
+    list-style: none
+}
+
+em,
+address {
+    font-style: normal
+}
+
+img,
+input,
+select,
+textarea {
+    vertical-align: middle
+}
+
+a {
+    color: #7d7d7d;
+    text-decoration: none;
+    cursor: pointer
+}
+
+a:hover {
+    color: #333;
+    text-decoration: none
+}
+
+button,
+label {
+    cursor: pointer;
+    _cursor/**/
+    : hand
+}
+
+button * {
+    position: relative
+}
+
+textarea {
+    overflow: auto
+}
+
+option {
+    padding-right: 6px
+}
+
+.input_text,
+textarea {
+    margin: -1px 0;
+    padding-right: 1px
+}
+
+.input_check,
+.input_radio {
+    width: 13px;
+    height: 13px
+}
+
+.blind,
+legend,
+caption {
+    text-indent: -9999px;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden
+}
+
+hr {
+    display: none
+}
+
+legend {
+    width: 0
+}
+
+:root legend {
+    margin-top: -1px;
+    font-size: 0;
+    line-height: 0
+}
+
+caption {
+    line-height: 0
+}
+
+img {
+    max-width: 100%;
+}
+
+/*test*/
+
+.test1 {
+    border: 1px solid red
+}
+
+.test2 {
+    background: #4f7beb
+}
+
+.font1 {
+    font-family: "Noto Sans KR";
+}
+
+.font2 {
+    font-family: "Montserrat";
+}
+
+.font3 {
+    font-family: "Rubik";
+}
+
+/* popup */
+
+.pop_today_close {
+    padding: 1px 7px 3px 7px;
+    color: #ffffff;
+    background: #303030;
+    vertical-align: middle;
+    border: 0px;
+}
+
+.pop_close {
+    padding: 1px 7px 3px 7px;
+    color: #ffffff;
+    background: #303030;
+    vertical-align: middle;
+    border: 0px;
+}
