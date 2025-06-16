@@ -1692,6 +1692,7 @@ Route::group([ 'prefix' => 'rg',], function () {
     Route::get('/balance', 'GameProviders\RGController@balance');
     Route::post('/changeBalance', 'GameProviders\RGController@changeBalance');
 });
+
 //for nexus
 Route::group([ 'prefix' => 'nexus',], function () {
     Route::post('/balance', 'GameProviders\NEXUSController@balance');
@@ -1699,6 +1700,13 @@ Route::group([ 'prefix' => 'nexus',], function () {
     Route::post('/betResult', 'GameProviders\NEXUSController@betResult');
     Route::post('/betCancel', 'GameProviders\NEXUSController@betCancel');
     Route::post('/betAdjust', 'GameProviders\NEXUSController@betAdjust');
+});
+
+//for tower
+Route::group([ 'prefix' => 'tower',], function () {
+    Route::get('/api/balance', 'GameProviders\TOWERController@balance');
+    Route::get('/api/bet', 'GameProviders\TOWERController@bet');
+    Route::get('/api/result', 'GameProviders\TOWERController@result');
 });
 
 Route::get('/api/js/refresh','GameProviders\BTIController@sendSession');
