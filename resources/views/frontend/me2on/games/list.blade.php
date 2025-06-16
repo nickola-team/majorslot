@@ -1,6 +1,6 @@
 @extends('frontend.me2on.layouts.app')
 @section('page-title', $title)
 
-@section('content')
+@section('content') 
 
 @stop

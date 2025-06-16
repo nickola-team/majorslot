@@ -307,7 +307,7 @@
                         <li><a href="https://www.linkedin.com/company/me2on-group" target="_blank" onclick="return false;"><img
 								src="/frontend/me2on/assets/images/common/sns_linkedin2.png" alt="" /></a></li>
                     </ul>
-                    <div class="family">
+                    <div class="family"> 
                         <a>Family site</a>
                         <ul>
                             <li><a href="http://www.ghoststudio.net/" target="_blank" onclick="return false;">Ghost Studio</a></li>

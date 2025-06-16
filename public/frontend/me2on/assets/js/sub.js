@@ -4,7 +4,7 @@ $(function() {
     var $animation_elements = $('.ani');
     var $window = $(window);
 
-
+ 
     function check_if_in_view() {
         var window_height = $window.height();
         var window_top_position = $window.scrollTop();

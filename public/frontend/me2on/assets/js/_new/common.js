@@ -9,7 +9,7 @@
 
 // 	$("#vod_home")[0].setAttribute('src', url);
 // }
-
+ 
 function resetVideo(filename, isDesktop) {
     let screenWith = window.innerWidth;
     let screenHeight = window.innerHeight;
