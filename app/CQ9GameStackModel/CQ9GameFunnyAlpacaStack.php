@@ -1,7 +1,7 @@
 <?php 
 namespace VanguardLTE\CQ9GameStackModel;
 {
-    class CQ9GamefunnyalpacaStack extends \Illuminate\Database\Eloquent\Model
+    class CQ9GameFunnyAlpacaStack extends \Illuminate\Database\Eloquent\Model
     {
         protected $table = 'cqgame_funnyalpaca_stack';
         protected $fillable = [
